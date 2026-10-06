@@ -126,11 +126,21 @@ and runtime acceptance.
   rendering/interaction cases and all 54 manual body-cell checks pass on that
   same candidate, including visible body targets with a hidden inspection core.
   The temporary native list is filtered in place without changing the thing
-  grid, ordinary selection, cell fallback or simulation. Other manned weapons,
-  sight loss during an active burst, additional weapons, actual enemy turret
-  acquisition, CE performance and combined overhaul loadouts remain open;
+  grid, ordinary selection, cell fallback or simulation. The later beab8196...
+  candidate fixes a mortar acquiring a visible Pawn and firing after losing
+  sight during warmup. The matched native control now retains its shell while
+  hidden, fires when sight returns, and still permits deliberate blind cell
+  fire and native minimum-range rejection. A manned M240B remains idle while
+  its healthy target is hidden. After three visible rounds, native CE converts
+  the lost target to a last known cell and finishes its burst there; that
+  fallback remains intact, with no subsequent hidden acquisition. Its real
+  reload consumes exactly 30 rounds and both the magazine and remaining supply
+  survive in-process and fresh-process loads. Twenty-nine source-linked CE
+  cases pass. Other manned weapons, live suppressive Thing fallback/nearby
+  retargeting, narrowed fire arcs, actual enemy turret acquisition,
+  CE performance and combined overhaul loadouts remain open;
   this is not full CE acceptance. Native evidence is in
-  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native` and
+  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native` and
   `artifacts/manual-target-symbiant`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly

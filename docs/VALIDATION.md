@@ -4337,3 +4337,80 @@ Other manned CE weapons, active-burst sight loss, actual enemy acquisition,
 broader loadouts and current-candidate performance/package gates remain open.
 The public API and commands are unchanged; the separate README rewrite is
 preserved uncommitted. Mortal retains the earlier tested ZIP pair.
+
+### CE firing after sight loss and native M240B controls
+
+The beab8196... candidate closes a separate native mortar tracking omission.
+On the previous 0d19b952... gameplay DLL, the same healthy mortar fixture
+acquires the visible Pawn after 60 unforced Normal ticks, with its shell still
+loaded. Removing the real revealing security bell makes that Pawn hidden and
+not natively acquirable. Another 418 ticks nevertheless fires the shell at
+tick 3685. This is a Total Fog omission; no upstream blocker or issue is needed.
+The before receipts are retained. Its Player.log was not retained because the
+initial copy used the wrong path and the next launch replaced the log.
+
+DecompilerServer resolves CE 16.7.3.0's exact four-argument
+TryFindCEShootLineFromTo overload and KeepBurstOnNoShootLine. The former bypasses
+hit-cell checks for overhead projectiles. The latter may either convert a lost
+Thing to a last known cell for a locked burst or retain a Thing for suppressive
+fire. Total Fog applies current observing-faction sight to successful
+Thing-bearing results from both paths, including declared overrides. Native
+Retarget still runs before the shot-line check. Native failures, cell orders,
+last known cell fallback, ammo preparation, projectile creation and burst
+completion remain on CE's own paths. There is no tick scheduler, saved state,
+per-shot reflection or new gameplay allocation. The two new adapters share the
+existing turret-acquisition policy, including crew faction and disabled enemy fog.
+
+The canonical build passes 291 independent tests, including 29 CE cases.
+The ten added cases cover current sight changes, overhead weapons, native
+failures, blind cell orders and converted fallback, suppressive Thing tracking,
+the newly retargeted argument, crew factions and incomplete map/fog state.
+The public API and workflow commands are unchanged; the separate README remains
+untouched and uncommitted. Exact gameplay SHA-256:
+beab8196373bd0f8ab371e68cb8085def1eba6f048b6a1fc611e989d62b9f734;
+companion SHA-256:
+ba5fafb6e20a2b3806ba2b1ba5a275171bdf0796f71adab41418c53d99d96bce.
+
+On these exact bytes, the unchanged healthy mortar save repeats the same
+visible acquisition and sight loss. During 421 Normal ticks while hidden,
+the shell remains loaded, lastShotTick stays -999999 and the automatic target
+clears. Restoring the bell permits a normal Pawn-bearing shot during 480 ticks,
+consuming its shell at tick 4167. A separate unheld manual click on the hidden
+Pawn's cell fires during 481 ticks; the weapon retains a cell target rather
+than a Thing. A fresh unheld order ten cells from the mortar, inside its
+32-cell native minimum range, receives no shot during another 481 ticks.
+The first manual-order attempt had hold fire enabled; its window is excluded
+from blind-fire acceptance and retained separately as a fixture precondition.
+
+The native M240B fixture uses a healthy waiting enemy 60 cells east of the
+weapon, ordinary ManTurret, the default 360-degree fire arc and native Fog
+weather. The weather reduces the crew's sight below that distance; no fog
+grid is manually changed. Its unchanged hidden save is
+246711950f8cb3c042e4e1749c207918aaa750d1f149c6f402f253a524c820de.
+During 481 Normal ticks it remains manned, hidden and loaded at 180 rounds,
+lastShotTick 12690. With a real revealing bell, 90 ticks acquire the same Pawn
+and fire three rounds. Removing the bell and advancing 14 ticks shows the
+weapon itself has switched to a cell target at (121,0,70), HasThing false,
+while still bursting. Another 362 ticks completes the native ten-round burst
+at 170 rounds, then clears automatic targeting without further hidden shots.
+The older turret-only probe could not distinguish this cell fallback from
+continued Pawn tracking. The retained probe now reports both targets separately.
+
+Ordinary Prioritize reloading M240B consumes exactly the 30 missing rounds
+from a real 400-round supply during 721 Normal ticks, producing a full
+200-round magazine and 370 rounds remaining. Both counts survive in-process
+save/load. A fresh game process also retains those counts and separately
+replays the unchanged manned hidden save for 362 ticks without any new shot.
+The reload save is
+b9455fc6c8e04a3f89fa0a51deb0bff89e2ceba40383e35759a4c7448d95363a.
+Fixture objects are removed, the unchanged base save is reloaded, both final
+logs pass the existing runtime-error summarizer and termination is verified.
+
+Receipts, the two final Player.logs, identity checks and the bounded acceptance
+summary are under artifacts/ce-m240-native. The exact tested pair is retained
+under artifacts/candidates/ce-shottracking-beab8196. These Normal-speed controls
+do not prove guaranteed hits, narrowed fire arcs, live suppressive Thing
+fallback or nearby retargeting, non-magazine ammo handling, actual enemy
+turrets, broader CE/Zombieland combinations or current-candidate performance.
+Those checks, Multiplayer and the full release-candidate gates remain open.
+Mortal's tested ZIP pair is unchanged.

@@ -11,6 +11,9 @@ namespace TotalFog.Compatibility;
 internal static class CombatExtendedIntegration
 {
     private static readonly Type[] HitArguments = [typeof(Vector3), typeof(IntVec3), typeof(Thing)];
+    private static readonly Type[] ShootLineArguments = [typeof(IntVec3), typeof(LocalTargetInfo),
+        typeof(ShootLine).MakeByRefType(), typeof(Vector3).MakeByRefType()];
+    private static readonly Type[] BurstFallbackArguments = [typeof(bool), typeof(ShootLine).MakeByRefType()];
 
     internal static void Install(Harmony harmony)
     {
@@ -36,11 +39,24 @@ internal static class CombatExtendedIntegration
             catch (Exception exception) { Log.Warning("[Total Fog] Combat Extended integration: " + target.DeclaringType.FullName + ": " + exception.Message); }
         }
         Patch(method);
+        void PatchShotPaths(Type verbType, bool required = false)
+        {
+            var shot = AccessTools.DeclaredMethod(verbType, "TryFindCEShootLineFromTo", ShootLineArguments);
+            var fallback = AccessTools.DeclaredMethod(verbType, "KeepBurstOnNoShootLine", BurstFallbackArguments);
+            if (required && (shot == null || fallback == null))
+                Log.Warning("[Total Fog] Combat Extended integration: burst shoot-line hooks are unavailable.");
+            Patch(shot, nameof(ShootLinePostfix));
+            Patch(fallback, nameof(BurstFallbackPostfix));
+        }
+        PatchShotPaths(type, required: true);
         // Inherited methods are already covered. A declared override needs its
         // own hook even when another mod supplies the derived CE verb.
         foreach (var child in GenTypes.AllTypes)
             if (child != type && type.IsAssignableFrom(child))
+            {
                 Patch(AccessTools.DeclaredMethod(child, method.Name, HitArguments));
+                PatchShotPaths(child);
+            }
         // Overhead weapons bypass hit-cell LOS. Filter automatic acquisition at
         // CE's existing validator; deliberate indirect-fire cell orders stay native.
         var turretType = AccessTools.TypeByName("CombatExtended.Building_TurretGunCE");
@@ -59,11 +75,30 @@ internal static class CombatExtendedIntegration
 
     public static void TurretTargetPostfix(Building_Turret __instance, Thing __0, ref bool __result)
     {
-        if (!__result || __0 == null) return;
-        Thing observer = __instance.TryGetComp<CompMannable>()?.ManningPawn ?? (Thing)__instance;
-        if (observer?.Map == null || observer.Faction == null || __0.MapHeld != observer.Map ||
-            observer.Faction != Faction.OfPlayer && !FogSettings.AISmart) return;
+        if (__result && __0 != null) __result = CanTrack(__instance, __0);
+    }
+
+    public static void ShootLinePostfix(Verse.Verb __instance, LocalTargetInfo __1, ref bool __result)
+    {
+        // Native Retarget runs before this check. Overhead weapons otherwise
+        // bypass the hit-cell hook and can follow a now-hidden Thing.
+        if (__result && __1.HasThing) __result = CanTrack(__instance.caster, __1.Thing);
+    }
+
+    public static void BurstFallbackPostfix(Verse.Verb __instance, ref bool __result)
+    {
+        // CE may convert a locked burst to its last known cell. Keep that blind
+        // fire; only a fallback still tracking an unseen Thing is restricted.
+        var target = __instance.CurrentTarget;
+        if (__result && target.HasThing) __result = CanTrack(__instance.caster, target.Thing);
+    }
+
+    private static bool CanTrack(Thing caster, Thing target)
+    {
+        Thing observer = caster?.TryGetComp<CompMannable>()?.ManningPawn ?? caster;
+        if (observer?.Map == null || observer.Faction == null || target.MapHeld != observer.Map ||
+            observer.Faction != Faction.OfPlayer && !FogSettings.AISmart) return true;
         var fog = observer.Map.GetVisibility();
-        if (fog?.Initialized == true) __result = fog.IsShown(observer.Faction, __0.Position);
+        return fog?.Initialized != true || fog.IsShown(observer.Faction, target.Position);
     }
 }

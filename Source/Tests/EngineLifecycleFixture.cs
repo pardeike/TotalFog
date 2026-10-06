@@ -114,7 +114,17 @@ namespace Verse
             => (x - other.x) * (x - other.x) + (z - other.z) * (z - other.z) <= range * range;
     }
     public class VerbProperties { public bool requireLineOfSight = true; }
-    public class Verb { public Thing caster; public VerbProperties verbProps = new(); }
+    public class Verb { public Thing caster; public VerbProperties verbProps = new(); public LocalTargetInfo CurrentTarget; }
+    public readonly struct LocalTargetInfo
+    {
+        public readonly Thing Thing;
+        private readonly IntVec3 cell;
+        public LocalTargetInfo(Thing thing) { Thing = thing; cell = IntVec3.Invalid; }
+        public LocalTargetInfo(IntVec3 targetCell) { Thing = null; cell = targetCell; }
+        public bool HasThing => Thing != null;
+        public IntVec3 Cell => Thing?.Position ?? cell;
+    }
+    public struct ShootLine { }
     public static class GenTypes { public static IEnumerable<System.Type> AllTypes = System.Array.Empty<System.Type>(); }
     public record struct IntVec2(int x, int z);
     public record struct Rot4(int Value)

@@ -115,6 +115,7 @@ public sealed class CombatExtendedTurretFixture
                 var power = gunTurret.GetComp<CompPowerTrader>();
                 var sight = gunTurret.GetComp<CompFog>()?.FieldOfViewWatcher;
                 var manningPawn = gunTurret.GetComp<CompMannable>()?.ManningPawn;
+                var fireArc = gunTurret.AllComps.FirstOrDefault(c => c.GetType().FullName == "CombatExtended.CompFireArc");
                 return (object)new
                 {
                     success = true, ids = string.Join(",", ownedIds), action,
@@ -129,8 +130,21 @@ public sealed class CombatExtendedTurretFixture
                         currentTargetValid = gunTurret.CurrentTarget.IsValid,
                         currentTargetHasThing = gunTurret.CurrentTarget.HasThing,
                         currentTargetCell = gunTurret.CurrentTarget.Cell.ToString() },
+                    fireArc = fireArc == null ? null : new
+                    {
+                        center = AccessTools.Field(fireArc.GetType(), "CurrentCenterAngle").GetValue(fireArc),
+                        span = AccessTools.Field(fireArc.GetType(), "CurrentSpan").GetValue(fireArc),
+                        within = AccessTools.Method(fireArc.GetType(), "WithinFireArc")
+                            .Invoke(fireArc, new object[] { new LocalTargetInfo(targetThing) })
+                    },
                     weapon = new { type = verb.GetType().FullName, requiresLos = verb.verbProps.requireLineOfSight,
                         fliesOverhead = verb.ProjectileFliesOverhead(), minRange = verb.verbProps.minRange,
+                        currentTarget = verb.CurrentTarget.Thing?.ThingID,
+                        currentTargetHasThing = verb.CurrentTarget.HasThing,
+                        currentTargetCell = verb.CurrentTarget.Cell.ToString(),
+                        bursting = verb.state == VerbState.Bursting,
+                        midBurst = Property(verb, "MidBurst"),
+                        locksRotation = Property(verb, "LockRotationAndAngle"),
                         ammunition = Property(compAmmo, "CurrentAmmo") is ThingDef def ? def.defName : null,
                         magazine = Property(compAmmo, "CurMagCount"), capacity = Property(compAmmo, "MagSize"),
                         lastShotTick = AccessTools.Field(typeof(Verse.Verb), "lastShotTick").GetValue(verb) },

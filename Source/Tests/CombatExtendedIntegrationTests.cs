@@ -41,9 +41,16 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
     {
         ModsConfig.Active.Add(Package);
         CombatExtendedIntegration.Install(new Harmony());
-        Assert.Equal(new[] { typeof(CeVerb), typeof(OverrideVerb), typeof(CeTurret) }, Harmony.Patched.Select(m => m.DeclaringType));
-        Assert.All(Harmony.Patched.Take(2), m => Assert.Equal(new[] { typeof(Vector3), typeof(IntVec3), typeof(Thing) },
-            m.GetParameters().Select(p => p.ParameterType)));
+        Assert.Equal(new[] { "CanHitCellFromCellIgnoringRange", "TryFindCEShootLineFromTo", "KeepBurstOnNoShootLine",
+            "CanHitCellFromCellIgnoringRange", "TryFindCEShootLineFromTo", "KeepBurstOnNoShootLine", "IsValidTarget" },
+            Harmony.Patched.Select(m => m.Name));
+        Assert.Equal(new[] { typeof(CeVerb), typeof(CeVerb), typeof(CeVerb), typeof(OverrideVerb),
+            typeof(OverrideVerb), typeof(OverrideVerb), typeof(CeTurret) }, Harmony.Patched.Select(m => m.DeclaringType));
+        Assert.All(Harmony.Patched.Where(m => m.Name == "CanHitCellFromCellIgnoringRange"), m =>
+            Assert.Equal(new[] { typeof(Vector3), typeof(IntVec3), typeof(Thing) }, m.GetParameters().Select(p => p.ParameterType)));
+        Assert.All(Harmony.Patched.Where(m => m.Name == "TryFindCEShootLineFromTo"), m =>
+            Assert.Equal(new[] { typeof(IntVec3), typeof(LocalTargetInfo), typeof(ShootLine).MakeByRefType(),
+                typeof(Vector3).MakeByRefType() }, m.GetParameters().Select(p => p.ParameterType)));
         Assert.Equal(new[] { typeof(Thing) }, Harmony.Patched.Last().GetParameters().Select(p => p.ParameterType));
     }
 
@@ -169,7 +176,8 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         ModsConfig.Active.Add(Package);
         AccessTools.Types.Remove("CombatExtended.Building_TurretGunCE");
         CombatExtendedIntegration.Install(new Harmony());
-        Assert.Equal(new[] { typeof(CeVerb), typeof(OverrideVerb) }, Harmony.Patched.Select(m => m.DeclaringType));
+        Assert.Equal(new[] { typeof(CeVerb), typeof(CeVerb), typeof(CeVerb), typeof(OverrideVerb),
+            typeof(OverrideVerb), typeof(OverrideVerb) }, Harmony.Patched.Select(m => m.DeclaringType));
     }
 
     [Fact]
@@ -253,6 +261,126 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         Assert.True(result); Assert.Equal(0, turret.Map.Fog.VisibilityQueries);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShotLinesStopTrackingUnseenThingsIncludingOverheadWeapons(bool requiresLos)
+    {
+        var (verb, _) = Shooter(); verb.verbProps.requireLineOfSight = requiresLos;
+        var target = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
+        bool result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        Assert.False(result);
+        verb.caster.Map.Fog.InSight[1] = true; result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        Assert.True(result);
+        verb.caster.Map.Fog.InSight[1] = false; result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void FailedNativeShotLinesDoNotQueryOrPromoteVisibility()
+    {
+        var (verb, _) = Shooter(); verb.caster.Map.Fog.InSight[1] = true;
+        var target = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
+        bool result = false;
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        Assert.False(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
+    }
+
+    [Fact]
+    public void BlindCellOrdersAndNativeLockedCellFallbackAreUnrestricted()
+    {
+        var (verb, _) = Shooter(); var cell = new LocalTargetInfo(new IntVec3(1, 0));
+        bool result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, cell, ref result);
+        Assert.True(result);
+        // CE has already replaced the lost Thing with its last known cell.
+        verb.CurrentTarget = cell;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.True(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
+    }
+
+    [Fact]
+    public void SuppressiveFallbackCannotKeepTrackingAHiddenThing()
+    {
+        var (verb, _) = Shooter();
+        verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
+        bool result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.False(result);
+        verb.caster.Map.Fog.InSight[1] = true; result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.True(result);
+        verb.caster.Map.Fog.InSight[1] = false; result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void FailedNativeBurstFallbackDoesNotQuerySight()
+    {
+        var (verb, _) = Shooter(); verb.caster.Map.Fog.InSight[1] = true;
+        verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
+        bool result = false;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.False(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
+    }
+
+    [Fact]
+    public void NativeRetargetUsesTheNewShotLineTarget()
+    {
+        var (verb, _) = Shooter();
+        var hidden = new Thing { Map = verb.caster.Map, PositionHeld = new(0, 1) };
+        var visible = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
+        verb.CurrentTarget = new LocalTargetInfo(hidden); verb.caster.Map.Fog.InSight[1] = true;
+        bool result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(visible), ref result);
+        Assert.True(result);
+        verb.CurrentTarget = new LocalTargetInfo(visible);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(hidden), ref result);
+        Assert.False(result);
+    }
+
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public void ShotAndFallbackUseCrewFactionAndOptionalEnemyFog(bool enemyFog, bool expected)
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer };
+        var crew = new Pawn { Faction = new Faction(), Map = turret.Map };
+        turret.Component = new RimWorld.CompMannable { ManningPawn = crew };
+        turret.Map.Fog.Initialized = true; FogSettings.AISmart = enemyFog;
+        var verb = new CeVerb { caster = turret,
+            CurrentTarget = new LocalTargetInfo(new Thing { Map = turret.Map, PositionHeld = new(1, 0) }) };
+        bool result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result);
+        Assert.Equal(expected, result);
+        result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.Equal(expected, result);
+        turret.Map.Fog.FactionSight[crew.Faction] = new[] { false, true, false, false };
+        result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IncompleteFogOrMapRetainsNativeShotAndFallback()
+    {
+        var verb = new CeVerb { caster = new Pawn { Faction = Faction.OfPlayer } };
+        verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
+        bool result = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result);
+        Assert.True(result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.True(result);
+        verb.caster.Map = null;
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        Assert.True(result);
+    }
+
     private sealed class CeTurret : RimWorld.Building_Turret
     {
         private bool IsValidTarget(Thing target) => true;
@@ -262,11 +390,19 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
     {
         protected virtual bool CanHitCellFromCellIgnoringRange(Vector3 source, IntVec3 target, Thing thing) => true;
         protected bool CanHitCellFromCellIgnoringRange(IntVec3 source, IntVec3 target, bool corners) => true;
+        public virtual bool TryFindCEShootLineFromTo(IntVec3 source, LocalTargetInfo target, out ShootLine line,
+            out Vector3 targetPosition) { line = default; targetPosition = default; return true; }
+        public bool TryFindCEShootLineFromTo(IntVec3 source, LocalTargetInfo target, out ShootLine line)
+        { line = default; return true; }
+        protected virtual bool KeepBurstOnNoShootLine(bool suppressing, out ShootLine line) { line = default; return true; }
     }
     private sealed class InheritedVerb : CeVerb { }
     private sealed class OverrideVerb : CeVerb
     {
         protected override bool CanHitCellFromCellIgnoringRange(Vector3 source, IntVec3 target, Thing thing) => false;
+        public override bool TryFindCEShootLineFromTo(IntVec3 source, LocalTargetInfo target, out ShootLine line,
+            out Vector3 targetPosition) { line = default; targetPosition = default; return false; }
+        protected override bool KeepBurstOnNoShootLine(bool suppressing, out ShootLine line) { line = default; return false; }
     }
     private sealed class UnrelatedVerb : Verse.Verb
     {
