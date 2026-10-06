@@ -251,6 +251,12 @@ and runtime acceptance.
   the CE profile and unchanged installed DLL pair are verified. The performance
   floor remains open until an evidence-backed change passes a matched native
   comparison. See `artifacts/ce-dpa-logical-cell-*.json`.
+  A following row-boundary candidate passes 296 tests, including 18,432
+  exhaustive small masks against unchanged callback geometry. Its first
+  original/candidate native pair completes, but the next process crashes in
+  startup reference resolution. The incomplete comparison is retained in
+  `artifacts/ce-row-center-startup-failure`; no native performance acceptance
+  or new feedback ZIP follows from this source change.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

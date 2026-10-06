@@ -4957,3 +4957,35 @@ excludes DPA. The original configuration XML byte hash was not recorded, so
 only active-order and installed-binary preservation are established. See
 artifacts/ce-dpa-logical-cell-cleanup.json. The README's command table is
 updated within the user's otherwise uncommitted rewrite.
+
+### Exact row-boundary candidate: geometry accepted, native performance open
+
+The next bounded change hoists mask-caster floor-center slope checks from each
+cell to the two exact rounded row endpoints. A wall-to-floor transition moves
+the starting slope behind that floor, leaving the remaining interior floor
+centers inside the interval. Wall/radius/map-edge handling and recursive shadow
+transitions remain unchanged. Callback casting and point queries retain their
+existing implementations as differential references. No scheduling, cache,
+visibility delay or public API change is added.
+
+The canonical build passes 296 tests. The new exhaustive contract compares
+all 512 three-by-three blocker arrangements, nine observer cells and four
+radii against callback casting, totaling 18,432 masks. Existing larger
+randomized/edge/peek contracts and warm allocation tests also pass.
+
+Gameplay ddb5c8fe3df8714d2bffa7d80723fb7e65b5bb2444a3b24692afe05958a8bd84
+and companion 71f9507d... begin the ordinary CE 350x350 six-process comparison.
+The first original/candidate pair completes, but the next candidate process
+exits during startup, before its bridge connects or fixture loads. The native
+Player.log records a SIGBUS with DefDatabase.ResolveAllReferences in a
+GenThreading.ParallelForEach worker. The associated forked crash-report child
+also aborts. This identifies the failing startup phase; it does not establish
+the underlying cause or attribute it to the mask-loop change.
+
+The incomplete run and native crash receipts are preserved under
+artifacts/ce-row-center-startup-failure, including both completed sample files.
+No six-process median or performance acceptance is available. The workflow
+restores the exact candidate and GABS confirms all game processes stopped.
+The previous 2f15cad0... failed floor remains separate. This source candidate
+is not a new feedback package; a complete comparison and affected native
+geometry checks remain required before accepting it for delivery.

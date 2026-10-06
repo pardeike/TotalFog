@@ -114,6 +114,11 @@ public static class FieldOfView
                     depth++;
                     continue;
                 }
+                // Rounded row endpoints can miss the center-slope interval
+                // by at most one cell. Interior floor cells are already inside.
+                // A wall-to-floor transition only moves start behind that floor.
+                int visibleFirst = first + ((long)first * start.Denominator < (long)depth * start.Numerator ? 1 : 0);
+                int visibleLast = last - ((long)last * end.Denominator > (long)depth * end.Numerator ? 1 : 0);
                 bool hasPrevious = false, previousOpaque = false;
                 for (int column = first; column <= last; column++)
                 {
@@ -128,9 +133,7 @@ public static class FieldOfView
                     bool inBounds = (uint)x < width && (uint)z < height;
                     bool inRange = depthSquared + (long)column * column <= rangeSquared;
                     bool wall = !inBounds || !inRange || opaque[z * width + x];
-                    if (inBounds && inRange && (wall ||
-                        (long)column * start.Denominator >= (long)depth * start.Numerator &&
-                        (long)column * end.Denominator <= (long)depth * end.Numerator))
+                    if (inBounds && inRange && (wall || column >= visibleFirst && column <= visibleLast))
                         destination!.AddCell(x, z);
                     if (hasPrevious && previousOpaque != wall)
                     {

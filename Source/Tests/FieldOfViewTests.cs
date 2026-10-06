@@ -125,6 +125,27 @@ public class FieldOfViewTests
     }
 
     [Fact]
+    public void DirectFootprintsMatchEverySmallBlockerLayoutAndObserver()
+    {
+        // Exhaustive opaque/floor transitions, including the observer itself,
+        // map edges, fractional slope endpoints and circular range clipping.
+        var mask = new VisibilityMask();
+        var blockers = new bool[9];
+        for (int layout = 0; layout < 512; layout++)
+        {
+            for (int cell = 0; cell < 9; cell++) blockers[cell] = (layout & (1 << cell)) != 0;
+            for (int origin = 0; origin < 9; origin++)
+            for (int radius = 0; radius <= 3; radius++)
+            {
+                mask.Reset(0, 0, 3, 3, 3);
+                FieldOfView.ComputeMask(3, 3, origin % 3, origin / 3, radius, blockers, mask);
+                var expected = Cast(blockers, 3, 3, origin % 3, origin / 3, radius);
+                for (int cell = 0; cell < 9; cell++) Assert.Equal(expected[cell], mask.Contains(cell));
+            }
+        }
+    }
+
+    [Fact]
     public void DirectFootprintsMatchCellCastingInOpenRowsShadowsAndAccumulatedPeeks()
     {
         const int width = 211, height = 139;
