@@ -4781,3 +4781,44 @@ deleted only after that readback. Private message IDs and receipts remain in
 ignored artifacts; the message requests Windows/busy-save and save-load
 feedback and contains no CE/Multiplayer update. Zombieland's gameplay DLL is
 unchanged from the preceding delivery.
+
+### Native no-magazine short-bow ammunition control
+
+The installed CE short bow uses Verb_ShootCE and inventory stone arrows with
+HasMagazine false and UseAmmo true. Its TryCastShot prepares ammunition before
+the projectile verb's shoot-line rejection, so failed preparation/shot paths
+need native evidence rather than an unconditional early fog prefix. The new
+companion fixture observes preparation and shot returns without modifying them.
+It uses CE's own OrderForceTarget and a real security bell; its temporary
+five-cell base range is restored without writing settings.
+
+The initial fixture is inconclusive: an AttackStatic job lacking the native
+selected verb never fires, and the armed pawn's effective sight subsequently
+extends to twelve cells. That attempt is retained separately. The corrected
+fixture uses CE's native order and places the wall thirteen cells away, inside
+the fourteen-cell bow range but beyond the twelve-cell effective sight.
+
+On the unchanged 450329a0... gameplay with companion 99b49b79..., the positive
+control prepares/fires at tick 156, consuming exactly one of twenty arrows.
+The shooter is stationary and healthy in this corrected attempt. At tick 266
+the next native stance is Warmup; removing the bell makes the target hidden
+and native CanHitTarget false. Another 240 Normal ticks produce no ammunition
+preparation or shot call and retain nineteen arrows. A new hidden attack order
+also prepares/fires nothing through another 180 reported Normal ticks.
+Restoring the bell allows a native shot at tick 816 and consumes exactly one
+more arrow. Both recorded preparation/shot pairs succeed while visible; there
+is no hidden failed-shot preparation or detached pending round.
+
+Ten receipt assertions pass across 844 reported Normal playback ticks, with
+native endpoints 20..869. The steel wall remains at 300 HP, so these controls
+prove ordinary shot execution and ammunition behavior, not damage. No
+no-magazine ammunition loss is reproduced in this path; the native warmup
+cancels before preparation. Other no-magazine verbs, direct mod-issued shots,
+live suppressive Thing fallback and no-magazine save/load remain open. No
+gameplay workaround or upstream issue is justified by this result.
+
+Cleanup removes owned actors/objects and probe patches, restores range sixty,
+reloads the unchanged base and verifies process termination. Recognized native
+logs are clean. Raw receipts, initial inconclusive control, summary, exact DLL
+pair and Player.log are retained in artifacts/ce-ammo-native. All 291 tests pass
+through the canonical deploy; the gameplay bytes sent to Mortal are unchanged.

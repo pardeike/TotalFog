@@ -198,6 +198,19 @@ and runtime acceptance.
   `artifacts/manual-target-symbiant`; current paired package evidence is in
   `artifacts/zombieland-current-package-gates.json`. Earlier scenario evidence
   retains its own exact gameplay DLL hashes.
+  A subsequent current-byte native short-bow check covers real no-magazine
+  stone-arrow inventory. CE's own attack order fires once at a visible steel
+  wall (20 to 19 arrows). Removing the real sight bell during the next native
+  warmup cancels before ammunition preparation; 240 Normal ticks retain all
+  19 arrows. A new hidden attack order also prepares/fires nothing. Revealing
+  the wall resumes a successful native shot (19 to 18). Ten receipt assertions
+  pass across 844 reported Normal playback ticks; the shooter remains still.
+  No ammunition-loss defect is reproduced in this ordinary short-bow path.
+  Other no-magazine verbs, mod-issued direct shots, live suppressive Thing
+  fallback and no-magazine save/load remain open. The wall is not damaged by
+  these two shots, so this is not damage acceptance. Cleanup restores the
+  original range, removes owned objects/probes, reloads the base and stops the
+  process; recognized logs are clean. See `artifacts/ce-ammo-native`.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

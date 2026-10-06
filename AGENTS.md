@@ -91,6 +91,12 @@ performance comparisons. DPA is excluded from feedback ZIPs.
 Use `./scripts/mod ce-setup` for `total-fog-ce-16`, the separate Steam profile
 under artifacts/CEUserData with installed Combat Extended and all DLCs. It
 preserves the core performance profile and existing CE settings/loadout.
+Use `totalfog/ce_ammo_fixture` for the scoped no-magazine short-bow control.
+It observes CE's own attack orders, ammunition preparation and shot results;
+play through ordinary Normal playback. Remove/recreate its real security bell
+to change sight during warmup, then call cleanup to restore the temporary base
+range and remove owned objects/probe patches. It is companion instrumentation,
+excluded from player ZIPs, and does not support save/load.
 Use `./scripts/mod zombieland-setup` for `total-fog-zombieland-16`, the isolated
 Steam profile under artifacts/ZombielandUserData with Total Fog, local Zombieland
 and all DLCs. This builds/deploys both mod/companion pairs and verifies their
