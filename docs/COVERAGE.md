@@ -136,8 +136,8 @@ and runtime acceptance.
   fallback remains intact, with no subsequent hidden acquisition. Its real
   reload consumes exactly 30 rounds and both the magazine and remaining supply
   survive in-process and fresh-process loads. Twenty-nine source-linked CE
-  cases pass. Other manned weapons, live suppressive Thing fallback/nearby
-  retargeting, other weapon/arc combinations, combat-heavy CE performance and combined overhaul
+  cases pass. Other manned weapons, live suppressive Thing fallback,
+  other weapon/arc combinations, combat-heavy CE performance and combined overhaul
   loadouts remain open. The same beab8196... gameplay bytes now also pass a
   native enemy mini-turret against a healthy drafted player target 42 cells
   away: enemy fog off permits ordinary firing, enabled 34-cell sight stops
@@ -162,9 +162,24 @@ and runtime acceptance.
   The fixture sets valid native configuration fields and invokes CE's adjustment
   callback; editor input remains unverified because the attempted mouse paths
   left the stored angle/span unchanged. No gameplay fix is needed for this case;
-  this is not full CE acceptance. Native evidence is in
+  this is not full CE acceptance. A later native M240B control proves CE's
+  ongoing burst switches from a lost primary Pawn to a visible nearby Pawn,
+  without a new turret acquisition. With both Pawns hidden, CE instead finishes
+  at the primary's last known cell and never selects either hidden Pawn. Native
+  projectile collisions remain intact. Loading the visible-alternate burst
+  exposed Total Fog publishing 39-cell sight before engine lighting was ready,
+  despite the ready pawn calculating 59 cells. The 2504105d... candidate runs
+  the engine's sky/glow updates once before initial sight publication. The same
+  fresh-process save immediately publishes 59 cells and completes its six
+  remaining shots at the visible alternate; the primary stays excluded.
+  The hidden-alternate save also prevents either hidden acquisition after
+  restart. Its native saved cell burst does not resume, so this is not proof
+  of cell-burst persistence. Seventeen receipt-backed controls pass under
+  `artifacts/ce-retarget-native`. Off-current-map, darkness and lamp-only load
+  controls and the new candidate's broader package/performance gates remain
+  open. Native evidence is in
   `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
-  `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native` and
+  `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native`, `artifacts/ce-retarget-native` and
   `artifacts/manual-target-symbiant`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly

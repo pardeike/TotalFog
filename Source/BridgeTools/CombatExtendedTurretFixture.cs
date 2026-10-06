@@ -14,7 +14,7 @@ namespace TotalFog.BridgeTools;
 /// <summary>Native CE turret/mortar fixtures. IDs survive save/load; no gameplay assembly dependency on CE.</summary>
 public sealed class CombatExtendedTurretFixture
 {
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. configure-fire-arc applies valid native angle/span fields and CE's adjustment callback; it does not test editor input. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction, for native retargeting controls. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. configure-fire-arc applies valid native angle/span fields and CE's adjustment callback; it does not test editor input. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
         int targetDistance = 16, bool holdFire = true, bool reveal = false,
@@ -76,8 +76,8 @@ public sealed class CombatExtendedTurretFixture
                     owned.AddRange(made); ownedIds.AddRange(made.Select(t => t.ThingID));
                 }
                 else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo" &&
-                    action != "configure-enemy-fog" && action != "configure-fire-arc")
-                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, configure-fire-arc, supply-ammo, remove-power or cleanup.");
+                    action != "configure-enemy-fog" && action != "configure-fire-arc" && action != "add-alternate")
+                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, configure-fire-arc, add-alternate, supply-ammo, remove-power or cleanup.");
 
                 if (action == "remove-power")
                 {
@@ -89,8 +89,25 @@ public sealed class CombatExtendedTurretFixture
                 }
 
                 var gunTurret = owned.OfType<Building_Turret>().Single();
-                var targetThing = owned.Single(t => t is Pawn || t is Corpse);
+                // Preserve the first target's identity when an alternate is added.
+                var targetThing = owned.First(t => t is Pawn || t is Corpse);
                 var target = targetThing is Pawn pawn ? pawn : ((Corpse)targetThing).InnerPawn;
+                if (action == "add-alternate")
+                {
+                    if (owned.Count(t => t is Pawn || t is Corpse) != 1 || targetDistance < 8 || targetDistance > 60)
+                        throw new InvalidOperationException("Add one alternate at 8..60 cells to a single-target fixture.");
+                    var cell = gunTurret.Position + IntVec3.East * targetDistance;
+                    if (!cell.InBounds(map) || !cell.Standable(map) || cell.GetThingList(map).Any(t => t is Pawn || t is Building))
+                        throw new InvalidOperationException("The alternate target cell must be clear and standable.");
+                    var alternate = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, target.Faction);
+                    made.Add(alternate); alternate.Name = new NameSingle("TF_CE_Alternate");
+                    alternate.equipment.DestroyAllEquipment();
+                    GenSpawn.Spawn(alternate, cell, map);
+                    if (alternate.Faction == Faction.OfPlayer) alternate.drafter.Drafted = true;
+                    var wait = JobMaker.MakeJob(JobDefOf.Wait); wait.expiryInterval = 60000;
+                    alternate.jobs.TryTakeOrderedJob(wait, JobTag.Misc);
+                    owned.Add(alternate); ownedIds.Add(alternate.ThingID);
+                }
                 var previousEnemyFog = FogSettings.AISmart;
                 if (action == "configure-enemy-fog")
                 {
@@ -177,9 +194,22 @@ public sealed class CombatExtendedTurretFixture
                         lastShotTick = AccessTools.Field(typeof(Verse.Verb), "lastShotTick").GetValue(verb) },
                     crew = manningPawn == null ? null : new { id = manningPawn.ThingID,
                         cell = manningPawn.Position.ToString(), job = manningPawn.CurJob?.def.defName,
-                        sightRange = manningPawn.GetComp<CompFog>()?.FieldOfViewWatcher.LastSightRange },
+                        moving = manningPawn.pather?.Moving,
+                        sightRange = manningPawn.GetComp<CompFog>()?.FieldOfViewWatcher.LastSightRange,
+                        calculatedSightRange = manningPawn.GetComp<CompFog>()?.FieldOfViewWatcher.CalcPawnSightRange(manningPawn.Position, false, false),
+                        groundGlow = map.glowGrid.GroundGlowAt(manningPawn.Position),
+                        weatherAccuracy = map.weatherManager.CurWeatherAccuracyMultiplier },
                     ammunitionSupplies = owned.Where(t => t.def == ammoDef && !t.Destroyed)
                         .Select(t => new { id = t.ThingID, cell = t.Position.ToString(), t.stackCount }).ToArray(),
+                    alternateTargets = owned.Where(t => t != targetThing && (t is Pawn || t is Corpse)).Select(t =>
+                    {
+                        var other = t is Pawn p ? p : ((Corpse)t).InnerPawn;
+                        return new { id = other.ThingID, cell = t.Position.ToString(), other.Dead, other.Downed,
+                            injuries = other.health.hediffSet.hediffs.OfType<Hediff_Injury>().Sum(h => h.Severity),
+                            job = other.CurJob?.def.defName,
+                            seenByTurretFaction = map.GetVisibility().IsShown(gunTurret.Faction, t.Position),
+                            nativeAcquirable = AccessTools.Method(gunTurret.GetType(), "IsValidTarget").Invoke(gunTurret, new object[] { t }) };
+                    }).ToArray(),
                     target = new { id = target.ThingID, cell = targetThing.Position.ToString(), target.Dead,
                         faction = target.Faction?.loadID,
                         target.Downed, job = target.CurJob?.def.defName,

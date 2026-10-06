@@ -172,6 +172,11 @@ public class MapVisibility : MapComponent
     {
         var startup = System.Diagnostics.Stopwatch.StartNew();
         TotalFogMod.LogMessage($"Fog initialization begins for map {map.uniqueID}, {map.Size.x}x{map.Size.z}.");
+        // A load callback (including Pause on load's first tick) runs before
+        // MapUpdate populates sunlight and accumulated lamp glow. Sample the
+        // engine's ready lighting now, including on maps that are not viewed.
+        map.skyManager.SkyManagerUpdate();
+        map.glowGrid.GlowGridUpdate_First();
         foreach (var designation in map.designationManager.AllDesignations)
             if (designation.def == DesignationDefOf.Mine && !designation.target.HasThing) RegisterMineDesignation(designation);
         // All spawned comps have completed registration before map initialization publishes sight.

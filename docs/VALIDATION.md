@@ -4580,3 +4580,73 @@ is unchanged, all six processes terminate, and the workflow restores the
 candidate install. The canonical build passes all 291 independent tests.
 Broader current-candidate Zombieland/package gates and Multiplayer remain open;
 Mortal's tested ZIP pair is unchanged.
+
+### Native CE nearby retargeting and initial-lighting regression
+
+The native M240B control uses public Steam 1.6, all five DLCs and CE 16.7.3.0
+with ordinary unforced Normal playback. CE's mid-burst retarget setting remains
+enabled and its arc setting remains disabled; no setting is written. A native
+manning pawn stands at (61,69), the gun at (61,70), and the healthy hostile
+primary waits at (121,70). The magazine starts at 180. A real player security
+bell reveals the primary; after 86 ticks the gun is bursting with 178 rounds.
+
+The companion adds a native-generated waiting pawn of the same hostile faction
+at (111,70). This pawn is alive, not downed and natively eligible; its four
+points of generated injury are retained rather than healed by the fixture.
+Removing only the bell hides the primary while crew sight still sees the
+alternate. During ten further ticks CE switches the weapon's Thing target to
+the alternate and consumes two rounds, reaching 176. The turret's acquisition
+target is still the original primary, proving this is an ongoing native burst
+retarget rather than a fresh turret acquisition. The burst finishes at 170
+rounds, with the original primary hidden and untouched. No private CE burst
+flags, ammo values or target fields are injected during playback.
+
+A save taken immediately after that switch preserves the visible-alternate
+Thing target, 176 rounds and active burst. Before the lighting fix, a fresh
+process publishes a 39-cell crew sight radius even though the ready engine
+calculates 59.268 cells, reports full ground glow and has a stationary manning
+pawn. The alternate at 50 cells is therefore incorrectly hidden. Five further
+ticks retain the stale radius and cancel the saved burst without consuming
+ammunition. This is a Total Fog initialization defect, not a CE blocker.
+
+Public engine source confirms that Map.FinalizeInit queues component callbacks
+before MapUpdate first populates sky and accumulated lamp glow. Native Pause
+on load can also execute a first tick before that frame update. Total Fog now
+invokes the existing SkyManagerUpdate and GlowGridUpdate_First once in its
+initialization callback, before forcing initial sight publication. It adds no
+recurring work or camera-dependent hook and uses the engine's own lighting
+calculations. Off-current-map and lamp-only/darkness runtime controls remain
+separate outstanding checks; source ordering alone does not close them.
+
+The unchanged switch save in a fresh process on gameplay SHA-256
+2504105d82f004d6c1794ff4160f5ee10f4b89806f58678f7764b9e449bed58b
+immediately publishes radius 59, sees and accepts the alternate, and continues
+to reject the hidden primary. During 63 Normal ticks CE completes the six
+remaining burst shots, reaching 170 and lastShotTick 13482. The earlier
+beab8196... result, stale-radius diagnostics and rejected burst replay remain
+retained separately. The proof companion is
+07821ea57a602cba9f67062d6708835cfd86ac70c9f5ae7a7481822a4cc226d7.
+
+The negative control reloads the same base scene, begins the original burst
+and adds a native healthy alternate at (120,70), 59 cells east. Removing the
+bell hides both Pawns because the crew is one row south and has radius 59.
+Both are rejected by CE's native target validator. Ten further ticks convert
+the weapon target to the primary's last known cell (121,70), with no Thing
+target, and consume one round. The native cell burst completes at 170; no
+hidden Pawn is selected. Native projectiles collide with the alternate along
+that trajectory and deal 13.0979 injury, preserving simulation rather than
+making hidden pawns immune. On fresh-process reload the saved cell burst does
+not resume; 60 Normal ticks retain 177 rounds and lastShotTick 13440, with
+neither hidden Pawn acquired. This proves the negative targeting control, not
+cell-burst resumption.
+
+Seventeen explicit receipt assertions pass in
+artifacts/ce-retarget-native/summary.json. Raw before/after/negative receipts,
+both mid-burst save hashes, candidate DLLs and native logs are retained there.
+The logs pass the existing recognized-error check and the canonical deploy
+build passes all 291 independent tests. These functional controls make no TPS
+claim. The earlier large-map floor belongs to beab8196...; the new gameplay
+candidate needs its own comparison and broader Zombieland/package checks.
+Suppressive still-Thing fallback, no-magazine ammo, broader CE weapons, combined
+loadouts and actual Multiplayer acceptance remain open. Mortal's delivered
+ZIP pair is unchanged.
