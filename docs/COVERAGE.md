@@ -68,6 +68,25 @@ Multiplayer's two-client determinism, settings, refresh and save/rejoin checks.
 Broader loadouts and long-session soak remain release work, guided by concrete
 failures and tester feedback.
 
+### Current closeout priorities
+
+Andreas has asked us to avoid diminishing returns and keep the zoomed-out sample
+small. The delivered Zombieland tester build has its own accepted exact-byte
+gates. The newer ddb5c8fe... candidate is still in development: its normal-view
+CE median passes with substantial variation, its one-pair wide CE spot check
+is 2.25% slower, and it has not superseded the delivered tester package.
+Recent combined mini-turret/Symbiant/electrifier controls need no gameplay fix.
+
+Use the remaining acceptance evidence to close the release rather than expand
+an open-ended variant matrix. Resolve the current performance finding with a
+bounded matched check or an evidence-backed fix, complete the explicit
+Multiplayer two-client checklist below, then run the affected final native and
+packaging gates against one frozen candidate. Existing required compatibility
+and performance checks remain required; source inventories and broader follow-up
+rows must retain their actual unverified status. Add new CE/zoom/optimization
+scenarios when a concrete defect, changed path or existing acceptance gap calls
+for them. Unchanged gameplay does not require another complete regression run.
+
 | Requirement | Evidence required or remaining gap |
 |---|---|
 | Information outside sight | Source-linked and real-item scenarios prove fresh static objects stay hidden until observed and static-target messages require current sight. Ownership no longer reveals static objects or projectiles, and a native owned wall creates no sight. Live UI requires current sight; a native remembered-item/proxy scenario proves deselection, blocked reselection and zero live UI callbacks while unseen. Static objects use native rendering once observed, so appearance and terrain can change while unseen. Exact visual memory is intentionally excluded for performance. Player-observer/held-pawn exceptions and optional-mod inspection paths also remain to audit. |
