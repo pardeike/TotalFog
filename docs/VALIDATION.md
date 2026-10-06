@@ -5155,3 +5155,41 @@ Exact paired bytes, receipts, Player.log and assertions are retained in
 `artifacts/ce-zombie-turret/summary.json` and that folder's source reports.
 This accepts only the ordinary player CE mini-turret acquisition/warmup/damage
 slice, not all special zombies, weapons, save/load or combined performance.
+
+### Ordinary zombie/turret active-fight save and fresh restart
+
+The same ddb5c8fe.../56daa1f2... gameplay pair and 00ff91d6... companion now
+complete one bounded native persistence check. CE's installed ExposeData
+explicitly serializes warmup, target, hold fire, cooldown and its owned gun.
+The existing fixture stages player mini-turret 75692 and ordinary zombie 75703
+nearby. The zombie continues its native Stumble job. Population-cleanup test
+mode suppresses only initial-grace, ordinary and scheduled removal during
+playback; it is restored before saving and again after resumed playback.
+
+After 420 Normal settling ticks and 720 Normal combat ticks, the magazine is
+70, the current target is the living visible zombie, and warmup is 18 ticks.
+The bounded native trace records a zombie damage result of 13.7573338 at tick
+851, but the native injury list is empty by save time. This is not a nonzero
+injury persistence check. Traces are stopped before writing the new isolated
+save, `TotalFog_CEZL_OrdinaryTurret_SaveReload`; saved game tick is 1184 and
+the exact XML also records warmup 18 and Thing_Zombie75703 as target.
+
+Process 67205 is stopped and process 67598 loads that save with the temporary
+Pause on load preference. The preference is restored without writing it.
+At paused native tick 1185, the same target/factions/positions/job, sight 34,
+native range 48, power, hold-fire state, ammunition, magazine 70 and
+last-shot tick 1065 remain. Warmup is 17, exactly accounting for the one
+native load tick. Transient aim flags are recomputed, not asserted identical.
+Another 719 unforced Normal ticks consume 38 rounds, reaching magazine 32
+with the same visible living target. The trace has 35 actual base projectile
+impacts, including cover and misses, but no additional zombie damage event.
+This proves resumed native firing, not guaranteed hits or further damage.
+
+The trace remains below its 128-record caps and is stopped. Original cleanup
+settings are restored, owned objects are removed, the unchanged base is
+reloaded and the second process terminates. Installed gameplay/companion bytes,
+ModsConfig.xml and both the base and prepared-fight saves remain unchanged.
+Both retained native logs have empty recognized error summaries. Exact
+receipts, saved XML, native logs and assertions are in
+`artifacts/ce-zombie-save`. M240/mortar/special-zombie persistence, nonzero
+injury retention, broader combat and performance remain separate checks.

@@ -296,8 +296,18 @@ and runtime acceptance.
   and misses. It runs off camera, retains ordinary zombie movement, and removes
   its trace/owned objects while restoring the temporary no-cleanup settings.
   Exact bytes, native receipts and clean logs are in `artifacts/ce-zombie-turret`.
-  This closes only the ordinary player mini-turret slice; special states,
-  other weapons, persistence and combined combat-heavy performance remain open.
+  A subsequent active-fight save survives a full process restart: the same
+  zombie target, positions/job, ammunition type, 70-round magazine and sight
+  remain. Native loading advances one tick, reducing saved warmup from 18 to
+  17. Another 719 unforced Normal ticks consume 38 rounds and produce real
+  cover impacts/misses. The saved injury list is empty and the resumed trace
+  has no zombie hit, so this does not prove nonzero injury persistence or
+  additional zombie damage. Settings are restored before saving and after
+  playback; both logs, owned cleanup/base reload, unchanged bytes/save and
+  both process stops are verified in `artifacts/ce-zombie-save`.
+  This closes only the ordinary player mini-turret sight/firing and bounded
+  warmup/target/ammunition persistence slices. Special states, other weapons,
+  nonzero injury persistence and combined combat-heavy performance remain open.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.
