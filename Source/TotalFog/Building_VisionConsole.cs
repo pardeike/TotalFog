@@ -34,7 +34,7 @@ public class Building_VisionConsole : Building
         if (mapComp != null)
         {
             inspect.AppendInNewLine(
-                "CameraCount".Translate() + ": " + mapComp.SurveillanceCameraCount()
+                "CameraCount".Translate() + ": " + mapComp.SurveillanceCameraCount(Faction)
             );
         }
 
@@ -54,7 +54,7 @@ public class Building_VisionConsole : Building
             return;
         }
 
-        var cameraCount = Mathf.Min(mapComp.SurveillanceCameraCount(), 12);
+        var cameraCount = Mathf.Min(mapComp.SurveillanceCameraCount(Faction), 12);
         workingGraphics[cameraCount] ??= GraphicDatabase.Get(
             def.graphicData.graphicClass,
             $"{def.graphicData.texPath}_FX{cameraCount}",

@@ -107,6 +107,7 @@ public class SectionLayerFog : SectionLayer
         bool wasFading = fading;
         var rect = section.CellRect;
         var counts = fog.GetFactionShownCells(Faction.OfPlayer);
+        var known = fog.GetFactionKnownCells(Faction.OfPlayer);
         int width = Map.Size.x,
             height = Map.Size.z,
             stride = rect.Width + 2;
@@ -120,7 +121,7 @@ public class SectionLayerFog : SectionLayer
             int index = sz * width + sx;
             samples[(z + 1) * stride + x + 1] = FogAppearance.CellAlpha(
                 Map.fogGrid.IsFogged(index),
-                fog.knownCells[index],
+                known != null && known[index],
                 counts[index],
                 PrefFogAlpha
             );

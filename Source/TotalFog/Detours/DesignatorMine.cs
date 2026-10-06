@@ -26,7 +26,7 @@ public static class DesignatorMine
         if (
             mapComponentSeenFog != null
             && c.InBounds(value)
-            && !mapComponentSeenFog.knownCells[value.cellIndices.CellToIndex(c)]
+            && !mapComponentSeenFog.IsKnown(Faction.OfPlayer, value.cellIndices.CellToIndex(c))
         )
         {
             __result = true;

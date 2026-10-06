@@ -21,7 +21,9 @@ public class Building_VisionCamera : Building
         var inspect = new StringBuilder();
         inspect.Append(base.GetInspectString());
         inspect.AppendInNewLine(
-            mapComp.workingCameraConsole ? "Revealing".Translate() : "NoCameraConsole".Translate()
+            mapComp.HasWorkingCameraConsole(Faction)
+                ? "Revealing".Translate()
+                : "NoCameraConsole".Translate()
         );
 
         return inspect.ToString();

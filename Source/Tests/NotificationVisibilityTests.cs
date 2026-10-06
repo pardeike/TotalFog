@@ -86,6 +86,19 @@ public sealed class NotificationVisibilityTests
         Assert.False(NotificationVisibility.HasLiveTarget(For(pawn)));
     }
 
+    [Fact]
+    public void AnotherFactionsPrisonerDoesNotDiscloseAnUnseenHealthEvent()
+    {
+        var pawn = new Pawn
+        {
+            Faction = new Faction(),
+            HostFaction = new Faction { loadID = 2, IsPlayer = true },
+            IsPrisonerOfColony = true,
+        };
+        pawn.Map.Fog.Initialized = true;
+        Assert.False(NotificationVisibility.HasVisibleTarget(For(pawn)));
+    }
+
     private static LookTargets For(Thing thing) =>
         new()
         {

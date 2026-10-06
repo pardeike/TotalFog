@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -27,10 +28,19 @@ public static class FogMapUtility
         return mapComponentSeenFog;
     }
 
-    public static void MakeSoundWave(Vector3 loc, Map map, float size, float velocity)
+    public static void MakeSoundWave(Vector3 loc, Map map, float size, float velocity) =>
+        MakeSoundWave(loc, map, size, velocity, Faction.OfPlayer);
+
+    public static void MakeSoundWave(
+        Vector3 loc,
+        Map map,
+        float size,
+        float velocity,
+        Faction observerFaction
+    )
     {
         var moteSoundWave = (Mote_HearingCue)ThingMaker.MakeThing(FogDefOf.Mote_SoundWave);
-        moteSoundWave.Initialize(loc, size, velocity);
+        moteSoundWave.Initialize(loc, size, velocity, observerFaction);
         GenSpawn.Spawn(moteSoundWave, loc.ToIntVec3(), map);
     }
 }

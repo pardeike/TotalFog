@@ -177,6 +177,7 @@ if (TotalFogSupport.AllowsTarget(shooter, targetCell) == false)
 3. **"Visible" means "seen right now".** An explored but grey area is not visible.
    This is on purpose: the player must not see live activity there. A temporary
    gravship landing preview does not grant sight through these methods.
+   In Multiplayer, these queries follow the current faction context.
 
 ### Step 4: Test both ways
 

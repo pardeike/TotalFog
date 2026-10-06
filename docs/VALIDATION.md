@@ -5578,3 +5578,42 @@ transition, not every blocker, sight behind the doorway, transfers or async maps
 Evidence is multiplayer-startup/fog-door-{before,open,closed}.json,
 door-build-pair.json and both preserved Player.log files. The loading exception
 remains, so clean-log acceptance is still open.
+
+
+## Player-faction separation source checkpoint, 2026-10-07
+
+The earlier key mapped every IsPlayer faction to coverage key zero. Discovery
+was one durable array and CompVisibility had one unowned observation boolean.
+The new source retains primary-faction direct storage and assigns other player
+factions separate coverage/discovery and observer IDs. Original discovery and
+observation fields remain readable; legacy observations are assigned to their
+map's primary faction, including held things before spawn. Faction IDs persist
+with their data, so moving an item to another player's map does not transfer
+its observation ownership. Rendering, overlays, minimap and mining queries use
+the current observer. Spawn/movement/coverage checks record each observer;
+presentation queries themselves do not record observations.
+
+Native Multiplayer's AsyncTimeComp.PreContext owns the map tick/faction/RNG
+context. Its FactionExtensions.PushFaction/PopFaction also swap native map/world
+data; cached delegates use that mechanism for deferred recipient checks/replay.
+Each queued notification now saves its recipient faction. Native non-historical
+command feedback can exist on only one client (SilenceMessagesNotTargetedAtMe),
+so hidden feedback is dropped rather than serialized in the shared queue.
+This notification path still needs native recipient/replay/save controls.
+
+Hearing cues are generated from simulation state on a 100-tick deadline, with
+no camera/mote-count rejection. Native Mote consumes random values during
+construction, so production must remain deterministic across observers.
+MoteBase uses normal ticking and is unsaved; ThingDef.HasThingIDNumber excludes
+motes. Each cue is tagged with its observer faction for local drawing. Native
+Multiplayer random/map context source is reviewed; actual cue generation under
+different native client views remains unverified for this candidate.
+
+The source-linked suite covers private remembered observation, explicit foreign
+observation, legacy held observation, transfer to another faction's map, hearing
+cue ownership, engine-owned tooltip registration and hidden foreign-prisoner
+notifications. The optional-binding test balances the native faction-context
+adapter and settings watches. Compilation and tests do not establish native
+separate-faction, independent-clock, notification replay or performance acceptance.
+The earlier shared-colony runtime remains on its separately recorded bytes until
+a fresh pair is deployed. No Multiplayer build or update is sent to Mortal.

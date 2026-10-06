@@ -20,7 +20,7 @@ internal static class Verb
         }
 
         var caster = __instance.caster;
-        if (caster == null || caster.Faction != Faction.OfPlayer && !FogSettings.AISmart)
+        if (caster == null || caster.Faction?.IsPlayer != true && !FogSettings.AISmart)
         {
             return;
         }

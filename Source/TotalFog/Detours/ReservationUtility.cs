@@ -16,7 +16,10 @@ public static class ReservationUtility
                 && target.Thing.def.category != ThingCategory.Pawn
             )
             {
-                __result = target.Thing.IsFogVisible();
+                __result = Presentation.ThingVisibility.IsVisible(
+                    target.Thing,
+                    observerFaction: p.Faction
+                );
             }
         }
 
@@ -29,7 +32,10 @@ public static class ReservationUtility
                 && target.Thing.def.category != ThingCategory.Pawn
             )
             {
-                __result = target.Thing.IsFogVisible();
+                __result = Presentation.ThingVisibility.IsVisible(
+                    target.Thing,
+                    observerFaction: p.Faction
+                );
             }
         }
     }

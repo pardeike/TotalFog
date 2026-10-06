@@ -121,17 +121,17 @@ public class CompSightSource : FogSubcomponent
                 effectiveFaction = null;
             else if (pawn.IsPrisonerOfColony && FogSettings.PrisonerGiveVision)
             {
-                effectiveFaction = Faction.OfPlayer;
+                effectiveFaction = pawn.HostFaction;
                 modifier = .2f;
             }
             else if (
                 effectiveFaction != null
-                && effectiveFaction != Faction.OfPlayer
+                && !effectiveFaction.IsPlayer
                 && FogSettings.AllyGiveVision
-                && effectiveFaction.AllyOrNeutralTo(Faction.OfPlayer)
+                && effectiveFaction.AllyOrNeutralTo(fog.PrimaryPlayerFaction)
             )
             {
-                effectiveFaction = Faction.OfPlayer;
+                effectiveFaction = fog.PrimaryPlayerFaction;
                 modifier = .5f;
             }
             else if (pawn.RaceProps.Animal)
@@ -139,7 +139,7 @@ public class CompSightSource : FogSubcomponent
         }
         // Player/ally/prisoner sight drives presentation. Other faction grids
         // are needed only when enemy fog targeting is explicitly enabled.
-        if (effectiveFaction != Faction.OfPlayer && !FogSettings.AISmart)
+        if (effectiveFaction?.IsPlayer != true && !FogSettings.AISmart)
             effectiveFaction = null;
         if (effectiveFaction == null)
         {
@@ -281,7 +281,7 @@ public class CompSightSource : FogSubcomponent
             return 0;
         var vision = parent.TryGetComp<CompBuildingSight>();
         if (vision != null)
-            return vision.Props.needManned && !fog.workingCameraConsole
+            return vision.Props.needManned && !fog.HasWorkingCameraConsole(parent.Faction)
                 ? 0
                 : vision.Props.viewRadius * FogSettings.BuildingVisionModifier;
         if (parent is Building_Turret turret && parent.TryGetComp<CompMannable>() == null)
@@ -349,7 +349,7 @@ public class CompSightSource : FogSubcomponent
     {
         if (
             !FogSettings.ShowHearingCues
-            || pawn.Faction != Faction.OfPlayer
+            || pawn.Faction?.IsPlayer != true
             || !pawn.RaceProps.Humanlike
             || FogSettings.BaseHearingRange <= 0
         )
@@ -363,7 +363,7 @@ public class CompSightSource : FogSubcomponent
                 other.Faction == faction
                 || other.pather?.Moving != true
                 || !other.Position.InHorDistOf(pawn.Position, range)
-                || fog.IsShown(Faction.OfPlayer, other.Position)
+                || fog.IsShown(pawn.Faction, other.Position)
             )
                 continue;
             float size = other.BodySize;
@@ -371,7 +371,8 @@ public class CompSightSource : FogSubcomponent
                 other.Position.ToVector3() + new Vector3(size * .5f, 0, size * .5f),
                 map,
                 Mathf.Lerp(1.5f, 3.5f, size / 4),
-                Mathf.Lerp(1, 2.5f, size / 4)
+                Mathf.Lerp(1, 2.5f, size / 4),
+                pawn.Faction
             );
         }
     }

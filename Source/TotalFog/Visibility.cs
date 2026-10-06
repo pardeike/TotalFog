@@ -35,7 +35,7 @@ public static class Visibility
         || pawn.Faction == null
         || pawn.Map == null
         || !FogSettings.AISmart
-        || pawn.Faction == Faction.OfPlayer
+        || pawn.Faction.IsPlayer
         || !pawn.RaceProps.Humanlike
         || pawn.Map.GetVisibility().IsShown(pawn.Faction, cell);
 

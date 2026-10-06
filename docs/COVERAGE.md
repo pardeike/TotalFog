@@ -574,6 +574,21 @@ separately from GenUI.TargetsAt. A native rifle control exposed a hidden target
 in that menu. The constructor now filters both lists through the existing
 current-sight policy, preserving the map grid and ordinary cell fallback.
 
+The next source checkpoint separates player-faction coverage keys, explored cells
+and object-observation ownership. The primary faction retains the direct arrays;
+extra discovery grids and observation lists are used only for other factions.
+Hauling, reservation, rifle sight, prisoner sight and surveillance use their own
+observer/owner instead of a local client's faction. Hearing cues retain the
+faction that generated them. Deferred notifications persist their recipient and
+bind Multiplayer's native push/pop context once to check and replay that recipient.
+Hidden non-historical command feedback is discarded in Multiplayer rather than
+entering a shared saved queue from only the issuing client. Tooltip registration
+stays engine-owned; the existing current-sight tooltip gate owns disclosure.
+Source-linked regression checks and compilation cover this checkpoint, but it
+has not yet passed a two-faction native game, save/rejoin or performance comparison.
+Separate-faction compatibility remains unverified. Earlier native results above
+belong to their recorded older gameplay bytes.
+
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
 those versions/hashes and desync diagnostics with each result. Single-player

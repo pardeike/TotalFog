@@ -1,3 +1,4 @@
+using RimWorld;
 using Verse;
 
 namespace TotalFog.Presentation;
@@ -17,6 +18,6 @@ internal static class DiscoveryOverlays
         if (map == null || ThingVisibility.Bypass(map))
             return true;
         var fog = map.GetVisibility();
-        return !fog.Initialized || (uint)index < fog.knownCells.Length && fog.knownCells[index];
+        return !fog.Initialized || fog.IsKnown(Faction.OfPlayer, index);
     }
 }

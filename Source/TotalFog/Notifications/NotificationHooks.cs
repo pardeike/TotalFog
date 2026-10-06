@@ -1,4 +1,5 @@
 using RimWorld;
+using TotalFog.Compatibility;
 using TotalFog.Core;
 using TotalFog.Utils;
 using Verse;
@@ -12,6 +13,10 @@ internal static class NotificationHooks
         if (msg == null || DeferredNotifications.IsReplayingLetter)
             return true;
         bool hidden = !NotificationVisibility.HasVisibleTarget(msg.lookTargets);
+        // MP can produce non-historical command feedback on only the issuing
+        // client. It must not enter a shared, saved notification queue.
+        if (hidden && !historical && MultiplayerIntegration.Active)
+            return false;
         bool suppress =
             hidden && msg.def == MessageTypeDefOf.ThreatBig && FogSettings.HideThreatBig;
         var decision = NotificationPolicy.Decide(

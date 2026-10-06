@@ -61,7 +61,10 @@ namespace Verse
 
     public class Faction
     {
-        public static readonly Faction OfPlayer = new();
+        public static readonly Faction PrimaryPlayer = new() { loadID = 1, IsPlayer = true };
+        public static Faction OfPlayer = PrimaryPlayer;
+        public int loadID;
+        public bool IsPlayer;
     }
 
     public class Thing
@@ -126,6 +129,7 @@ namespace Verse
     {
         public bool Dead;
         public bool IsPrisonerOfColony;
+        public Faction HostFaction = Faction.PrimaryPlayer;
         public RaceProperties RaceProps = new();
     }
 
@@ -225,9 +229,12 @@ namespace Verse
 
     public class Tooltips
     {
-        public void Notify_ThingSpawned(ThingWithComps thing) { }
+        public int Added,
+            Removed;
 
-        public void Notify_ThingDespawned(ThingWithComps thing) { }
+        public void Notify_ThingSpawned(ThingWithComps thing) => Added++;
+
+        public void Notify_ThingDespawned(ThingWithComps thing) => Removed++;
     }
 
     public class MapDrawer
@@ -345,6 +352,7 @@ namespace Verse
     {
         public static Selector Selector = new();
         public static TickManager TickManager = new();
+        public static FactionManager FactionManager = new();
         public static Map CurrentMap;
         public static RimWorld.Planet.World World;
         public static WorldComponent_GravshipController GravshipController =>
@@ -399,6 +407,26 @@ namespace Verse
     public static class Scribe_Values
     {
         public static void Look(ref bool value, string key) { }
+
+        public static void Look(ref int value, string key, int defaultValue = 0) { }
+    }
+
+    public enum LookMode
+    {
+        Value,
+    }
+
+    public static class Scribe_Collections
+    {
+        public static void Look<T>(ref List<T> values, string key, LookMode mode) { }
+    }
+
+    public class FactionManager
+    {
+        public Faction GetById(int id) =>
+            id == Faction.PrimaryPlayer.loadID ? Faction.PrimaryPlayer
+            : id == Faction.OfPlayer.loadID ? Faction.OfPlayer
+            : null;
     }
 
     public static class ThingMaker
@@ -586,6 +614,21 @@ namespace TotalFog
         public bool[] viewBlockerCells = new bool[4];
         public int VisibilityQueries;
         public readonly Dictionary<Verse.Faction, bool[]> FactionSight = new();
+        public readonly Dictionary<Verse.Faction, bool[]> FactionKnown = new();
+        internal int PrimaryPlayerFactionId = 1;
+        internal Verse.Faction PrimaryPlayerFaction =>
+            PrimaryPlayerFactionId == 1 ? Verse.Faction.PrimaryPlayer : Verse.Faction.OfPlayer;
+        internal readonly List<Verse.Faction> OtherPlayerFactions = new();
+
+        public bool[] GetFactionKnownCells(Verse.Faction faction) =>
+            faction?.loadID == PrimaryPlayerFactionId ? knownCells
+            : faction != null && FactionKnown.TryGetValue(faction, out var known) ? known
+            : null;
+
+        public bool IsKnown(Verse.Faction faction, int index) =>
+            GetFactionKnownCells(faction) is { } known
+            && (uint)index < known.Length
+            && known[index];
 
         public bool IsShown(Verse.Faction faction, Verse.IntVec3 cell)
         {
@@ -647,7 +690,14 @@ namespace TotalFog
 
     public class Mote_HearingCue : Verse.Thing
     {
-        public void Initialize(UnityEngine.Vector3 position, float size, float velocity) { }
+        public int ObserverFactionId;
+
+        public void Initialize(
+            UnityEngine.Vector3 position,
+            float size,
+            float velocity,
+            Verse.Faction observerFaction = null
+        ) => ObserverFactionId = observerFaction?.loadID ?? 0;
     }
 
     public static class FogDefOf

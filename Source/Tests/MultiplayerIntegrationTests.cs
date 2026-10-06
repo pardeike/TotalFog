@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using TotalFog.Compatibility;
+using Verse;
 using Xunit;
 
 namespace TotalFog.Tests;
@@ -54,6 +55,10 @@ public class MultiplayerIntegrationTests
         MultiplayerIntegration.Install();
         Assert.False(MultiplayerIntegration.BeginSettingsWatch());
         AccessTools.Types.Add("Multiplayer.API.MP", typeof(FakeApi));
+        AccessTools.Types.Add(
+            "Multiplayer.Client.Factions.FactionExtensions",
+            typeof(FakeFactionContext)
+        );
         try
         {
             MultiplayerIntegration.Install();
@@ -70,6 +75,22 @@ public class MultiplayerIntegrationTests
             Assert.Equal(expected, FakeApi.Fields.Select(field => field.Name));
             Assert.All(FakeApi.Fields, field => Assert.True(field.Buffered));
             FakeApi.IsInMultiplayer = true;
+            var originalFaction = Faction.OfPlayer;
+            var map = new Map();
+            var otherFaction = new Faction { loadID = 2, IsPlayer = true };
+            bool pushed = MultiplayerIntegration.BeginFactionContext(map, otherFaction);
+            try
+            {
+                Assert.True(pushed);
+                Assert.Same(otherFaction, Faction.OfPlayer);
+                Assert.False(MultiplayerIntegration.BeginFactionContext(map, otherFaction));
+            }
+            finally
+            {
+                MultiplayerIntegration.EndFactionContext(map, pushed);
+            }
+            Assert.Same(originalFaction, Faction.OfPlayer);
+            Assert.Equal(0, FakeFactionContext.Stack.Count);
             Assert.True(MultiplayerIntegration.BeginSettingsWatch());
             MultiplayerIntegration.EndSettingsWatch(true);
             Assert.Equal(1, FakeApi.Begins);
@@ -86,6 +107,7 @@ public class MultiplayerIntegrationTests
         {
             FakeApi.IsInMultiplayer = false;
             AccessTools.Types.Remove("Multiplayer.API.MP");
+            AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
         }
     }
 
@@ -127,5 +149,18 @@ public class MultiplayerIntegrationTests
                 throw new InvalidOperationException("Watch failed");
             Watches++;
         }
+    }
+
+    public static class FakeFactionContext
+    {
+        public static readonly Stack<Faction> Stack = new();
+
+        public static void PushFaction(Map map, Faction faction, bool force)
+        {
+            Stack.Push(Faction.OfPlayer);
+            Faction.OfPlayer = faction;
+        }
+
+        public static Faction PopFaction(Map map) => Faction.OfPlayer = Stack.Pop();
     }
 }

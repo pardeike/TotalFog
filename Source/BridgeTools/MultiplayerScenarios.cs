@@ -39,8 +39,8 @@ public sealed class MultiplayerScenarios
                 initialized = fog.Initialized,
                 blocked = fog.viewBlockerCells[index],
                 treeBlocked = fog.treeBlockerCells[index],
-                known = fog.knownCells[index],
-                visible = fog.IsShown(Faction.OfPlayer, cell),
+                known = StoredKnown(fog, Faction.OfPlayer)?[index] == true,
+                visible = fog.Initialized && fog.IsShown(Faction.OfPlayer, cell),
                 vanillaFog = map.fogGrid.IsFogged(cell),
                 building = building == null
                     ? null
@@ -296,6 +296,35 @@ public sealed class MultiplayerScenarios
             observedThings = things.Count(thing =>
                 thing.TryGetComp<CompFog>().HideFromPlayer.SeenByPlayer
             ),
+            discoveryByFaction = Find
+                .FactionManager.AllFactionsListForReading.Where(faction => faction.IsPlayer)
+                .OrderBy(faction => faction.loadID)
+                .Select(faction => new
+                {
+                    faction = faction.loadID,
+                    knownCount = StoredKnown(fog, faction)?.Count(value => value) ?? 0,
+                    observedThings = things.Count(thing =>
+                        thing.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(faction)
+                    ),
+                    knownHash = Hash(writer =>
+                    {
+                        var known = StoredKnown(fog, faction);
+                        if (known != null)
+                            foreach (bool value in known)
+                                writer.Write(value);
+                    }),
+                    observationHash = Hash(writer =>
+                    {
+                        foreach (var thing in things)
+                        {
+                            writer.Write(thing.thingIDNumber);
+                            writer.Write(
+                                thing.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(faction)
+                            );
+                        }
+                    }),
+                })
+                .ToArray(),
             sourceCount = sources.Length,
             sources,
             sourceOrderHash = Hash(writer =>
@@ -308,6 +337,16 @@ public sealed class MultiplayerScenarios
                 .Select(source => source.parent.thingIDNumber)
                 .ToArray(),
         };
+    }
+
+    private static bool[] StoredKnown(MapVisibility fog, Faction faction)
+    {
+        if (faction == null)
+            return null;
+        if ((int)Read(fog, "primaryPlayerFactionId") == faction.loadID)
+            return fog.knownCells;
+        var discovery = (Dictionary<int, bool[]>)Read(fog, "factionDiscovery");
+        return discovery.TryGetValue(faction.loadID, out var known) ? known : null;
     }
 
     private static object ReadGrid(int faction, int[] counts) =>

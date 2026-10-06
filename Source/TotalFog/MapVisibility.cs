@@ -1,6 +1,7 @@
 // Rewritten for Total Fog by Andreas Pardeike, 2026-10-04.
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using TotalFog.Core;
 using Verse;
@@ -16,7 +17,7 @@ public class MapVisibility : MapComponent
     private readonly ListenerCell<CompVisibility>[] hiddenAt;
     private readonly Dictionary<int, List<CompSightModifier>> affectersAt = new();
     private readonly Dictionary<int, List<CompTreeOcclusion>> treesAt = new();
-    private readonly Dictionary<int, Designation> miningAt = new();
+    private readonly Dictionary<(int faction, int cell), Designation> miningAt = new();
     private readonly List<Building_VisionConsole> consoles = new();
     private readonly List<Building_VisionCamera> cameras = new();
     private readonly HashSet<int> dirtySections = new();
@@ -24,6 +25,12 @@ public class MapVisibility : MapComponent
     private readonly List<CompSightSource> blockerSources = new();
     private int[] fullVisibility;
     private bool discoveryDirty;
+    private int primaryPlayerFactionId;
+    private Faction primaryPlayerFaction;
+    private readonly Dictionary<int, bool[]> factionDiscovery = new();
+    private readonly List<Faction> otherPlayerFactions = new();
+    private List<int> savedDiscoveryFactions;
+    private Faction renderedFaction;
     public readonly List<CompSightSource> fowWatchers = new();
     public readonly bool[] viewBlockerCells,
         treeBlockerCells;
@@ -33,17 +40,16 @@ public class MapVisibility : MapComponent
     public bool[] knownCells;
     public bool Initialized { get; private set; }
     public VisibilityGrid Coverage => coverage;
-    public bool workingCameraConsole
+    public bool workingCameraConsole => HasWorkingCameraConsole(Faction.OfPlayer);
+
+    internal bool HasWorkingCameraConsole(Faction faction)
     {
-        get
-        {
-            if (!FogSettings.NeedWatcher)
+        if (!FogSettings.NeedWatcher)
+            return true;
+        for (int i = 0; i < consoles.Count; i++)
+            if (consoles[i].Faction == faction && consoles[i].WorkingNow && consoles[i].Manned)
                 return true;
-            for (int i = 0; i < consoles.Count; i++)
-                if (consoles[i].WorkingNow && consoles[i].Manned)
-                    return true;
-            return false;
-        }
+        return false;
     }
 
     public MapVisibility(Map map)
@@ -59,7 +65,61 @@ public class MapVisibility : MapComponent
         treeBlockers = new int[coverage.CellCount];
     }
 
-    private static int Key(Faction faction) => faction.IsPlayer ? 0 : checked(faction.loadID + 1);
+    internal int PrimaryPlayerFactionId
+    {
+        get
+        {
+            if (primaryPlayerFactionId == 0)
+                _ = PrimaryPlayerFaction;
+            return primaryPlayerFactionId;
+        }
+    }
+
+    internal Faction PrimaryPlayerFaction
+    {
+        get
+        {
+            if (primaryPlayerFaction != null)
+                return primaryPlayerFaction;
+            var factions = Find.FactionManager.AllFactionsListForReading;
+            if (primaryPlayerFactionId != 0)
+                primaryPlayerFaction = factions.FirstOrDefault(faction =>
+                    faction.loadID == primaryPlayerFactionId
+                );
+            else
+            {
+                var owner = map.ParentFaction;
+                primaryPlayerFaction =
+                    owner?.IsPlayer == true
+                        ? owner
+                        : factions
+                            .Where(faction => faction.IsPlayer)
+                            .OrderBy(faction => faction.loadID)
+                            .FirstOrDefault();
+                primaryPlayerFactionId = primaryPlayerFaction?.loadID ?? 0;
+            }
+            return primaryPlayerFaction;
+        }
+    }
+
+    internal IReadOnlyList<Faction> OtherPlayerFactions => otherPlayerFactions;
+
+    private int Key(Faction faction) =>
+        faction.IsPlayer && faction.loadID == PrimaryPlayerFactionId
+            ? 0
+            : checked(faction.loadID + 1);
+
+    public bool[] GetFactionKnownCells(Faction faction) =>
+        faction == null ? null
+        : Key(faction) == 0 ? knownCells
+        : factionDiscovery.TryGetValue(faction.loadID, out var known) ? known
+        : null;
+
+    public bool IsKnown(Faction faction, int index)
+    {
+        var known = GetFactionKnownCells(faction);
+        return known != null && (uint)index < known.Length && known[index];
+    }
 
     public int[] GetFactionShownCells(Faction faction) =>
         faction == null ? null
@@ -104,11 +164,13 @@ public class MapVisibility : MapComponent
     public void DeregisterSurveillanceCamera(Building_VisionCamera camera) =>
         cameras.Remove(camera);
 
-    public int SurveillanceCameraCount()
+    public int SurveillanceCameraCount() => SurveillanceCameraCount(Faction.OfPlayer);
+
+    public int SurveillanceCameraCount(Faction faction)
     {
         int count = 0;
         for (int i = 0; i < cameras.Count; i++)
-            if (cameras[i].IsPowered())
+            if (cameras[i].Faction == faction && cameras[i].IsPowered())
                 count++;
         return count;
     }
@@ -226,14 +288,14 @@ public class MapVisibility : MapComponent
     {
         var cell = des.target.Cell;
         if (coverage.InBounds(cell.x, cell.z))
-            miningAt[coverage.Index(cell.x, cell.z)] = des;
+            miningAt[(Key(Faction.OfPlayer), coverage.Index(cell.x, cell.z))] = des;
     }
 
     public void DeregisterMineDesignation(Designation des)
     {
         var cell = des.target.Cell;
         if (coverage.InBounds(cell.x, cell.z))
-            miningAt.Remove(coverage.Index(cell.x, cell.z));
+            miningAt.Remove((Key(Faction.OfPlayer), coverage.Index(cell.x, cell.z)));
     }
 
     public override void MapComponentTick()
@@ -255,6 +317,14 @@ public class MapVisibility : MapComponent
 
     public override void MapComponentUpdate()
     {
+        // Native multiplayer changes the viewing faction independently of the
+        // map's simulation owner. Cached section geometry belongs to that view.
+        if (Initialized && map == Find.CurrentMap && renderedFaction != Faction.OfPlayer)
+        {
+            renderedFaction = Faction.OfPlayer;
+            map.mapDrawer.RegenerateEverythingNow();
+            dirtySections.Clear();
+        }
         // Sight can also change through paused signals and despawns. Publish
         // queued section changes without recomputing sight or waiting for a tick.
         if (dirtySections.Count != 0 || discoveryDirty)
@@ -321,6 +391,7 @@ public class MapVisibility : MapComponent
         // The engine owns drawing resources. Fog only changes print eligibility
         // and adds its overlay; it never captures GPU data or archives drawings.
         map.mapDrawer.RegenerateEverythingNow();
+        renderedFaction = Faction.OfPlayer;
         dirtySections.Clear();
         TotalFogMod.LogMessage(
             $"Fog initialization finished after {startup.ElapsedMilliseconds} ms."
@@ -330,11 +401,31 @@ public class MapVisibility : MapComponent
     public override void ExposeData()
     {
         base.ExposeData();
+        Scribe_Values.Look(ref primaryPlayerFactionId, "totalFogPrimaryPlayerFaction");
         DataExposeUtility.LookBoolArray(ref knownCells, coverage.CellCount, "revealedCells");
+        if (Scribe.mode == LoadSaveMode.Saving)
+            savedDiscoveryFactions = factionDiscovery.Keys.OrderBy(id => id).ToList();
+        Scribe_Collections.Look(
+            ref savedDiscoveryFactions,
+            "totalFogDiscoveryFactions",
+            LookMode.Value
+        );
+        if (savedDiscoveryFactions != null)
+            foreach (int id in savedDiscoveryFactions)
+            {
+                factionDiscovery.TryGetValue(id, out var known);
+                DataExposeUtility.LookBoolArray(
+                    ref known,
+                    coverage.CellCount,
+                    "totalFogRevealedFaction" + id
+                );
+                factionDiscovery[id] = known;
+            }
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
             coverage.LoadKnown(knownCells);
             knownCells = coverage.Known;
+            savedDiscoveryFactions = null;
         }
     }
 
@@ -344,20 +435,41 @@ public class MapVisibility : MapComponent
             return;
         knownCells[index] = true;
         DiscoveryChanged(index);
-        VisibilityChanged(index);
+        VisibilityChanged(PrimaryPlayerFaction, index);
     }
 
     public void IncrementSeen(Faction faction, int index)
     {
         if (faction == null || (uint)index >= coverage.CellCount)
             return;
-        bool discovered = !knownCells[index];
-        bool changed = coverage.Add(Key(faction), index);
+        int key = Key(faction);
+        bool discovered =
+            faction.IsPlayer
+            && (
+                key == 0
+                    ? !knownCells[index]
+                    : !factionDiscovery.TryGetValue(faction.loadID, out var knownBefore)
+                        || !knownBefore[index]
+            );
+        bool changed = coverage.Add(key, index);
         if (!faction.IsPlayer || !changed)
             return;
+        if (key != 0)
+        {
+            if (!otherPlayerFactions.Contains(faction))
+                otherPlayerFactions.Add(faction);
+            if (!factionDiscovery.TryGetValue(faction.loadID, out var known))
+            {
+                factionDiscovery.Add(faction.loadID, known = new bool[coverage.CellCount]);
+                if (FogSettings.MapRevealAtStart || map.Biome.defName == OuterSpaceBiome)
+                    for (int i = 0; i < known.Length; i++)
+                        known[i] = true;
+            }
+            known[index] = true;
+        }
         if (discovered)
-            DiscoveryChanged(index);
-        VisibilityChanged(index);
+            DiscoveryChanged(index, faction);
+        VisibilityChanged(faction, index);
     }
 
     public void DecrementSeen(Faction faction, int index)
@@ -365,14 +477,18 @@ public class MapVisibility : MapComponent
         if (faction == null || (uint)index >= coverage.CellCount)
             return;
         if (coverage.Remove(Key(faction), index) && faction.IsPlayer)
-            VisibilityChanged(index);
+            VisibilityChanged(faction, index);
     }
 
-    private void DiscoveryChanged(int index)
+    private void DiscoveryChanged(int index, Faction faction = null)
     {
         discoveryDirty = true;
         if (
-            miningAt.TryGetValue(index, out var designation)
+            (faction == null || faction == Faction.OfPlayer)
+            && miningAt.TryGetValue(
+                (Key(faction ?? PrimaryPlayerFaction), index),
+                out var designation
+            )
             && CellIndicesUtility.IndexToCell(index, mapSizeX).GetFirstMineable(map) == null
         )
             designation.Delete();
@@ -380,7 +496,7 @@ public class MapVisibility : MapComponent
         Compatibility.MinimapIntegration.Reveal(index);
     }
 
-    private void VisibilityChanged(int index)
+    private void VisibilityChanged(Faction faction, int index)
     {
         int x = coverage.X(index),
             z = coverage.Z(index);
@@ -398,7 +514,11 @@ public class MapVisibility : MapComponent
             return;
         ref var listeners = ref hiddenAt[index];
         for (int i = 0; i < listeners.Count; i++)
+        {
+            if (otherPlayerFactions.Count != 0)
+                listeners[i].RecordObservation(faction, this);
             listeners[i].UpdateVisibility(true);
+        }
     }
 
     private void FlushDirty()

@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using RimWorld;
+using Verse;
 
 namespace TotalFog.Compatibility;
 
@@ -30,6 +32,8 @@ internal static class MultiplayerIntegration
     private static Action watchBegin;
     private static Action watchEnd;
     private static Action<object, object>[] watches = Array.Empty<Action<object, object>>();
+    private static Action<Map, Faction, bool> pushFaction;
+    private static Func<Map, Faction> popFaction;
 
     internal static bool Active => isActive();
 
@@ -63,6 +67,43 @@ internal static class MultiplayerIntegration
                     api.GetProperty("IsInMultiplayer").GetGetMethod()
                 );
         watches = bound;
+        // Deferred notifications retain their recipient even when their map
+        // ticks under another player's faction. Use MP's own data context.
+        var factions = AccessTools.TypeByName("Multiplayer.Client.Factions.FactionExtensions");
+        if (factions != null)
+        {
+            pushFaction =
+                (Action<Map, Faction, bool>)
+                    Delegate.CreateDelegate(
+                        typeof(Action<Map, Faction, bool>),
+                        factions.GetMethod(
+                            "PushFaction",
+                            new[] { typeof(Map), typeof(Faction), typeof(bool) }
+                        )
+                    );
+            popFaction =
+                (Func<Map, Faction>)
+                    Delegate.CreateDelegate(
+                        typeof(Func<Map, Faction>),
+                        factions.GetMethod("PopFaction", new[] { typeof(Map) })
+                    );
+        }
+    }
+
+    internal static bool BeginFactionContext(Map map, Faction faction)
+    {
+        if (!Active || faction == null || faction == Faction.OfPlayer)
+            return false;
+        if (pushFaction == null || popFaction == null)
+            throw new MissingMethodException("Multiplayer faction context is unavailable.");
+        pushFaction(map, faction, true);
+        return true;
+    }
+
+    internal static void EndFactionContext(Map map, bool pushed)
+    {
+        if (pushed)
+            popFaction(map);
     }
 
     internal static bool BeginSettingsWatch()

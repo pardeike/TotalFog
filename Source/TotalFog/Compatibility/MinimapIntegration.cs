@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
+using RimWorld;
 using Verse;
 
 namespace TotalFog.Compatibility;
@@ -76,6 +77,7 @@ internal static class MinimapIntegration
         if (__result || __1 == null || Presentation.ThingVisibility.Bypass(__1))
             return;
         __result =
-            !__0.InBounds(__1) || !__1.GetVisibility().knownCells[__1.cellIndices.CellToIndex(__0)];
+            !__0.InBounds(__1)
+            || !__1.GetVisibility().IsKnown(Faction.OfPlayer, __1.cellIndices.CellToIndex(__0));
     }
 }

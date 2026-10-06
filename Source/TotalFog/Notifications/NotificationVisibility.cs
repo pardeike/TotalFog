@@ -21,7 +21,10 @@ internal static class NotificationVisibility
                 if (
                     !target.Thing.Destroyed
                     && target.Thing is Pawn pawn
-                    && (pawn.Faction == Faction.OfPlayer || pawn.IsPrisonerOfColony)
+                    && (
+                        pawn.Faction == Faction.OfPlayer
+                        || pawn.IsPrisonerOfColony && pawn.HostFaction == Faction.OfPlayer
+                    )
                 )
                     return true;
                 if (

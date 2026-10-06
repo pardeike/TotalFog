@@ -1,4 +1,5 @@
 // Modified by Andreas Pardeike for Total Fog, 2026-10-04: reference-assembly override compatibility.
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -6,6 +7,7 @@ namespace TotalFog;
 
 public class Mote_HearingCue : Mote
 {
+    public int ObserverFactionId { get; private set; }
     private float targetSize;
 
     private float velocity;
@@ -23,8 +25,17 @@ public class Mote_HearingCue : Mote
         }
     }
 
-    public void Initialize(Vector3 position, float size, float incomingVelocity)
+    public void Initialize(Vector3 position, float size, float incomingVelocity) =>
+        Initialize(position, size, incomingVelocity, Faction.OfPlayer);
+
+    public void Initialize(
+        Vector3 position,
+        float size,
+        float incomingVelocity,
+        Faction observerFaction
+    )
     {
+        ObserverFactionId = observerFaction?.loadID ?? 0;
         exactPosition = position;
         targetSize = size;
         velocity = incomingVelocity;

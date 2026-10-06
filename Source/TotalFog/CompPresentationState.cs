@@ -28,11 +28,8 @@ public class CompPresentationState : FogSubcomponent
 
         Hidden = true;
 
-        var hasTooltip = parent.def.hasTooltip;
-        if (hasTooltip)
-        {
-            parent.Map.tooltipGiverList.Notify_ThingDespawned(parent);
-        }
+        // The engine owns tooltip registration. The common tooltip gate checks
+        // current faction sight before any thing-specific tooltip is evaluated.
 
         var selector = Find.Selector;
         if (selector.IsSelected(parent))
@@ -51,12 +48,6 @@ public class CompPresentationState : FogSubcomponent
         }
 
         Hidden = false;
-
-        var hasTooltip = parent.def.hasTooltip;
-        if (hasTooltip)
-        {
-            parent.Map.tooltipGiverList.Notify_ThingSpawned(parent);
-        }
 
         updateMeshes();
     }

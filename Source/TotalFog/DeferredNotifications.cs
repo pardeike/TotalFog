@@ -1,5 +1,7 @@
 // Rewritten for Total Fog by Andreas Pardeike, 2026-10-04.
 using System;
+using RimWorld;
+using TotalFog.Compatibility;
 using TotalFog.Core;
 using TotalFog.Notifications;
 using Verse;
@@ -20,24 +22,26 @@ public class DeferredNotifications : MapComponent
         : base(map)
     {
         valid = n => NotificationVisibility.HasLiveTarget(n.Targets);
-        ready = n =>
-            map.GetVisibility().Initialized
-            && Find.TickManager.TicksGame >= n.earliestTick
-            && (
-                !FogSettings.DelayAlertsUntilSeen
-                || NotificationVisibility.HasVisibleTarget(n.Targets)
-            );
+        ready = Ready;
         replay = Replay;
     }
 
     public void Add(Message message, bool historical) =>
-        queue.Add(new DeferredNotification { message = message, historical = historical });
+        queue.Add(
+            new DeferredNotification
+            {
+                message = message,
+                historical = historical,
+                faction = Faction.OfPlayer,
+            }
+        );
 
     public void Add(Letter letter, string debugInfo, int delayTicks, bool playSound) =>
         queue.Add(
             new DeferredNotification
             {
                 letter = letter,
+                faction = Faction.OfPlayer,
                 debugInfo = debugInfo,
                 playSound = playSound,
                 earliestTick = checked(Find.TickManager.TicksGame + Math.Max(0, delayTicks)),
@@ -52,8 +56,29 @@ public class DeferredNotifications : MapComponent
         queue.Drain(valid, ready, replay);
     }
 
-    private static void Replay(DeferredNotification notification)
+    private bool Ready(DeferredNotification notification)
     {
+        if (
+            !map.GetVisibility().Initialized
+            || Find.TickManager.TicksGame < notification.earliestTick
+        )
+            return false;
+        if (!FogSettings.DelayAlertsUntilSeen)
+            return true;
+        var pushed = MultiplayerIntegration.BeginFactionContext(map, notification.faction);
+        try
+        {
+            return NotificationVisibility.HasVisibleTarget(notification.Targets);
+        }
+        finally
+        {
+            MultiplayerIntegration.EndFactionContext(map, pushed);
+        }
+    }
+
+    private void Replay(DeferredNotification notification)
+    {
+        var pushed = MultiplayerIntegration.BeginFactionContext(map, notification.faction);
         IsReplayingLetter = true;
         try
         {
@@ -73,6 +98,7 @@ public class DeferredNotifications : MapComponent
         finally
         {
             IsReplayingLetter = false;
+            MultiplayerIntegration.EndFactionContext(map, pushed);
         }
     }
 
@@ -88,6 +114,7 @@ public class DeferredNotification : IExposable
 {
     public Message message;
     public Letter letter;
+    public Faction faction;
     public bool historical = true,
         playSound = true;
     public string debugInfo;
@@ -98,6 +125,7 @@ public class DeferredNotification : IExposable
     {
         Scribe_Deep.Look(ref message, "message");
         Scribe_Deep.Look(ref letter, "letter");
+        Scribe_References.Look(ref faction, "totalFogRecipientFaction");
         Scribe_Values.Look(ref historical, "historical", true);
         Scribe_Values.Look(ref playSound, "playSound", true);
         Scribe_Values.Look(ref debugInfo, "debugInfo");

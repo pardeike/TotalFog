@@ -21,7 +21,7 @@ internal static partial class InterfaceVisibility
 
     public static void DrawOverlay(Thing thing)
     {
-        if (CanRead(thing, thing?.PositionHeld))
+        if (thing != null && CanRead(thing, thing.PositionHeld))
             thing.DrawGUIOverlay();
     }
 
