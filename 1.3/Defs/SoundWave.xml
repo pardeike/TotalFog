@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!--=============== Bases ==============-->
+  <ThingDef Name="MoteSoundWaveBase" ParentName="MoteBase" Abstract="True">
+    <thingClass>RimWorldRealFoW.MoteSoundWave</thingClass>
+    <graphicData>
+      <shaderType>MoteWater</shaderType>
+    </graphicData>
+  </ThingDef>
+  <ThingDef ParentName="MoteSoundWaveBase">
+    <defName>Mote_SoundWave</defName>
+    <mote>
+      <fadeInTime>0</fadeInTime>
+      <solidTime>500</solidTime>
+      <fadeOutTime>0</fadeOutTime>
+    </mote>
+    <graphicData>
+      <graphicClass>RimWorldRealFoW.Graphic_MoteSoundWave</graphicClass>
+      <texPath>Things/Mote/Horseshoe</texPath>
+      <!-- actually unused atm, this is just a stub to avoid errors -->
+    </graphicData>
+  </ThingDef>
+</Defs>

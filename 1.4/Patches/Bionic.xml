@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Combat Extended</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <success>Always</success>
+      <operations>
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/HediffDef[defName="BionicEye" or defName = "ArchotechEye"]/stages/li/statOffsets</xpath>
+          <value>
+            <NightVisionEffectiveness>0.175</NightVisionEffectiveness>
+          </value>
+        </li>
+      </operations>
+    </match>
+    <nomatch Class="PatchOperationSequence">
+      <success>Always</success>
+      <operations>
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/HediffDef[defName="BionicEye" or defName = "ArchotechEye"]</xpath>
+          <value>
+            <stages>
+              <li>
+                <statOffsets>
+                  <NightVisionEffectiveness>0.175</NightVisionEffectiveness>
+                </statOffsets>
+              </li>
+            </stages>
+          </value>
+        </li>
+      </operations>
+    </nomatch>
+  </Operation>
+</Patch>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: daylight vision effectiveness  -->
+  <DayVisionEffectiveness.label>daylight vision effectiveness </DayVisionEffectiveness.label>
+  <!-- EN: Multiplier on the the vision range at daylight of this creature. -->
+  <DayVisionEffectiveness.description>Multiplier on the the vision range at daylight of this creature.</DayVisionEffectiveness.description>
+  <!-- EN: night vision effectiveness  -->
+  <NightVisionEffectiveness.label>night vision effectiveness </NightVisionEffectiveness.label>
+  <!-- EN: Multiplier on the the vision range at night of this creature. -->
+  <NightVisionEffectiveness.description>Multiplier on the the vision range at night of this creature.</NightVisionEffectiveness.description>
+</LanguageData>

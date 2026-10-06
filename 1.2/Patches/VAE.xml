@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Patch>
+  <!-- Module to Vanilla Armour Expanded -->
+  <Operation Class="PatchOperationFindMod">
+    <mods>
+      <li>Vanilla Armour Expanded</li>
+    </mods>
+    <match Class="PatchOperationSequence">
+      <success>Always</success>
+      <operations>
+        <li Class="PatchOperationAdd">
+          <xpath>Defs/ThingDef[defName = "VAE_Headgear_NightVisionGoggles"]/equippedStatOffsets</xpath>
+          <value>
+            <NightVisionEffectiveness>0.3</NightVisionEffectiveness>
+          </value>
+        </li>
+      </operations>
+    </match>
+  </Operation>
+</Patch>

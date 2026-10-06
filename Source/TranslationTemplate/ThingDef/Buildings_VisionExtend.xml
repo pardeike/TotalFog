@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: light beacon -->
+  <TowerLightBeacon.label>light beacon</TowerLightBeacon.label>
+  <!-- EN: Allow colonist can see further in the dark -->
+  <TowerLightBeacon.description>Allow colonist can see further in the dark</TowerLightBeacon.description>
+  <!-- EN: watch telescope -->
+  <WatchTelescope.label>watch telescope</WatchTelescope.label>
+  <!-- EN: Watch Telescope that increase vision when colonists stand on it. -->
+  <WatchTelescope.description>Watch Telescope that increase vision when colonists stand on it.</WatchTelescope.description>
+  <!-- EN: watch tower -->
+  <WatchTower.label>watch tower</WatchTower.label>
+  <!-- EN: Watch Tower that increase vision when colonists stand on it. -->
+  <WatchTower.description>Watch Tower that increase vision when colonists stand on it.</WatchTower.description>
+  <!-- EN: roofed watch tower -->
+  <WatchTowerRoofed.label>roofed watch tower</WatchTowerRoofed.label>
+  <!-- EN: A Watch tower that increase vision when colonists stand on it. Colonist vision range will not be affected by weather as it has roof -->
+  <WatchTowerRoofed.description>A Watch tower that increase vision when colonists stand on it. Colonist vision range will not be affected by weather as it has roof</WatchTowerRoofed.description>
+</LanguageData>

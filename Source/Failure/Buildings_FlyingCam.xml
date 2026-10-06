@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BaseArtilleryBuilding">
+    <defName>FlyingCameraLauncher</defName>
+    <label>camera launcher</label>
+    <description>.</description>
+    <comps>
+    </comps>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <building>
+      <turretGunDef>Artillery_Camera</turretGunDef>
+    </building>
+    <uiIconPath>Things/Building/Security/TurretMortar_MenuIcon</uiIconPath>
+    <uiIconScale>0.5</uiIconScale>
+  </ThingDef>
+  <ThingDef ParentName="BaseArtilleryWeapon">
+    <defName>Artillery_Camera</defName>
+    <label>LaunchPort</label>
+    <description>.</description>
+    <graphicData>
+      <texPath>Things/Building/Security/TurretMortar_Top</texPath>
+    </graphicData>
+    <verbs>
+      <li>
+        <verbClass>Verb_Shoot</verbClass>
+        <forceNormalTimeSpeed>false</forceNormalTimeSpeed>
+        <warmupTime>2.0</warmupTime>
+        <forcedMissRadius>1</forcedMissRadius>
+        <requireLineOfSight>false</requireLineOfSight>
+        <minRange>10</minRange>
+        <range>500</range>
+        <burstShotCount>1</burstShotCount>
+        <soundCast>Mortar_LaunchA</soundCast>
+        <muzzleFlashScale>5</muzzleFlashScale>
+        <targetParams>
+          <canTargetLocations>true</canTargetLocations>
+        </targetParams>
+      </li>
+    </verbs>
+    <comps>
+      <li Class="CompProperties_ChangeableProjectile" />
+    </comps>
+    <building>
+      <fixedStorageSettings>
+        <filter>
+          <categories>
+            <li>FlyingCamera</li>
+          </categories>
+        </filter>
+      </fixedStorageSettings>
+      <defaultStorageSettings>
+        <filter>
+          <categories>
+            <li>FlyingCamera</li>
+          </categories>
+        </filter>
+      </defaultStorageSettings>
+    </building>
+  </ThingDef>
+</Defs>

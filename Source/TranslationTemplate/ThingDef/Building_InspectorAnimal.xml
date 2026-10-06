@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: inspector Chicken -->
+  <InspectorChicken.label>inspector Chicken</InspectorChicken.label>
+  <!-- EN: It's a Chicken that monitors your surroundings and tells you what's going on. It consumes rice. -->
+  <InspectorChicken.description>It's a Chicken that monitors your surroundings and tells you what's going on. It consumes rice.</InspectorChicken.description>
+  <!-- EN: inspector Hare -->
+  <InspectorHare.label>inspector Hare</InspectorHare.label>
+  <!-- EN: It's a Hare that monitors your surroundings and tells you what's going on. It consumes haygrass. -->
+  <InspectorHare.description>It's a Hare that monitors your surroundings and tells you what's going on. It consumes haygrass.</InspectorHare.description>
+  <!-- EN: inspector Monkey -->
+  <InspectorMonkey.label>inspector Monkey</InspectorMonkey.label>
+  <!-- EN: It's a Monkey that monitors your surroundings and tells you what's going on. It consumes berries. -->
+  <InspectorMonkey.description>It's a Monkey that monitors your surroundings and tells you what's going on. It consumes berries.</InspectorMonkey.description>
+  <!-- EN: inspector Rat -->
+  <InspectorRat.label>inspector Rat</InspectorRat.label>
+  <!-- EN: It's a Rat that monitors your surroundings and tells you what's going on. It consumes potatoes. -->
+  <InspectorRat.description>It's a Rat that monitors your surroundings and tells you what's going on. It consumes potatoes.</InspectorRat.description>
+  <!-- EN: inspector Squirrel -->
+  <InspectorSquirrel.label>inspector Squirrel</InspectorSquirrel.label>
+  <!-- EN: It's a Squirrel that monitors your surroundings and tells you what's going on. It consumes corn. -->
+  <InspectorSquirrel.description>It's a Squirrel that monitors your surroundings and tells you what's going on. It consumes corn.</InspectorSquirrel.description>
+</LanguageData>

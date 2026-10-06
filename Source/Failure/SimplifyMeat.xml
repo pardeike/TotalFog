@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationSequence">
+    <operations>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName = "InspectorRat"]/costList</xpath>
+        <value>
+          <Meat_Rat>25</Meat_Rat>
+        </value>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName = "InspectorChicken"]/costList</xpath>
+        <value>
+          <Meat_Chicken>25</Meat_Chicken>
+        </value>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName = "InspectorMonkey"]/costList</xpath>
+        <value>
+          <Meat_Monkey>25</Meat_Monkey>
+        </value>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThingDef[defName = "InspectorSquirrel"]/costList</xpath>
+        <value>
+          <Meat_Squirrel>25</Meat_Squirrel>
+        </value>
+      </li>
+      <!--			<li Class="PatchOperationAdd">
+				<xpath>Defs/ThingDef[defName = ""]/costList</xpath>
+				<value>
+					<Meat_>25</Meat_>
+				</value>
+			</li> -->
+    </operations>
+  </Operation>
+</Patch>

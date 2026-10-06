@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: Security camera -->
+  <CameraSecurity.label>Security camera</CameraSecurity.label>
+  <!-- EN: Allows the construction of security camera, providing your colony vision when some one is watching them. -->
+  <CameraSecurity.description>Allows the construction of security camera, providing your colony vision when some one is watching them.</CameraSecurity.description>
+  <!-- EN: Advanced camera lens -->
+  <CameraSecurityAdvanced.label>Advanced camera lens</CameraSecurityAdvanced.label>
+  <!-- EN: Allows the construction of advanced security camera. Their vision range is better than the previous one and more flexible, and some niche one too. -->
+  <CameraSecurityAdvanced.description>Allows the construction of advanced security camera. Their vision range is better than the previous one and more flexible, and some niche one too.</CameraSecurityAdvanced.description>
+  <!-- EN: watch telescope -->
+  <WatchTelescope.label>watch telescope</WatchTelescope.label>
+  <!-- EN: Allows the production of watch telescope. -->
+  <WatchTelescope.description>Allows the production of watch telescope.</WatchTelescope.description>
+</LanguageData>

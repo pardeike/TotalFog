@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <RimWorldRealFoW.RealFoWModDefaultsDef>
+    <defName>RealFoWModDefaults</defName>
+    <baseViewRange>80</baseViewRange>
+  </RimWorldRealFoW.RealFoWModDefaultsDef>
+</Defs>

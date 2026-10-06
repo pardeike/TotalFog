@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: large security bell -->
+  <SecurityBell.label>large security bell</SecurityBell.label>
+  <!-- EN: Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it.. -->
+  <SecurityBell.description>Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it..</SecurityBell.description>
+  <!-- EN: small security bell  -->
+  <SecurityBellSmall.label>small security bell </SecurityBellSmall.label>
+  <!-- EN: Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it.. -->
+  <SecurityBellSmall.description>Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it..</SecurityBellSmall.description>
+  <!-- EN: surveillance camera in a bush -->
+  <SurveillanceCamera_Bush.label>surveillance camera in a bush</SurveillanceCamera_Bush.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy -->
+  <SurveillanceCamera_Bush.description>Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy</SurveillanceCamera_Bush.description>
+  <!-- EN: surveillance camera in a dead bush -->
+  <SurveillanceCamera_DeadBush.label>surveillance camera in a dead bush</SurveillanceCamera_DeadBush.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy -->
+  <SurveillanceCamera_DeadBush.description>Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy</SurveillanceCamera_DeadBush.description>
+  <!-- EN: Ground surveillance camera -->
+  <SurveillanceCamera_Ground.label>Ground surveillance camera</SurveillanceCamera_Ground.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 35 Camera view range radius. -->
+  <SurveillanceCamera_Ground.description>Surveillance camera that provide vision for an area. 35 Camera view range radius.</SurveillanceCamera_Ground.description>
+  <!-- EN: surveillance camera post -->
+  <SurveillanceCamera_High.label>surveillance camera post</SurveillanceCamera_High.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 65 Camera view range radius. Can't be placed indoor -->
+  <SurveillanceCamera_High.description>Surveillance camera that provide vision for an area. 65 Camera view range radius. Can't be placed indoor</SurveillanceCamera_High.description>
+  <!-- EN: wall mounted surveillance camera -->
+  <SurveillanceCamera_Mounted.label>wall mounted surveillance camera</SurveillanceCamera_Mounted.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 24 Camera view range radius. Automatically sustain itself power -->
+  <SurveillanceCamera_Mounted.description>Surveillance camera that provide vision for an area. 24 Camera view range radius. Automatically sustain itself power</SurveillanceCamera_Mounted.description>
+  <!-- EN: Self sustained surveillance camera -->
+  <SurveillanceCamera_Solar.label>Self sustained surveillance camera</SurveillanceCamera_Solar.label>
+  <!-- EN: Surveillance camera that provide vision for an area. 40 Camera view range radius. Automatically sustain itself power -->
+  <SurveillanceCamera_Solar.description>Surveillance camera that provide vision for an area. 40 Camera view range radius. Automatically sustain itself power</SurveillanceCamera_Solar.description>
+  <!-- EN: ceiling surveillance camera -->
+  <SurveillanceCamera_UnderRoof.label>ceiling surveillance camera</SurveillanceCamera_UnderRoof.label>
+  <!-- EN: Surveillance camera that provide vision for an area. Cheaper for indoor build. 25 Camera view range radius. -->
+  <SurveillanceCamera_UnderRoof.description>Surveillance camera that provide vision for an area. Cheaper for indoor build. 25 Camera view range radius.</SurveillanceCamera_UnderRoof.description>
+</LanguageData>

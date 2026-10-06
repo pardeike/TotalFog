@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: Central camera console -->
+  <CameraConsole.label>Central camera console</CameraConsole.label>
+  <!-- EN: A central hub for monitoring camera, allowing them to actually deliver vision -->
+  <CameraConsole.description>A central hub for monitoring camera, allowing them to actually deliver vision</CameraConsole.description>
+</LanguageData>

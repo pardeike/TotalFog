@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingCategoryDef>
+    <defName>FlyingCamera</defName>
+    <label>Fly cam</label>
+    <parent>Items</parent>
+  </ThingCategoryDef>
+  <ThingDef Name="BaseFlyingCamera" ParentName="ResourceBase" Abstract="True">
+    <soundInteract>Metal_Drop</soundInteract>
+    <soundDrop>Standard_Drop</soundDrop>
+    <tickerType>Normal</tickerType>
+    <stackLimit>5</stackLimit>
+    <techLevel>Industrial</techLevel>
+    <statBases>
+      <MaxHitPoints>60</MaxHitPoints>
+      <MarketValue>55</MarketValue>
+      <Mass>1.25</Mass>
+      <Flammability>0</Flammability>
+      <DeteriorationRate>0.5</DeteriorationRate>
+    </statBases>
+    <thingCategories>
+      <li>FlyingCamera</li>
+    </thingCategories>
+    <recipeMaker>
+      <workSpeedStat>GeneralLaborSpeed</workSpeedStat>
+      <effectWorking>Cook</effectWorking>
+      <soundWorking>Recipe_Machining</soundWorking>
+      <workAmount>800</workAmount>
+      <targetCountAdjustment>5</targetCountAdjustment>
+      <workSkill>Crafting</workSkill>
+      <recipeUsers>
+        <li>TableMachining</li>
+      </recipeUsers>
+      <skillRequirements>
+        <Crafting>4</Crafting>
+      </skillRequirements>
+    </recipeMaker>
+  </ThingDef>
+  <ThingDef ParentName="BaseFlyingCamera">
+    <defName>FlyingCamera_Mini</defName>
+    <label>Flying cam small</label>
+    <description>A shell filled with high explosives. Can be fired from mortars or installed as a trap. Explodes when damaged.</description>
+    <graphicData>
+      <texPath>Things/Item/Resource/Shell/Shell_HighExplosive</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+    </graphicData>
+    <projectileWhenLoaded>Projectile_FlyingCamMini</projectileWhenLoaded>
+    <costList>
+      <Steel>20</Steel>
+      <Chemfuel>20</Chemfuel>
+    </costList>
+    <recipeMaker>
+      <researchPrerequisite>Mortars</researchPrerequisite>
+    </recipeMaker>
+  </ThingDef>
+  <ThingDef ParentName="BaseBullet">
+    <defName>Projectile_FlyingCamMini</defName>
+    <label>Flying cam small</label>
+    <graphicData>
+      <texPath>Things/Projectile/ShellHighExplosive</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>TransparentPostLight</shaderType>
+    </graphicData>
+    <thingClass>Bullet</thingClass>
+    <comps>
+      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+        <viewRadius>30</viewRadius>
+      </li>
+    </comps>
+    <projectile>
+      <damageDef>Bomb</damageDef>
+      <speed>12</speed>
+      <explosionRadius>1</explosionRadius>
+      <flyOverhead>true</flyOverhead>
+      <soundHitThickRoof>Artillery_HitThickRoof</soundHitThickRoof>
+      <soundExplode>MortarBomb_Explode</soundExplode>
+      <soundImpactAnticipate>MortarRound_PreImpact</soundImpactAnticipate>
+      <soundAmbient>MortarRound_Ambient</soundAmbient>
+    </projectile>
+  </ThingDef>
+</Defs>

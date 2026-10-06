@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RFWreset>Reset</RFWreset>
+  <CurrentModVersion>Installed mod-version: {0}</CurrentModVersion>
+  <MustBeUnderRoof>Must be placed under a roof.</MustBeUnderRoof>
+  <MustBeNextToWall>Must be placed against a wall.</MustBeNextToWall>
+  <NotVisible>Not visible area</NotVisible>
+  <CannotPlaceInUndiscovered>Can't place in undiscovered area.</CannotPlaceInUndiscovered>
+  <baseViewRange>Base pawn vision range</baseViewRange>
+  <baseViewRangeDesc>Need save reload to take effect</baseViewRangeDesc>
+  <buildingVisionMod>How far can vision providing building can see multiplier</buildingVisionMod>
+  <buildingVisionModDesc>The preview range shown will not be accurate</buildingVisionModDesc>
+  <animalVisionModDesc>How far can trained animal can see multiplier</animalVisionModDesc>
+  <turretVisionModDesc>How far can turret can see multiplier</turretVisionModDesc>
+  <NeedWatcher>Camera need to be monitored</NeedWatcher>
+  <NeedWatcherDesc>Camera building need someone to use the camera console to provide vision</NeedWatcherDesc>
+  <wildLifeTabVisible>Wild animals in fog is still shown in wildlife tab</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc />
+  <NeedStorage>Camera need enough memory storage</NeedStorage>
+  <NeedStorageDesc />
+  <aiSmart>AI not affected much by fog of war</aiSmart>
+  <aiSmartDesc>AI not affected much by fog of war</aiSmartDesc>
+  <hideSpeakBubble>Hide interaction bubble for enemy in fog of war.</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Hide the bubble when you use the interaction bubble mod. Can cause lag. Will make UI crash when combined with speak up mod.</hideSpeakBubbleDesc>
+  <CameraCount>Number of working cameras</CameraCount>
+  <NoCameraConsole>The camera console isn't built or being used</NoCameraConsole>
+  <Revealing>Revealing area...</Revealing>
+  <mapRevealAtStart>Reveal map at start. Doesn't provide vision though</mapRevealAtStart>
+  <baseHearingRange>Base hearing range (pawn position hidden in FoW will be revealed if they are moving). Set to 0 to disable</baseHearingRange>
+  <censorMode>Hide that little 17x28 pixels image for the puritan</censorMode>
+  <hideEventNegative>Hide negative event (ex: Blight)</hideEventNegative>
+  <hideEventNeutral>Hide neutral event (ex: Visitor)</hideEventNeutral>
+  <hideEventPositive>Hide positive event (ex: caravan arrival)</hideEventPositive>
+  <hideThreatBig>Hide big threat event (ex: Raid)</hideThreatBig>
+  <hideThreatSmall>Hide small threat event (ex: single manhunter animal)</hideThreatSmall>
+  <prisonerGiveVision>Prisoner provide vision at reduced range</prisonerGiveVision>
+  <allyGiveVision>Ally provide vision at slightly reduced range</allyGiveVision>
+  <fogAlphaSetting_title>Fog level</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Fog covering level for discovered but not currently seen places</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Black</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>Nearly black</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>Very very very dark</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>Very very dark</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>Very dark</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>Dark</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>Medium</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>Light</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Fog fade speed</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Speed of the fog fade effect. Disable it could improve performances.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Slow</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Medium</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Fast</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Disabled</fogFadeSpeedSetting_Disabled>
+  <doVolumeCheck>Should sounds outside the fog be muffled</doVolumeCheck>
+  <audioSourceRange>How far into the fog can sounds be heard</audioSourceRange>
+  <audioSourceRangeDesc>Number of tiles away you can still hear a sound under fog</audioSourceRangeDesc>
+  <volumeMufflingModifier>How much should sounds be muffled</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>At max distance, 0 = no muffling 1 = completely silent</volumeMufflingModifierDesc>
+  <doFilthReveal>Hide new filth until discovered</doFilthReveal>
+  <doFilthRevealDesc>Filth spawned under fog will remain invisible until you reveal that tile.</doFilthRevealDesc>
+  <onlyOutsideColony>Only show fog on non-colony maps</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Fog of war will only have an effect on maps that are not colony maps</onlyOutsideColonyDesc>
+  <delayAlertsUntilSeen>Delay alerts until enemy/event is spotted</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>When enabled, events will be delayed until you actually see the entity causing the alert. This simulates that your pawns can't know about threats they haven't discovered yet. Alerts will trigger immediately when the entity becomes visible.</delayAlertsUntilSeenDesc>
+  <clearFogDuringTargeting>Clear fog during gravship takeoff, targeting and landing</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>When enabled, the fog of war is temporarily hidden while you are taking off, selecting landing spot and landing a gravship.</clearFogDuringTargetingDesc>
+  <treesBlockSight>Trees block line of sight</treesBlockSight>
+  <treesBlockSightDesc>When enabled, fully grown trees (over 50% growth) will block pawns' line of sight. Trees must be at least 50% grown to have this effect.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>This setting requires reloading the save to take effect.</treesBlockSight_RequiresReload>
+</LanguageData>

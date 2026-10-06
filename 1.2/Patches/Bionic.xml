@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/HediffDef[defName="BionicEye" or defName = "ArchotechEye"]</xpath>
+    <value>
+      <stages>
+        <li>
+          <statOffsets>
+            <NightVisionEffectiveness>0.175</NightVisionEffectiveness>
+          </statOffsets>
+        </li>
+      </stages>
+    </value>
+  </Operation>
+</Patch>

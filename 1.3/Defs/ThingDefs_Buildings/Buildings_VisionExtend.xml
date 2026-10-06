@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Watch Tower -->
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>WatchTower</defName>
+    <label>watch tower</label>
+    <description>Watch Tower that increase vision when colonists stand on it.</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <rotatable>false</rotatable>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+      <li>Stony</li>
+    </stuffCategories>
+    <thingCategories Inherit="False" />
+    <graphicData>
+      <texPath>Things/Buildings/WatchTower</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <damageData>
+        <rect>(0.1,0.1,1.8,1.8)</rect>
+      </damageData>
+    </graphicData>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fillPercent>0.75</fillPercent>
+    <size>(2,2)</size>
+    <pathCost>50</pathCost>
+    <pathCostIgnoreRepeat>true</pathCostIgnoreRepeat>
+    <costStuffCount>150</costStuffCount>
+    <placeWorkers>
+      <li>PlaceWorker_NotUnderRoof</li>
+    </placeWorkers>
+    <statBases>
+      <MaxHitPoints>450</MaxHitPoints>
+      <WorkToBuild>4500</WorkToBuild>
+      <Mass>20</Mass>
+      <Flammability>1.0</Flammability>
+      <Beauty>-10</Beauty>
+    </statBases>
+    <comps>
+      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+        <fovMultiplier>1.5</fovMultiplier>
+      </li>
+    </comps>
+  </ThingDef>
+  <!--	<ThingDef ParentName="BaseVisionStuff">
+		<defName>WatchTowerWithBeacon</defName>
+		<label>light watch tower</label>
+		<description>Watch Tower that increase vision when colonists stand on it. Colonist can see further in the dark</description>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>Standable</passability>
+		<leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+		<rotatable>false</rotatable>
+		<stuffCategories>
+			<li>Metallic</li>
+			<li>Stony</li>
+		</stuffCategories>
+		<thingCategories Inherit="False"/>
+		<graphicData>
+			<texPath>Things/Buildings/WatchTowerWithBeacon</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(2,2)</drawSize>
+			<damageData>
+				<rect>(0.1,0.1,1.8,1.8)</rect>
+			</damageData>
+		</graphicData>
+		<castEdgeShadows>true</castEdgeShadows>
+		<staticSunShadowHeight>1.0</staticSunShadowHeight>
+		<fillPercent>0.75</fillPercent>
+		<size>(2,2)</size>
+		<pathCost>50</pathCost>
+		<pathCostIgnoreRepeat>true</pathCostIgnoreRepeat>
+		<costStuffCount>150</costStuffCount>
+		<placeWorkers>
+			<li>PlaceWorker_NotUnderRoof</li>
+		</placeWorkers>
+		<statBases>
+			<MaxHitPoints>450</MaxHitPoints>
+			<WorkToBuild>4500</WorkToBuild>
+			<Mass>20</Mass>
+			<Flammability>1.0</Flammability>
+			<Beauty>-10</Beauty>
+		</statBases>
+		<comps>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>125</basePowerConsumption>
+			</li>
+			<li Class="CompProperties_Glower">
+				<glowRadius>10</glowRadius>
+				<glowColor>(217,217,208,0)</glowColor>
+			</li>
+			<li Class="RimWorldRealFoW.CompProperties_AffectVision">
+				<fovMultiplier>1.5</fovMultiplier>
+				<denyDarkness>true</denyDarkness>
+			</li>
+		</comps>
+	</ThingDef>-->
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>WatchTowerRoofed</defName>
+    <label>roofed watch tower</label>
+    <description>A Watch tower that increase vision when colonists stand on it. Colonist vision range will not be affected by weather as it has roof</description>
+    <altitudeLayer>Skyfaller</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <rotatable>false</rotatable>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Stony</li>
+      <li>Woody</li>
+    </stuffCategories>
+    <thingCategories Inherit="False" />
+    <graphicData>
+      <texPath>Things/Buildings/WatchTowerWithRoof</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <damageData>
+        <rect>(0.1,0.1,1.8,1.8)</rect>
+      </damageData>
+    </graphicData>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fillPercent>0.75</fillPercent>
+    <size>(2,2)</size>
+    <pathCost>50</pathCost>
+    <costList>
+      <Steel>25</Steel>
+    </costList>
+    <pathCostIgnoreRepeat>true</pathCostIgnoreRepeat>
+    <costStuffCount>150</costStuffCount>
+    <placeWorkers>
+      <li>PlaceWorker_NotUnderRoof</li>
+    </placeWorkers>
+    <statBases>
+      <MaxHitPoints>450</MaxHitPoints>
+      <WorkToBuild>4500</WorkToBuild>
+      <Mass>20</Mass>
+      <Flammability>0.8</Flammability>
+      <Beauty>-10</Beauty>
+    </statBases>
+    <comps>
+      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+        <fovMultiplier>1.5</fovMultiplier>
+        <denyWeather>true</denyWeather>
+      </li>
+    </comps>
+  </ThingDef>
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>TowerLightBeacon</defName>
+    <label>light beacon</label>
+    <description>Allow colonist can see further in the dark</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <rotatable>false</rotatable>
+    <thingCategories Inherit="False" />
+    <costList>
+      <Steel>50</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <graphicData>
+      <texPath>Things/Buildings/TowerLightBeacon</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <damageData>
+        <rect>(0.1,0.1,1.8,1.8)</rect>
+      </damageData>
+    </graphicData>
+    <castEdgeShadows>true</castEdgeShadows>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <fillPercent>0.5</fillPercent>
+    <size>(2,2)</size>
+    <pathCost>2</pathCost>
+    <pathCostIgnoreRepeat>false</pathCostIgnoreRepeat>
+    <building>
+      <isEdifice>false</isEdifice>
+      <canBuildNonEdificesUnder>true</canBuildNonEdificesUnder>
+      <sowTag>SupportPlantsOnly</sowTag>
+      <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+      <ai_chillDestination>false</ai_chillDestination>
+      <artificialForMeditationPurposes>false</artificialForMeditationPurposes>
+    </building>
+    <statBases>
+      <MaxHitPoints>200</MaxHitPoints>
+      <WorkToBuild>2400</WorkToBuild>
+      <Mass>10</Mass>
+      <Flammability>0</Flammability>
+      <Beauty>-1</Beauty>
+    </statBases>
+    <comps>
+      <li Class="CompProperties_Forbiddable" />
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>250</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable" />
+      <li Class="CompProperties_Breakdownable" />
+      <li Class="CompProperties_Glower">
+        <glowRadius>6</glowRadius>
+        <glowColor>(217,217,208,0)</glowColor>
+      </li>
+      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+        <fovMultiplier>1.05</fovMultiplier>
+        <denyDarkness>true</denyDarkness>
+      </li>
+    </comps>
+  </ThingDef>
+  <!--	<ThingDef ParentName="BaseVisionStuff">
+		<defName>TowerLightBeaconBase</defName>
+		<label>light beacon</label>
+		<thingClass>Building_TurretGun</thingClass>
+		<description>Allow colonist can see further in the dark</description>
+		<altitudeLayer>Building</altitudeLayer>
+		<passability>Standable</passability>
+		<leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+		<rotatable>false</rotatable>
+		<thingCategories Inherit="False"/>
+		<graphicData>
+			<texPath>Things/Buildings/TowerLightBeaconBase</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+			<drawSize>(2,2)</drawSize>
+			<damageData>
+				<rect>(0.1,0.1,1.8,1.8)</rect>
+			</damageData>
+		</graphicData>
+		<castEdgeShadows>true</castEdgeShadows>
+		<staticSunShadowHeight>1.0</staticSunShadowHeight>
+		<fillPercent>0.75</fillPercent>
+		<size>(2,2)</size>
+		<pathCost>2</pathCost>
+		<pathCostIgnoreRepeat>false</pathCostIgnoreRepeat>
+		<building>
+			<isEdifice>false</isEdifice>
+			<canBuildNonEdificesUnder>true</canBuildNonEdificesUnder>
+			<sowTag>SupportPlantsOnly</sowTag>
+			<canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+			<ai_chillDestination>false</ai_chillDestination>
+			<artificialForMeditationPurposes>false</artificialForMeditationPurposes>
+			<ai_combatDangerous>false</ai_combatDangerous>
+			<turretGunDef>NWN_BeaconLightGun</turretGunDef>
+			<turretBurstCooldownTime>0.17</turretBurstCooldownTime>
+		</building>
+		<placeWorkers>
+			<li>PlaceWorker_TurretTop</li>
+		</placeWorkers>
+		<statBases>
+			<MaxHitPoints>200</MaxHitPoints>
+			<WorkToBuild>2400</WorkToBuild>
+			<Mass>10</Mass>
+			<Flammability>0</Flammability>
+			<Beauty>-1</Beauty>
+		</statBases>
+		<comps>
+			<li Class="CompProperties_Forbiddable"/>
+			<li Class="CompProperties_Power">
+				<compClass>CompPowerTrader</compClass>
+				<basePowerConsumption>250</basePowerConsumption>
+			</li>
+			<li Class="CompProperties_Flickable"/>
+			<li Class="CompProperties_Breakdownable"/>
+			<li Class="CompProperties_Glower">
+				<glowRadius>6</glowRadius>
+				<glowColor>(217,217,208,0)</glowColor>
+			</li>
+			<li Class="RimWorldRealFoW.CompProperties_AffectVision">
+				<fovMultiplier>1.05</fovMultiplier>
+				<denyDarkness>true</denyDarkness>
+			</li>
+		</comps>
+	</ThingDef>
+	<ThingDef ParentName="BaseWeaponTurret">
+		<defName>NWN_BeaconLightGun</defName>
+		<label>searchlight</label>
+		<description>A rotatable spotlight.</description>
+		<graphicData>
+			<texPath>Things/Buildings/TowerLightBeacon</texPath>
+			<graphicClass>Graphic_Single</graphicClass>
+		</graphicData>
+		<soundInteract>Metal_Drop</soundInteract>
+		<menuHidden>true</menuHidden>
+		<destroyOnDrop>true</destroyOnDrop>
+		<tradeability>None</tradeability>
+		<useHitPoints>false</useHitPoints>
+		<statBases>
+			<RangedWeapon_Cooldown>0.17</RangedWeapon_Cooldown>
+			<DeteriorationRate>0</DeteriorationRate>
+			<Mass>5</Mass>
+			<Flammability>0</Flammability>
+		</statBases>
+		<weaponTags Inherit="false">
+			<li>TurretGun</li>
+		</weaponTags>
+		    <verbs>
+		<li>
+        <verbClass>RimWorldRealFoW.Verb_Look</verbClass>
+        <range>24.9</range>
+        <muzzleFlashScale>0</muzzleFlashScale>
+        <consumeFuelPerShot>0</consumeFuelPerShot>
+      </li>
+    </verbs>
+	</ThingDef> -->
+  <!-- Watch Scope -->
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>WatchTelescope</defName>
+    <label>watch telescope</label>
+    <description>Watch Telescope that increase vision when colonists stand on it.</description>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <rotatable>false</rotatable>
+    <costList>
+      <Steel>30</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <graphicData>
+      <texPath>Things/Buildings/WatchTelescope</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2,2)</drawSize>
+      <damageData>
+        <cornerTL>Damage/Corner</cornerTL>
+        <cornerTR>Damage/Corner</cornerTR>
+        <cornerBL>Damage/Corner</cornerBL>
+        <cornerBR>Damage/Corner</cornerBR>
+      </damageData>
+    </graphicData>
+    <castEdgeShadows>false</castEdgeShadows>
+    <fillPercent>0.1</fillPercent>
+    <size>(1,2)</size>
+    <pathCost>0</pathCost>
+    <pathCostIgnoreRepeat>true</pathCostIgnoreRepeat>
+    <statBases>
+      <MaxHitPoints>50</MaxHitPoints>
+      <WorkToBuild>1000</WorkToBuild>
+      <Mass>1</Mass>
+      <Flammability>0.1</Flammability>
+      <Beauty>0</Beauty>
+    </statBases>
+    <comps>
+      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+        <fovMultiplier>2</fovMultiplier>
+      </li>
+    </comps>
+    <constructionSkillPrerequisite>4</constructionSkillPrerequisite>
+    <researchPrerequisites>
+      <li>WatchTelescope</li>
+    </researchPrerequisites>
+  </ThingDef>
+</Defs>
