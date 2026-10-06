@@ -147,8 +147,8 @@ public class CompSightSource : FogSubcomponent
         var vision = parent.TryGetComp<CompBuildingSight>();
         if (vision != null)
             return vision.Props.needManned && !fog.workingCameraConsole ? 0 : vision.Props.viewRadius * FogSettings.BuildingVisionModifier;
-        if (parent is Building_TurretGun turret && parent.TryGetComp<CompMannable>() == null)
-            return (turret.GunCompEq?.PrimaryVerb?.verbProps.range ?? 0) * FogSettings.TurretVisionModifier;
+        if (parent is Building_Turret turret && parent.TryGetComp<CompMannable>() == null)
+            return (turret.AttackVerb?.verbProps.range ?? 0) * FogSettings.TurretVisionModifier;
         return 0;
     }
     public float CalcPawnSightRange(IntVec3 cell, bool forTargeting, bool shouldMove)

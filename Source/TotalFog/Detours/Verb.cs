@@ -59,7 +59,9 @@ internal static class Verb
 
         if (thing is not Verse.Pawn)
         {
-            return true;
+            // Unmanned turrets use their faction's current coverage above.
+            // Other non-pawn casters retain their native policy.
+            return thing is not Building_Turret;
         }
 
         var map = thing.Map;

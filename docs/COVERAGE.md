@@ -93,16 +93,27 @@ and runtime acceptance.
 - Installed Combat Extended 16.7.3.0 uses its own Vector3-source hit-check
   overload. An optional adapter now applies the shared targeting policy to
   successful results from that method and any declared overrides. Eight
-  source-linked regressions pass. The actual installed CE method passes native
+  original source-linked regressions pass. Four additional turret/non-pawn
+  cases now bring that adapter suite to twelve passing cases. The actual installed CE method passes native
   hidden/revealed target, blocked-ballistics and enemy-fog setting checks with
   a CE pistol shooter. Two CE fixture reloads pass 1,926 section regenerations
   without failures or grid mutations. The current e24d50df... gameplay DLL also
   passes an ordinary M1911 equip/ammunition/reload/attack sequence. Its active
   CE reload and queued attack survive in-process and fresh-process loads, then
   consume another seven rounds and deal further damage during 360 Normal ticks
-  in each replay. Turrets, mortars, sight loss during actual firing, additional
-  weapons, enemy acquisition and combined overhaul loadouts remain open; this
-  is not full CE acceptance.
+  in each replay. The later 6527f4d8... candidate fixes a native powered CE
+  mini-turret with zero sight that fired at unseen targets. Its shared engine
+  turret contract now supplies a 34-cell sight radius for the native 48-cell
+  weapon at the configured 0.7 modifier. Ordinary automatic firing/damage works
+  nearby; an enemy at 42 cells receives no shots while hidden, including after
+  reveal/hide and both in-process and fresh-process loads. Shared sight from a
+  real security bell permits native firing at that same distant target.
+  Native power loss removes the turret's coverage. Manned turrets, mortars,
+  sight loss during an active burst, additional weapons, actual enemy turret
+  acquisition, CE performance and combined overhaul loadouts remain open;
+  this is not full CE acceptance. Native evidence is in
+  `artifacts/ce-turret-native`; broader performance/package gates still refer
+  to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

@@ -116,6 +116,51 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         Assert.False(result);
     }
 
+    [Fact]
+    public void UnmannedPlayerTurretsRequireCurrentFactionSight()
+    {
+        var turret = new RimWorld.Building_Turret { Faction = Faction.OfPlayer };
+        turret.Map.Fog.Initialized = true;
+        var verb = new CeVerb { caster = turret };
+        bool result = true;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(.5f, 0, .5f), new(1, 0));
+        Assert.False(result);
+        turret.Map.Fog.InSight[1] = true; result = true;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(.5f, 0, .5f), new(1, 0));
+        Assert.True(result);
+        result = false;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(.5f, 0, .5f), new(1, 0));
+        Assert.False(result);
+        turret.Map.Fog.InSight[1] = false; result = true;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(.5f, 0, .5f), new(1, 0));
+        Assert.False(result);
+    }
+
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public void EnemyTurretsFollowTheOptionalEnemyFogPolicy(bool enemyFog, bool expected)
+    {
+        var turret = new RimWorld.Building_Turret { Faction = new Faction() };
+        turret.Map.Fog.Initialized = true;
+        var verb = new CeVerb { caster = turret };
+        FogSettings.AISmart = enemyFog;
+        bool result = true;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(.5f, 0, .5f), new(1, 0));
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void UnknownNonPawnCastersKeepTheirNativePolicy()
+    {
+        var caster = new Thing { Faction = Faction.OfPlayer };
+        caster.Map.Fog.Initialized = true;
+        bool result = true;
+        CombatExtendedIntegration.HitCellPostfix(new CeVerb { caster = caster }, ref result,
+            new(.5f, 0, .5f), new(1, 0));
+        Assert.True(result);
+    }
+
     private class CeVerb : Verse.Verb
     {
         protected virtual bool CanHitCellFromCellIgnoringRange(Vector3 source, IntVec3 target, Thing thing) => true;

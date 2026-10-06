@@ -191,6 +191,7 @@ namespace Unity.Collections
 }
 namespace RimWorld
 {
+    public class Building_Turret : Verse.Building { }
     public class IncidentDef { }
     public static class IncidentDefOf { public static readonly IncidentDef ManhunterPack = new(); }
     public class IncidentParms { public bool silent; public bool sendLetter = true; public float points; }

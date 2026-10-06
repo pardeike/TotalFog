@@ -4136,3 +4136,90 @@ shoot-line shortcut; the existing no-LOS policy remains unchanged. Actual
 turret/mortar, sight-loss-during-firing, enemy acquisition and broader weapon
 coverage are still open. Receipts, save-state assertions and logs are retained
 under `artifacts/ce-combat-native`.
+
+
+### Public source and upstream escalation
+
+The public development repository is https://github.com/pardeike/TotalFog,
+with main as its default branch and GitHub issues enabled. Its first source
+snapshot is e28a51ba7e47ae40e67a73c803dc6c4d0a139741. Private development history
+remains on the local total-fog branch; public-main tracks origin/main. Private
+chat links, delivery message identifiers and scheduling discussion are removed
+from the public snapshot. Ignored artifacts and unfinished working changes
+are not published. Original source, assets, license and attribution remain.
+The upstream-baseline tag is an unmodified snapshot of upstream commit
+6d176be50656e3056f6760eaa4e3c94a2ba9f22c; its definition trees and both original
+assemblies are byte-identical to the retained performance baseline.
+
+A fresh temporary clone from GitHub passes the canonical build and 263 tests,
+producing the exact e24d50df... gameplay DLL from the current tester pair. The
+canonical staging function recreates the original baseline from the public
+tag without relying on private history or pre-existing artifacts. The temporary
+clone is removed; receipts and logs stay in artifacts/public-source-fresh-clone.
+This is source publication, not a player release or Steam publication.
+
+AGENTS.md now requires an upstream GitHub issue when a native reproduction
+establishes a blocker in another mod that cannot reasonably be solved in Total
+Fog. The report must link the public integration contract and relevant source
+at the published commit, include a short optional API example, and leave the
+compatibility check open until our own native validation passes. The architecture
+document supplies a once-bound optional query example without a Total Fog build
+dependency. No upstream blocker is established by the turret defect below;
+both corrections belong in Total Fog.
+
+### Powered CE mini-turret sight and firing
+
+The installed Steam CE 16.7.3.0 turret derives from Building_Turret rather than
+Building_TurretGun. On e24d50df..., native power becomes active but sight remains
+zero. Releasing its actual Hold fire gizmo and playing 361 Normal ticks consumes
+ten rounds while the target remains unseen. The earlier receipt named
+before-fix-powered actually has PowerOn false; the later power-playback/state
+receipts establish the powered reproduction. Neither fixture wiring delay nor
+that premature filename is treated as a gameplay failure.
+
+The correction uses Building_Turret.AttackVerb for unmanned turret sight and
+requires current faction coverage for unmanned turret targeting. Other non-pawn
+casters retain their native policy, and the existing manning-pawn and no-LOS
+paths remain. There is no CE gameplay assembly reference, new scheduler or new
+saved data. Two targeted source-linked cases fail before the correction. The
+canonical deploy then passes all 267 independent tests, including twelve CE
+adapter cases. Built/deployed main SHA-256 is
+6527f4d85118066ff4185d91279f082a4ee0a97fe8710c9a7aa359694f8c2843;
+companion SHA-256 is
+0636c4bd3d41f9ea4f3df13a49c7590cebd8ae50731db137c18e73c29f35a02b.
+The existing native CE pawn hit-check matrix also passes on this candidate.
+
+Native automatic-firing controls use a real CE mini-turret, charged battery,
+conduits and a generated hostile pawn. Only the initial magazine is preloaded
+by the fixture; shooting uses the turret's ordinary AI and native verb. At
+16 cells, power supplies the expected rounded 34-cell sight radius from native
+range 48 and modifier 0.7. Hold fire retains all 100 rounds; releasing it consumes
+ten rounds and increases injuries from 3 to 49.6667, downing the target. Destroying
+only the owned battery/conduits through their normal native lifecycle removes
+power, reduces sight to zero and hides the target during 242 Normal ticks. That
+power row proves coverage removal, not interruption of active firing, because
+the target is already downed and Hold fire is enabled.
+
+At 42 cells, outside the turret's own sight but within its native weapon range,
+the live enemy remains hidden, healthy and waiting. Two 360-tick windows retain
+100 rounds and lastShotTick -999999, including after a real security bell reveals
+and hides the target while paused. The powered, unheld fixture is saved as
+TotalFogCE_MiniTurret_Hidden. Both an in-process load and a fresh-process load
+retain power, 34-cell sight, ammunition and the hidden healthy target. Another
+361 and 360 Normal ticks respectively produce no shots. Revealing that same
+far target after the fresh load consumes ten rounds and advances lastShotTick
+to 1697. These distant shots miss; nearby damage is independently proved above.
+An initial test assertion incorrectly required distant shots to cause injury.
+The retained far-firing-assertion-review explains the correction; ammunition
+and lastShotTick establish actual firing without changing native accuracy.
+
+The input save SHA-256 remains
+e8a851a7711e5128327921ff79a1068a75c96c974b41d580eecc2a168ced6179.
+Both candidate Player.logs contain no recognized errors, fixture objects are
+removed, the unchanged base save is reloaded and both process terminations are
+verified. Receipts, complete logs and build identities are retained under
+artifacts/ce-turret-native. All playback is Normal and unforced; the bridge's
+startup debug boost does not affect that speed. This does not establish
+fourth-speed performance, native ammo reloading for turrets, active-burst sight
+loss, manned weapons, mortars or broader combined loadouts. Mortal retains the
+preceding tested pair; this CE-only change has not been sent as a tester update.
