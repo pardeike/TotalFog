@@ -4822,3 +4822,39 @@ reloads the unchanged base and verifies process termination. Recognized native
 logs are clean. Raw receipts, initial inconclusive control, summary, exact DLL
 pair and Player.log are retained in artifacts/ce-ammo-native. All 291 tests pass
 through the canonical deploy; the gameplay bytes sent to Mortal are unchanged.
+
+### Native CE suppressive burst and loaded-guard contracts
+
+The unchanged Total Fog 450329a0... gameplay and companion 2b8e2742... are
+archived with thirteen passing receipt assertions in
+artifacts/ce-suppressive-native. The companion observes CE's actual fallback
+before and after Total Fog, retaining at most 128 rows without changing results.
+An initial probe setup failed because Harmony's registry needed the declared
+MethodInfo rather than the inherited member's differing ReflectedType. That
+prerequisite failure and blocking attention are retained separately; the fixed
+probe verifies the existing production hook before installing its observers.
+
+The native M240B is already in SuppressFire mode. With the real sight bell,
+one ordinary Normal-playback shot starts the burst and leaves 179 rounds.
+Removing the bell during that burst produces nine actual fallback calls at
+ticks 13434..13482. Every call retains native=true/final=true, HasThing=false,
+the last known cell (121,70), and faction sight=false. The burst ends with 170
+rounds and no hidden-Pawn acquisition. This proves preservation of CE's blind
+cell fire, not tracking a hidden Thing.
+
+Four separate readonly calls to the loaded production guard use the actual
+verb, Thing and sight state with supplied false/true incoming results. Hidden
+Thing success is rejected; visible success and both native failures are
+preserved. This is an adapter contract, not a naturally executed still-Thing
+fallback. Earlier separate automatic and native forced-target warmup controls
+cancel while hidden before any shot/fallback. The stock mortar exposes no
+CompFireModes, so no unsupported suppressive mode is fabricated.
+
+CE's native aim-mode toggle switches to Snapshot and back to SuppressFire.
+The bounded trace is stopped, owned objects are removed, the unchanged base
+fixture reloads and the process terminates; recognized native logs are clean.
+All 291 independent tests pass. A later tool-description-only rebuild has
+distinct companion bytes; the archived 2b8e2742... pair identifies this proof.
+Gameplay bytes and Mortal's delivered ZIP remain unchanged. Naturally executed
+still-Thing fallback, combined overhaul loadouts and combat-heavy performance
+remain open; these checks do not complete all CE acceptance.

@@ -14,11 +14,16 @@ namespace TotalFog.BridgeTools;
 /// <summary>Native CE turret/mortar fixtures. IDs survive save/load; no gameplay assembly dependency on CE.</summary>
 public sealed class CombatExtendedTurretFixture
 {
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction, for native retargeting controls. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. configure-fire-arc applies valid native angle/span fields and CE's adjustment callback; it does not test editor input. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
+    private const string TraceOwner = "brrainz.totalfog.ce-burst-probe";
+    private static readonly List<object> BurstEvents = new();
+    private static Verse.Verb tracedVerb;
+    private static bool nativeFallback, traceOverflow;
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for later actions. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction. configure-enemy-fog applies the enemyFog test setting through normal refresh; restore it before cleanup. configure-fire-arc applies native angle/span fields and CE's adjustment callback; it does not test editor input. configure-aim-mode uses the weapon's native toggle and rejects unavailable modes. trace-start/trace-stop observe at most 128 actual burst-fallback results before/after Total Fog without changing them. fallback-policy supplies false/true inputs to the loaded fog guard; it is a readonly contract check, not a native fallback reproduction. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. cleanup removes owned things and their active trace. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
         int targetDistance = 16, bool holdFire = true, bool reveal = false,
-        bool enemyTurret = false, bool enemyFog = false, float arcCenter = 0f, float arcSpan = 90f)
+        bool enemyTurret = false, bool enemyFog = false, float arcCenter = 0f, float arcSpan = 90f,
+        string aimMode = "SuppressFire")
     {
         return await ctx.MainThread.InvokeAsync(() =>
         {
@@ -32,6 +37,7 @@ public sealed class CombatExtendedTurretFixture
             var owned = ownedIds.Select(Owned).Where(t => t != null).ToList();
             if (action == "cleanup")
             {
+                if (owned.Contains(tracedVerb?.caster)) StopTrace();
                 foreach (var thing in owned) if (!thing.Destroyed) thing.Destroy();
                 return (object)new { success = ownedIds.All(id => Owned(id) == null), ownedIds };
             }
@@ -76,8 +82,9 @@ public sealed class CombatExtendedTurretFixture
                     owned.AddRange(made); ownedIds.AddRange(made.Select(t => t.ThingID));
                 }
                 else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo" &&
-                    action != "configure-enemy-fog" && action != "configure-fire-arc" && action != "add-alternate")
-                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, configure-fire-arc, add-alternate, supply-ammo, remove-power or cleanup.");
+                    action != "configure-enemy-fog" && action != "configure-fire-arc" && action != "add-alternate" &&
+                    action != "configure-aim-mode" && action != "trace-start" && action != "trace-stop" && action != "fallback-policy")
+                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, configure-fire-arc, configure-aim-mode, trace-start, trace-stop, fallback-policy, add-alternate, supply-ammo, remove-power or cleanup.");
 
                 if (action == "remove-power")
                 {
@@ -128,6 +135,35 @@ public sealed class CombatExtendedTurretFixture
                     else if (!reveal && bell != null) { bell.Destroy(); ownedIds.Remove(bell.ThingID); }
                 }
                 var verb = gunTurret.AttackVerb;
+                var fireModes = verb.EquipmentSource?.AllComps.FirstOrDefault(c => c.GetType().FullName == "CombatExtended.CompFireModes");
+                string[] AimModes() => fireModes == null ? new string[0] :
+                    ((System.Collections.IEnumerable)Property(fireModes, "AvailableAimModes")).Cast<object>().Select(mode => mode.ToString()).ToArray();
+                if (action == "configure-aim-mode")
+                {
+                    var available = AimModes();
+                    if (!available.Contains(aimMode)) throw new InvalidOperationException("Select one of this weapon's native aim modes.");
+                    for (int i = 0; i < available.Length && Property(fireModes, "CurrentAimMode").ToString() != aimMode; i++)
+                        AccessTools.Method(fireModes.GetType(), "ToggleAimMode").Invoke(fireModes, null);
+                    if (Property(fireModes, "CurrentAimMode").ToString() != aimMode)
+                        throw new InvalidOperationException("The native aim-mode toggle did not select the requested mode.");
+                }
+                if (action == "trace-start") StartTrace(verb);
+                else if (action == "trace-stop") StopTrace();
+                // This readonly contract check supplies the incoming result;
+                // it does not claim that CE naturally took this fallback branch.
+                object[] fallbackPolicy = null;
+                if (action == "fallback-policy")
+                {
+                    var guard = AccessTools.Method(typeof(TotalFogMod).Assembly.GetType("TotalFog.Compatibility.CombatExtendedIntegration"),
+                        "BurstFallbackPostfix");
+                    fallbackPolicy = new[] { false, true }.Select(original =>
+                    {
+                        var arguments = new object[] { verb, original };
+                        guard.Invoke(null, arguments);
+                        return (object)new { originalResult = original, filteredResult = (bool)arguments[1],
+                            hasThing = verb.CurrentTarget.HasThing, target = verb.CurrentTarget.Thing?.ThingID };
+                    }).ToArray();
+                }
                 var compAmmo = Ammo(gunTurret);
                 var ammoDef = Property(compAmmo, "CurrentAmmo") as ThingDef;
                 if (action == "supply-ammo")
@@ -169,6 +205,7 @@ public sealed class CombatExtendedTurretFixture
                         sightRange = sight?.LastSightRange, nativeRange = verb.verbProps.range,
                         expectedUnmannedSightRange = verb.verbProps.range * FogSettings.TurretVisionModifier,
                         manned = gunTurret.GetComp<CompMannable>()?.MannedNow,
+                        warmupTicksLeft = AccessTools.Field(gunTurret.GetType(), "burstWarmupTicksLeft").GetValue(gunTurret),
                         reloading = AccessTools.Field(gunTurret.GetType(), "isReloading").GetValue(gunTurret),
                         currentTarget = gunTurret.CurrentTarget.Thing?.ThingID,
                         currentTargetValid = gunTurret.CurrentTarget.IsValid,
@@ -192,6 +229,9 @@ public sealed class CombatExtendedTurretFixture
                         ammunition = Property(compAmmo, "CurrentAmmo") is ThingDef def ? def.defName : null,
                         magazine = Property(compAmmo, "CurMagCount"), capacity = Property(compAmmo, "MagSize"),
                         lastShotTick = AccessTools.Field(typeof(Verse.Verb), "lastShotTick").GetValue(verb) },
+                    fireModes = fireModes == null ? null : new { current = Property(fireModes, "CurrentAimMode").ToString(), available = AimModes() },
+                    burstTrace = new { active = tracedVerb == verb, overflow = traceOverflow, rows = BurstEvents.ToArray() },
+                    fallbackPolicy,
                     crew = manningPawn == null ? null : new { id = manningPawn.ThingID,
                         cell = manningPawn.Position.ToString(), job = manningPawn.CurJob?.def.defName,
                         moving = manningPawn.pather?.Moving,
@@ -225,6 +265,51 @@ public sealed class CombatExtendedTurretFixture
                 throw;
             }
         }, cancellationToken);
+    }
+
+    private static void StartTrace(Verse.Verb verb)
+    {
+        if (tracedVerb != null) throw new InvalidOperationException("Stop the active burst trace first.");
+        var method = AccessTools.Method(verb.GetType(), "KeepBurstOnNoShootLine",
+            new[] { typeof(bool), typeof(ShootLine).MakeByRefType() });
+        // Harmony's patch registry uses the declared MethodInfo. Resolving an
+        // inherited member from Verb_ShootCE can retain a different ReflectedType.
+        if (method != null) method = AccessTools.DeclaredMethod(method.DeclaringType, method.Name,
+            new[] { typeof(bool), typeof(ShootLine).MakeByRefType() });
+        if (method == null || Harmony.GetPatchInfo(method)?.Owners.Contains("brrainz.totalfog") != true)
+            throw new InvalidOperationException("The actual native fallback must have Total Fog's integration hook.");
+        BurstEvents.Clear(); traceOverflow = false;
+        var harmony = new Harmony(TraceOwner);
+        try
+        {
+            harmony.Patch(method, postfix: new HarmonyMethod(typeof(CombatExtendedTurretFixture), nameof(NativeFallbackPostfix))
+                { priority = Priority.First, before = new[] { "brrainz.totalfog" } });
+            harmony.Patch(method, postfix: new HarmonyMethod(typeof(CombatExtendedTurretFixture), nameof(FinalFallbackPostfix))
+                { priority = Priority.Last, after = new[] { "brrainz.totalfog" } });
+            tracedVerb = verb;
+        }
+        catch { StopTrace(); throw; }
+    }
+    private static void StopTrace()
+    {
+        new Harmony(TraceOwner).UnpatchAll(TraceOwner);
+        tracedVerb = null;
+    }
+    public static void NativeFallbackPostfix(Verse.Verb __instance, bool __result)
+    {
+        if (__instance == tracedVerb) nativeFallback = __result;
+    }
+    public static void FinalFallbackPostfix(Verse.Verb __instance, bool __result, bool __0)
+    {
+        if (__instance != tracedVerb) return;
+        if (BurstEvents.Count >= 128) { traceOverflow = true; return; }
+        // The native method and Total Fog's readonly guard execute synchronously;
+        // this snapshot retains the native result before the final fog decision.
+        var target = __instance.CurrentTarget;
+        var observer = __instance.caster.TryGetComp<CompMannable>()?.ManningPawn ?? __instance.caster;
+        BurstEvents.Add(new { tick = Find.TickManager.TicksGame, suppressing = __0, nativeResult = nativeFallback,
+            finalResult = __result, hasThing = target.HasThing, target = target.Thing?.ThingID, cell = target.Cell.ToString(),
+            seenByFaction = observer.Map.GetVisibility().IsShown(observer.Faction, target.Cell) });
     }
 
     private static object Property(object instance, string name) =>

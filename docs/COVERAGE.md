@@ -211,6 +211,17 @@ and runtime acceptance.
   these two shots, so this is not damage acceptance. Cleanup restores the
   original range, removes owned objects/probes, reloads the base and stops the
   process; recognized logs are clean. See `artifacts/ce-ammo-native`.
+  Current gameplay also passes thirteen suppressive-fire receipt assertions.
+  An actual M240B burst begins with one visible shot, then completes nine native
+  blind-cell fallbacks after the sight bell is removed: CE converts the target
+  to its last known cell, both native/final results remain true, and magazine
+  179 drops to 170 without hidden-Pawn reacquisition. Four separate readonly
+  loaded-guard contracts reject hidden Thing success and preserve visible
+  success/native failure. These supplied inputs do not establish a naturally
+  executed still-Thing fallback. Ordinary automatic and manual forced-target
+  warmups cancel before a shot while hidden; the stock mortar has no suppressive
+  aim mode. Native mode toggle, bounded trace removal, owned cleanup, unchanged
+  base reload and clean logs pass. See `artifacts/ce-suppressive-native`.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

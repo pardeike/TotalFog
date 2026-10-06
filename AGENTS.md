@@ -97,6 +97,11 @@ play through ordinary Normal playback. Remove/recreate its real security bell
 to change sight during warmup, then call cleanup to restore the temporary base
 range and remove owned objects/probe patches. It is companion instrumentation,
 excluded from player ZIPs, and does not support save/load.
+Use `totalfog/ce_turret_fixture` trace-start/trace-stop to observe bounded native
+burst fallbacks before and after Total Fog. Stop traces and remove owned objects
+before other tests. configure-aim-mode uses CE's native toggle. fallback-policy
+is a readonly loaded-guard contract with supplied boolean inputs; it does not
+prove that CE naturally executed the still-Thing fallback branch.
 Use `./scripts/mod zombieland-setup` for `total-fog-zombieland-16`, the isolated
 Steam profile under artifacts/ZombielandUserData with Total Fog, local Zombieland
 and all DLCs. This builds/deploys both mod/companion pairs and verifies their
