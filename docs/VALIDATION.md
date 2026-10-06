@@ -4731,3 +4731,53 @@ complete result are artifacts/comparison-ce-single-cell-450329a0.json and
 its runtime reports. The workflow terminates all processes and restores the
 exact candidate install; all 291 tests pass. Current Zombieland rendering,
 behavior and package gates still need that exact gameplay pair's refresh.
+
+### Current single-cell candidate: save-load retest and Zombieland floor
+
+Gameplay 450329a0... with companion b3d63df3... repeats the native CE visible-
+alternate save in another fresh process. Radius 59 matches the ready 59.268
+calculation immediately, the visible alternate remains accepted and the hidden
+primary remains rejected. During 62 Normal ticks the saved burst completes
+from 176 to 170 rounds, lastShotTick 13482. Loading the hidden-alternate save
+in that process rejects both hidden Pawns; 60 ticks preserve 177 rounds and
+lastShotTick 13440 with no acquisition. Eight receipt assertions pass in
+artifacts/ce-retarget-native/single-cell-candidate-summary.json. This repeats
+the current load regression and negative control, not every native CE scenario.
+Owned objects are removed, the unchanged base fixture is reloaded and the
+process terminates. The current recognized-error check is clean.
+
+The canonical Zombieland setup rebuilds unchanged exact gameplay bytes:
+Total Fog 450329a0... and Zombieland
+56daa1f257a72d3a69e960a97b48a442f1b92798eb0d0dbd73df48f80667d109.
+The predeclared single-cell-overlay-player-1000 comparison uses the unchanged
+TotalFog_Zombieland_UpstreamQuietGap1000 save, 1,000-zombie fixture and distant
+4,000-cell contamination overlay. All six fresh native processes pass the
+identity, population, settings, camera, speed/focus and recognized-log guards.
+Fourth speed retains multiplier 15, without forced speed, UltraSpeedBoost or
+zombie/DPA diagnostic instrumentation.
+
+Original/candidate pair TPS values are 205.03/219.28, 203.34/221.63 and
+203.98/216.65. Median candidate 219.2750 exceeds original 203.9821 by 7.4972%,
+meeting the strict floor. Median whole-tick elapsed is 3.11073 versus
+3.44015 ms. Frame p95 is worse at 81.2696 versus 76.8874 ms; the throughput
+result does not imply every aspect improved. This remains bounded evidence
+for this declared loadout/fixture, not all maps, combat or Windows. The
+complete comparison and six raw reports/logs are retained under artifacts.
+The workflow terminates all six processes and restores the candidate pair.
+The exact-byte native rendering/behavior suite passes through the canonical
+feedback verification: twelve Symbiant pixel cases, 54 manual targets, forty
+paused render-cost rows, four actual silent arrivals with parameter-lifetime
+checks, seven warning controls, 21 Albino scream controls, sixteen explosion
+camera controls and fourteen contamination sight/refresh cases. Global ambient
+controls also retain their previous behavior. Recognized native logs are clean;
+the attempt is artifacts/feedback-verification-single-cell-overlay-player-1000-qyix2mn3.
+The refreshed package gates identify the exact gameplay and instrumentation
+pairs. The canonical feedback-package command passes all 291 independent tests
+and native/package guards; both separate complete ZIPs retain the tested DLLs.
+The testing guide is updated to this candidate's counts and bounded performance
+results. Both separate complete ZIPs are delivered privately and downloaded
+back with matching archive SHA-256 hashes. The superseded own preview post is
+deleted only after that readback. Private message IDs and receipts remain in
+ignored artifacts; the message requests Windows/busy-save and save-load
+feedback and contains no CE/Multiplayer update. Zombieland's gameplay DLL is
+unchanged from the preceding delivery.

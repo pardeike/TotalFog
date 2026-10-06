@@ -45,6 +45,8 @@
 - Reduce work when walls and other sight blockers change near large colonies.
 - Avoid repeated sight calculations when movement or another update has already refreshed a pawn.
 - Keep fog updates requested by mod callbacks during a refresh.
+- Initialize sight using ready daylight and lamp lighting when loading a map.
+- Reduce repeated footprint construction for common single-cell visibility queries.
 - Refresh fog rendering when sight changes while the game is paused.
 - With the updated Zombieland, show only visible parts of a Symbiant body and its rotating core, including when the root is hidden.
 - With the updated Zombieland, allow inspection of a visible Symbiant core even when its root is hidden, and offer manual body targets only in visible cells. Hidden roots cannot show labels or overlays through a visible core.

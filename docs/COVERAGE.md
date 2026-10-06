@@ -186,11 +186,18 @@ and runtime acceptance.
   update deadlines. All 291 tests pass and its own complete six-process CE
   stress comparison meets the median floor at 511.55 versus 489.75 TPS (4.45%
   higher). One pair is slower; this is bounded fixture evidence, not a uniform
-  gain or broad performance/package acceptance. Native evidence is in
+  gain. This current candidate also repeats the saved visible-alternate burst
+  and hidden-target controls with eight receipt assertions. Its exact
+  450329a0... / 56daa1f2... pair passes the six-process Zombieland overlay floor
+  at 219.28 versus 203.98 TPS, 7.50% higher, with frame p95 worse at 81.27
+  versus 76.89 ms. The current broad paired rendering/behavior suite and
+  preliminary package guards pass. CE combat-heavy/combined-loadout and
+  Windows performance remain open. Native evidence is in
   `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
   `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native`, `artifacts/ce-retarget-native` and
-  `artifacts/manual-target-symbiant`; broader performance/package gates still refer
-  to their exact earlier gameplay DLLs.
+  `artifacts/manual-target-symbiant`; current paired package evidence is in
+  `artifacts/zombieland-current-package-gates.json`. Earlier scenario evidence
+  retains its own exact gameplay DLL hashes.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

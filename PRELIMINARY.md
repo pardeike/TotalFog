@@ -26,6 +26,8 @@ still being checked.
 
 ## Included changes
 
+- Initial sight uses ready daylight and lamp lighting after loading a map.
+- Common single-cell visibility checks avoid repeated footprint construction.
 - Zombieland healer beams/glows and the zombie counter/hover highlights respect current sight.
 - Hidden healers continue their gameplay work when their drawing is suppressed.
 - Danger-area warnings follow sight at the reported location, including when a Symbiant's core and root have different visibility. Colonist warnings keep working.
@@ -78,7 +80,7 @@ gameplay problem, a save or short clip plus the enabled mod list.
 
 Mac checks cover twelve Symbiant visibility/resource/interaction cases and pixel
 comparisons, plus paused dense/sparse stress samples at 400 and 4,000 cells.
-The independent test suite passes 263 tests. These checks do not establish
+The independent test suite passes 291 tests. These checks do not establish
 Windows behavior or long-session performance. Native audio checks cover 24
 tank/electric/tar/toxic action controls, 12 spawn-siren controls and 16 electric/
 tank loop controls. Six 128-hit electric bursts preserve absorption and keep
@@ -129,10 +131,10 @@ every modded incident or every combat situation.
 
 Six fresh matched Mac samples at native fourth speed on a 1,000-zombie fixture
 with the contamination overlay open and 4,000 staged sparse ground cells
-measure median 226.80 TPS for Total Fog versus 212.67 for the original, about
-6.64% higher on this current pair. The debug speed boost is off; every measured
-tick uses the native fourth-speed multiplier. Frame p95 is 82.90 ms versus
-78.26 ms, so this is a TPS improvement with a worse frame tail on this fixture.
+measure median 219.28 TPS for Total Fog versus 203.98 for the original, about
+7.50% higher on this current pair. The debug speed boost is off; every measured
+tick uses the native fourth-speed multiplier. Frame p95 is 81.27 ms versus
+76.89 ms, so this is a TPS improvement with a worse frame tail on this fixture.
 The input, camera, settings and Zombieland bytes match; each fog mod keeps its
 ordinary visibility policy. This does not compare identical rendered geometry
 or prove performance for all maps, mod lists or long sessions. Please try your
