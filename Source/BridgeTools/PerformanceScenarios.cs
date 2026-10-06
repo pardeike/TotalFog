@@ -210,6 +210,36 @@ public sealed class PerformanceScenarios
         }, cancellationToken);
     }
 
+    [Tool("totalfog/load_comparison_save", Description = "Load a native comparison save visually ready and paused from its first tick. Temporarily enables RimWorld's Pause on load preference, restores it without saving preferences, and returns the native load result. Does not edit the save or simulation.")]
+    public static async Task<object> LoadComparisonSave(IRimBridgeContext ctx, CancellationToken cancellationToken,
+        string saveName)
+    {
+        var watch = Stopwatch.StartNew();
+        bool previousPauseOnLoad = await ctx.MainThread.InvokeAsync(() =>
+        {
+            bool previous = Prefs.PauseOnLoad;
+            Prefs.PauseOnLoad = true;
+            return previous;
+        }, cancellationToken);
+        object load;
+        try
+        {
+            var result = await ctx.Tools.CallAsync("rimworld/load_game_ready",
+                new { saveName, readiness = "visual", pauseIfNeeded = true, ignoreModCompatibility = true },
+                cancellationToken: cancellationToken);
+            if (!result.Succeeded()) throw new InvalidOperationException("Comparison load failed: " + result.Error);
+            load = result.Result;
+        }
+        finally
+        {
+            await ctx.MainThread.InvokeAsync(() => Prefs.PauseOnLoad = previousPauseOnLoad, CancellationToken.None);
+        }
+        return await ctx.MainThread.InvokeAsync(() => (object)new
+        {
+            load, loadMs = watch.ElapsedMilliseconds, previousPauseOnLoad, restoredPauseOnLoad = Prefs.PauseOnLoad
+        }, cancellationToken);
+    }
+
     [Tool("totalfog/runtime_performance", Description = "Measure actual native playback, whole-tick elapsed time and frame intervals. Works with the inherited binary too. Reload the same save and camera before each comparison sample; instrumentation is removed afterward.")]
     public static async Task<object> RuntimePerformance(IRimBridgeContext ctx, CancellationToken cancellationToken,
         int durationMs = 15000, string speed = "Normal", bool forceRequestedSpeed = false, bool profileFog = false,
@@ -323,10 +353,16 @@ public sealed class PerformanceScenarios
                 zombiePopulationStart = CountSpawnedZombies(Find.CurrentMap, zombieType);
                 var zombieSettings = zombieMod?.GetType("ZombieLand.ZombieSettings");
                 var zombieValues = zombieSettings == null ? null : AccessTools.Field(zombieSettings, "Values").GetValue(null);
+                var ceMod = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(a => a.GetName().Name == "CombatExtended");
+                var ceValues = ceMod == null ? null : AccessTools.Field(ceMod.GetType("CombatExtended.Controller"), "settings").GetValue(null);
+                if (ceMod != null && ceValues == null)
+                    throw new InvalidOperationException("Combat Extended settings are unavailable for comparison.");
                 var view = Find.CameraDriver.CurrentViewRect;
                 environment = new { assembly = mod.GetName().Name, mod.Location, mvid = mod.ManifestModule.ModuleVersionId,
                     zombieAssembly = zombieMod == null ? null : new { zombieMod.Location, mvid = zombieMod.ManifestModule.ModuleVersionId,
                         scalarSettings = ScalarSettings(zombieValues) },
+                    combatExtendedAssembly = ceMod == null ? null : new { ceMod.Location, mvid = ceMod.ManifestModule.ModuleVersionId,
+                        scalarSettings = ScalarSettings(ceValues) },
                     camera = new { view.minX, view.minZ, view.maxX, view.maxZ, zoom = Find.CameraDriver.CurrentZoom.ToString() },
                     gameVersion = RimWorld.VersionControl.CurrentVersionStringWithRev,
                     engineMvid = typeof(Pawn).Assembly.ManifestModule.ModuleVersionId, runtimeNamespace = root,

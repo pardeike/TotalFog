@@ -137,10 +137,26 @@ and runtime acceptance.
   reload consumes exactly 30 rounds and both the magazine and remaining supply
   survive in-process and fresh-process loads. Twenty-nine source-linked CE
   cases pass. Other manned weapons, live suppressive Thing fallback/nearby
-  retargeting, narrowed fire arcs, actual enemy turret acquisition,
-  CE performance and combined overhaul loadouts remain open;
+  retargeting, narrowed fire arcs, combat-heavy CE performance and combined overhaul
+  loadouts remain open. The same beab8196... gameplay bytes now also pass a
+  native enemy mini-turret against a healthy drafted player target 42 cells
+  away: enemy fog off permits ordinary firing, enabled 34-cell sight stops
+  acquisition, and a real enemy-faction security bell restores firing. The
+  player's visibility of its own Pawn does not grant enemy-faction sight.
+  Power loss still stops shots despite valid shared sight. The hidden controls
+  pass in-process and fresh-process loads; the restarted profile's unchanged
+  default enemy-fog setting is explicitly re-enabled for that test. This closes
+  the bounded automatic enemy mini-turret check, not every enemy weapon.
+  A matched 350x350/410-pawn CE stress save now passes three alternating
+  fresh-process pairs with the same beab8196... candidate: median 459.27 TPS
+  versus 406.85 TPS, 12.9% higher. All measured ticks retain native fourth-speed
+  multiplier 15, unforced and without UltraSpeedBoost. Absolute starting ticks,
+  effective CE/fog settings, camera and bytes match; logs are clean. Timing
+  varies and frame p95 is essentially unchanged. This closes that synthetic
+  colony/animal fixture's performance floor, not combat-heavy or combined-loadout performance;
   this is not full CE acceptance. Native evidence is in
-  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native` and
+  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
+  `artifacts/ce-enemy-turret-native` and
   `artifacts/manual-target-symbiant`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly

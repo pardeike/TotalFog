@@ -14,10 +14,11 @@ namespace TotalFog.BridgeTools;
 /// <summary>Native CE turret/mortar fixtures. IDs survive save/load; no gameplay assembly dependency on CE.</summary>
 public sealed class CombatExtendedTurretFixture
 {
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. configure uses the actual hold-fire gizmo and an optional real security bell. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
-        int targetDistance = 16, bool holdFire = true, bool reveal = false)
+        int targetDistance = 16, bool holdFire = true, bool reveal = false,
+        bool enemyTurret = false, bool enemyFog = false)
     {
         return await ctx.MainThread.InvokeAsync(() =>
         {
@@ -41,6 +42,8 @@ public sealed class CombatExtendedTurretFixture
                     if (ownedIds.Count != 0 || turretDefName != "Turret_MiniTurret" &&
                         turretDefName != "Turret_M240B" && turretDefName != "Turret_Mortar")
                         throw new InvalidOperationException("Stage one supported turret in a clean fixture.");
+                    if (enemyTurret && turretDefName != "Turret_MiniTurret")
+                        throw new InvalidOperationException("Enemy fixture currently supports only the automatic mini-turret.");
                     if (targetDistance < 8 || targetDistance > 60) throw new ArgumentOutOfRangeException(nameof(targetDistance));
                     var source = map.AllCells.First(cell => cell.x >= 6 && cell.z >= 6 &&
                         cell.x + targetDistance + 3 < map.Size.x && cell.z + 4 < map.Size.z &&
@@ -52,7 +55,7 @@ public sealed class CombatExtendedTurretFixture
                     {
                         var def = DefDatabase<ThingDef>.GetNamed(defName);
                         var thing = ThingMaker.MakeThing(def, def.MadeFromStuff ? ThingDefOf.Steel : null);
-                        made.Add(thing); thing.SetFaction(Faction.OfPlayer);
+                        made.Add(thing); thing.SetFaction(enemyTurret ? Faction.OfAncientsHostile : Faction.OfPlayer);
                         return GenSpawn.Spawn(thing, cell, map);
                     }
                     var turret = (Building_Turret)Spawn(turretDefName, source);
@@ -62,16 +65,19 @@ public sealed class CombatExtendedTurretFixture
                     var ammo = Ammo(turret);
                     AccessTools.Method(ammo.GetType(), "ResetAmmoCount").Invoke(ammo, new object[] { null });
                     SetHoldFire(turret, true);
-                    var enemy = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfAncientsHostile);
+                    var enemy = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist,
+                        enemyTurret ? Faction.OfPlayer : Faction.OfAncientsHostile);
                     made.Add(enemy); enemy.Name = new NameSingle("TF_CE_Target");
                     enemy.equipment.DestroyAllEquipment();
                     GenSpawn.Spawn(enemy, source + IntVec3.East * targetDistance, map);
+                    if (enemyTurret) enemy.drafter.Drafted = true;
                     var wait = JobMaker.MakeJob(JobDefOf.Wait); wait.expiryInterval = 60000;
                     enemy.jobs.TryTakeOrderedJob(wait, JobTag.Misc);
                     owned.AddRange(made); ownedIds.AddRange(made.Select(t => t.ThingID));
                 }
-                else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo")
-                    throw new InvalidOperationException("Use setup, state, configure, supply-ammo, remove-power or cleanup.");
+                else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo" &&
+                    action != "configure-enemy-fog")
+                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, supply-ammo, remove-power or cleanup.");
 
                 if (action == "remove-power")
                 {
@@ -85,6 +91,12 @@ public sealed class CombatExtendedTurretFixture
                 var gunTurret = owned.OfType<Building_Turret>().Single();
                 var targetThing = owned.Single(t => t is Pawn || t is Corpse);
                 var target = targetThing is Pawn pawn ? pawn : ((Corpse)targetThing).InnerPawn;
+                var previousEnemyFog = FogSettings.AISmart;
+                if (action == "configure-enemy-fog")
+                {
+                    FogSettings.AISmart = enemyFog;
+                    AccessTools.Method(typeof(FogSettings), "applySettings").Invoke(null, null);
+                }
                 if (action == "configure")
                 {
                     SetHoldFire(gunTurret, holdFire);
@@ -92,7 +104,7 @@ public sealed class CombatExtendedTurretFixture
                     if (reveal && bell == null)
                     {
                         bell = ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("SecurityBellSmall"));
-                        made.Add(bell); bell.SetFaction(Faction.OfPlayer);
+                        made.Add(bell); bell.SetFaction(gunTurret.Faction);
                         GenSpawn.Spawn(bell, targetThing.Position + IntVec3.East, map);
                         owned.Add(bell); ownedIds.Add(bell.ThingID);
                     }
@@ -119,9 +131,11 @@ public sealed class CombatExtendedTurretFixture
                 return (object)new
                 {
                     success = true, ids = string.Join(",", ownedIds), action,
+                    enemyFog = FogSettings.AISmart, previousEnemyFog,
                     turret = new { id = gunTurret.ThingID, type = gunTurret.GetType().FullName,
+                        faction = gunTurret.Faction?.loadID,
                         cell = gunTurret.Position.ToString(), powerOn = power?.PowerOn,
-                        powerNet = power?.PowerNet != null, held = HoldFire(gunTurret).isActive(),
+                        powerNet = power?.PowerNet != null, held = IsHeld(gunTurret),
                         sightRange = sight?.LastSightRange, nativeRange = verb.verbProps.range,
                         expectedUnmannedSightRange = verb.verbProps.range * FogSettings.TurretVisionModifier,
                         manned = gunTurret.GetComp<CompMannable>()?.MannedNow,
@@ -154,9 +168,11 @@ public sealed class CombatExtendedTurretFixture
                     ammunitionSupplies = owned.Where(t => t.def == ammoDef && !t.Destroyed)
                         .Select(t => new { id = t.ThingID, cell = t.Position.ToString(), t.stackCount }).ToArray(),
                     target = new { id = target.ThingID, cell = targetThing.Position.ToString(), target.Dead,
+                        faction = target.Faction?.loadID,
                         target.Downed, job = target.CurJob?.def.defName,
                         injuries = target.health.hediffSet.hediffs.OfType<Hediff_Injury>().Sum(h => h.Severity),
                         nativeAcquirable = AccessTools.Method(gunTurret.GetType(), "IsValidTarget").Invoke(gunTurret, new object[] { targetThing }),
+                        seenByTurretFaction = map.GetVisibility().IsShown(gunTurret.Faction, targetThing.Position),
                         shown = Visibility.IsVisible(map, targetThing.Position) }
                 };
             }
@@ -173,10 +189,16 @@ public sealed class CombatExtendedTurretFixture
     private static object Ammo(Building_Turret turret) => Property(turret, "CompAmmo") ??
         throw new InvalidOperationException("The staged CE turret has no ammunition component.");
     private static Command_Toggle HoldFire(Building_Turret turret) => turret.GetGizmos().OfType<Command_Toggle>()
-        .Single(g => g.defaultLabel == "CommandHoldFire".Translate());
+        .SingleOrDefault(g => g.defaultLabel == "CommandHoldFire".Translate());
+    private static bool IsHeld(Building_Turret turret) =>
+        (bool)AccessTools.Field(turret.GetType(), "holdFire").GetValue(turret);
     private static void SetHoldFire(Building_Turret turret, bool hold)
     {
         var toggle = HoldFire(turret);
-        if (toggle.isActive() != hold) toggle.toggleAction();
+        if (IsHeld(turret) == hold) return;
+        if (toggle != null) toggle.toggleAction();
+        // Enemy turrets expose no player gizmo. Invoke the same native action
+        // used by that gizmo; do not write the flag or bypass burst cleanup.
+        else AccessTools.Method(turret.GetType(), "ToggleHoldFire").Invoke(turret, null);
     }
 }

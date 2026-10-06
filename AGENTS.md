@@ -50,8 +50,13 @@ The runner also verifies the actual camera rectangle and, when present,
 Zombieland's DLL bytes, scalar settings and configuration-file hashes. Camera
 zoom and public engine version/MVID must also match. Zombie population endpoints
 are counted outside playback even with zombie work telemetry disabled. The
-Zombieland runner also rejects missing native logs and errors recognized by
+runtime runner also rejects missing native logs and errors recognized by
 Zombieland's existing log summarizer, preserving the native result/log first.
+Combat Extended comparisons also match its exact loaded DLL/MVID, effective
+scalar settings and configuration-file hashes outside the measured interval.
+Benchmark loads temporarily enable native Pause on load and restore it without
+saving preferences. Pausing only after visual readiness can advance a different
+number of native ticks on each binary; comparison warmup endpoints must match.
 Set `TOTALFOG_WARMUP_TICKS=300` to request a predeclared 300-native-tick warmup
 (0..600, default 0). Set `TOTALFOG_PROFILE_ZOMBIES=1` with the Zombieland profile
 to record its existing selected/actual zombie work, priority/remote service,

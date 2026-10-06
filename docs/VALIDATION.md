@@ -4414,3 +4414,125 @@ fallback or nearby retargeting, non-magazine ammo handling, actual enemy
 turrets, broader CE/Zombieland combinations or current-candidate performance.
 Those checks, Multiplayer and the full release-candidate gates remain open.
 Mortal's tested ZIP pair is unchanged.
+
+### Native enemy CE mini-turret and observing-faction controls
+
+The unchanged beab8196... gameplay DLL passes the native automatic enemy
+mini-turret control on the separate Steam CE/all-DLC profile. The companion
+4c27fc7ec64a2c49c746ad2bba05be064d4fe3b0c1410d90a586c0b075d98fb1
+adds enemy ownership, observing-faction readouts and a controlled enemy-fog
+setting action using the ordinary settings refresh. No gameplay fix is needed.
+The fixture uses OfAncientsHostile turret faction 9 and a healthy drafted
+player-faction 16 Pawn, waiting 42 cells east. Native weapon range is 48;
+the configured 0.7 modifier yields 34 cells of enemy sight. Player visibility
+and the observing faction's grid are reported separately.
+
+With enemy fog disabled, ordinary automatic fire consumes ten rounds during
+361 unforced Normal ticks, from 100 to 90, lastShotTick 442. The enemy source
+has radius -1 and supplies no enemy-fog sight work. Enabling the option while
+paused supplies 34-cell sight and immediately makes the healthy distant Pawn
+not acquirable. Another 362 ticks retain all 90 rounds and lastShotTick 442;
+the automatic target clears even though the player's own Pawn remains visible.
+A real security bell belonging to the turret faction grants shared sight at
+the same target. Native acquisition becomes valid, and another 360 ticks
+consume ten rounds, from 90 to 80, lastShotTick 1014.
+
+Reloading the unchanged hidden save in-process retains the healthy waiting
+target, power, 34-cell sight and 90 rounds. Another 361 ticks produce no shot.
+A separate positive sight control removes only the fixture battery/conduits
+while keeping the real enemy-faction bell. Shared target sight and CE's bare
+target validator remain true, but PowerOn is false and the turret's own sight
+is zero. During 360 ticks, native CE Active prevents fire and all 90 rounds
+remain, preserving its availability check independently of Total Fog's gate.
+
+A fresh process reloads the same hidden save. Its profile retains the original
+enemy-fog setting false, so the test explicitly re-enables it before playback;
+this does not prove persistence of a changed settings value. The healthy target
+remains unseen by the turret faction and receives no shot during 360 ticks.
+The first 62 setup ticks still had PowerOn false and are excluded from powered
+negative acceptance. Decompiled native CE Tick clears enemy hold fire when its
+player toggle is unavailable; no held interval is used to prove this policy.
+
+The original test setting is restored, all owned fixture objects are removed,
+the unchanged base save is reloaded and termination is verified. Both retained
+logs pass the existing error summarizer. Receipts, the exact companion and the
+hidden save hash are recorded under artifacts/ce-enemy-turret-native. These
+checks prove bounded faction/availability behavior for the automatic
+mini-turret. Other enemy weapons, native narrowed arcs/suppressive fallback,
+nearby retargeting and broad CE combat/performance remain separate targets.
+
+### CE stress-fixture preparation and timing guards
+
+The existing original-fog 350x350 stress save contains 410 pawns, including
+53 native-listed colonists. Its first unchanged copy into the CE profile is
+rejected before timing: CE requires a stuff value for seventeen saved flak
+vests, and the vanilla save also carries old ThinkNode keys. This is a fixture
+conversion problem, not a measured performance failure. The original save is
+preserved byte for byte at SHA-256
+7e5b6d5c8c8e9e69e394e352c1a48cb4d09f661198ab161af6957d173a300429.
+
+Under the original fog DLL, native CE loading supplies its ordinary garment
+defaults. A native save creates TotalFogCE_Stress350_Compatible; no XML is
+edited and no actors are removed. The result retains all 410 pawns, the
+350x350 map and the original fog map/alert types. Its SHA-256 is
+09db9bda50f9f995ec4adca1cdf21b56f75d53f696882fa57b2dd9fb4ea3b72f.
+A fresh process loads it cleanly with no open attention or recognized native
+errors. The adaptation receipts, original rejection, migration log and clean
+fresh-load log are retained under artifacts/ce-enemy-turret-native.
+
+The first adapted pair, ce-stress-compatible-beab8196, is also excluded:
+visual-ready pausing starts the original at tick 3 and the candidate at tick
+19. All other compared conditions match, and both native samples complete
+without recognized errors, but the absolute warmup endpoints correctly reject
+this pair. The comparison helper now enables native Pause on load only during
+loading, restores the previous preference without saving it and retains that
+receipt. The game, saved tick count and absolute-start comparison remain
+unchanged. The first helper attempt, ce-stress-paused-beab8196, completes native
+loading/playback but fails in runner load-duration accounting; it supplies no
+accepted timing result. The accounting is corrected and raw load receipts are
+now preserved before validation. These rejected attempts remain separately
+labeled and do not establish the performance floor.
+
+### CE large-map performance floor on the current sight-loss fix
+
+The corrected ce-stress-paused2-beab8196 comparison completes three alternating
+original/candidate pairs in six fresh public Steam processes. All-DLC CE 16.7.3.0
+is loaded with identical DLL SHA-256
+3102bc2276c583e51fe85ae340e5b986f80452171db63ea72d04f7651b96afe3,
+MVID 2154499a-15df-4785-9832-e4d0c305b722 and effective scalar settings;
+no CE configuration file exists in this isolated profile. Ammo is enabled,
+mid-burst retargeting is enabled and the optional arc-of-fire setting is disabled.
+This run does not validate arc behavior. The 350x350/410-pawn fixture hash,
+fog settings, loadout, engine, hardware, rendering settings and camera all
+match. The camera is Middle zoom at x106..194, z171..221.
+
+Every sample starts at saved tick 3 with zero requested warmup, retains focus,
+restores Pause on load from false to false, and completes 15 seconds of native
+playback without recognized runtime errors. Every measured tick retains
+Ultrafast with native multiplier 15; forced speed and UltraSpeedBoost are both
+off. DPA and zombie telemetry are off. Sample order is original/candidate,
+candidate/original, original/candidate:
+
+| Pair | Original TPS | Total Fog TPS |
+| --- | ---: | ---: |
+| 1 | 476.55 | 474.39 |
+| 2 | 406.85 | 459.27 |
+| 3 | 403.42 | 420.91 |
+| Median | 406.85 | 459.27 |
+
+The unchanged beab8196... gameplay DLL meets the strict TPS floor here: median
+TPS is 12.9% higher. Median whole-tick elapsed time, which includes scheduling,
+is 1.526ms versus 1.721ms. Frame p95 is effectively unchanged, 69.47ms versus
+69.32ms. The first pair is slightly slower and runs vary appreciably, so this
+is bounded paired evidence, not a uniform 13% improvement or nominal 900 TPS.
+The fixture is a synthetic moving colony/animal load with CE active; broader
+combat-heavy CE and combined CE/Zombieland performance remain open.
+
+The complete comparison and all six raw reports/Player.logs are retained under
+artifacts. The proof companion SHA-256 is
+f207d426cedabecf7b78e811b80cb7cd1568141d18a0a99ef88ab84d85fbe91f;
+it is retained with the candidate under artifacts/ce-stress-native. The save
+is unchanged, all six processes terminate, and the workflow restores the
+candidate install. The canonical build passes all 291 independent tests.
+Broader current-candidate Zombieland/package gates and Multiplayer remain open;
+Mortal's tested ZIP pair is unchanged.

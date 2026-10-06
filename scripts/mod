@@ -127,6 +127,7 @@ try:
                         identity['contaminationOverlay'] = environment['contaminationOverlay']
                         identity['contaminationInput'] = environment['contaminationInput']
                         identity['zombieland'] = evidence['zombielandIdentity']
+                        identity['combatExtended'] = evidence['combatExtendedIdentity']
                         identity['warmupTicks'] = evidence['warmupTicks']
                         identity['warmupWindow'] = sample['warmup']
                         identity['profileZombieWork'] = evidence['profileZombieWork']

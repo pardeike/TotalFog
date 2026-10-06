@@ -49,7 +49,7 @@ process = subprocess.Popen(
 request_id = 0
 game_started = False
 
-def check_zombieland_log(path):
+def check_native_log(path):
     if not path.is_file():
         raise RuntimeError('Native Player.log is missing: ' + str(path))
     summary = subprocess.check_output(
@@ -130,10 +130,14 @@ try:
             raise RuntimeError('Profiling state or active mods changed between samples')
         report['instrumentation'] = instrumentation
         try:
-            load = tool('games_call_tool', {
-                'tool': GAME_ID + '_rimworld_load_game_ready', 'timeout': 180,
-                'arguments': {'saveName': save_name, 'readiness': 'visual',
-                              'pauseIfNeeded': True, 'ignoreModCompatibility': True}})
+            load_preparation = tool('games_call_tool', {
+                'tool': GAME_ID + '_totalfog_load_comparison_save', 'timeout': 180,
+                'arguments': {'saveName': save_name}})
+            report['pendingLoad'] = load_preparation
+            report_path.write_text(json.dumps(report, indent=2) + '\n')
+            if load_preparation['previousPauseOnLoad'] != load_preparation['restoredPauseOnLoad']:
+                raise RuntimeError('Comparison load did not restore the native Pause on load preference')
+            load = load_preparation['load']
             if not load.get('success'):
                 raise RuntimeError('Comparison save did not become ready')
             # The bridge enables its private ultrafast debug default on startup.
@@ -160,10 +164,12 @@ try:
             if player_log.exists():
                 shutil.copy2(player_log, ROOT / 'artifacts' / f'runtime-{label}-{index + 1}.log')
         # Retain the native result even when a later evidence guard rejects it.
-        report['pendingSample'] = {'loadMs': load['operation']['DurationMs'], 'measurement': sample}
+        report['pendingSample'] = {'loadMs': load_preparation.get('loadMs'),
+                                  'loadPreparation': load_preparation, 'measurement': sample}
         report_path.write_text(json.dumps(report, indent=2) + '\n')
-        if GAME_ID == 'total-fog-zombieland-16':
-            check_zombieland_log(ROOT / 'artifacts' / f'runtime-{label}-{index + 1}.log')
+        if not isinstance(load_preparation.get('loadMs'), int):
+            raise RuntimeError('Comparison load timing is missing; install the current companion')
+        check_native_log(ROOT / 'artifacts' / f'runtime-{label}-{index + 1}.log')
         if not sample.get('success'):
             report['failedSample'] = sample
             report_path.write_text(json.dumps(report, indent=2) + '\n')
@@ -215,13 +221,27 @@ try:
         if report.get('zombielandIdentity', zombie_identity) != zombie_identity:
             raise RuntimeError('Zombieland bytes or settings changed between samples')
         report['zombielandIdentity'] = zombie_identity
+        if 'combatExtendedAssembly' not in environment:
+            raise RuntimeError('Install the current companion to record Combat Extended identity')
+        ce = environment['combatExtendedAssembly']
+        if ('ceteam.combatextended' in instrumentation['activePackageIds']) != (ce is not None):
+            raise RuntimeError('Combat Extended loadout and loaded assembly disagree')
+        ce_identity = None if ce is None else {
+            'mainSha256': hashlib.sha256(Path(ce['Location']).read_bytes()).hexdigest(),
+            'mvid': ce['mvid'], 'scalarSettings': ce['scalarSettings'],
+            'configSha256': {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                             for path in sorted((DATA / 'Config').glob('*CombatExtended*'))}}
+        if report.get('combatExtendedIdentity', ce_identity) != ce_identity:
+            raise RuntimeError('Combat Extended bytes or settings changed between samples')
+        report['combatExtendedIdentity'] = ce_identity
         if profile_zombies:
             work = sample.get('zombieWork')
             if not work or not work['success'] or not work['scheduler']['selectedEqualsActuallyTicked']:
                 raise RuntimeError('The sample lacks complete actual zombie work accounting')
             if work['timing']['gameTicks'] != sample['tickCpuMs']['count']:
                 raise RuntimeError('Zombie telemetry and whole-tick timing cover different native ticks')
-        report['samples'].append({'loadMs': load['operation']['DurationMs'], 'measurement': sample})
+        report['samples'].append({'loadMs': load_preparation['loadMs'],
+                                 'loadPreparation': load_preparation, 'measurement': sample})
         del report['pendingSample']
         report_path.write_text(json.dumps(report, indent=2) + '\n')
         # Ending the MCP subprocess only requests game shutdown asynchronously.
