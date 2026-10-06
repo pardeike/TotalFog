@@ -119,11 +119,19 @@ and runtime acceptance.
   that same target. Hidden controls also pass in-process and fresh-process
   loads, and ordinary CE turret reload jobs consume real shells and refill the
   magazine. Nineteen source-linked CE cases and the eight native pawn hit-check
-  controls pass. Other manned weapons, manual indirect-fire orders,
+  controls pass. The later 0d19b952... candidate also filters the engine's
+  manual-target candidate list: an actual hidden-pawn mortar click creates a
+  cell order and fires, a revealed click retains the Pawn target and fires,
+  and the native minimum-range rejection remains intact. Twelve Symbiant
+  rendering/interaction cases and all 54 manual body-cell checks pass on that
+  same candidate, including visible body targets with a hidden inspection core.
+  The temporary native list is filtered in place without changing the thing
+  grid, ordinary selection, cell fallback or simulation. Other manned weapons,
   sight loss during an active burst, additional weapons, actual enemy turret
   acquisition, CE performance and combined overhaul loadouts remain open;
   this is not full CE acceptance. Native evidence is in
-  `artifacts/ce-turret-native` and `artifacts/ce-mortar-native`; broader performance/package gates still refer
+  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native` and
+  `artifacts/manual-target-symbiant`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn

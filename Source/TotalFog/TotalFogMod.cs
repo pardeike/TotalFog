@@ -107,6 +107,8 @@ public class TotalFogMod : Mod
             transpiler: new HarmonyMethod(typeof(Presentation.InterfaceVisibility), nameof(Presentation.InterfaceVisibility.TooltipTranspiler)));
         harmony.Patch(AccessTools.Method(typeof(Verse.MouseoverReadout), nameof(Verse.MouseoverReadout.MouseoverReadoutOnGUI)),
             transpiler: new HarmonyMethod(typeof(Presentation.InterfaceVisibility), nameof(Presentation.InterfaceVisibility.MouseoverTranspiler)));
+        harmony.Patch(AccessTools.EnumeratorMoveNext(AccessTools.Method(typeof(Verse.GenUI), nameof(Verse.GenUI.TargetsAt))),
+            transpiler: new HarmonyMethod(typeof(Presentation.InterfaceVisibility), nameof(Presentation.InterfaceVisibility.TargetCandidatesTranspiler)));
         foreach (var method in typeof(Verse.GenMapUI).GetMethods().Where(m => m.Name == nameof(Verse.GenMapUI.DrawPawnLabel)))
             harmony.Patch(method, prefix: new HarmonyMethod(typeof(Presentation.InterfaceVisibility), nameof(Presentation.InterfaceVisibility.PawnLabelPrefix)));
         patchMethod(typeof(Verse.GenMapUI), typeof(GenMapUI), nameof(Verse.GenMapUI.DrawThingLabel), typeof(Thing),

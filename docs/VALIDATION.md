@@ -4280,3 +4280,60 @@ verified. Other manned weapons, manual indirect-fire orders, active-burst sight
 loss, actual enemy turret acquisition, CE fourth-speed performance and combined
 loadouts remain unverified. Earlier Zombieland/performance/package gates still
 refer to their exact previous gameplay bytes. Mortal's tester pair is unchanged.
+
+### Manual target candidates and blind mortar fire
+
+An actual forced-target gizmo and map click on the c7205ee1... candidate binds
+the unseen healthy enemy to the CE mortar's CurrentTarget as Human75713, despite
+nativeAcquirable and player sight both being false. It consumes a shell during
+480 Normal ticks. The selection can therefore track the hidden Pawn rather
+than the chosen cell. This is a Total Fog UI omission, not an upstream blocker.
+
+DecompilerServer confirms the public 1.6 GenUI.TargetsAt iterator contains one
+ThingsUnderMouse call at IL_003A. The native method owns a fresh candidate list;
+the iterator separately retains psychological invisibility checks, native
+candidate order and its bounds/CanTarget-validated cell fallback. Total Fog
+replaces only that list call with a wrapper which compacts unseen candidates
+in place. It introduces no extra list, simulation mutation, saved state or
+tick work. Ordinary selection and float-menu enumeration remain on their
+original call paths. Registered inspection cores keep a separate targeting
+policy: their native adapter supplies body-shape candidates and Total Fog checks
+current sight at the clicked cell. An unseen inspection core does not prevent
+attacking a visible body cell, and a visible core does not disclose hidden cells.
+
+Three focused candidate tests fail before filtering. The final canonical build
+passes all 281 independent tests, including remembered/owned objects, list
+identity/order, authoritative-grid preservation, selection proxies,
+uninitialized fog and root/core sight disagreements. Its main SHA-256 is
+0d19b952d29918d1c45dd085a8f13c534346e07c982372b2cb794f7c35a34620;
+the companion is
+016459c1bf5c73f231724b57f9bff4f3df241e94e7868aa655239f4bfd045cce.
+
+Fresh-process native acceptance uses the unchanged healthy mortar save, SHA-256
+4999423f63df00f0d955d9f858c2d1d8f296a864b434dfc0d92c0c817fc6f838.
+The actual hidden-enemy click now creates a valid cell target at (136,0,70),
+HasThing false, with the healthy enemy still unseen. During 481 unforced Normal
+ticks, native fire consumes the shell and advances lastShotTick to 3685. After
+reloading the unchanged fixture and revealing the same enemy with a real
+security bell, its actual click binds Human75713, HasThing true. Another 481
+ticks consumes the shell and advances lastShotTick to 3693. A fresh load and
+click 10 cells from the mortar, inside its 32-cell native minimum range, creates
+no valid order and retains its shell and lastShotTick -999999. These are firing
+and selection controls, not guaranteed-hit or fourth-speed performance evidence.
+
+On those same Total Fog bytes with the unchanged tested Zombieland gameplay
+DLL 56daa1f2..., the extended native Symbiant boundary fixture passes all 12
+rendering/interaction cases and 54 manual body-cell checks. Twenty-two paired
+screenshots pass the existing pixel verifier, including hidden-cell exclusion,
+all-hidden silence, native/fallback positives and core/root disagreement. The
+fixture matures through 61 native ticks, then keeps its evidence phases paused.
+Its settings and diagnostic patches are restored and its unchanged base save
+is reloaded. Both native Player.logs have no recognized runtime errors; fixture
+objects are removed and both process terminations are verified.
+
+Receipts and the retained candidate DLL are under artifacts/ce-mortar-native,
+artifacts/manual-target-symbiant and artifacts/candidates/manual-target-0d19b952.
+Other manned CE weapons, active-burst sight loss, actual enemy acquisition,
+broader loadouts and current-candidate performance/package gates remain open.
+The public API and commands are unchanged; the separate README rewrite is
+preserved uncommitted. Mortal retains the earlier tested ZIP pair.

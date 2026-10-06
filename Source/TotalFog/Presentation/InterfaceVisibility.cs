@@ -43,4 +43,26 @@ internal static partial class InterfaceVisibility
         return visible;
     }
 
+    // GenUI.TargetsAt owns this temporary candidate list. Filtering it leaves
+    // the authoritative grid, ordinary selection, and native cell fallback alone.
+    public static List<Thing> FilterTargetThings(List<Thing> things, IntVec3 clickCell)
+    {
+        int write = 0;
+        for (int read = 0; read < things.Count; read++)
+        {
+            var thing = things[read];
+            // A registered inspection core is independent of manual body
+            // targeting. Its native adapter supplies shape-valid candidates;
+            // current sight at the clicked cell still gates every body target.
+            bool visible = thing != null && CustomInspectionCell.TryGetCell(thing, out _)
+                ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
+                : CanRead(thing);
+            if (!visible) continue;
+            if (write != read) things[write] = thing;
+            write++;
+        }
+        if (write != things.Count) things.RemoveRange(write, things.Count - write);
+        return things;
+    }
+
 }

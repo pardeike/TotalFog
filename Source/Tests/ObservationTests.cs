@@ -290,6 +290,22 @@ public sealed class ObservationTests
         Assert.Same(item.Map.Things, InterfaceVisibility.MouseoverThings(item.Position, item.Map));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RememberedObjectsNeedCurrentSightToBecomeManualTargets(bool owned)
+    {
+        var item = Item();
+        if (owned) item.Faction = Faction.OfPlayer;
+        item.Map.Fog.InSight[0] = true;
+        item.TryGetComp<CompFog>().HideFromPlayer.UpdateVisibility(true);
+        item.Map.Fog.InSight[0] = false;
+        Assert.True(ThingVisibility.IsVisible(item));
+        Assert.Empty(InterfaceVisibility.FilterTargetThings(new() { item }, item.Position));
+        item.Map.Fog.InSight[0] = true;
+        Assert.Equal(new[] { item }, InterfaceVisibility.FilterTargetThings(new() { item }, item.Position));
+    }
+
     [Fact]
     public void SelectedRememberedObjectIsDeselectedWhenSightIsLost()
     {

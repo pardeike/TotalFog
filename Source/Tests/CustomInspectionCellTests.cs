@@ -27,6 +27,8 @@ public sealed class CustomInspectionCellTests
             Assert.Equal(coreVisible, Visibility.IsVisible(pawn));
             Assert.Equal(coreVisible && rootVisible, InterfaceVisibility.PawnLabelPrefix(pawn));
             Assert.Equal(coreVisible ? new IntVec3(1, 0) : IntVec3.Invalid, InterfaceVisibility.TooltipPosition(pawn));
+            Assert.Equal(rootVisible ? 1 : 0, InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(0, 0)).Count);
+            Assert.Equal(coreVisible ? 1 : 0, InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(1, 0)).Count);
             Assert.Equal(rootVisible, ThingVisibility.IsVisible(pawn));
             Assert.Equal(new IntVec3(0, 0), pawn.PositionHeld);
             InterfaceVisibility.DrawOverlay(pawn);

@@ -37,6 +37,7 @@
 - Apply fog targeting to Combat Extended weapons while preserving its ballistics and the enemy-fog setting.
 - Give powered Combat Extended turrets their configured sight and stop unmanned turrets firing at cells unseen by their faction.
 - Keep mortar crews at their normal sight range, and prevent Combat Extended turrets from automatically acquiring unseen targets.
+- Keep manual targeting from selecting unseen objects; blind fire aims at the chosen cell instead of tracking a hidden pawn.
 - Reduce sight-update work in open terrain while preserving blocked-cell visibility and combat targeting.
 - Reduce visibility-listener lookup work and index memory on populated maps.
 - Reduce fog memory use and recurring allocations as pawns move through populated maps.
