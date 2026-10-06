@@ -5229,3 +5229,39 @@ ModsConfig.xml match the preflight hashes. The retained native log has an empty
 recognized error summary. Exact native receipts, source findings, byte guards
 and assertions are in `artifacts/ce-special-targets`. No production change or
 new performance acceptance follows from these controls.
+
+### Native CE electrifier exclusion and EMP state transition
+
+The same ddb5c8fe.../56daa1f2... gameplay pair and 00ff91d6... companion pass
+one bounded visible-electrifier control in process 70375. The existing player
+mini-turret fixture uses native range 48 and current sight 34. After 419 Normal
+power-settle ticks with hold fire enabled, its human target is removed and an
+electrifier is spawned 12 cells east. With hold fire disabled, 241 unforced
+Normal ticks leave its magazine at 100, no acquired target or warmup, and the
+never-fired lastShotTick sentinel. The zombie remains alive, visible, not downed
+and in native Stumble AI. CE's basic IsValidTarget accepts it, which again does
+not establish the full automatic target scan.
+
+The existing EMP tool applies actual DamageInfo EMP input 10 to that same
+electrifier. It observes electricDisabledUntil changing from 0 to 1282 at native
+tick 682, active electric true before and false after, and zero injury damage.
+The disabling path is Zombieland's native damage notification patch. This does
+not test delivery by a CE EMP projectile. Over another 241 unforced Normal ticks,
+the unchanged turret acquires the same zombie and consumes ten rounds, with
+lastShotTick 861 and the disabling interval still active. Its final injury sum
+is zero, so this proves native acquisition/firing rather than a projectile hit.
+No diagnostic trace or DPA instrumentation is enabled.
+
+A subsequent player-command attempt uses an ordinary unconfused zombie and
+correctly produces no rope option. GetRopableZombie requires IsConfused, so that
+setup does not establish roped-target acquisition or identify a defect. The
+roped/confused check remains open rather than forcing an ineligible menu entry.
+
+The population-cleanup test mode is restored to its original settings, owned
+zombies/colonist/turret/power are removed, selection is cleared, the unchanged
+base is reloaded and native process termination is verified. Gameplay/companion
+bytes, base save and ModsConfig.xml remain unchanged; the retained Player.log has
+an empty recognized error summary. Native receipts, assertions and hashes are in
+`artifacts/ce-electric-targets`. Reactivation, other weapons, CE EMP delivery,
+save/load and combined combat performance remain separate checks. No production
+change follows from this bounded pass.

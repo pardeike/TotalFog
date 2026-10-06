@@ -316,6 +316,16 @@ and runtime acceptance.
   This closes only the ordinary player mini-turret sight/firing and bounded
   warmup/target/ammunition persistence slices. Special states, other weapons,
   nonzero injury persistence and combined combat-heavy performance remain open.
+  The unchanged pair also preserves one native visible-electrifier transition:
+  the same powered, unheld CE mini-turret ignores the active zombie for 241
+  Normal ticks with all 100 rounds retained. Real EMP damage input 10 disables
+  its electric state for 600 ticks; another 241 Normal ticks acquire that same
+  zombie and consume ten rounds. This checks the native damage/targeting state
+  transition, not delivery by a CE EMP projectile, guaranteed hits, reactivation
+  or other weapon routes. A separate unconfused-zombie UI attempt correctly
+  offers no rope option and does not close roped/confused target coverage.
+  Owned cleanup, original settings, stopped process, clean native log and
+  unchanged byte guards are verified in `artifacts/ce-electric-targets`.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.
