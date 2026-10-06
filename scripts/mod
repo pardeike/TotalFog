@@ -30,6 +30,8 @@ def stage(destination, baseline=False):
         if src.is_dir(): shutil.copytree(src, dst, dirs_exist_ok=True)
         else: shutil.copy2(src, dst)
     assemblies = destination / '1.6/Assemblies'
+    # Remove the inherited updater metadata from previously staged installs.
+    (destination / 'About/ModSync.xml').unlink(missing_ok=True)
     (assemblies / 'rimworld-mod-real-fow.dll').unlink(missing_ok=True)
     if baseline:
         # The native baseline must retain the original runtime XML bindings.
