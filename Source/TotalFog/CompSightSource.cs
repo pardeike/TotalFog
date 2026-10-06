@@ -165,7 +165,8 @@ public class CompSightSource : FogSubcomponent
             if (job?.def == JobDefOf.ManTurret && job.targetA.Thing is Building_Turret turret) attack = turret.AttackVerb;
             else if (job != null && (job.def == JobDefOf.AttackStatic || job.def == JobDefOf.AttackMelee || job.def == JobDefOf.Wait_Combat || job.def == JobDefOf.Hunt))
                 attack = pawn.equipment?.Primary?.GetComp<CompEquippable>()?.PrimaryVerb;
-            if (attack?.verbProps.requireLineOfSight == true && attack.EquipmentSource?.def.IsRangedWeapon == true) range = Math.Max(range, attack.verbProps.range);
+            if (attack?.verbProps.requireLineOfSight == true && !attack.ProjectileFliesOverhead() &&
+                attack.EquipmentSource?.def.IsRangedWeapon == true) range = Math.Max(range, attack.verbProps.range);
         }
         float modifier = capacities.GetLevel(PawnCapacityDefOf.Sight);
         bool ignoreDarkness = false, ignoreWeather = false;

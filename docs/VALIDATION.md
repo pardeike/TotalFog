@@ -4223,3 +4223,60 @@ startup debug boost does not affect that speed. This does not establish
 fourth-speed performance, native ammo reloading for turrets, active-burst sight
 loss, manned weapons, mortars or broader combined loadouts. Mortal retains the
 preceding tested pair; this CE-only change has not been sent as a tester update.
+
+### CE mortar sight, automatic acquisition and native reload
+
+The installed public Steam CE 16.7.3.0 mortar marks its verb as requiring LOS,
+but the engine's ProjectileFliesOverhead query returns true. On the preceding
+6527f4d8... gameplay DLL, manning it extends the crew's sight to the 700-cell
+weapon range, reduced to 455 cells by the scene's normal sight modifiers. The
+same saved scene on the range correction reports 39 cells and hides the enemy
+60 cells away. Later playback uses the changing native lighting/weather and
+reports ordinary crew radii of 53..58; it does not pin those modifiers.
+
+The range correction alone exposes a second native failure: CE's overhead
+automatic-target scan skips its LOS hook, consumes a shell at an unseen healthy
+waiting pawn and advances lastShotTick to 5845. Total Fog now filters CE's
+existing IsValidTarget validator through current faction coverage. It uses the
+manning pawn's faction when present, preserves failed native validation and
+the disabled enemy-fog policy, and leaves deliberate indirect-fire orders on
+their native path. Reflection resolves the hook at startup; no new scheduler,
+saved data or hard CE reference is introduced. Four source-linked CE cases fail
+before that correction. The canonical deploy passes 274 tests, including
+nineteen CE adapter cases. Its native eight-control CE pawn hit matrix also
+passes without promoting failed ballistics.
+
+The final main SHA-256 is
+c7205ee19ab8ce0ff3ebc02554f54f540d3f7704883c2b1614d3a6aa20ea63b2;
+the native companion is
+58dae363b0f8f8202482df5ea66ab7d40d8b8bbfd8869e6112f2c987214405ae.
+The fresh mortar fixture uses ordinary generated pawns, a preloaded initial
+magazine, actual Man mortar menu orders and unforced Normal playback. Other
+colonists remain drafted more than 75 cells from the target. The manned,
+loaded mortar cannot acquire the healthy unseen enemy 60 cells away and keeps
+its shell and lastShotTick -999999 throughout 481 native ticks. An in-process
+load adds 361 ticks and a fresh process adds 361 ticks with the same result.
+A real security bell reveals that same healthy pawn: native acquisition changes
+from false to true, and ordinary automatic fire consumes its shell and advances
+lastShotTick to 4060 during 479 ticks. This proves firing, not a guaranteed hit.
+
+Reloading is independently exercised through the ordinary Prioritize reloading
+menu and CE's ReloadTurret job. A real two-shell supply drops to one while the
+magazine goes from zero to one during 719 native ticks; it is not filled through
+the fixture's setup-only ResetAmmoCount call. A saved active native reload also
+completes on the new candidate. That older saved scene contains an already-fired
+shell which subsequently kills its target. The corpse-based no-fire window is
+excluded from acquisition acceptance; the healthy fresh fixture supplies those
+controls. An initial fixture-layout attempt found no clear strip sufficiently
+far from the colony. Its diagnostic attention was inspected and acknowledged;
+moving the colonists through ordinary orders supplies the required layout.
+
+The unchanged healthy hidden save has SHA-256
+4999423f63df00f0d955d9f858c2d1d8f296a864b434dfc0d92c0c817fc6f838.
+Receipts, identities and complete logs remain under artifacts/ce-mortar-native.
+Both final native control/restart logs have no recognized errors, fixture
+objects are removed, the unchanged base save is reloaded, and termination is
+verified. Other manned weapons, manual indirect-fire orders, active-burst sight
+loss, actual enemy turret acquisition, CE fourth-speed performance and combined
+loadouts remain unverified. Earlier Zombieland/performance/package gates still
+refer to their exact previous gameplay bytes. Mortal's tester pair is unchanged.

@@ -108,11 +108,22 @@ and runtime acceptance.
   nearby; an enemy at 42 cells receives no shots while hidden, including after
   reveal/hide and both in-process and fresh-process loads. Shared sight from a
   real security bell permits native firing at that same distant target.
-  Native power loss removes the turret's coverage. Manned turrets, mortars,
+  Native power loss removes the turret's coverage. The later c7205ee1...
+  candidate also fixes overhead weapons extending crew sight to their weapon
+  range: the same saved CE mortar scene drops from 455 cells to 39, rather than
+  treating its 700-cell indirect range as vision. CE's native turret validator
+  now filters automatic acquisition using the current observing faction;
+  deliberate indirect-fire orders retain their native path. A healthy enemy
+  60 cells away remains hidden and receives no automatic shots while the mortar
+  is manned and loaded. A real security bell permits acquisition and firing at
+  that same target. Hidden controls also pass in-process and fresh-process
+  loads, and ordinary CE turret reload jobs consume real shells and refill the
+  magazine. Nineteen source-linked CE cases and the eight native pawn hit-check
+  controls pass. Other manned weapons, manual indirect-fire orders,
   sight loss during an active burst, additional weapons, actual enemy turret
   acquisition, CE performance and combined overhaul loadouts remain open;
   this is not full CE acceptance. Native evidence is in
-  `artifacts/ce-turret-native`; broader performance/package gates still refer
+  `artifacts/ce-turret-native` and `artifacts/ce-mortar-native`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn

@@ -19,6 +19,7 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         ModsConfig.Active.Clear(); AccessTools.Types.Clear(); Harmony.Patched.Clear();
         GenTypes.AllTypes = new[] { typeof(CeVerb), typeof(InheritedVerb), typeof(OverrideVerb), typeof(UnrelatedVerb) };
         AccessTools.Types[TypeName] = typeof(CeVerb);
+        AccessTools.Types["CombatExtended.Building_TurretGunCE"] = typeof(CeTurret);
     }
 
     public void Dispose()
@@ -40,9 +41,10 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
     {
         ModsConfig.Active.Add(Package);
         CombatExtendedIntegration.Install(new Harmony());
-        Assert.Equal(new[] { typeof(CeVerb), typeof(OverrideVerb) }, Harmony.Patched.Select(m => m.DeclaringType));
-        Assert.All(Harmony.Patched, m => Assert.Equal(new[] { typeof(Vector3), typeof(IntVec3), typeof(Thing) },
+        Assert.Equal(new[] { typeof(CeVerb), typeof(OverrideVerb), typeof(CeTurret) }, Harmony.Patched.Select(m => m.DeclaringType));
+        Assert.All(Harmony.Patched.Take(2), m => Assert.Equal(new[] { typeof(Vector3), typeof(IntVec3), typeof(Thing) },
             m.GetParameters().Select(p => p.ParameterType)));
+        Assert.Equal(new[] { typeof(Thing) }, Harmony.Patched.Last().GetParameters().Select(p => p.ParameterType));
     }
 
     [Fact]
@@ -159,6 +161,101 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         CombatExtendedIntegration.HitCellPostfix(new CeVerb { caster = caster }, ref result,
             new(.5f, 0, .5f), new(1, 0));
         Assert.True(result);
+    }
+
+    [Fact]
+    public void MissingOptionalTurretKeepsTheProjectileHooks()
+    {
+        ModsConfig.Active.Add(Package);
+        AccessTools.Types.Remove("CombatExtended.Building_TurretGunCE");
+        CombatExtendedIntegration.Install(new Harmony());
+        Assert.Equal(new[] { typeof(CeVerb), typeof(OverrideVerb) }, Harmony.Patched.Select(m => m.DeclaringType));
+    }
+
+    [Fact]
+    public void TurretAcquisitionUsesLiveCoverageWithoutPromotingNativeFailures()
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer };
+        turret.Map.Fog.Initialized = true;
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        bool result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result);
+        turret.Map.Fog.InSight[1] = true; result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.True(result);
+        turret.Map.Fog.InSight[1] = false; result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result);
+        turret.Map.Fog.InSight[1] = true; result = false;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result);
+    }
+
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public void EnemyTurretAcquisitionRetainsTheOptionalPolicy(bool enemyFog, bool expected)
+    {
+        var turret = new CeTurret { Faction = new Faction() };
+        turret.Map.Fog.Initialized = true;
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        FogSettings.AISmart = enemyFog;
+        bool result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ManningPawnFactionControlsAcquisitionRatherThanBuildingOwner()
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer };
+        var crew = new Pawn { Faction = new Faction(), Map = turret.Map };
+        turret.Component = new RimWorld.CompMannable { ManningPawn = crew };
+        turret.Map.Fog.Initialized = true;
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        bool result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.True(result);
+        FogSettings.AISmart = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result);
+        turret.Map.Fog.FactionSight[crew.Faction] = new[] { false, true, false, false };
+        result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void MissingMapOrUninitializedFogRetainsNativeAcquisition()
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer };
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        bool result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.True(result);
+        turret.Map = null;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void InvalidNativeTargetsDoNotQuerySight()
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer };
+        turret.Map.Fog.Initialized = true;
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        bool result = false;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result); Assert.Equal(0, turret.Map.Fog.VisibilityQueries);
+        result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, null, ref result);
+        Assert.True(result); Assert.Equal(0, turret.Map.Fog.VisibilityQueries);
+    }
+
+    private sealed class CeTurret : RimWorld.Building_Turret
+    {
+        private bool IsValidTarget(Thing target) => true;
     }
 
     private class CeVerb : Verse.Verb

@@ -14,7 +14,7 @@ namespace TotalFog.BridgeTools;
 /// <summary>Native CE turret/mortar fixtures. IDs survive save/load; no gameplay assembly dependency on CE.</summary>
 public sealed class CombatExtendedTurretFixture
 {
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret/mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/remove-power/cleanup. configure uses the actual hold-fire gizmo and an optional real security bell. remove-power destroys only the fixture battery and conduits. Playback, manning and attack orders use ordinary bridge tools. Magazines are preloaded only during fixture setup. Does not establish performance or all CE weapons.")]
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. configure uses the actual hold-fire gizmo and an optional real security bell. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
         int targetDistance = 16, bool holdFire = true, bool reveal = false)
@@ -38,14 +38,16 @@ public sealed class CombatExtendedTurretFixture
             {
                 if (action == "setup")
                 {
-                    if (ownedIds.Count != 0 || turretDefName != "Turret_MiniTurret" && turretDefName != "Turret_Mortar")
+                    if (ownedIds.Count != 0 || turretDefName != "Turret_MiniTurret" &&
+                        turretDefName != "Turret_M240B" && turretDefName != "Turret_Mortar")
                         throw new InvalidOperationException("Stage one supported turret in a clean fixture.");
                     if (targetDistance < 8 || targetDistance > 60) throw new ArgumentOutOfRangeException(nameof(targetDistance));
                     var source = map.AllCells.First(cell => cell.x >= 6 && cell.z >= 6 &&
                         cell.x + targetDistance + 3 < map.Size.x && cell.z + 4 < map.Size.z &&
                         new CellRect(cell.x - 3, cell.z - 2, targetDistance + 7, 6).All(c => c.Standable(map) &&
                             !c.GetThingList(map).Any(t => t is Pawn || t is Building || t.def.blockLight)) &&
-                        !Visibility.IsVisible(map, cell + IntVec3.East * targetDistance));
+                        !Visibility.IsVisible(map, cell + IntVec3.East * targetDistance) &&
+                        !map.mapPawns.FreeColonistsSpawned.Any(p => p.Position.InHorDistOf(cell + IntVec3.East * targetDistance, 75)));
                     Thing Spawn(string defName, IntVec3 cell)
                     {
                         var def = DefDatabase<ThingDef>.GetNamed(defName);
@@ -68,8 +70,8 @@ public sealed class CombatExtendedTurretFixture
                     enemy.jobs.TryTakeOrderedJob(wait, JobTag.Misc);
                     owned.AddRange(made); ownedIds.AddRange(made.Select(t => t.ThingID));
                 }
-                else if (action != "state" && action != "configure" && action != "remove-power")
-                    throw new InvalidOperationException("Use setup, state, configure, remove-power or cleanup.");
+                else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo")
+                    throw new InvalidOperationException("Use setup, state, configure, supply-ammo, remove-power or cleanup.");
 
                 if (action == "remove-power")
                 {
@@ -98,8 +100,21 @@ public sealed class CombatExtendedTurretFixture
                 }
                 var verb = gunTurret.AttackVerb;
                 var compAmmo = Ammo(gunTurret);
+                var ammoDef = Property(compAmmo, "CurrentAmmo") as ThingDef;
+                if (action == "supply-ammo")
+                {
+                    if (ammoDef == null) throw new InvalidOperationException("The staged turret has no current ammo definition.");
+                    var cell = GenAdj.CellsAdjacent8Way(gunTurret).First(c => c.Standable(map) &&
+                        !c.GetThingList(map).Any(t => t is Pawn || t is Building));
+                    var ammo = ThingMaker.MakeThing(ammoDef);
+                    made.Add(ammo);
+                    ammo.stackCount = Math.Min(ammoDef.stackLimit, Math.Max(2, Convert.ToInt32(Property(compAmmo, "MagSize")) * 2));
+                    GenSpawn.Spawn(ammo, cell, map);
+                    owned.Add(ammo); ownedIds.Add(ammo.ThingID);
+                }
                 var power = gunTurret.GetComp<CompPowerTrader>();
                 var sight = gunTurret.GetComp<CompFog>()?.FieldOfViewWatcher;
+                var manningPawn = gunTurret.GetComp<CompMannable>()?.ManningPawn;
                 return (object)new
                 {
                     success = true, ids = string.Join(",", ownedIds), action,
@@ -109,14 +124,22 @@ public sealed class CombatExtendedTurretFixture
                         sightRange = sight?.LastSightRange, nativeRange = verb.verbProps.range,
                         expectedUnmannedSightRange = verb.verbProps.range * FogSettings.TurretVisionModifier,
                         manned = gunTurret.GetComp<CompMannable>()?.MannedNow,
+                        reloading = AccessTools.Field(gunTurret.GetType(), "isReloading").GetValue(gunTurret),
                         currentTarget = gunTurret.CurrentTarget.Thing?.ThingID },
                     weapon = new { type = verb.GetType().FullName, requiresLos = verb.verbProps.requireLineOfSight,
+                        fliesOverhead = verb.ProjectileFliesOverhead(), minRange = verb.verbProps.minRange,
                         ammunition = Property(compAmmo, "CurrentAmmo") is ThingDef def ? def.defName : null,
                         magazine = Property(compAmmo, "CurMagCount"), capacity = Property(compAmmo, "MagSize"),
                         lastShotTick = AccessTools.Field(typeof(Verse.Verb), "lastShotTick").GetValue(verb) },
+                    crew = manningPawn == null ? null : new { id = manningPawn.ThingID,
+                        cell = manningPawn.Position.ToString(), job = manningPawn.CurJob?.def.defName,
+                        sightRange = manningPawn.GetComp<CompFog>()?.FieldOfViewWatcher.LastSightRange },
+                    ammunitionSupplies = owned.Where(t => t.def == ammoDef && !t.Destroyed)
+                        .Select(t => new { id = t.ThingID, cell = t.Position.ToString(), t.stackCount }).ToArray(),
                     target = new { id = target.ThingID, cell = targetThing.Position.ToString(), target.Dead,
                         target.Downed, job = target.CurJob?.def.defName,
                         injuries = target.health.hediffSet.hediffs.OfType<Hediff_Injury>().Sum(h => h.Severity),
+                        nativeAcquirable = AccessTools.Method(gunTurret.GetType(), "IsValidTarget").Invoke(gunTurret, new object[] { targetThing }),
                         shown = Visibility.IsVisible(map, targetThing.Position) }
                 };
             }
