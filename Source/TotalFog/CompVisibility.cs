@@ -68,7 +68,19 @@ public class CompVisibility : FogSubcomponent
         // does not mean the player has observed every spawned object.
         if (visible)
         {
-            if (!seenByPlayer && (fog ?? parent.Map.GetVisibility()).Initialized)
+            if (
+                !seenByPlayer
+                && (fog ?? parent.Map.GetVisibility()).Initialized
+                && (
+                    !Compatibility.GravshipVisibility.Revealed
+                    || ThingVisibility.IsVisible(
+                        parent,
+                        allowMemory: false,
+                        registeredVisibility: fog,
+                        observed: false
+                    )
+                )
+            )
                 seenByPlayer = true;
             mainComponent.Hiddenable?.Show();
         }

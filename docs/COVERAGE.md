@@ -523,7 +523,12 @@ It is a determinism control, not a performance benchmark.
 A bounded vanilla manual-melee control also preserves identical fog state; the
 native saved battle log confirms the ordered visible target's hit and death.
 Jobs/health/visibility match after saved-session rejoin. Ranged/AI/turret and
-combined CE Multiplayer targeting still require their own checks.
+combined CE Multiplayer targeting still require broader checks. The later
+88f41bed candidate passes one native bolt-action rifle order, attributed impact
+and death, with both clients matching complete fog and selected pawn state after
+1,994 Normal ticks. Its current hidden-target menu control has no attack option;
+a visible but unhittable target retains vanilla's disabled firing option. This
+does not close AI/turret, boundary loss during warmup or combined CE coverage.
 See exact hashes and limits in
 `docs/VALIDATION.md`.
 
@@ -546,8 +551,23 @@ throws on the installed build, matching the already reported
 [Multiplayer Apple Silicon tracing issue #944](https://github.com/rwmt/Multiplayer/issues/944).
 A separate reflection-only
 `UnityEngine.InputLegacyModule` dependency exception still occurs during loading.
-Its cause is not isolated, and these runs are not clean-log acceptance. Native
+It also occurs in a fresh native quick game with Total Fog and its companion
+removed. The same control starts without that exception when Multiplayer and
+Prepatcher are removed too, with Harmony, the bridge and all DLCs retained.
+This narrows the trigger to that interaction; it does not establish the exact
+responsible mod or function. The profile and companion removals were restored.
+These runs are not clean-log acceptance. Native
 receipts and evidence limits are recorded in `docs/VALIDATION.md`.
+
+The local gravship landing preview now changes drawing only. Current thing/cell
+sight, object observation flags, queued notification eligibility and positional
+sound policy ignore the temporary preview. Four regression cases first failed
+and then passed against the source-linked engine boundary. This is a proven
+policy regression, not a completed two-client native gravship flight test.
+The public 1.6 right-click context builds its own temporary thing/pawn lists,
+separately from GenUI.TargetsAt. A native rifle control exposed a hidden target
+in that menu. The constructor now filters both lists through the existing
+current-sight policy, preserving the map grid and ordinary cell fallback.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
@@ -570,7 +590,8 @@ Current source review identifies the immediate audit points in
 `FogSettings.applySettings`, `MapVisibility` source/discovery updates,
 `CompSightSource` deadlines/hearing, `CompVisibility` observation state,
 `DeferredNotifications`, and the shared vanilla/CE targeting policy. These are
-review targets, not demonstrated Multiplayer defects. Core-kernel tests and
+review targets; the saved-settings and preview/menu defects above were found
+and fixed. Core-kernel tests and
 the upstream spreadsheet rating cannot substitute for this two-client acceptance.
 
 Mortal supplied the original combat save and identified intermittent Fingerspike

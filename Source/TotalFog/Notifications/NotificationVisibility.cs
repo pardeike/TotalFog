@@ -32,7 +32,7 @@ internal static class NotificationVisibility
             }
             else if (
                 target.Map == null
-                || ThingVisibility.Bypass(target.Map)
+                || ThingVisibility.Unrestricted(target.Map)
                 || target.Cell.InBounds(target.Map)
                     && target.Map.GetVisibility().IsShown(Faction.OfPlayer, target.Cell)
             )

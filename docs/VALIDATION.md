@@ -5499,3 +5499,60 @@ fog-native-combat-control.json, combat-log-D.xml and
 fog-native-combat-pawns-rejoin.json. This is one vanilla manual-melee/control
 case; ranged weapons, AI fog targeting, turrets, boundary loss during warmup
 and the combined CE Multiplayer matrix remain unverified.
+
+## Multiplayer preview and right-click boundaries, 2026-10-06
+
+The reflection-only InputLegacyModule loading exception reproduces in a fresh
+native quick game without Total Fog or its companion. It disappears in the
+next control without Multiplayer and Prepatcher, while Harmony, RimBridgeServer,
+Core and all DLCs remain. Both use the isolated client profile. Exact active
+loadouts and Player.log files are retained as no-totalfog-* and no-multiplayer-*
+under artifacts/multiplayer-startup. This does not isolate the responsible
+function, distinguish the Multiplayer/Prepatcher/bridge interaction, or prove
+a player-only loadout is affected. The temporary removals are restored and
+verified against the original config hash; no user settings are rolled back.
+
+Four source-linked regression cases demonstrate that a local gravship landing
+preview previously grants current sight, persists object observation and makes
+hidden thing/cell notifications eligible. Their first failing build is retained
+as gravship-preview-regression-red.log. The fixed policy keeps the drawing
+preview but requires actual sight for current queries and observation. Queued
+notifications and positional sound ignore that temporary drawing exception.
+These cases pass in the canonical 302-test build; they are engine-boundary
+policy proofs, not native two-client gravship flight acceptance.
+
+On that intermediate gameplay DLL, cdf9a510, Andrews equips the real
+bolt-action rifle through a native right-click order. Both clients match fog and
+pawn state at paused tick 6786 after normal playback. Drafting then leaves the
+same native hidden Toughspike18314 eligible for both Fire at and Melee attack
+menu options. The menu and its false current-visibility result are retained in
+artifacts/rifle-menu-red.json. Public 1.6 DecompilerServer source identifies
+FloatMenuContext's separately owned ClickedThings and ClickedPawns lists,
+populated through GenUI.ThingsUnderMouse. Our existing GenUI.TargetsAt filter
+does not cover this producer. A constructor postfix now filters both temporary
+lists through the same policy, without changing the authoritative map grid.
+The source-linked list/visibility test passes in the canonical 303-test build.
+
+The final built/deployed gameplay DLL is SHA-256
+88f41bedb0fa610ce14775d0e959c5370ac7588764645ee6946be83704d86fdb.
+Both clients reload/resume/join the native post-equip archive at tick 6788 with
+range 10 and matching complete fog state. Cold reconstruction applies the
+already-completed draft/rifle state, legitimately expanding stationary weapon
+sight; the earlier toughspike is now visible. The positive/negative controls
+therefore use current visibility, not that old cell's earlier classification.
+Hidden Trispike18346 at 148,131 has no attack menu. Visible Toughspike18334 at
+155,106 keeps vanilla's disabled Cannot hit target option. Visible Trispike18404
+at 123,105 offers an enabled Fire at option, which is executed through the
+ordinary UI and native synchronized job path.
+
+After 1,994 unforced Normal ticks, both clients pause at tick 8782 with identical
+complete fog and selected pawn state and no reported native desync. The native
+post-combat archive passes ZIP CRC; its battle log records Andrews/Human390's
+bolt-action rifle fire, impact and the trispike's Gunshot death. The killed target
+is absent on both clients and Andrews has the same healthy Wait_Combat state.
+Evidence is multiplayer-startup/fog-rifle-{baseline,equip,playback}.json,
+rifle-menu-green.json and rifle-battle-log.xml. The existing loading exception
+and native gpath assertions remain in both preserved native logs, so this
+is bounded manual rifle/determinism evidence, not clean-log release acceptance,
+TPS/FPS acceptance, AI/turret targeting, native gravship flight, separate
+factions, independent map clocks or combined CE Multiplayer validation.

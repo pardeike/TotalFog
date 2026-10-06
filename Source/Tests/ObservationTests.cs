@@ -330,6 +330,34 @@ public sealed class ObservationTests
     }
 
     [Fact]
+    public void ContextMenuFiltersBothCandidateListsWithoutChangingTheMap()
+    {
+        var hidden = new Pawn();
+        var map = hidden.Map;
+        map.Fog.Initialized = true;
+        map.Fog.knownCells[0] = true;
+        var visible = new Pawn { Map = map, PositionHeld = new IntVec3(1, 0) };
+        map.Fog.InSight[1] = true;
+        map.Things.AddRange(new Thing[] { hidden, visible });
+        var context = new FloatMenuContext
+        {
+            ClickedCell = hidden.Position,
+            ClickedThings = new() { hidden, visible },
+            ClickedPawns = new() { hidden, visible },
+        };
+        InterfaceVisibility.ContextMenuPostfix(context);
+        Assert.Equal(new Thing[] { visible }, context.ClickedThings);
+        Assert.Equal(new[] { visible }, context.ClickedPawns);
+        Assert.Equal(new Thing[] { hidden, visible }, map.Things);
+        map.Fog.InSight[0] = true;
+        context.ClickedThings.Add(hidden);
+        context.ClickedPawns.Add(hidden);
+        InterfaceVisibility.ContextMenuPostfix(context);
+        Assert.Equal(new Thing[] { visible, hidden }, context.ClickedThings);
+        Assert.Equal(new[] { visible, hidden }, context.ClickedPawns);
+    }
+
+    [Fact]
     public void VisibleSelectionProxyCannotRevealItsHiddenTargetThroughLiveUi()
     {
         var target = Item();

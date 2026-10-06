@@ -11,7 +11,8 @@ public static class Visibility
     /// Whether the player can currently see a thing. Remembered appearance and
     /// player ownership do not disclose live effects outside current sight.
     /// Uses the held map and ordinary footprint or registered inspection cell,
-    /// vanilla fog and Total Fog's existing bypasses.
+    /// vanilla fog and the configured colony bypass. A temporary gravship
+    /// landing preview does not grant current sight.
     /// Null or mapless things follow the engine's unrestricted presentation policy.
     /// Call on the game thread; this method does not change simulation or sight.
     /// </summary>

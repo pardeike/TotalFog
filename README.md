@@ -175,7 +175,8 @@ if (TotalFogSupport.AllowsTarget(shooter, targetCell) == false)
 2. **Game thread only.** Call the methods from normal game code (ticks, drawing,
    UI), never from your own background threads.
 3. **"Visible" means "seen right now".** An explored but grey area is not visible.
-   This is on purpose: the player must not see live activity there.
+   This is on purpose: the player must not see live activity there. A temporary
+   gravship landing preview does not grant sight through these methods.
 
 ### Step 4: Test both ways
 

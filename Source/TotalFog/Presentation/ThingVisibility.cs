@@ -6,9 +6,10 @@ namespace TotalFog.Presentation;
 /// <summary>The common information boundary for game and modded things, including held pawns.</summary>
 internal static class ThingVisibility
 {
+    internal static bool Unrestricted(Map map) => FogSettings.OnlyOutsideColony && map.IsPlayerHome;
+
     internal static bool Bypass(Map map) =>
-        FogSettings.OnlyOutsideColony && map.IsPlayerHome
-        || Compatibility.GravshipVisibility.Revealed;
+        Unrestricted(map) || Compatibility.GravshipVisibility.Revealed;
 
     // A visibility component already owns its observation flag and a current
     // map registration. Other callers resolve those inputs through the thing.
@@ -48,7 +49,13 @@ internal static class ThingVisibility
         if (allowMemory && ownObserver)
             return true;
         var fog = registeredVisibility ?? map.GetVisibility();
-        if (!fog.Initialized || Bypass(map))
+        // Landing previews can draw hidden geometry, but must not grant current
+        // sight to effects, target information or saved notification state.
+        if (
+            !fog.Initialized
+            || Unrestricted(map)
+            || allowMemory && Compatibility.GravshipVisibility.Revealed
+        )
             return true;
         bool mobile =
             thing is Pawn or PawnFlyer

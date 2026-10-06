@@ -32,6 +32,8 @@
 - Skip enemy sight calculations while enemy fog targeting is disabled, preserving the game's enemy targeting and other AI mods.
 - Apply vision and enemy-targeting setting changes within the normal sight-refresh interval.
 - Synchronize shared fog settings in Multiplayer and preserve them in saved sessions.
+- Keep gravship landing previews from permanently revealing objects, hidden notifications or sound sources.
+- Keep hidden pawns and objects out of right-click action and attack menus.
 - Reduce repeated map-component searches and duplicate fog-section cell sampling.
 - Skip cell-index rewrites when one-cell things turn in place; preserve immediate movement and larger footprint updates.
 - Skip unnecessary fog lookups when drawing owned pawns.

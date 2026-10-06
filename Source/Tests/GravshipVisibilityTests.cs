@@ -111,6 +111,68 @@ public sealed class GravshipVisibilityTests : IDisposable
         Assert.Equal(0, Find.World.ComponentLookups);
     }
 
+    [Fact]
+    public void LandingPreviewDoesNotCreateAnObservation()
+    {
+        var controller = AddController();
+        controller.LandingAreaConfirmationInProgress = true;
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        item.Map.Fog.knownCells[0] = true;
+        var comp = new CompFog();
+        comp.Hiddenable = new CompPresentationState { parent = item, mainComponent = comp };
+        comp.HideFromPlayer = new CompVisibility { parent = item, mainComponent = comp };
+        item.Component = comp;
+        comp.Hiddenable.PostSpawnSetup(false);
+        comp.HideFromPlayer.PostSpawnSetup(false);
+
+        Assert.True(Presentation.ThingVisibility.IsVisible(item));
+        Assert.False(comp.Hiddenable.Hidden);
+        Assert.False(comp.HideFromPlayer.SeenByPlayer);
+        controller.LandingAreaConfirmationInProgress = false;
+        comp.HideFromPlayer.UpdateVisibility(true);
+        Assert.True(comp.Hiddenable.Hidden);
+        item.Map.Fog.InSight[0] = true;
+        comp.HideFromPlayer.UpdateVisibility(true);
+        Assert.True(comp.HideFromPlayer.SeenByPlayer);
+        Assert.False(comp.Hiddenable.Hidden);
+    }
+
+    [Fact]
+    public void LandingPreviewDoesNotGrantCurrentSight()
+    {
+        AddController().LandingAreaConfirmationInProgress = true;
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        Assert.True(Presentation.ThingVisibility.IsVisible(item));
+        Assert.False(Visibility.IsVisible(item));
+        Assert.False(Visibility.IsVisible(item.Map, item.Position));
+        item.Map.Fog.InSight[0] = true;
+        Assert.True(Visibility.IsVisible(item));
+        Assert.True(Visibility.IsVisible(item.Map, item.Position));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void LandingPreviewDoesNotDeliverHiddenTargetNotifications(bool thingTarget)
+    {
+        AddController().LandingAreaConfirmationInProgress = true;
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        var target = new TargetInfo
+        {
+            IsValid = true,
+            Thing = thingTarget ? item : null,
+            Map = item.Map,
+            Cell = item.Position,
+        };
+        var targets = new LookTargets { targets = new() { target } };
+        Assert.False(Notifications.NotificationVisibility.HasVisibleTarget(targets));
+        item.Map.Fog.InSight[0] = true;
+        Assert.True(Notifications.NotificationVisibility.HasVisibleTarget(targets));
+    }
+
     private static WorldComponent_GravshipController AddController()
     {
         var controller = new WorldComponent_GravshipController(Find.World);

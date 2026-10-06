@@ -190,6 +190,16 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.TargetCandidatesTranspiler)
             )
         );
+        harmony.Patch(
+            AccessTools.Constructor(
+                typeof(FloatMenuContext),
+                [typeof(List<Verse.Pawn>), typeof(Vector3), typeof(Map)]
+            ),
+            postfix: new HarmonyMethod(
+                typeof(Presentation.InterfaceVisibility),
+                nameof(Presentation.InterfaceVisibility.ContextMenuPostfix)
+            )
+        );
         foreach (
             var method in typeof(Verse.GenMapUI)
                 .GetMethods()

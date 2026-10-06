@@ -26,7 +26,7 @@ public static class SoundAudibility
         var fog = map.GetVisibility();
         if (
             !fog.Initialized
-            || Presentation.ThingVisibility.Bypass(map)
+            || Presentation.ThingVisibility.Unrestricted(map)
             || maker.Thing?.Faction == Faction.OfPlayer
             || fog.IsShown(Faction.OfPlayer, origin)
         )

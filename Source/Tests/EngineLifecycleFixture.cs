@@ -511,6 +511,13 @@ namespace RimWorld
         public Verse.Thing thingToSelect;
     }
 
+    public class FloatMenuContext
+    {
+        public Verse.IntVec3 ClickedCell;
+        public List<Verse.Thing> ClickedThings = new();
+        public List<Verse.Pawn> ClickedPawns = new();
+    }
+
     public class CompMannable
     {
         public Verse.Pawn ManningPawn;

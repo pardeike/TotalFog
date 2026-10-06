@@ -49,9 +49,19 @@ internal static partial class InterfaceVisibility
         return visible;
     }
 
-    // GenUI.TargetsAt owns this temporary candidate list. Filtering it leaves
-    // the authoritative grid, ordinary selection, and native cell fallback alone.
-    public static List<Thing> FilterTargetThings(List<Thing> things, IntVec3 clickCell)
+    // Both producers own temporary candidate lists. Filtering leaves the
+    // authoritative grid and native cell fallback alone.
+    public static void ContextMenuPostfix(FloatMenuContext __instance)
+    {
+        FilterTargets(__instance.ClickedThings, __instance.ClickedCell);
+        FilterTargets(__instance.ClickedPawns, __instance.ClickedCell);
+    }
+
+    public static List<Thing> FilterTargetThings(List<Thing> things, IntVec3 clickCell) =>
+        FilterTargets(things, clickCell);
+
+    private static List<T> FilterTargets<T>(List<T> things, IntVec3 clickCell)
+        where T : Thing
     {
         int write = 0;
         for (int read = 0; read < things.Count; read++)
