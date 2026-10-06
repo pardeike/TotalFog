@@ -520,6 +520,10 @@ A fresh client also joins the resumed native saved session with identical state.
 One different-view control then advances 1,325 ticks with host root size 12 and
 client root size 100 at different positions; complete fog state still matches.
 It is a determinism control, not a performance benchmark.
+A bounded vanilla manual-melee control also preserves identical fog state; the
+native saved battle log confirms the ordered visible target's hit and death.
+Jobs/health/visibility match after saved-session rejoin. Ranged/AI/turret and
+combined CE Multiplayer targeting still require their own checks.
 See exact hashes and limits in
 `docs/VALIDATION.md`.
 

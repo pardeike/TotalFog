@@ -16,6 +16,81 @@ namespace TotalFog.BridgeTools;
 public sealed class MultiplayerScenarios
 {
     [Tool(
+        "totalfog/multiplayer_pawns",
+        Description = "Read selected native pawns or corpse inner pawns by comma-separated ThingIDs. Reports combat jobs, targets, health and current fog visibility without issuing orders or changing simulation. Compare only at matching paused native ticks."
+    )]
+    public static Task<object> Pawns(IRimBridgeContext context, string thingIds) =>
+        context.MainThread.InvokeAsync<object>(() =>
+        {
+            var ids = thingIds
+                .Split(',')
+                .Select(id => id.Trim())
+                .Where(id => id.Length > 0)
+                .ToArray();
+            if (ids.Length == 0 || ids.Length > 8 || Find.CurrentMap == null)
+                return new
+                {
+                    success = false,
+                    message = "Use 1..8 comma-separated ThingIDs on a loaded map.",
+                };
+            var map = Find.CurrentMap;
+            var pawns = map
+                .mapPawns.AllPawns.Concat(
+                    map.listerThings.ThingsInGroup(ThingRequestGroup.Corpse)
+                        .OfType<Corpse>()
+                        .Select(corpse => corpse.InnerPawn)
+                )
+                .Distinct()
+                .ToDictionary(pawn => pawn.ThingID);
+            return new
+            {
+                success = true,
+                ticks = Find.TickManager.TicksGame,
+                pawns = ids.Select(id =>
+                        pawns.TryGetValue(id, out var pawn)
+                            ? ReadPawn(pawn)
+                            : new { id, found = false }
+                    )
+                    .ToArray(),
+            };
+        });
+
+    private static object ReadPawn(Pawn pawn) =>
+        new
+        {
+            id = pawn.ThingID,
+            found = true,
+            position = pawn.PositionHeld.ToString(),
+            faction = pawn.Faction?.loadID,
+            pawn.Dead,
+            pawn.Downed,
+            drafted = pawn.drafter?.Drafted,
+            visible = Visibility.IsVisible(pawn),
+            weapon = pawn.equipment?.Primary?.def.defName,
+            health = pawn.health.summaryHealth.SummaryHealthPercent,
+            hediffs = pawn
+                .health.hediffSet.hediffs.Select(hediff => new
+                {
+                    def = hediff.def.defName,
+                    part = hediff.Part?.def.defName,
+                    hediff.Severity,
+                })
+                .ToArray(),
+            job = pawn.CurJob?.def.defName,
+            jobId = pawn.CurJob?.loadID,
+            targetA = ReadTarget(pawn.CurJob?.targetA ?? LocalTargetInfo.Invalid),
+            targetB = ReadTarget(pawn.CurJob?.targetB ?? LocalTargetInfo.Invalid),
+        };
+
+    private static object ReadTarget(LocalTargetInfo target) =>
+        new
+        {
+            valid = target.IsValid,
+            thing = target.Thing?.ThingID,
+            cell = target.Cell.ToString(),
+        };
+
+    [Tool(
         "totalfog/multiplayer_settings",
         Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100) or SilentRaids (true/false), or save local settings without changing sight. Returns command submission, not proof that the other client applied it."
     )]

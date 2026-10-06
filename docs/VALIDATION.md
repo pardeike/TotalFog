@@ -5471,3 +5471,31 @@ folder, while preserving another task's independent offline game/mod folder.
 The pair layout verifies after fresh pair launch; restarting only one duplicate
 app can temporarily leave the older process without AX-exposed windows. That
 tooling failure is retained separately from fog evidence.
+
+The bounded manual combat control uses the same 4221b0d9 gameplay bytes.
+Native SyncMethods.Init registers Pawn_DraftController.Drafted and
+Pawn_JobTracker.TryTakeOrderedJob; the bridge's ordinary draft and map-click
+paths therefore submit native synchronized commands. Keno's host-side draft
+submission initially reads false, then both clients report drafted=true.
+At range 10, a right-click on hidden Toughspike18314 at 128,121 leaves no attack
+menu; visible Trispike18077 at 120,108 offers an enabled "Melee attack trispike"
+option. The hidden-cell click can still issue the ordinary move order; lack of
+an attack menu is not described as a no-op. The visible melee option is then
+executed and ordinary Normal playback completes.
+
+Both clients pause at tick 5689 with identical complete fog snapshots and no
+native desync report. The native saved world battle log records Keno/Human393
+as initiator of a MeleeHit and the target's Transition_Died at absolute tick
+321777, with Trispike18077 as recipient/subject. The first observer-only job
+read missed the transient attack job, so battle-log attribution supplies the
+actual hit/death evidence. The new multiplayer_pawns companion query reads
+jobs, targets, health, equipment and fog visibility by ThingID without relying
+on an open inspector, and also resolves corpse inner pawns when they remain.
+It changes no gameplay DLL bytes. After cold-load/resumed hosting of the native
+post-combat save, both clients match at paused tick 5691: Keno is healthy and
+drafted with the same Wait_Combat job/id, the killed trispike is absent, and the
+hidden toughspike has identical health, position and job. Evidence is
+fog-native-combat-control.json, combat-log-D.xml and
+fog-native-combat-pawns-rejoin.json. This is one vanilla manual-melee/control
+case; ranged weapons, AI fog targeting, turrets, boundary loss during warmup
+and the combined CE Multiplayer matrix remain unverified.
