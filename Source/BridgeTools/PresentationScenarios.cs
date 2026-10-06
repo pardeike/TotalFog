@@ -97,17 +97,9 @@ public sealed class PresentationScenarios
                     () =>
                     {
                         if (shown)
-                            fog.IncrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.IncrementSeen(Faction.OfPlayer, index);
                         else if (addedSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                         addedSight = shown;
                         gasDraws = 0;
                     },
@@ -136,11 +128,7 @@ public sealed class PresentationScenarios
             await ctx.MainThread.InvokeAsync(
                 () =>
                 {
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                 },
                 cancellationToken
@@ -186,11 +174,7 @@ public sealed class PresentationScenarios
                     {
                         harmony.UnpatchAll(harmony.Id);
                         if (addedSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                         FogSettings.OnlyOutsideColony = oldBypass;
                         gasProbe = null;
                     },

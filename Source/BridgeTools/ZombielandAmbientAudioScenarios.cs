@@ -166,11 +166,7 @@ public sealed partial class AudioScenarios
                     () =>
                     {
                         foreach (int i in contributed)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                i
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, i);
                         contributed.Clear();
                         FogSettings.MuteHiddenSounds = state.StartsWith(
                             "muted",
@@ -183,11 +179,7 @@ public sealed partial class AudioScenarios
                                 if (state == "muted-visible" || state == "muted-mixed" && n == 1)
                                 {
                                     int i = map.cellIndices.CellToIndex(targets[g, n].Position);
-                                    fog.IncrementSeen(
-                                        Faction.OfPlayer,
-                                        fog.GetFactionShownCells(Faction.OfPlayer),
-                                        i
-                                    );
+                                    fog.IncrementSeen(Faction.OfPlayer, i);
                                     contributed.Add(i);
                                 }
                             if (loops[g] != null)
@@ -308,11 +300,7 @@ public sealed partial class AudioScenarios
                     () =>
                     {
                         foreach (int i in contributed)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                i
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, i);
                         for (int g = 0; g < 2; g++)
                         {
                             loops[g]?.End();

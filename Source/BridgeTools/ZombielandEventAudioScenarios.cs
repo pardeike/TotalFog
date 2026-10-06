@@ -112,11 +112,7 @@ public sealed partial class AudioScenarios
                         StopOwnedOneShots(ownedSamples);
                         if (addedSight)
                         {
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                             addedSight = false;
                         }
                         sirenField.SetValue(settings, state != "cue-disabled");
@@ -127,11 +123,7 @@ public sealed partial class AudioScenarios
                         FogSettings.DoAudioCheck = state == "hearing";
                         if (state == "visible-muted")
                         {
-                            fog.IncrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.IncrementSeen(Faction.OfPlayer, index);
                             addedSight = true;
                         }
                         expectedVolume =
@@ -264,11 +256,7 @@ public sealed partial class AudioScenarios
                     {
                         StopOwnedOneShots(ownedSamples);
                         if (addedSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                         if (settings != null)
                         {
                             sirenField.SetValue(settings, oldSiren);

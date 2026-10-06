@@ -151,17 +151,9 @@ public sealed partial class ZombielandEffectsScenarios
                         if (visible != addedSight)
                         {
                             if (visible)
-                                fog.IncrementSeen(
-                                    Faction.OfPlayer,
-                                    fog.GetFactionShownCells(Faction.OfPlayer),
-                                    index
-                                );
+                                fog.IncrementSeen(Faction.OfPlayer, index);
                             else
-                                fog.DecrementSeen(
-                                    Faction.OfPlayer,
-                                    fog.GetFactionShownCells(Faction.OfPlayer),
-                                    index
-                                );
+                                fog.DecrementSeen(Faction.OfPlayer, index);
                             addedSight = visible;
                         }
                         cache.Clear();
@@ -269,20 +261,12 @@ public sealed partial class ZombielandEffectsScenarios
                         () =>
                         {
                             foreach (int seen in symbiantSight)
-                                fog.DecrementSeen(
-                                    Faction.OfPlayer,
-                                    fog.GetFactionShownCells(Faction.OfPlayer),
-                                    seen
-                                );
+                                fog.DecrementSeen(Faction.OfPlayer, seen);
                             symbiantSight.Clear();
                             int seenIndex = map.cellIndices.CellToIndex(
                                 rootVisible ? root : root + IntVec3.East
                             );
-                            fog.IncrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                seenIndex
-                            );
+                            fog.IncrementSeen(Faction.OfPlayer, seenIndex);
                             symbiantSight.Add(seenIndex);
                             cache.Clear();
                             cache.Add(symbiant, zombieArea);
@@ -348,17 +332,9 @@ public sealed partial class ZombielandEffectsScenarios
                     {
                         harmony.UnpatchAll(harmony.Id);
                         if (addedSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                         foreach (int seen in symbiantSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                seen
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, seen);
                         if (cache != null)
                         {
                             cache.Clear();

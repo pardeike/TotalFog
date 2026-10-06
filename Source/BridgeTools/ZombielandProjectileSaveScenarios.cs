@@ -70,16 +70,8 @@ public sealed partial class ZombielandProjectileScenarios
                     foreach (var c in corridor)
                     {
                         int i = map.cellIndices.CellToIndex(c);
-                        fog.IncrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            i
-                        );
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            i
-                        );
+                        fog.IncrementSeen(Faction.OfPlayer, i);
+                        fog.DecrementSeen(Faction.OfPlayer, i);
                     }
                 },
                 cancellationToken
@@ -488,17 +480,9 @@ public sealed partial class ZombielandProjectileScenarios
             {
                 int i = map.cellIndices.CellToIndex(c);
                 if (visible)
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, i);
                 else
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, i);
             }
             addedSight = visible;
         }

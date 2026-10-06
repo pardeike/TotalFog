@@ -158,11 +158,7 @@ public sealed class CombatExtendedScenarios
                     }
                     bool nativeOpen = Native(),
                         hiddenPlayer = Call();
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     bool revealedPlayer = Call();
                     wall = ThingMaker.MakeThing(ThingDefOf.Wall, ThingDefOf.Steel);
@@ -175,11 +171,7 @@ public sealed class CombatExtendedScenarios
                     wall.Destroy();
                     wall = null;
                     Find.TickManager.DoSingleTick();
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     pawn.SetFaction(Faction.OfAncientsHostile);
                     sight.UpdateFoV(true);
@@ -227,11 +219,7 @@ public sealed class CombatExtendedScenarios
                             }
                         );
                     if (addedSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            index
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, index);
                     if (wall != null && !wall.Destroyed)
                         wall.Destroy();
                     if (pawn != null && !pawn.Destroyed)

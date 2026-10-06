@@ -262,17 +262,9 @@ public sealed class FleckScenarios
             {
                 int i = map.cellIndices.CellToIndex(cell);
                 if (visible)
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, i);
                 else
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, i);
             }
             addedSight = visible;
         }

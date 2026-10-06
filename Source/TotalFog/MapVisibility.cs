@@ -10,6 +10,8 @@ namespace TotalFog;
 /// <summary>RimWorld ownership and side effects around the game-independent coverage grid.</summary>
 public class MapVisibility : MapComponent
 {
+    private const int SectionSize = 17;
+    private const string OuterSpaceBiome = "OuterSpaceBiome";
     private readonly VisibilityGrid coverage;
     private readonly ListenerCell<CompVisibility>[] hiddenAt;
     private readonly Dictionary<int, List<CompSightModifier>> affectersAt = new();
@@ -61,7 +63,7 @@ public class MapVisibility : MapComponent
 
     public int[] GetFactionShownCells(Faction faction) =>
         faction == null ? null
-        : map.Biome.defName == "OuterSpaceBiome" ? SpaceVisibility()
+        : map.Biome.defName == OuterSpaceBiome ? SpaceVisibility()
         : coverage.Counts(Key(faction));
 
     private int[] SpaceVisibility()
@@ -81,7 +83,7 @@ public class MapVisibility : MapComponent
         && faction != null
         && (
             map.IsPlayerHome && FogSettings.OnlyOutsideColony
-            || map.Biome.defName == "OuterSpaceBiome"
+            || map.Biome.defName == OuterSpaceBiome
             || coverage.IsVisible(Key(faction), x, z)
         );
 
@@ -310,7 +312,7 @@ public class MapVisibility : MapComponent
                 RevealCell
             );
         }
-        if (map.Biome.defName == "OuterSpaceBiome" || FogSettings.MapRevealAtStart)
+        if (map.Biome.defName == OuterSpaceBiome || FogSettings.MapRevealAtStart)
             for (int i = 0; i < coverage.CellCount; i++)
                 RevealCell(i);
         TotalFogMod.LogMessage(
@@ -345,7 +347,7 @@ public class MapVisibility : MapComponent
         VisibilityChanged(index);
     }
 
-    public void IncrementSeen(Faction faction, int[] counts, int index)
+    public void IncrementSeen(Faction faction, int index)
     {
         if (faction == null || (uint)index >= coverage.CellCount)
             return;
@@ -358,7 +360,7 @@ public class MapVisibility : MapComponent
         VisibilityChanged(index);
     }
 
-    public void DecrementSeen(Faction faction, int[] counts, int index)
+    public void DecrementSeen(Faction faction, int index)
     {
         if (faction == null || (uint)index >= coverage.CellCount)
             return;
@@ -383,7 +385,13 @@ public class MapVisibility : MapComponent
         int x = coverage.X(index),
             z = coverage.Z(index);
         foreach (
-            int section in GridGeometry.AffectedSections(x, z, coverage.Width, coverage.Height, 17)
+            int section in GridGeometry.AffectedSections(
+                x,
+                z,
+                coverage.Width,
+                coverage.Height,
+                SectionSize
+            )
         )
             dirtySections.Add(section);
         if (!Initialized)
@@ -395,11 +403,11 @@ public class MapVisibility : MapComponent
 
     private void FlushDirty()
     {
+        int columns = (coverage.Width + SectionSize - 1) / SectionSize;
         foreach (int section in dirtySections)
         {
-            int columns = (coverage.Width + 16) / 17;
             map.mapDrawer.MapMeshDirty(
-                new IntVec3(section % columns * 17, 0, section / columns * 17),
+                new IntVec3(section % columns * SectionSize, 0, section / columns * SectionSize),
                 FogDefOf.RealFogOfWar
             );
         }

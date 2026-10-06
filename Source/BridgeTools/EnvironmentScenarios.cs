@@ -102,11 +102,7 @@ public sealed class EnvironmentScenarios
                             nameof(RecordWindow)
                         )
                     );
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                 },
                 cancellationToken
@@ -157,11 +153,7 @@ public sealed class EnvironmentScenarios
                 () =>
                 {
                     observed = State(fog);
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     ResetCounters();
                 },
@@ -172,11 +164,7 @@ public sealed class EnvironmentScenarios
                 () =>
                 {
                     hidden = State(fog);
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     ResetCounters();
                 },
@@ -187,11 +175,7 @@ public sealed class EnvironmentScenarios
                 () =>
                 {
                     revealed = State(fog);
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     FogSettings.OnlyOutsideColony = true;
                     ResetCounters();
@@ -215,11 +199,7 @@ public sealed class EnvironmentScenarios
                 () =>
                 {
                     if (addedSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            index
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, index);
                     patches.UnpatchAll(PatchID);
                     RimWorld.BeautyUtility.beautyRelevantCells.Clear();
                     if (testMap != null)

@@ -262,17 +262,9 @@ public sealed class ExplosionScenarios
                 return;
             int index = probeMap.cellIndices.CellToIndex(probeCell);
             if (visible)
-                fog.IncrementSeen(
-                    Faction.OfPlayer,
-                    fog.GetFactionShownCells(Faction.OfPlayer),
-                    index
-                );
+                fog.IncrementSeen(Faction.OfPlayer, index);
             else
-                fog.DecrementSeen(
-                    Faction.OfPlayer,
-                    fog.GetFactionShownCells(Faction.OfPlayer),
-                    index
-                );
+                fog.DecrementSeen(Faction.OfPlayer, index);
             addedSight = visible;
         }
     }

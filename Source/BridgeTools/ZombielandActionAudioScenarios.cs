@@ -135,11 +135,7 @@ public sealed partial class AudioScenarios
                         createdThings.Clear();
                         if (addedSight)
                         {
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                             addedSight = false;
                         }
                         actionField.SetValue(settings, state != "cue-disabled");
@@ -150,11 +146,7 @@ public sealed partial class AudioScenarios
                         FogSettings.DoAudioCheck = state == "hearing";
                         if (state == "visible-muted")
                         {
-                            fog.IncrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.IncrementSeen(Faction.OfPlayer, index);
                             addedSight = true;
                         }
                         expectedFactor =
@@ -411,11 +403,7 @@ public sealed partial class AudioScenarios
                         foreach (var thing in createdThings.Where(t => !t.Destroyed).ToArray())
                             thing.Destroy();
                         if (addedSight)
-                            fog.DecrementSeen(
-                                Faction.OfPlayer,
-                                fog.GetFactionShownCells(Faction.OfPlayer),
-                                index
-                            );
+                            fog.DecrementSeen(Faction.OfPlayer, index);
                         if (settings != null)
                             actionField.SetValue(settings, oldAction);
                         FogSettings.MuteHiddenSounds = oldMute;

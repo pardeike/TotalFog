@@ -36,9 +36,9 @@ public class CompSightSource : FogSubcomponent
         change = (index, visible) =>
         {
             if (visible)
-                fog.IncrementSeen(faction, null, index);
+                fog.IncrementSeen(faction, index);
             else
-                fog.DecrementSeen(faction, null, index);
+                fog.DecrementSeen(faction, index);
         };
     }
 
@@ -94,7 +94,7 @@ public class CompSightSource : FogSubcomponent
             return;
         for (int i = 0; i < current.Area; i++)
             if (current.At(i))
-                fog.DecrementSeen(faction, null, current.GlobalIndex(i));
+                fog.DecrementSeen(faction, current.GlobalIndex(i));
         current.Reset(0, 0, 0, 0, 1);
     }
 

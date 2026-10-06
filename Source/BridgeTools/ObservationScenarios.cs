@@ -95,11 +95,7 @@ public sealed class ObservationScenarios
                     proxy = (ThingWithComps)ThingMaker.MakeThing(proxyDef);
                     GenSpawn.Spawn(proxy, proxyCell, map);
                     proxy.TryGetComp<CompSelectProxy>().thingToSelect = probe;
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     Find.Selector.Select(proxy, false, false);
                     observedThroughProxy = Find.Selector.IsSelected(probe);
@@ -137,11 +133,7 @@ public sealed class ObservationScenarios
                 {
                     Find.Selector.Select(proxy, false, false);
                     observed = InterfaceState(probe);
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     // An offscreen simulation change must not reach custom live UI.
                     probe.stackCount = 7;
@@ -175,11 +167,7 @@ public sealed class ObservationScenarios
                 () =>
                 {
                     hidden = InterfaceState(probe);
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     probe.ResetCounters();
                 },
@@ -226,11 +214,7 @@ public sealed class ObservationScenarios
                 () =>
                 {
                     if (addedSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            index
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, index);
                     if (probe != null && !probe.Destroyed)
                         probe.Destroy();
                     if (proxy != null && !proxy.Destroyed)
@@ -343,10 +327,10 @@ public sealed class ObservationScenarios
                     remembered.SetForbidden(true, false);
                     initial = State(remembered);
                     var counts = fog.GetFactionShownCells(Faction.OfPlayer);
-                    fog.IncrementSeen(Faction.OfPlayer, counts, index);
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     observed = State(remembered);
-                    fog.DecrementSeen(Faction.OfPlayer, counts, index);
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     lostSight = State(remembered);
                     // Separate cells avoid spawn collision/move-aside semantics.
@@ -376,9 +360,9 @@ public sealed class ObservationScenarios
                         true
                     );
                     pendingQueued = manager.PendingCount;
-                    fog.IncrementSeen(Faction.OfPlayer, counts, index);
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
-                    fog.IncrementSeen(Faction.OfPlayer, counts, freshIndex);
+                    fog.IncrementSeen(Faction.OfPlayer, freshIndex);
                     addedFreshSight = true;
                 },
                 cancellationToken
@@ -421,17 +405,9 @@ public sealed class ObservationScenarios
                 () =>
                 {
                     if (addedSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            index
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, index);
                     if (addedFreshSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            freshIndex
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, freshIndex);
                     if (!keepForSave || !completed)
                     {
                         if (remembered != null && !remembered.Destroyed)
@@ -526,18 +502,10 @@ public sealed class ObservationScenarios
                 () =>
                 {
                     periodic = Inspect();
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, index);
                     addedSight = true;
                     observed = Inspect();
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        index
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, index);
                     addedSight = false;
                     remembered = Inspect();
                 },
@@ -563,11 +531,7 @@ public sealed class ObservationScenarios
                 () =>
                 {
                     if (addedSight)
-                        fog.DecrementSeen(
-                            Faction.OfPlayer,
-                            fog.GetFactionShownCells(Faction.OfPlayer),
-                            index
-                        );
+                        fog.DecrementSeen(Faction.OfPlayer, index);
                     if (wall != null && !wall.Destroyed)
                         wall.Destroy();
                 },

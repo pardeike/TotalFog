@@ -300,17 +300,9 @@ public sealed partial class AudioScenarios
             {
                 int i = impactMap.cellIndices.CellToIndex(c);
                 if (visible)
-                    fog.IncrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.IncrementSeen(Faction.OfPlayer, i);
                 else
-                    fog.DecrementSeen(
-                        Faction.OfPlayer,
-                        fog.GetFactionShownCells(Faction.OfPlayer),
-                        i
-                    );
+                    fog.DecrementSeen(Faction.OfPlayer, i);
             }
             addedSight = visible;
         }
