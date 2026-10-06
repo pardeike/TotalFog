@@ -280,6 +280,13 @@ and runtime acceptance.
   show the intended current-sight clipping. These two pairs do not close the
   three-pair delivery gate, and there is no new feedback package. See the
   small wide-view section in VALIDATION.md and the retained comparison reports.
+  One subsequent eight-second wide DPA capture locates rendering cost without
+  adding acceptance pairs: the fog culling postfix averages 0.06853 ms per DPA
+  entry, regeneration 0.52860 ms and layer drawing 0.21939 ms. It uses debug
+  multiplier 150 and nested instrumentation, so it does not resolve the TPS
+  difference or establish ordinary fourth-speed performance. Exact config,
+  camera and installed binaries are preserved; DPA cleanup, native logs and
+  process termination are verified in `artifacts/ce-wide-diagnostic`.
   The unchanged ddb5c8fe... gameplay pair now also passes a bounded combined
   player CE mini-turret/ordinary-zombie check: hidden targets receive no shots,
   real bell sight enables acquisition, losing sight during the 52 remaining

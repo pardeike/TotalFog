@@ -5071,6 +5071,36 @@ Current gameplay SHA-256 remains ddb5c8fe..., with Zombieland 56daa1f2....
 The normal-view median pass does not resolve the wide CE failure; no new
 feedback ZIP is accepted from these measurements.
 
+### Bounded wide-view rendering diagnosis
+
+One eight-second DPA Update capture uses the unchanged CE stress save and
+ddb5c8fe... gameplay at the same 100-root-size camera rectangle, covering
+71,050 map cells and 225 pawn roots. All nine requested methods resolve.
+The snapshot contains 131 DPA entries, including paused setup/tail entries;
+the playback probe records 111 frame intervals. These denominators differ.
+
+Inclusive mean cost per DPA entry is 9.23110 ms for native MapUpdate,
+2.55167 ms for DrawDynamicThings, 1.48909 ms for DrawMapMesh and 0.52430 ms
+for ComputeCulledThings. Total Fog's culling postfix averages 0.06853 ms;
+custom-render lookup averages 0.00354 ms. SectionLayerFog.Regenerate averages
+0.52860 ms at 37.11 calls per entry, and DrawLayer 0.21939 ms at 273 calls per
+entry. ThingVisibility.IsVisible averages 0.93155 ms across 4,681.44 calls per
+entry; this includes simulation and interface callers, not only rendering.
+Nested inclusive timings must not be added or treated as uninstrumented cost.
+
+The bridge's existing UltraSpeedBoost is enabled in this fresh diagnostic
+process. Despite forceRequestedSpeed=false, every captured tick has native
+multiplier 150. This is explicitly diagnostic evidence, not ordinary fourth
+speed, an original/candidate comparison or an explanation of the 2.25% TPS
+difference. It supplies no reason to add culling caches or defer visibility
+work. No additional wide acceptance pair or production change follows.
+
+The camera and zoom extension are restored, DPA is observed stopped/unpatched,
+and process 66536 termination is verified. Removing DPA restores the exact
+pre-capture ModsConfig.xml bytes. Installed gameplay/companion bytes and the
+save hash remain unchanged, and the retained Player.log has an empty native
+error summary. Receipts and checks are in `artifacts/ce-wide-diagnostic`.
+
 ## Combined CE turret and ordinary zombie, 2026-10-06
 
 Source review corrects the proposed Symbiant turret expectation. Zombieland's
