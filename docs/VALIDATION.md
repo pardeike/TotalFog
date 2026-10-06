@@ -4650,3 +4650,84 @@ candidate needs its own comparison and broader Zombieland/package checks.
 Suppressive still-Thing fallback, no-magazine ammo, broader CE weapons, combined
 loadouts and actual Multiplayer acceptance remain open. Mortal's delivered
 ZIP pair is unchanged.
+
+### Initial-lighting candidate: rejected CE performance floor
+
+The ce-load-lighting-2504105d comparison completes all six fresh processes on
+the unchanged public CE 350x350/410-pawn save. Exact candidate bytes are
+2504105d...; the engine, CE bytes/settings, fog settings, camera, saved tick 3
+and zero warmup match. Native fourth-speed multiplier 15 is retained with
+forced speed and UltraSpeedBoost off, DPA off, no focus loss and clean logs.
+Pair TPS values (original/candidate) are 490.07/495.26, 491.73/478.27 and
+509.26/481.43. Median candidate 481.4302 is below original 491.7317 by 2.095%;
+the strict workflow rejects the floor and returns nonzero. Tick elapsed
+medians are 1.51727/1.51251 ms; frame p95 is 68.759/68.6777 ms. The complete
+failed result and all raw reports/logs are retained. The earlier passing
+beab8196... comparison does not establish this candidate's performance.
+
+Separate diagnostic intervals use profileFog=true on the same save and
+ordinary fourth speed, then remove instrumentation. Total Fog records 694,815
+visibility reconciliation calls during 6,607 ticks; the original records
+363,754 during 6,686 ticks. Total Fog's fog layer regenerations/draws take
+0.6972/2.4859 ms during that whole interval. Inclusive method times overlap
+and the available nested method sets differ, so these traces cannot prove a
+throughput floor or attribute the uninstrumented gap. They identify repeated
+visibility work for investigation. Engine map/mesh/dynamic-draw counters are
+added to the same optional probe for the next bounded diagnostic; they remain
+off in acceptance comparisons. No production performance shortcut is applied
+based solely on these traces. The canonical build still passes 291 tests.
+Raw diagnostics are artifacts/ce-load-lighting-{original-,}profile.json with
+matching native logs. The candidate is restored after original diagnosis.
+
+### Engine drawing diagnosis and direct single-cell queries
+
+The expanded optional profile records the same native map/mesh/dynamic-draw
+methods on both binaries. Mean per-call times (Total Fog/original) are
+1.9468/1.8453 ms for MapUpdate, 0.2915/0.2528 ms for DrawMapMesh and
+0.8793/0.8169 ms for DrawDynamicThings. These overlapping diagnostic times
+do not justify changing engine registration ownership or explain the rejected
+2.1% throughput floor by themselves. The exact profile companion is
+b3d63df3d2c7e07b4d4360ef7d66295e2ea17bfd77507783c60381913b35d41d;
+all instrumentation is removed afterward. Gameplay remains 2504105d... for
+this diagnosis. Raw receipts/logs are artifacts/ce-engine-draw-{candidate,original}-profile.*.
+
+A small production candidate avoids occupied-rectangle construction for
+single-cell objects and finishes a remembered known-anchor hit before scanning
+the rest of a footprint. Current vanilla fog, initialization/bypass, ownership,
+interactive-core and mobile/current-sight rules still run before these paths.
+Larger footprints retain their ordinary scan and rendered-cell translation.
+No cache, delayed work, polling interval or registration ownership changes.
+The source-linked build passes all 291 tests, including the non-anchor memory,
+rotated footprint, held pawn, flyer, current-information and selection controls.
+
+Gameplay 450329a092f654a85ffd637c8327fa3297e9ac9bebc524773ff791b4e1954db5
+records 680,684 common queries at 228.8728 ms in the same optional diagnostic,
+compared with 677,145 at 247.7712 ms on 2504105d.... Mean measured query time
+is about 8.1% lower. Method instrumentation contributes overhead; these
+different native intervals establish neither an isolated microbenchmark nor
+a whole-game TPS gain. The changed candidate proceeds to its own strict
+paired comparison; the prior rejected result remains retained. Its profile
+receipt/log is artifacts/ce-single-cell-profile.* and the DLL pair is retained
+under artifacts/candidates/single-cell-visibility.
+
+### Single-cell candidate: bounded CE stress floor
+
+The changed 450329a0... candidate completes ce-single-cell-450329a0 on the
+unchanged CE stress fixture in six fresh processes. All identity and clean-log
+checks pass, and every measured tick retains native fourth-speed multiplier
+15 with forced speed and UltraSpeedBoost off. Paused loading starts at saved
+tick 3 with zero warmup throughout; camera/settings/CE and engine bytes match.
+Original/candidate pair TPS values are 461.11/526.36, 489.75/511.55 and
+518.97/476.73. The strict median floor passes: 511.5512 versus 489.7529 TPS,
+4.4509% higher. Median tick elapsed is 1.485738/1.475872 ms and frame p95 is
+67.7776/67.7914 ms.
+
+The third pair is slower and the native runs vary appreciably. This proves
+only the predeclared median floor for this fixture; it does not establish a
+uniform improvement, attribute all TPS variation to the direct query change,
+or close broad combat-heavy/combined-loadout or Windows performance. The
+prior 2504105d... failure remains retained. All six reports/logs and the
+complete result are artifacts/comparison-ce-single-cell-450329a0.json and
+its runtime reports. The workflow terminates all processes and restores the
+exact candidate install; all 291 tests pass. Current Zombieland rendering,
+behavior and package gates still need that exact gameplay pair's refresh.

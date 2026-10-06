@@ -388,6 +388,9 @@ public sealed class PerformanceScenarios
                             prefix: new HarmonyMethod(typeof(PerformanceScenarios), nameof(SlowdownRequested)));
                 if (profileFog)
                     foreach (var target in new[] {
+                        ("Verse.Map", "MapUpdate"),
+                        ("Verse.MapDrawer", "DrawMapMesh"),
+                        ("Verse.DynamicDrawManager", "DrawDynamicThings"),
                         ("TotalFog.CompFog", "CompTick"),
                         ("TotalFog.CompSightSource", "UpdateFoV"),
                         ("TotalFog.CompSightSource", "CalcPawnSightRange"),
@@ -411,7 +414,7 @@ public sealed class PerformanceScenarios
                                 .Replace("TotalFog.CompVisibility", "RimWorldRealFoW.CompHideFromPlayer")
                                 .Replace("TotalFog.Presentation", "RimWorldRealFoW.Presentation")
                                 .Replace("TotalFog.Detours", "RimWorldRealFoW.Detours");
-                        var type = mod.GetType(name);
+                        var type = mod.GetType(name) ?? typeof(Map).Assembly.GetType(name);
                         var method = type == null ? null : AccessTools.Method(type, target.Item2);
                         if (method == null) continue;
                         probe.Counters.Add(method, new MethodCounter());

@@ -35,6 +35,12 @@ internal static class ThingVisibility
         bool mobile = thing is Pawn or PawnFlyer || thing.def.category == ThingCategory.Projectile || thing.def.category == ThingCategory.Mote;
         bool canRemember = allowMemory && !mobile &&
             (observed ?? thing.TryGetComp<CompFog>()?.HideFromPlayer?.SeenByPlayer) == true;
+        // The queried cell belongs to the footprint, including when rendering
+        // offsets it. Most queries are single-cell pawns/items; avoid building
+        // their occupied rectangle, and finish remembered anchor hits here.
+        if (canRemember && fog.knownCells[map.cellIndices.CellToIndex(position)]) return true;
+        if (!thing.Spawned || thing is PawnFlyer || thing.def.size.x == 1 && thing.def.size.z == 1)
+            return fog.IsShown(Faction.OfPlayer, position);
         var rect = thing.Spawned && thing is not PawnFlyer ? thing.OccupiedRect() : CellRect.SingleCell(position);
         if (rect.Area == 1)
             return canRemember && fog.knownCells[map.cellIndices.CellToIndex(position)] ||

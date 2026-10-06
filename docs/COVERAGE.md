@@ -177,7 +177,16 @@ and runtime acceptance.
   of cell-burst persistence. Seventeen receipt-backed controls pass under
   `artifacts/ce-retarget-native`. Off-current-map, darkness and lamp-only load
   controls and the new candidate's broader package/performance gates remain
-  open. Native evidence is in
+  open. Its completed six-process CE stress comparison is rejected at 481.43
+  versus 491.73 median TPS (2.1% lower); the earlier beab8196... pass cannot
+  close this candidate's floor. Raw failing reports and separate diagnostic
+  traces remain retained. No performance acceptance is inferred from those
+  instrumented traces. The 450329a0... candidate then avoids constructing a
+  footprint for single-cell visibility queries, without caches or changed
+  update deadlines. All 291 tests pass and its own complete six-process CE
+  stress comparison meets the median floor at 511.55 versus 489.75 TPS (4.45%
+  higher). One pair is slower; this is bounded fixture evidence, not a uniform
+  gain or broad performance/package acceptance. Native evidence is in
   `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
   `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native`, `artifacts/ce-retarget-native` and
   `artifacts/manual-target-symbiant`; broader performance/package gates still refer
