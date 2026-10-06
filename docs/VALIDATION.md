@@ -5639,3 +5639,44 @@ passes 311 tests. This preserves the common primary-view path without another
 sight query. b1cc0a3c... is the next built gameplay candidate and is not covered
 by the older 65c07a54 native result. Both remain separate from prior performance
 and package acceptance.
+
+### Native separate-colony startup, 2026-10-07
+
+The b1cc0a3c gameplay candidate creates a second faction and map through native
+Multiplayer's ideology/pawn wizard. The host views faction 16 and the client
+views faction 18 at paused tick 14174. The original map retains identical
+per-faction discovery and observations. The new map initially differs: the
+host stores no discovered cells, while the client stores 317 around the landing
+site. `MapVisibility.Initialize` used `map.IsPlayerHome` and
+`ColonistsSpawnedCount`, which depend on the local viewing faction. The retained
+red evidence is `artifacts/multiplayer-startup/native-multifaction-created.json`.
+
+Initialization now checks the map's player owner and that owner's spawned
+humanlike non-prisoner pawns. The full suite still passes 311 tests and the
+formatter gate passes. The 30362595 gameplay / 43426096 Total Fog companion
+pair repeats native second-colony creation at the same explicit surface site.
+Both clients now store the same 317 discovered cells, and neither other faction
+inherits them. Coverage, discovery, observed-object hashes, blockers and source
+schedules agree after excluding empty coverage allocations made by local
+presentation and the intentionally observer-specific presentation hash. Evidence:
+`artifacts/multiplayer-startup/native-multifaction-startup-fixed.json` and
+`owner-startup-installed-pair.json`.
+
+The second native pawn wizard also logs a null food need for generated pawn
+Waters during native pawn serialization on both clients. Its stack begins in
+Hediff_Addiction/Need_Food, with Multiplayer stat/needs patches; no Total Fog
+frame appears. This has not been isolated without Total Fog, so ownership is
+unverified. The fog startup observation is not clean-log or complete-session
+acceptance. Both full logs are retained under multiplayer-startup.
+
+Before that startup fix, 3,852 shared synchronous ticks of the native two-map
+session reach paused tick 18026 with matching per-faction discovery, observations,
+coverage, blockers and all source schedules. Native faction switching does not
+transfer knowledge. This older b1cc0a3c result is retained separately in
+`native-multifaction-running-paused.json`; it does not accept the new gameplay
+candidate's performance, independent clocks or deferred notifications.
+
+RimBridgeServer's optional Multiplayer companion now exposes the native faction
+setup wizard and join-faction packet, plus faction/time-mode status. These are
+test controls outside player mod packages. An immediate status read while the
+native replay loads also exercises the new world-null guard successfully.

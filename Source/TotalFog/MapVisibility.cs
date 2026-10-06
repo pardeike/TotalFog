@@ -369,7 +369,14 @@ public class MapVisibility : MapComponent
         TotalFogMod.LogMessage(
             $"Fog sight sources initialized after {startup.ElapsedMilliseconds} ms."
         );
-        if (map.IsPlayerHome && map.mapPawns.ColonistsSpawnedCount == 0)
+        // IsPlayerHome and ColonistsSpawnedCount use the local player faction.
+        // Both clients must seed a newly generated colony's discovery for its owner.
+        if (
+            map.ParentFaction?.IsPlayer == true
+            && !map.mapPawns.AllPawnsSpawned.Any(pawn =>
+                pawn.Faction == PrimaryPlayerFaction && pawn.RaceProps.Humanlike && !pawn.IsPrisoner
+            )
+        )
         {
             var start = MapGenerator.PlayerStartSpot;
             FieldOfView.Compute(
