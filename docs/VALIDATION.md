@@ -5405,3 +5405,69 @@ by the explicit diagnostic setting. These are not clean-log compatibility passes
 The full saved-session/replay, dedicated combat, blockers/transfers, separate
 factions, independent map clocks, deferred notifications and combined CE gates
 remain outstanding. No compatibility completion is inferred from these controls.
+
+## Multiplayer saved settings and independent views, 2026-10-06
+
+The cold-load control found a real Total Fog defect in candidate 402b52da.
+The live session saved at tick 3336 with BaseViewRange=10. A fresh process
+loaded that native archive with its local default of 60, publishing much wider
+coverage. MPAPI field registration synchronizes live changes but does not itself
+persist static mod fields in the game snapshot. The one-tick advance made by
+native replay loading is not a desync claim; the differing setting is the defect.
+The failure is retained in fog-coldsave-failure.json.
+
+MultiplayerSettingsGameComponent now saves shared primitive settings and the
+startup tree-blocking policy only while Multiplayer is active. It restores them
+in LoadingVars before map initialization. Ordinary single-player saves do not
+gain a shared-settings snapshot. Numbers round-trip with invariant culture;
+registration uses ordinal name order. The canonical build passes 298 tests,
+including exact floating-point settings restored across French/English cultures,
+unknown future keys and the existing optional-binding controls. There is no new
+per-tick work or hard Multiplayer reference.
+
+The first fixed gameplay DLL hashes
+`f818f0e42be22097cb0b468c9d076185afb79ef57c33b3a52050a2834e7a86a1`.
+Both live clients match completely at paused tick 1559 with range 10 before saving
+TotalFog_MP_20261006_C through native Autosaving. The archive passes ZIP CRC
+validation and contains the shared-settings game component. Both local preference
+files omit the range field, retaining its default of 60. Independently restarted
+host and client load identical archive bytes to paused replay tick 1560 with
+range 10 and identical complete fog snapshots, including transient schedules:
+375 sources, 1,206 visible cells and 12,163 known cells. Evidence is in
+fog-fixed-coldsave-{source,result,pair}.json. Native loading advances the saved
+endpoint by one tick, so the pre-save and post-load snapshots are not treated
+as a same-tick comparison.
+
+The final ordinal-order gameplay candidate hashes
+`4221b0d9198d22c3a6c9680b41bd2abd022990f75a7e0e5f049e9efb8572239f`.
+A fresh host loads the same saved archive, resumes hosting through native
+HostUtil.HostServer(settings, fromReplay: true), and a fresh client joins with
+local default preferences. Their complete snapshots match at tick 1561 with
+range 10 and 375 sources. The updated companion follows native HostWindow's
+server initialization/replay-host path; it does not write MP session state.
+The replay-host companion hashes 090a041d8c7a5656273536b6ba1ce4cc27966f2c5d956af1dd131b1478a64df3;
+the deployed RimBridgeServer main DLL hashes
+fdd46a996f683a815e7413739775bf40cac89263a35339c2458268b971ee2f16.
+Native public game/Multiplayer identities and the shared synchronous loadout
+remain those recorded above. Evidence is fog-fixed-resumed-join.json.
+
+One bounded independent-camera control follows. The host stays at cell 137,125
+with root size 12 and a 25x27 view. The client uses cell 200,50, root size 100
+and a 187x203 view through the session-only bridge extension. Native synchronized
+Superfast playback and a client pause advance both from 1561 to 2886, 1,325 ticks.
+Their complete fog snapshots still match, including 374 surviving sources,
+1,250 visible cells, discovery, observations, blockers and schedules. Neither
+reports a native desync. This is a camera-independence control, not an FPS/TPS
+benchmark or proof of every interface interaction. Evidence is
+fog-fixed-different-cameras.json.
+
+The recurring reflection-only InputLegacyModule loading exception remains;
+these results do not establish clean-log acceptance. Dedicated ordered combat,
+blocker edits/transfers, deferred notification replay, separate factions,
+independent map clocks and combined CE remain open. Cold snapshot reconstruction
+and resumed hosting close only the corresponding part of the save/rejoin target.
+The deployment guard now rejects running games using the selected physical Mods
+folder, while preserving another task's independent offline game/mod folder.
+The pair layout verifies after fresh pair launch; restarting only one duplicate
+app can temporarily leave the older process without AX-exposed windows. That
+tooling failure is retained separately from fog evidence.

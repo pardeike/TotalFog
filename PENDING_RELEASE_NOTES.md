@@ -30,7 +30,8 @@
 - Keep colony health and global notifications immediate; discard settings now apply only to unseen events.
 - Avoid rebuilding terrain and other section meshes when realtime pawns become hidden or visible.
 - Skip enemy sight calculations while enemy fog targeting is disabled, preserving the game's enemy targeting and other AI mods.
-- Apply vision and enemy-targeting setting changes immediately, including while paused.
+- Apply vision and enemy-targeting setting changes within the normal sight-refresh interval.
+- Synchronize shared fog settings in Multiplayer and preserve them in saved sessions.
 - Reduce repeated map-component searches and duplicate fog-section cell sampling.
 - Skip cell-index rewrites when one-cell things turn in place; preserve immediate movement and larger footprint updates.
 - Skip unnecessary fog lookups when drawing owned pawns.

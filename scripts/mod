@@ -73,8 +73,13 @@ def format_sources(log, check=False):
 
 def stopped():
     listing = subprocess.check_output(["ps", "ax", "-o", "comm="], text=True)
-    if any(line.endswith("/RimWorld by Ludeon Studios") for line in listing.splitlines()):
-        raise RuntimeError("Stop RimWorld through GABS before deploying")
+    for line in listing.splitlines():
+        if line.endswith("/RimWorld by Ludeon Studios"):
+            game_mods = (Path(line.strip()).parents[2] / "Mods").resolve()
+            if game_mods == MODS:
+                raise RuntimeError(
+                    "Stop RimWorld using " + str(MODS) + " through GABS before deploying"
+                )
 
 
 def stage(destination, baseline=False):

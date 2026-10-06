@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -10,6 +11,42 @@ namespace TotalFog.Tests;
 
 public class MultiplayerIntegrationTests
 {
+    [Fact]
+    public void Session_settings_round_trip_exact_float_values_and_startup_tree_policy()
+    {
+        var original = MultiplayerIntegration.CaptureSettings();
+        var originalCulture = CultureInfo.CurrentCulture;
+        var trees = typeof(FogSettings).GetField(
+            "treesBlockSightValue",
+            BindingFlags.Static | BindingFlags.NonPublic
+        );
+        try
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
+            FogSettings.BaseViewRange = 10;
+            FogSettings.BuildingVisionModifier = 1.23456789f;
+            FogSettings.SilentRaids = true;
+            trees.SetValue(null, true);
+            var saved = MultiplayerIntegration.CaptureSettings();
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            saved.Add("UnknownFutureSetting", "42");
+            FogSettings.BaseViewRange = 60;
+            FogSettings.BuildingVisionModifier = 1;
+            FogSettings.SilentRaids = false;
+            trees.SetValue(null, false);
+            MultiplayerIntegration.RestoreSettings(saved);
+            Assert.Equal(10, FogSettings.BaseViewRange);
+            Assert.Equal(1.23456789f, FogSettings.BuildingVisionModifier);
+            Assert.True(FogSettings.SilentRaids);
+            Assert.True(FogSettings.TreesBlockSight);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = originalCulture;
+            MultiplayerIntegration.RestoreSettings(original);
+        }
+    }
+
     [Fact]
     public void Optional_binding_buffers_all_settings_and_balances_watches_after_failure()
     {
@@ -28,7 +65,7 @@ public class MultiplayerIntegrationTests
                     field.FieldType.IsPrimitive && !field.IsLiteral && !field.IsInitOnly
                 )
                 .Select(field => field.Name)
-                .OrderBy(name => name)
+                .OrderBy(name => name, StringComparer.Ordinal)
                 .ToArray();
             Assert.Equal(expected, FakeApi.Fields.Select(field => field.Name));
             Assert.All(FakeApi.Fields, field => Assert.True(field.Buffered));

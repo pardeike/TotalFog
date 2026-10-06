@@ -510,8 +510,17 @@ ticks at 1820, and after a client leaves/rejoins at 1821. The settings candidate
 then matches after a client changes BaseViewRange from 60 to 10 at tick 1593 and
 after the host restores 60 at tick 2629. Silent Raids also synchronizes from the
 client. This is 1,411 candidate ticks with shared-colony synchronous time;
-separate factions, independent map clocks, targeted combat, and a full saved
-Multiplayer session/replay remain outstanding. See exact hashes and limits in
+separate factions, independent map clocks and targeted combat remain outstanding.
+A subsequent cold-save check exposed lost session settings; the fixed candidate
+preserves range 10 despite local preferences defaulting to 60. Two fresh processes
+load the same native Multiplayer archive to tick 1560 with identical complete
+fog snapshots, including 375 sources and 1,206 visible cells. This verifies cold
+saved-state reconstruction, not the full combat/queue/transfer replay matrix.
+A fresh client also joins the resumed native saved session with identical state.
+One different-view control then advances 1,325 ticks with host root size 12 and
+client root size 100 at different positions; complete fog state still matches.
+It is a determinism control, not a performance benchmark.
+See exact hashes and limits in
 `docs/VALIDATION.md`.
 
 An optional MPAPI binding registers the public primitive settings in stable name
@@ -522,7 +531,11 @@ no longer force sight recalculation. Source ticks apply vision settings within
 the existing 30-tick refresh bound. Saving host settings at paused tick 1593
 leaves the complete fog snapshot unchanged. Tree blocking remains a startup
 setting initialized through the host configuration, with its existing in-game
-reload restriction.
+reload restriction. A game component stores the shared primitive settings and
+startup tree policy in native Multiplayer snapshots. It restores them during
+variable loading before maps initialize, without adding per-tick work or storing
+session settings in ordinary single-player saves. Setting registration uses
+ordinal name order and saved numbers use invariant culture.
 
 Diagnostic stack capture is disabled after Multiplayer's native Arm64 tracer
 throws on the installed build, matching the already reported

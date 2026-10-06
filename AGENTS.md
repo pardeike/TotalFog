@@ -125,6 +125,9 @@ uses the same native MPAPI watcher as the UI; verify the applied value on both
 clients. Never run single-player mutation fixtures on only one connected client.
 The current acceptance loadout uses shared-colony synchronous time. Separate
 factions and independent map clocks remain explicit outstanding targets.
+Native MP save loading enters replay mode. The companion's host_local can resume
+hosting that loaded replay; it rejects an existing live session. Inspect status
+for completed hosting/join and compare fog only at matching paused ticks.
 Use `totalfog/ce_ammo_fixture` for the scoped no-magazine short-bow control.
 It observes CE's own attack orders, ammunition preparation and shot results;
 play through ordinary Normal playback. Remove/recreate its real security bell

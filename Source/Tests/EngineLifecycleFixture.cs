@@ -620,6 +620,10 @@ namespace TotalFog
 
     public class FogSettings : Verse.ModSettings
     {
+        public static int BaseViewRange = 60;
+        public static float BuildingVisionModifier = 1;
+        private static bool treesBlockSightValue;
+        public static bool TreesBlockSight => treesBlockSightValue;
         public static bool DoAudioCheck = true;
         public static bool MuteHiddenSounds;
         public static int AudioSourceRange = 30;
