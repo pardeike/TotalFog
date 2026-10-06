@@ -529,6 +529,11 @@ and death, with both clients matching complete fog and selected pawn state after
 1,994 Normal ticks. Its current hidden-target menu control has no attack option;
 a visible but unhittable target retains vanilla's disabled firing option. This
 does not close AI/turret, boundary loss during warmup or combined CE coverage.
+The same gameplay bytes also pass one real closed/open/closed door cycle through
+synchronized pawn movement over 5,388 Normal ticks. Both clients match complete
+fog and pawn state plus the door's native open/see-over and fog blocker flags.
+Discovery persists after closing. Transport/map removal and broader blocker
+changes still need their own checks.
 See exact hashes and limits in
 `docs/VALIDATION.md`.
 

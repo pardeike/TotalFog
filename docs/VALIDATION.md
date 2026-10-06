@@ -5556,3 +5556,25 @@ and native gpath assertions remain in both preserved native logs, so this
 is bounded manual rifle/determinism evidence, not clean-log release acceptance,
 TPS/FPS acceptance, AI/turret targeting, native gravship flight, separate
 factions, independent map clocks or combined CE Multiplayer validation.
+
+One real door cycle follows on the same 88f41bed gameplay bytes. A companion-only
+read-only cell query reports native building/door state alongside actual fog
+blocker, current sight and discovery; it does not create map/grid state or issue
+orders. A canonical rebuild passes the same 303 tests and proves gameplay byte
+identity. The deployed companion hashes
+db5bd03490c1bac18fd0f6f7d2c15f24f95874f8600678fd0cfc85ef5c91d73f.
+
+Both clients resume/join the native post-rifle save at paused tick 8784. The real
+Door13612 at 33,124 is closed, cannot be seen over and blocks fog sight; its cell
+is not yet discovered. Andrews reaches and stands in that door through native
+right-click movement and ordinary Normal playback. At matching paused tick
+12870, both report the same healthy pawn at 33,124, native doorOpen=true,
+canBeSeenOver=true, blocked=false and known=true. A second native move to 40,124
+lets the door close naturally. Both pause at tick 14172 with the same pawn there,
+doorOpen=false, canBeSeenOver=false, blocked=true and retained discovery.
+Complete fog snapshots match at all three boundaries and native desync flags
+remain false. This covers 5,388 Normal ticks and one ordinary door/movement
+transition, not every blocker, sight behind the doorway, transfers or async maps.
+Evidence is multiplayer-startup/fog-door-{before,open,closed}.json,
+door-build-pair.json and both preserved Player.log files. The loading exception
+remains, so clean-log acceptance is still open.

@@ -16,6 +16,47 @@ namespace TotalFog.BridgeTools;
 public sealed class MultiplayerScenarios
 {
     [Tool(
+        "totalfog/multiplayer_cell",
+        Description = "Read one current-map cell's native building/door state and fog blockers, discovery and sight without changing simulation. Compare only at matching paused native ticks."
+    )]
+    public static Task<object> Cell(IRimBridgeContext context, int x, int z) =>
+        context.MainThread.InvokeAsync<object>(() =>
+        {
+            var map = Find.CurrentMap;
+            var cell = new IntVec3(x, 0, z);
+            var fog = map?.GetComponent<MapVisibility>();
+            if (fog == null || !cell.InBounds(map))
+                return new { success = false, message = "Use an in-bounds cell on a loaded map." };
+            int index = map.cellIndices.CellToIndex(cell);
+            var building = cell.GetEdifice(map);
+            return new
+            {
+                success = true,
+                ticks = Find.TickManager.TicksGame,
+                map = map.uniqueID,
+                x,
+                z,
+                initialized = fog.Initialized,
+                blocked = fog.viewBlockerCells[index],
+                treeBlocked = fog.treeBlockerCells[index],
+                known = fog.knownCells[index],
+                visible = fog.IsShown(Faction.OfPlayer, cell),
+                vanillaFog = map.fogGrid.IsFogged(cell),
+                building = building == null
+                    ? null
+                    : new
+                    {
+                        id = building.ThingID,
+                        def = building.def.defName,
+                        building.HitPoints,
+                        building.def.blockLight,
+                        canBeSeenOver = building.CanBeSeenOver(),
+                        doorOpen = (building as Building_Door)?.Open,
+                    },
+            };
+        });
+
+    [Tool(
         "totalfog/multiplayer_pawns",
         Description = "Read selected native pawns or corpse inner pawns by comma-separated ThingIDs. Reports combat jobs, targets, health and current fog visibility without issuing orders or changing simulation. Compare only at matching paused native ticks."
     )]
