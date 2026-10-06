@@ -5017,6 +5017,30 @@ unpatched, process termination is verified, and the temporary project includes
 are removed before the following ordinary-player comparison. See
 artifacts/row-center-native-cleanup.json.
 
+## Current candidate Zombieland performance gate, 2026-10-06
+
+The unchanged ddb5c8fe... Total Fog candidate and 56daa1f2... Zombieland DLL
+complete the existing three-pair ordinary fourth-speed comparison on
+`TotalFog_Zombieland_UpstreamQuietGap1000`. Original/candidate TPS is
+203.4972/214.0356, 198.4477/219.2105 and 209.8320/212.1995; the order alternates
+original/candidate, candidate/original, original/candidate in fresh processes.
+The candidate median is 214.0356 versus 203.4972 TPS, 5.18% higher. Median
+per-run frame p95 is 77.8705 versus 76.3189 ms, so this does not establish a
+frame-tail improvement.
+
+All six runs start with 1,000 zombies and finish with 999..1,000. Every measured
+tick uses native multiplier 15 with selected Ultrafast, forced speed and the
+private speed boost disabled. DPA and zombie work profiling are absent. Save,
+settings, both gameplay binaries, engine, camera and sparse contamination
+input match. The camera uses the existing native root size 60 and covers
+25,953 cells; this is the regular fixture, not another wide-view test.
+All six recognized native log summaries are empty, processes are stopped,
+the fixture is unchanged and the candidate remains deployed. Evidence is
+`artifacts/comparison-release-row-center-zombieland-1000.json` with its six
+native reports and logs. This passes that fixture's performance gate only.
+The earlier wide CE failure remains retained, and the delivered tester
+package and its native presentation gates still identify their earlier bytes.
+
 ## Small wide-view sample, 2026-10-06
 
 The completed normal-view CE comparison uses the same ddb5c8fe... gameplay

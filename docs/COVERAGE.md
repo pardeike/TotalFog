@@ -76,6 +76,10 @@ gates. The newer ddb5c8fe... candidate is still in development: its normal-view
 CE median passes with substantial variation, its one-pair wide CE spot check
 is 2.25% slower, and it has not superseded the delivered tester package.
 Recent combined mini-turret/Symbiant/electrifier controls need no gameplay fix.
+The same candidate now passes the existing six-process Zombieland fixture at
+214.036 versus 203.497 median TPS (5.18% higher), with ordinary fourth speed,
+999..1,000 zombies retained and no DPA. This closes that fixture's performance
+gate; it does not resolve the wide CE spot check or refresh the final package.
 
 Use the remaining acceptance evidence to close the release rather than expand
 an open-ended variant matrix. Resolve the current performance finding with a
