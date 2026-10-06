@@ -4415,6 +4415,50 @@ turrets, broader CE/Zombieland combinations or current-candidate performance.
 Those checks, Multiplayer and the full release-candidate gates remain open.
 Mortal's tested ZIP pair is unchanged.
 
+### Native narrowed M240B firing arc and sight controls
+
+The unchanged beab8196... gameplay bytes also pass a native 90-degree M240B
+arc control with CE 16.7.3.0 and all DLCs. The proof companion SHA-256 is
+90f2c2e0fd73a66c3d04ec9fcd4e6bf3cd4776e943f72da8cb3eea8cd60fdbb6.
+CE's enableArcOfFire setting is initially false. The native semantic settings
+tool enables it only in memory, with write=false. The fixture validates the
+span against native CompFireArc bounds, writes its configuration fields and
+invokes Building_TurretGunCE.PostAdjustFireArc, the same callback used when
+the editor commits. Native target acquisition, bursts and ammunition remain
+untouched. No gameplay fix is needed.
+
+The healthy hostile waiting Pawn remains 60 cells east of the manned gun,
+inside its native 62-cell weapon range. A real player-faction security bell
+provides shared sight. With center 0 and span 90, native WithinFireArc and
+acquisition are false despite valid sight. During 507 unforced Normal ticks,
+all 180 rounds and lastShotTick 12690 remain. Turning only the center to 90
+makes the same target eligible. Another 112 native ticks fire six rounds,
+leaving 174 and lastShotTick 13966, with a real Thing target and native burst.
+
+The pre-fire native inside-visible save is reloaded to retain a healthy target
+and all 180 rounds. Removing only the real bell makes sight/acquisition false
+while native WithinFireArc remains true. Another 502 ticks consume no ammo
+and retain lastShotTick 12690. Fresh-process reloads preserve the native arc
+fields: inside-hidden center 90/span 90 produces no shot during 540 ticks,
+and outside-visible center 0/span 90 produces no shot during 541 ticks. The
+restarted profile retains its original false arc setting, which is explicitly
+enabled for these controls; this is not changed-settings persistence proof.
+Both fresh controls remain healthy, manned and unheld.
+
+The original CE setting is restored without writing it to disk. The seven
+owned objects are removed, TotalFogCEFixture is reloaded, and process
+termination is verified. Both retained control/restart logs pass the existing
+error summarizer and there is no open attention. The sixteen checked receipts,
+exact gameplay/companion bytes and three native save hashes are retained under
+artifacts/ce-arc-native. The canonical build passes all 291 independent tests.
+
+Editor interaction is excluded from acceptance. Both bridge virtual clicks
+and actual application mouse attempts left CurrentCenterAngle/CurrentSpan
+unchanged. Their receipts/log are retained separately; this does not establish
+a Total Fog bug or an upstream blocker. The native configuration control
+proves targeting/fog behavior and persistence for this M240B case, not editor
+input, every CE weapon/arc, suppressive Thing fallback or nearby retargeting.
+
 ### Native enemy CE mini-turret and observing-faction controls
 
 The unchanged beab8196... gameplay DLL passes the native automatic enemy

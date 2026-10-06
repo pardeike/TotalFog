@@ -137,7 +137,7 @@ and runtime acceptance.
   reload consumes exactly 30 rounds and both the magazine and remaining supply
   survive in-process and fresh-process loads. Twenty-nine source-linked CE
   cases pass. Other manned weapons, live suppressive Thing fallback/nearby
-  retargeting, narrowed fire arcs, combat-heavy CE performance and combined overhaul
+  retargeting, other weapon/arc combinations, combat-heavy CE performance and combined overhaul
   loadouts remain open. The same beab8196... gameplay bytes now also pass a
   native enemy mini-turret against a healthy drafted player target 42 cells
   away: enemy fog off permits ordinary firing, enabled 34-cell sight stops
@@ -154,9 +154,17 @@ and runtime acceptance.
   effective CE/fog settings, camera and bytes match; logs are clean. Timing
   varies and frame p95 is essentially unchanged. This closes that synthetic
   colony/animal fixture's performance floor, not combat-heavy or combined-loadout performance;
+  a separate native M240B 90-degree arc control also passes. A visible target
+  outside the arc consumes no ammo; turning the arc toward it allows native
+  fire; removing shared sight stops fire even while geometry remains valid.
+  The saved outside-visible and inside-hidden controls pass after restart.
+  CE's arc option is restored to its original false value without disk writes.
+  The fixture sets valid native configuration fields and invokes CE's adjustment
+  callback; editor input remains unverified because the attempted mouse paths
+  left the stored angle/span unchanged. No gameplay fix is needed for this case;
   this is not full CE acceptance. Native evidence is in
   `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
-  `artifacts/ce-enemy-turret-native` and
+  `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native` and
   `artifacts/manual-target-symbiant`; broader performance/package gates still refer
   to their exact earlier gameplay DLLs.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly

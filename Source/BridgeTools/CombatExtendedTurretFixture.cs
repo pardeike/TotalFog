@@ -14,11 +14,11 @@ namespace TotalFog.BridgeTools;
 /// <summary>Native CE turret/mortar fixtures. IDs survive save/load; no gameplay assembly dependency on CE.</summary>
 public sealed class CombatExtendedTurretFixture
 {
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for state/configure/supply-ammo/remove-power/cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. configure-enemy-fog applies the enemyFog test setting through the normal settings refresh; restore it before cleanup. configure-fire-arc applies valid native angle/span fields and CE's adjustment callback; it does not test editor input. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
         int targetDistance = 16, bool holdFire = true, bool reveal = false,
-        bool enemyTurret = false, bool enemyFog = false)
+        bool enemyTurret = false, bool enemyFog = false, float arcCenter = 0f, float arcSpan = 90f)
     {
         return await ctx.MainThread.InvokeAsync(() =>
         {
@@ -76,8 +76,8 @@ public sealed class CombatExtendedTurretFixture
                     owned.AddRange(made); ownedIds.AddRange(made.Select(t => t.ThingID));
                 }
                 else if (action != "state" && action != "configure" && action != "remove-power" && action != "supply-ammo" &&
-                    action != "configure-enemy-fog")
-                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, supply-ammo, remove-power or cleanup.");
+                    action != "configure-enemy-fog" && action != "configure-fire-arc")
+                    throw new InvalidOperationException("Use setup, state, configure, configure-enemy-fog, configure-fire-arc, supply-ammo, remove-power or cleanup.");
 
                 if (action == "remove-power")
                 {
@@ -128,6 +128,19 @@ public sealed class CombatExtendedTurretFixture
                 var sight = gunTurret.GetComp<CompFog>()?.FieldOfViewWatcher;
                 var manningPawn = gunTurret.GetComp<CompMannable>()?.ManningPawn;
                 var fireArc = gunTurret.AllComps.FirstOrDefault(c => c.GetType().FullName == "CombatExtended.CompFireArc");
+                if (action == "configure-fire-arc")
+                {
+                    if (fireArc == null) throw new InvalidOperationException("The fixture turret has no native fire arc.");
+                    var range = (FloatRange)AccessTools.Field(fireArc.props.GetType(), "spanRange").GetValue(fireArc.props);
+                    if (float.IsNaN(arcCenter) || float.IsInfinity(arcCenter) || arcCenter < -180 || arcCenter > 180 ||
+                        float.IsNaN(arcSpan) || float.IsInfinity(arcSpan) || !range.Includes(arcSpan))
+                        throw new ArgumentOutOfRangeException(nameof(arcSpan), "Use a finite center in -180..180 and span within native bounds.");
+                    if ((bool)AccessTools.Field(fireArc.GetType(), "Editing").GetValue(fireArc))
+                        throw new InvalidOperationException("Exit CE's native arc editor before configuring the fixture.");
+                    AccessTools.Field(fireArc.GetType(), "CurrentCenterAngle").SetValue(fireArc, arcCenter);
+                    AccessTools.Field(fireArc.GetType(), "CurrentSpan").SetValue(fireArc, arcSpan);
+                    AccessTools.Method(gunTurret.GetType(), "PostAdjustFireArc").Invoke(gunTurret, null);
+                }
                 return (object)new
                 {
                     success = true, ids = string.Join(",", ownedIds), action,
