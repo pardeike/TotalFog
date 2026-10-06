@@ -103,12 +103,15 @@ try:
             run(['dotnet','build',str(PROJECT),'-c','Release','--no-incremental','--nologo','-v:q','-p:RIMWORLD_MOD_DIR='],log)
         if mode == 'runtime-compare':
             step = 'runtime comparison'
+            pairs = int(os.environ.get('TOTALFOG_COMPARISON_PAIRS', '3'))
+            if pairs not in {1, 2, 3}: raise RuntimeError('Use 1..3 for TOTALFOG_COMPARISON_PAIRS')
             label, save_name = sys.argv[2:4]
             speed = sys.argv[4] if len(sys.argv) == 5 else 'Ultrafast'
-            report = {'save': save_name, 'speed': speed, 'complete': False, 'samples': []}
+            report = {'save': save_name, 'speed': speed, 'comparisonPairs': pairs,
+                'scope': 'performance-floor' if pairs == 3 else 'spot-check', 'complete': False, 'samples': []}
             destination = ROOT/'artifacts'/('comparison-'+label+'.json')
             try:
-                for index in range(3):
+                for index in range(pairs):
                     order = ['original','candidate'] if index % 2 == 0 else ['candidate','original']
                     for variant in order:
                         deploy_pair(variant == 'original')
@@ -124,6 +127,7 @@ try:
                         identity['saveSha256'] = evidence['saveSha256']
                         identity['instrumentation'] = evidence['instrumentation']
                         identity['camera'] = environment['camera']
+                        identity['wideView'] = environment['wideView']
                         identity['contaminationOverlay'] = environment['contaminationOverlay']
                         identity['contaminationInput'] = environment['contaminationInput']
                         identity['zombieland'] = evidence['zombielandIdentity']
@@ -153,10 +157,11 @@ try:
                 report['diagnosticInstrumentation'] = report['identity']['profileZombieWork']
                 report['unrestrictedPlayerUltrafast'] = speed == 'Ultrafast' and not report['identity']['forceRequestedSpeed'] and all(
                     row['multiplier'] == 15 for sample in report['samples'] for row in sample['tickRateSamples'])
-                report['performanceFloorMet'] = report['medians']['candidate']['tps'] >= report['medians']['original']['tps']
+                report['measuredFloorMet'] = report['medians']['candidate']['tps'] >= report['medians']['original']['tps']
+                report['performanceFloorMet'] = pairs == 3 and report['measuredFloorMet']
                 report['complete'] = True
                 destination.write_text(json.dumps(report,indent=2)+'\n')
-                if not report['performanceFloorMet']:
+                if not report['measuredFloorMet']:
                     raise RuntimeError('Candidate TPS is below the original; inspect '+str(destination))
             finally:
                 primary_error = sys.exc_info()[1]

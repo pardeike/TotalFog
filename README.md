@@ -274,6 +274,11 @@ solution is `Source/TotalFog.slnx`.
 | `./scripts/mod runtime-compare <label> <save> [speed]` | Alternates three original/candidate pairs and checks the native performance floor |
 | `./scripts/mod source-publish` | Pushes committed source and verifies GitHub; does not publish a player ZIP or update Steam |
 
+For a short wide-zoom comparison, prefix `runtime-compare` with
+`TOTALFOG_WIDE_VIEW=1 TOTALFOG_COMPARISON_PAIRS=1`. It records the actual visible
+map area at root size 100. This is a spot check; the normal performance gate
+still uses three pairs.
+
 Full logs are kept in `artifacts/logs/`. Only RimWorld 1.6 is supported; the older
 version folders stay for history. More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),

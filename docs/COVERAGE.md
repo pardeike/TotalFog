@@ -257,6 +257,25 @@ and runtime acceptance.
   startup reference resolution. The incomplete comparison is retained in
   `artifacts/ce-row-center-startup-failure`; no native performance acceptance
   or new feedback ZIP follows from this source change.
+  A later fresh startup/load succeeds and a same-process native comparison
+  verifies 512 masks/4,096 queries plus each timed origin's full footprint.
+  Compared with exact pre-change source 846e7c4, paused casting cost drops
+  7.77% on the stress map's blockers/53 colonist positions and 8.80% on open
+  terrain. This establishes the casting improvement, not whole-game TPS or
+  native allocation behavior. DPA is absent, logs are clean, and temporary
+  comparison code is removed before further acceptance measurements.
+  The completed normal-view six-process comparison passes its median at
+  421.133 versus 398.386 TPS, but large sample variation prevents a stable
+  causal gain claim. A deliberately small wide-view sample then covers a CE
+  colony and Zombieland contamination in one original/candidate pair each.
+  Wide CE covers 71,050 cells and measures 402.053 versus 411.314 TPS, a 2.25%
+  decrease with a worse frame tail. It remains a failed spot check. The older
+  Zombieland fixture covers 50,750 cells but loses most zombies and spends
+  most ticks at native multiplier 1, so its 2.28% higher TPS cannot establish
+  sustained fourth-speed or equal-work acceptance. Paused wide overlay pixels
+  show the intended current-sight clipping. These two pairs do not close the
+  three-pair delivery gate, and there is no new feedback package. See the
+  small wide-view section in VALIDATION.md and the retained comparison reports.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

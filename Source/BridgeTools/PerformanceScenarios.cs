@@ -240,18 +240,18 @@ public sealed class PerformanceScenarios
         }, cancellationToken);
     }
 
-    [Tool("totalfog/runtime_performance", Description = "Measure actual native playback, whole-tick elapsed time and frame intervals. Works with the inherited binary too. Reload the same save and camera before each comparison sample; instrumentation is removed afterward.")]
+    [Tool("totalfog/runtime_performance", Description = "Measure actual native playback, whole-tick elapsed time and frame intervals. Works with the inherited binary too. Optional wideView frames the map center at root size 100 through the bridge's session-only zoom extension and centers the sparse contamination input there. Records actual visible map cells and pawn root cells in view. Restores camera/extension, overlay and instrumentation. Reload the same save before each comparison sample.")]
     public static async Task<object> RuntimePerformance(IRimBridgeContext ctx, CancellationToken cancellationToken,
         int durationMs = 15000, string speed = "Normal", bool forceRequestedSpeed = false, bool profileFog = false,
         bool profileZombieWork = false, int warmupTicks = 0, bool traceSlowdowns = false,
-        bool contaminationOverlay = false)
+        bool contaminationOverlay = false, bool wideView = false)
     {
         if (durationMs < 1000 || durationMs > 30000) throw new ArgumentOutOfRangeException(nameof(durationMs));
         if (warmupTicks < 0 || warmupTicks > 600) throw new ArgumentOutOfRangeException(nameof(warmupTicks));
         await drawGate.WaitAsync(cancellationToken);
         var harmony = new Harmony("brrainz.totalfog.performance-probe");
         RuntimeFrameProbe probe = null;
-        object environment = null, zombieWork = null;
+        object environment = null, zombieWork = null, wideScreenshot = null;
         Type zombieType = null;
         int zombiePopulationStart = 0;
         int warmupStartTick = -1, warmupEndTick = -1;
@@ -264,8 +264,36 @@ public sealed class PerformanceScenarios
         object overlayManager = null;
         bool previousOverlay = false;
         float[] groundCells = null, previousGround = null;
+        bool? previousZoomExtension = null;
+        Vector3 previousCameraPosition = default;
+        float previousCameraSize = 0;
+        int groundX = 40, groundZ = 40;
         try
         {
+            if (wideView)
+            {
+                var center = await ctx.MainThread.InvokeAsync(() =>
+                {
+                    if (Find.CurrentMap == null || !Find.TickManager.Paused || active != null)
+                        throw new InvalidOperationException("Use a paused comparison map without another performance sample.");
+                    var priorCell = Find.CameraDriver.MapPosition;
+                    previousCameraPosition = new Vector3(priorCell.x, 0f, priorCell.z);
+                    previousCameraSize = Find.CameraDriver.RootSize;
+                    var cell = Find.CurrentMap.Center;
+                    groundX = cell.x - 79; groundZ = cell.z - 49;
+                    return cell;
+                }, cancellationToken);
+                var extended = await ctx.Tools.CallAsync("rimworld/set_camera_zoom_extension",
+                    new { enabled = true }, cancellationToken: cancellationToken);
+                if (!extended.Succeeded() || !extended.ReadResult<bool>("success"))
+                    throw new InvalidOperationException("The bridge camera extension could not be enabled.");
+                previousZoomExtension = extended.ReadResult<bool>("previousEnabled");
+                var framed = await ctx.Tools.CallAsync("rimworld/frame_cell_rect",
+                    new { x = center.x, z = center.z, width = 1, height = 1, rootSize = 100f }, cancellationToken: cancellationToken);
+                if (!framed.Succeeded() || !framed.ReadResult<bool>("success"))
+                    throw new InvalidOperationException("The wide camera could not be established.");
+                await ctx.Game.FramesAsync(65, cancellationToken);
+            }
             await ctx.MainThread.InvokeAsync(() =>
             {
                 if (active != null) throw new InvalidOperationException("A performance sample is already running.");
@@ -292,7 +320,7 @@ public sealed class PerformanceScenarios
                     // Gameplay visibility policies remain active; no settings or save writes.
                     for (int i = 0; i < 4000; i++)
                     {
-                        var cell = new IntVec3(40 + i % 80 * 2, 0, 40 + i / 80 * 2);
+                        var cell = new IntVec3(groundX + i % 80 * 2, 0, groundZ + i / 80 * 2);
                         if (!cell.InBounds(map) || !Find.CameraDriver.CurrentViewRect.Contains(cell))
                             throw new InvalidOperationException("The complete 159x99 contamination shape must be in view.");
                         setter.Invoke(grid, new object[] { cell, .65f });
@@ -313,6 +341,15 @@ public sealed class PerformanceScenarios
                 Prefs.AutomaticPauseMode = AutomaticPauseMode.Never;
             }, cancellationToken);
             if (contaminationOverlay) await ctx.Game.FramesAsync(65, cancellationToken);
+            if (wideView)
+            {
+                var captured = await ctx.Tools.CallAsync("rimworld/take_screenshot",
+                    new { fileName = "TotalFogWideView-" + DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"),
+                        includeTargets = false, suppressMessage = true }, cancellationToken: cancellationToken);
+                if (!captured.Succeeded() || !captured.ReadResult<bool>("success"))
+                    throw new InvalidOperationException("The paused wide-view screenshot failed.");
+                wideScreenshot = captured.Result;
+            }
             if (warmupTicks > 0) await ctx.Game.StepTicksAsync(warmupTicks, cancellationToken: cancellationToken);
             await ctx.MainThread.InvokeAsync(() =>
             {
@@ -363,7 +400,13 @@ public sealed class PerformanceScenarios
                         scalarSettings = ScalarSettings(zombieValues) },
                     combatExtendedAssembly = ceMod == null ? null : new { ceMod.Location, mvid = ceMod.ManifestModule.ModuleVersionId,
                         scalarSettings = ScalarSettings(ceValues) },
-                    camera = new { view.minX, view.minZ, view.maxX, view.maxZ, zoom = Find.CameraDriver.CurrentZoom.ToString() },
+                    camera = new { view.minX, view.minZ, view.maxX, view.maxZ, zoom = Find.CameraDriver.CurrentZoom.ToString(),
+                        rootSize = Find.CameraDriver.RootSize,
+                        visibleMapCells = Math.Max(0, Math.Min(view.maxX, Find.CurrentMap.Size.x - 1) - Math.Max(view.minX, 0) + 1) *
+                            Math.Max(0, Math.Min(view.maxZ, Find.CurrentMap.Size.z - 1) - Math.Max(view.minZ, 0) + 1),
+                        pawnRootCellsInView = Find.CurrentMap.mapPawns.AllPawnsSpawned.Count(p => view.Contains(p.Position)),
+                        zombieRootCellsInView = zombieType == null ? 0 : Find.CurrentMap.mapPawns.AllPawnsSpawned.Count(p =>
+                            !p.Dead && zombieType.IsInstanceOfType(p) && view.Contains(p.Position)) },
                     gameVersion = RimWorld.VersionControl.CurrentVersionStringWithRev,
                     engineMvid = typeof(Pawn).Assembly.ManifestModule.ModuleVersionId, runtimeNamespace = root,
                     starterTypeName = root == "TotalFog" ? "TotalFogMod" : "RealFoWModStarter", mapX = Find.CurrentMap.Size.x,
@@ -371,8 +414,8 @@ public sealed class PerformanceScenarios
                     Screen.width, Screen.height, QualitySettings.vSyncCount, Application.targetFrameRate, Application.isFocused,
                     renderer = SystemInfo.graphicsDeviceType.ToString(), cpu = SystemInfo.processorType, effectiveSettings,
                     automaticPauseBefore = previousAutomaticPause.Value.ToString(),
-                    contaminationOverlay = contaminationOverlay,
-                    contaminationInput = contaminationOverlay ? new { count = 4000, x = 40, z = 40,
+                    wideView, contaminationOverlay = contaminationOverlay,
+                    contaminationInput = contaminationOverlay ? new { count = 4000, x = groundX, z = groundZ,
                         width = 80, height = 50, stride = 2, value = .65f } : null };
                 // A discovered ancient danger is a legitimate major-threat pause.
                 // Timing needs an uninterrupted interval; restore the preference
@@ -449,7 +492,7 @@ public sealed class PerformanceScenarios
                 {
                 success = playback.Succeeded() && probe.TickCount > 0 && probe.FrameCount > 0 && !probe.Overflow
                     && (!contaminationOverlay || (bool)overlayField.GetValue(overlayManager)),
-                environment, playback = playback.Result, tickTiming = "Stopwatch elapsed, including scheduling delays", tickCpuMs = Summarize(probe.Ticks, probe.TickCount),
+                environment, wideScreenshot, playback = playback.Result, tickTiming = "Stopwatch elapsed, including scheduling delays", tickCpuMs = Summarize(probe.Ticks, probe.TickCount),
                 frameIntervalMs = Summarize(probe.Frames, probe.FrameCount), probe.Overflow, probe.FocusLost,
                 timeSpeedSamples = probe.TimeSpeedTicks.Select((ticks, value) => new
                     { speed = ((TimeSpeed)value).ToString(), ticks }).Where(sample => sample.ticks > 0).ToArray(),
@@ -490,8 +533,23 @@ public sealed class PerformanceScenarios
                     Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
                     UnityEngine.Object.Destroy(probe.gameObject);
                 }
+                if (previousZoomExtension.HasValue)
+                    Find.CameraDriver.SetRootPosAndSize(previousCameraPosition, previousCameraSize);
             }, CancellationToken.None); }
-            finally { drawGate.Release(); }
+            finally
+            {
+                try
+                {
+                    if (previousZoomExtension.HasValue)
+                    {
+                        var restored = await ctx.Tools.CallAsync("rimworld/set_camera_zoom_extension",
+                            new { enabled = previousZoomExtension.Value }, cancellationToken: CancellationToken.None);
+                        if (!restored.Succeeded() || !restored.ReadResult<bool>("success"))
+                            throw new InvalidOperationException("The prior camera zoom extension was not restored.");
+                    }
+                }
+                finally { drawGate.Release(); }
+            }
         }
     }
 

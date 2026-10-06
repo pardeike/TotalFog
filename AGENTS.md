@@ -78,6 +78,14 @@ mode flags are retained and matched across original/candidate samples.
 Native tick-rate multipliers are recorded separately because RimWorld can force
 normal speed while the selected speed remains Ultrafast. A rate-limited sample
 does not prove sustained nominal fourth-speed throughput.
+For a small wide-zoom sample, set `TOTALFOG_WIDE_VIEW=1` and
+`TOTALFOG_COMPARISON_PAIRS=1` with runtime-compare. It centers the map at camera
+root size 100 through the session-only bridge zoom extension, records actual
+visible map cells and pawn root cells in view, and restores the prior camera
+and extension. Wide contamination input is centered in the map. Paused wide
+screenshots are captured before timing. One/two-pair results are spot checks:
+they cannot satisfy the three-pair feedback performance gate. Keep the default
+three pairs for the existing performance-floor acceptance.
 Verify gameplay screenshots and semantic evidence with
 `./scripts/mod verify-rendered artifacts/<evidence-folder>`. This uses Pillow
 from artifacts/pixel-analysis-env when present, otherwise the current Python.

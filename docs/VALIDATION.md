@@ -4989,3 +4989,84 @@ restores the exact candidate and GABS confirms all game processes stopped.
 The previous 2f15cad0... failed floor remains separate. This source candidate
 is not a new feedback package; a complete comparison and affected native
 geometry checks remain required before accepting it for delivery.
+
+The subsequent fresh Steam startup and unchanged CE stress-save load succeed.
+A disposable companion compares the exact 846e7c4 pre-change caster with the
+ddb5c8fe... candidate in the same paused native Mono process. It alternates five
+warmed batches for each workload and verifies 512 masks/4,096 point queries,
+plus full footprints at each measured origin. All geometries match.
+
+| Mask workload | Prior median ms | Candidate median ms | Candidate casting cost |
+|---|---:|---:|---:|
+| Open terrain, 5,000 casts | 193.1490 | 176.1479 | 8.80% lower |
+| 3% blockers, 5,000 casts | 186.5053 | 178.6518 | 4.21% lower |
+| 15% blockers, 5,000 casts | 27.4182 | 26.5526 | 3.16% lower |
+| 35% blockers, 5,000 casts | 6.7311 | 6.6378 | 1.39% lower |
+| Late row blockers, 5,000 casts | 161.5012 | 147.6114 | 8.60% lower |
+| Corridor, 5,000 casts | 20.3641 | 20.1911 | 0.85% lower |
+| Map edges, 4,998 casts | 84.8485 | 78.1000 | 7.95% lower |
+| Stress-map blockers/53 colonist origins, 4,982 casts | 156.8877 | 144.7041 | 7.77% lower |
+
+Point-query code is unchanged; its small mixed timing differences are control
+noise, not a claimed point-query improvement. The native allocation counter
+returns zero, but its validity is not established, so these rows do not prove
+native zero allocation. These are paused casting batches, not whole-game TPS.
+Evidence: artifacts/row-center-native-kernel.json, with exact sources/binaries
+and clean Player.log retained in artifacts/row-center-native. DPA is absent and
+unpatched, process termination is verified, and the temporary project includes
+are removed before the following ordinary-player comparison. See
+artifacts/row-center-native-cleanup.json.
+
+## Small wide-view sample, 2026-10-06
+
+The completed normal-view CE comparison uses the same ddb5c8fe... gameplay
+bytes and 350x350/410-pawn save. Three alternating original/candidate pairs
+measure 458.0445/502.0067, 398.3858/225.6061 and 223.8727/421.1327 TPS.
+The median comparison passes at 398.3858/421.1327 TPS, but the large variation
+prevents attributing a stable 5.71% whole-game gain to the casting change.
+That view covers 4,539 cells. Evidence is
+`artifacts/comparison-ce-row-center-player-350-clean.json`; all six logs are clean.
+
+At Andreas' request, wide-view coverage is limited to two one-pair spot checks
+and paused visual inspection. The companion uses the bridge's session-only
+zoom extension at root size 100, verifies the actual camera rectangle, and
+restores the prior camera/extension. Screenshots happen before timing. Neither
+one-pair result can satisfy the existing three-pair delivery gate.
+
+| Wide case | Map cells in camera rectangle | Original / candidate TPS | Original / candidate frame p95 ms |
+|---|---:|---:|---:|
+| CE colony, 350x350, 410 pawns | 71,050; 225 pawn root cells | 411.3143 / 402.0530 | 79.7915 / 85.3077 |
+| Zombieland with 4,000 sparse contamination cells, 250x250 | 50,750; 874 pawn root cells, including 815 zombie root cells | 38.8981 / 39.7862 | 98.3831 / 91.0861 |
+
+The CE pair measures 2.25% lower TPS and a worse frame tail. It is retained as
+a failed spot check, without repeating until green. Every measured native
+tick retains ordinary Ultrafast multiplier 15, with debug overrides and DPA off.
+Its wide rectangle covers about 58% of the map, nearly sixteen times the
+normal-view area; this is not a whole-map claim. Root-cell counts describe
+objects within the camera rectangle, not objects actually drawn through fog.
+
+The Zombieland pair uses the older `TotalFog_Zombieland_Upstream1000` fixture,
+not the stable `UpstreamQuietGap1000` used by the earlier overlay floor.
+Both variants start the measured interval with 1,000 zombies but finish with
+77 and 68. Actual native multipliers are mostly 1 despite selected Ultrafast.
+The candidate's 2.28% higher TPS is a result for this changing, rate-limited
+workload, not evidence of equal zombie work or sustained nominal fourth speed.
+The prior initial-grace cleanup investigation remains separate; this interval
+does not instrument removals to establish their cause. There is no retry or
+new acceptance claim from this pair.
+
+Paused wide screenshots show the candidate clipping the sparse contamination
+overlay to current sight, while the original shows the staged rectangle across
+hidden terrain. The policies draw different geometry, so this is a whole-game
+spot check, not an equal-geometry GPU comparison. The images accept only this
+paused overlay presentation, not wide Symbiant or every label/effect behavior.
+
+Both pairs complete with matching fixture/configuration/render identities and
+clean native logs. The runner stops each game and restores the candidate.
+Evidence is `artifacts/comparison-{ce-wide-view,zombieland-wide-overlay}-spot-check.json`
+and the corresponding runtime reports/logs. Exact candidate gameplay bytes,
+the Zombieland wide companion, both inspected screenshots and stopped-process
+evidence are retained in `artifacts/wide-view-spot-check/manifest.json`.
+Current gameplay SHA-256 remains ddb5c8fe..., with Zombieland 56daa1f2....
+The normal-view median pass does not resolve the wide CE failure; no new
+feedback ZIP is accepted from these measurements.
