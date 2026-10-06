@@ -16,9 +16,12 @@ public sealed class CombatExtendedTurretFixture
 {
     private const string TraceOwner = "brrainz.totalfog.ce-burst-probe";
     private static readonly List<object> BurstEvents = new();
+    private static readonly List<object> ImpactEvents = new();
+    private static readonly List<object> DamageEvents = new();
+    private static System.Reflection.FieldInfo projectileLauncher;
     private static Verse.Verb tracedVerb;
     private static bool nativeFallback, traceOverflow;
-    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for later actions. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction. configure-enemy-fog applies the enemyFog test setting through normal refresh; restore it before cleanup. configure-fire-arc applies native angle/span fields and CE's adjustment callback; it does not test editor input. configure-aim-mode uses the weapon's native toggle and rejects unavailable modes. trace-start/trace-stop observe at most 128 actual burst-fallback results before/after Total Fog without changing them. fallback-policy supplies false/true inputs to the loaded fog guard; it is a readonly contract check, not a native fallback reproduction. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. cleanup removes owned things and their active trace. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
+    [Tool("totalfog/ce_turret_fixture", Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for later actions. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction. configure-enemy-fog applies the enemyFog test setting through normal refresh; restore it before cleanup. configure-fire-arc applies native angle/span fields and CE's adjustment callback; it does not test editor input. configure-aim-mode uses the weapon's native toggle and rejects unavailable modes. trace-start/trace-stop observe at most 128 actual burst-fallback results, base CE projectile impacts and applied-damage results each, without changing them. fallback-policy supplies false/true inputs to the loaded fog guard; it is a readonly contract check, not a native fallback reproduction. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. cleanup removes owned things and their active trace. Magazines are preloaded only during setup. Does not establish performance or all CE weapons.")]
     public static async Task<object> Fixture(IRimBridgeContext ctx, CancellationToken cancellationToken,
         string action = "state", string ids = "", string turretDefName = "Turret_MiniTurret",
         int targetDistance = 16, bool holdFire = true, bool reveal = false,
@@ -230,7 +233,8 @@ public sealed class CombatExtendedTurretFixture
                         magazine = Property(compAmmo, "CurMagCount"), capacity = Property(compAmmo, "MagSize"),
                         lastShotTick = AccessTools.Field(typeof(Verse.Verb), "lastShotTick").GetValue(verb) },
                     fireModes = fireModes == null ? null : new { current = Property(fireModes, "CurrentAimMode").ToString(), available = AimModes() },
-                    burstTrace = new { active = tracedVerb == verb, overflow = traceOverflow, rows = BurstEvents.ToArray() },
+                    burstTrace = new { active = tracedVerb == verb, overflow = traceOverflow, rows = BurstEvents.ToArray(),
+                        impacts = ImpactEvents.ToArray(), damage = DamageEvents.ToArray() },
                     fallbackPolicy,
                     crew = manningPawn == null ? null : new { id = manningPawn.ThingID,
                         cell = manningPawn.Position.ToString(), job = manningPawn.CurJob?.def.defName,
@@ -278,7 +282,12 @@ public sealed class CombatExtendedTurretFixture
             new[] { typeof(bool), typeof(ShootLine).MakeByRefType() });
         if (method == null || Harmony.GetPatchInfo(method)?.Owners.Contains("brrainz.totalfog") != true)
             throw new InvalidOperationException("The actual native fallback must have Total Fog's integration hook.");
-        BurstEvents.Clear(); traceOverflow = false;
+        var projectile = AccessTools.TypeByName("CombatExtended.ProjectileCE");
+        var impact = AccessTools.DeclaredMethod(projectile, "Impact", new[] { typeof(Thing) });
+        projectileLauncher = AccessTools.Field(projectile, "launcher");
+        if (impact == null || projectileLauncher == null)
+            throw new InvalidOperationException("The native CE impact trace is unavailable.");
+        BurstEvents.Clear(); ImpactEvents.Clear(); DamageEvents.Clear(); traceOverflow = false;
         var harmony = new Harmony(TraceOwner);
         try
         {
@@ -286,6 +295,9 @@ public sealed class CombatExtendedTurretFixture
                 { priority = Priority.First, before = new[] { "brrainz.totalfog" } });
             harmony.Patch(method, postfix: new HarmonyMethod(typeof(CombatExtendedTurretFixture), nameof(FinalFallbackPostfix))
                 { priority = Priority.Last, after = new[] { "brrainz.totalfog" } });
+            harmony.Patch(impact, prefix: new HarmonyMethod(typeof(CombatExtendedTurretFixture), nameof(ImpactPrefix)));
+            harmony.Patch(AccessTools.DeclaredMethod(typeof(Thing), nameof(Thing.TakeDamage), new[] { typeof(DamageInfo) }),
+                postfix: new HarmonyMethod(typeof(CombatExtendedTurretFixture), nameof(DamagePostfix)) { priority = Priority.Last });
             tracedVerb = verb;
         }
         catch { StopTrace(); throw; }
@@ -294,6 +306,7 @@ public sealed class CombatExtendedTurretFixture
     {
         new Harmony(TraceOwner).UnpatchAll(TraceOwner);
         tracedVerb = null;
+        projectileLauncher = null;
     }
     public static void NativeFallbackPostfix(Verse.Verb __instance, bool __result)
     {
@@ -310,6 +323,22 @@ public sealed class CombatExtendedTurretFixture
         BurstEvents.Add(new { tick = Find.TickManager.TicksGame, suppressing = __0, nativeResult = nativeFallback,
             finalResult = __result, hasThing = target.HasThing, target = target.Thing?.ThingID, cell = target.Cell.ToString(),
             seenByFaction = observer.Map.GetVisibility().IsShown(observer.Faction, target.Cell) });
+    }
+
+    public static void ImpactPrefix(Thing __instance, Thing __0)
+    {
+        if (tracedVerb == null || projectileLauncher.GetValue(__instance) != tracedVerb.caster) return;
+        if (ImpactEvents.Count >= 128) { traceOverflow = true; return; }
+        ImpactEvents.Add(new { tick = Find.TickManager.TicksGame, projectile = __instance.def.defName,
+            cell = __instance.Position.ToString(), hit = __0?.ThingID, hitDef = __0?.def.defName });
+    }
+
+    public static void DamagePostfix(Thing __instance, DamageInfo __0, DamageWorker.DamageResult __result)
+    {
+        if (tracedVerb == null || __0.Instigator != tracedVerb.caster) return;
+        if (DamageEvents.Count >= 128) { traceOverflow = true; return; }
+        DamageEvents.Add(new { tick = Find.TickManager.TicksGame, target = __instance.ThingID,
+            targetDef = __instance.def.defName, requested = __0.Amount, actual = __result?.totalDamageDealt });
     }
 
     private static object Property(object instance, string name) =>

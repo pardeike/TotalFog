@@ -235,7 +235,11 @@ and runtime acceptance.
   a native Steal job, so this is not sustained-combat/save-rejoin acceptance.
   Combined saved M240B visible/hidden retarget controls and six actual blind-cell
   fallbacks also pass. Exact pairs/receipts and clean log are in
-  `artifacts/ce-zombieland-native`. Combined turret logical-cell acquisition,
+  `artifacts/ce-zombieland-native`. Zombieland deliberately rejects Symbiants
+  from automatic non-pawn target scans and permits logical hostile acquisition
+  only for its selected humanlike/mechanoid pawn attackers. A positive Symbiant
+  turret-acquisition expectation would change that policy, so do not add one.
+  Native preservation of this exclusion, combined special-zombie turret behavior,
   long fights, combat-heavy performance and Windows remain open. Earlier
   candidate performance/package gates retain their own gameplay hashes. The
   completed current-byte six-process standalone CE comparison misses the floor:
@@ -276,6 +280,17 @@ and runtime acceptance.
   show the intended current-sight clipping. These two pairs do not close the
   three-pair delivery gate, and there is no new feedback package. See the
   small wide-view section in VALIDATION.md and the retained comparison reports.
+  The unchanged ddb5c8fe... gameplay pair now also passes a bounded combined
+  player CE mini-turret/ordinary-zombie check: hidden targets receive no shots,
+  real bell sight enables acquisition, losing sight during the 52 remaining
+  native warmup ticks retains all 100 rounds and clears the target, and renewed
+  sight permits native firing. A separate nearby traced control records two
+  actual zombie impacts dealing seven damage each, alongside real cover impacts
+  and misses. It runs off camera, retains ordinary zombie movement, and removes
+  its trace/owned objects while restoring the temporary no-cleanup settings.
+  Exact bytes, native receipts and clean logs are in `artifacts/ce-zombie-turret`.
+  This closes only the ordinary player mini-turret slice; special states,
+  other weapons, persistence and combined combat-heavy performance remain open.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

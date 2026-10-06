@@ -5070,3 +5070,58 @@ evidence are retained in `artifacts/wide-view-spot-check/manifest.json`.
 Current gameplay SHA-256 remains ddb5c8fe..., with Zombieland 56daa1f2....
 The normal-view median pass does not resolve the wide CE failure; no new
 feedback ZIP is accepted from these measurements.
+
+## Combined CE turret and ordinary zombie, 2026-10-06
+
+Source review corrects the proposed Symbiant turret expectation. Zombieland's
+`AttackTargetFinder_BestAttackTarget_Patch` rejects Symbiants for non-pawn
+searchers, and `ZombieSymbiantCombat.IsPermittedHostileAttacker` excludes
+turrets. Do not introduce positive automatic turret acquisition merely to make
+Total Fog's root-cell guard accept a logical body cell. Preserving that native
+exclusion still needs its own combined native check; this source finding does
+not complete it.
+
+Existing native fixtures are sufficient to check an ordinary zombie instead.
+A player CE mini-turret has a native 48-cell weapon and 34-cell sight range.
+The staged target starts 42 cells east and moves through ordinary Stumble AI.
+After native power settles, the hidden target remains unacquirable, receives
+no shots and leaves the full 100-round magazine unchanged. A real security bell
+reveals it. During 26 Normal ticks the turret acquires the actual zombie and
+enters warmup with 52 ticks left. Removing the bell immediately removes sight;
+121 further Normal ticks clear the turret target, retain 100 rounds and leave
+lastShotTick at its never-fired sentinel. Renewed bell sight permits 20 native
+shots over 603 Normal ticks. No zombie injury is recorded in that interval,
+which does not by itself identify a compatibility defect.
+
+A nearby positive control likewise initially fires without a recorded injury.
+The existing bounded CE turret trace is extended to observe the installed base
+`ProjectileCE.Impact(Thing)` and `Thing.TakeDamage(DamageInfo)`, filtered to the
+fixture turret's launcher/instigator. It records actual results without changing
+them. Impact, damage and burst-fallback streams each have a 128-record ceiling;
+all diagnostic patches are removed through the same owner on trace-stop/cleanup.
+These hooks are companion-only and excluded from player ZIPs and TPS acceptance.
+
+The fresh traced control uses an ordinary zombie initially 12 cells from the
+turret. After 422 Normal power-settle ticks with hold-fire enabled, a 721-tick
+Normal interval fires 20 rounds. Eighteen observed base impacts include two
+zombie hits, terrain/plants and misses. Two matching damage results each deal
+seven damage to the zombie; the final injury sum is seven, so the sum is not
+used as a substitute for cumulative damage results. The zombie remains alive,
+continues native Stumble movement and stays visible to the turret faction.
+The camera rectangle is x68..156/z94..144 while the turret/zombie are near
+x79..93/z6..7, so native off-camera damage works in this control. This does not
+establish zoomed-out FPS or explain the earlier scene's uninjured shot window.
+
+The temporary existing Zombieland no-cleanup test mode suppresses only initial
+grace, zero-threat and scheduled zombie-free removal during these controls.
+Its exact previous settings timeline is restored before the unchanged base
+reload. Owned objects and traces are removed, GABS verifies native termination,
+and the retained trace-process log has an empty recognized error summary.
+All 296 independent tests pass. TF gameplay remains
+ddb5c8fe3df8714d2bffa7d80723fb7e65b5bb2444a3b24692afe05958a8bd84;
+Zombieland remains 56daa1f2.... Trace companion SHA-256 is
+00ff91d612e1b0c9d299dac8b4d54c51298bec96bd9cd2801c79d8110f247f05.
+Exact paired bytes, receipts, Player.log and assertions are retained in
+`artifacts/ce-zombie-turret/summary.json` and that folder's source reports.
+This accepts only the ordinary player CE mini-turret acquisition/warmup/damage
+slice, not all special zombies, weapons, save/load or combined performance.
