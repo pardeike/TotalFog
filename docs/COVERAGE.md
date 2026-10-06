@@ -496,6 +496,19 @@ search is neither compatibility nor incompatibility evidence.
 
 ### Outstanding acceptance checks
 
+The 2026-10-06 tooling check uses two independent Steam 1.6 processes and the
+optional RimBridgeServer Multiplayer companion. Native host/join, player status,
+client leave/rejoin and main-menu return are verified. A host's synchronized
+Normal command and a client's synchronized pause advance both clients from tick
+1215 to the same paused tick 3004, with neither reporting a desync. This short
+control check does not compare Total Fog's gameplay state or close compatibility.
+
+Diagnostic stack capture is disabled after Multiplayer's native Arm64 tracer
+throws on the installed build. A separate reflection-only
+`UnityEngine.InputLegacyModule` dependency exception still occurs during loading.
+Its cause is not isolated, and these runs are not clean-log acceptance. Native
+receipts and evidence limits are recorded in `docs/VALIDATION.md`.
+
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
 those versions/hashes and desync diagnostics with each result. Single-player

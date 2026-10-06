@@ -5289,3 +5289,62 @@ an empty recognized error summary. Native receipts, assertions and hashes are in
 `artifacts/ce-electric-targets`. Reactivation, other weapons, CE EMP delivery,
 save/load and combined combat performance remain separate checks. No production
 change follows from this bounded pass.
+
+## Native Multiplayer bridge controls, 2026-10-06
+
+`./scripts/mod mp-setup` creates isolated Steam-managed host/client profiles with
+separate savedata, bridge endpoints and tracked PIDs. Their loadout is Prepatcher,
+Harmony, RimBridgeServer, Core/all five DLCs, Multiplayer and Total Fog. Native
+engine: 1.6.4871 rev597. Multiplayer: 0.11.5+4a3be27-dirty, MVID
+34169ac4-d99e-463c-b48c-0af3be9783f8. Total Fog remains
+ddb5c8fe3df8714d2bffa7d80723fb7e65b5bb2444a3b24692afe05958a8bd84.
+
+RimBridgeServer's optional `Companions/Multiplayer` has no hard Multiplayer or
+Total Fog assembly reference. Its sole DLL deploys into sibling global
+`BridgeTools/Multiplayer`. Native host, local join, status, leave and synchronized
+shared-time commands run on the game thread. Native `hostReady` requires a
+running local server and a completed initial data snapshot before joining.
+Initiation/submission receipts do not establish completed player states.
+
+The first tracing-enabled run joins both players but fails in Multiplayer's
+Arm64 deferred stack tracer, with `Unknown function header` from its Rand hook
+and subsequent null references. Disabling native diagnostic stack capture
+removes that tracer failure in subsequent controls; native desync detection
+remains available. An early join also fails in native disconnect-packet
+serialization while hosting is still preparing. Both failed runs are retained.
+
+Native cleanup reapplies preferences, restoring `runInBackground=False` and
+stalling an unfocused game's bridge. RimBridgeServer now preserves its existing
+runtime background execution contract after preference refreshes, without
+changing the saved preference. A native check verifies client leave to Entry/no
+session, rejoin as a new player without process restart, and host leave to
+Entry/no session. An unexpected host disconnection also leaves the client bridge
+responsive. The leave tool handles a native disconnected window and preserves
+an unrelated idle single-player game.
+
+The final control starts both players Playing at tick 1215. A host's native
+synchronized Normal command advances simulation, and a client's synchronized
+pause leaves both at tick 3004, desired speed Paused, both players Playing and
+both `desynced=False`. Those 1,789 ticks prove time-command propagation and a
+short connection check. They do not compare fog masks or serialized gameplay
+state, or validate settings, targeting, save/resync and faction visibility.
+Both leave commands subsequently reach Entry/no session. Opening the native
+ServerBrowser through the repaired window-type lookup also succeeds.
+
+The reflection-only `UnityEngine.InputLegacyModule` dependency exception still
+occurs during native loading; its owner is not isolated. Destroyed-thing
+deep-save warnings also occur during simulation. These are not clean-log
+compatibility acceptance. Full Multiplayer compatibility remains open, with no
+Total Fog gameplay fix or tester delivery from this tooling work.
+
+Receipts/logs are in `artifacts/multiplayer-startup`, including
+`background-cleanup-receipts.json`, `native-time-control-receipts.json`, failed
+tracing/readiness logs and exact installed hashes. Final native tooling hashes:
+RimBridgeServer aad042e56a1c7127019107c32f7812828d903e2ae851cc5c200a09343f89a32a;
+Multiplayer companion 994389846f773fb35182a363028e43f17f1065ae450ec31b4f15326dc29caab9.
+The existing 202 RimBridgeServer tests pass. Deployment compares installed/ZIP
+DLLs with build bytes and excludes test companions from player ZIPs.
+
+After each pair launch, `./scripts/mod mp-layout` identifies exact savedata/PIDs,
+arranges host-left/client-right half-screen windows on the main display and
+verifies both rectangles. Layout is presentation, not determinism evidence.

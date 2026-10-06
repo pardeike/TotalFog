@@ -72,7 +72,7 @@ try:
     guard = (LOGS/'workflow.lock').open('w')
     fcntl.flock(guard, fcntl.LOCK_EX)
     mode = sys.argv[1]
-    if mode not in {'build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
+    if mode not in {'build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','mp-setup','mp-layout','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
     if mode == 'runtime-compare' and len(sys.argv) not in {4, 5}:
         raise RuntimeError('Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]')
     with logpath.open('w') as log:
@@ -96,7 +96,7 @@ try:
             if len(sys.argv) != 3: raise RuntimeError('Use feedback-verify <completed comparison label>')
             stopped()
             run(['python3', str(ROOT/'scripts/feedback-verify'), sys.argv[2]], log)
-        if mode not in {'baseline','deploy-built','dpa-setup','zombieland-fallback-setup','verify-rendered','runtime-benchmark','feedback-verify','source-publish'}:
+        if mode not in {'baseline','deploy-built','dpa-setup','mp-setup','mp-layout','zombieland-fallback-setup','verify-rendered','runtime-benchmark','feedback-verify','source-publish'}:
             step = 'tests'
             run(['dotnet','test',str(ROOT/'Source/Tests/TotalFog.Tests.csproj'),'-c','Release','--nologo','-v:q'],log)
             step = 'build'
@@ -272,6 +272,77 @@ try:
             cfg.write_text(json.dumps(config, indent=2)+'\n')
             if [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')] != order:
                 raise RuntimeError('The isolated Zombieland profile did not retain its loadout')
+        if mode == 'mp-layout':
+            step = 'Multiplayer window layout'
+            if len(sys.argv) != 2: raise RuntimeError('Use mp-layout')
+            def desktop(*args):
+                result = json.loads(subprocess.check_output(['brrainztools', *args], text=True, stderr=log))
+                if not result.get('ok'): raise RuntimeError('Window control failed: '+str(result))
+                return result['data']
+            display = next(d for d in desktop('displays')['displays'] if d['isMain'])['frame']
+            half = int(display['width'])//2
+            processes = subprocess.check_output(['ps','-ax','-o','pid=,command='], text=True).splitlines()
+            windows = []
+            for index, role in enumerate(['Host','Client']):
+                marker = '-savedatafolder='+str(ROOT/'artifacts'/('MP'+role+'UserData'))
+                matches = [line.split(None,1)[0] for line in processes if marker in line.split()]
+                if len(matches) != 1: raise RuntimeError('Expected one running Multiplayer '+role.lower()+' process')
+                pid = matches[0]
+                state = desktop('ax','--app',pid,'windows')
+                if state['application']['bundleIdentifier'] != 'ludeon.rimworld' or len(state['windows']) != 1:
+                    raise RuntimeError('Expected one RimWorld window for '+role)
+                windows.append((pid, int(display['x'])+index*half, int(display['y'])+30))
+            for pid, x, y in windows:
+                desktop('ax','--app',pid,'resize',str(half-2)+','+str(int(display['height'])-30),'--window-index','0')
+                desktop('ax','--app',pid,'move',str(x)+','+str(y),'--window-index','0')
+                frame = desktop('ax','--app',pid,'windows')['windows'][0]['frame']
+                if any(abs(frame[key]-value)>2 for key,value in {'x':x,'y':y,'width':half-2,'height':int(display['height'])-30}.items()):
+                    raise RuntimeError('Window did not retain its requested half-screen rectangle')
+        if mode == 'mp-setup':
+            step = 'isolated Multiplayer configuration'
+            if len(sys.argv) != 2: raise RuntimeError('Use mp-setup')
+            stopped()
+            workshop = GAME.parents[2]/'workshop/content/294100'
+            for item, package in [('2934420800','zetrith.prepatcher'), ('2606448745','rwmt.multiplayer')]:
+                about = ET.parse(workshop/item/'About/About.xml').getroot()
+                if about.findtext('packageId','').lower() != package or '1.6' not in [v.text for v in about.findall('supportedVersions/li')]:
+                    raise RuntimeError('Installed Multiplayer and Prepatcher must support RimWorld 1.6')
+            order = ['zetrith.prepatcher','brrainz.harmony','brrainz.rimbridgeserver','ludeon.rimworld',
+                'ludeon.rimworld.royalty','ludeon.rimworld.ideology','ludeon.rimworld.biotech',
+                'ludeon.rimworld.anomaly','ludeon.rimworld.odyssey','rwmt.multiplayer','brrainz.totalfog']
+            cfg = Path.home()/'.gabs/config.json'; config = json.loads(cfg.read_text())
+            profiles = []
+            for role in ['Host','Client']:
+                data = ROOT/'artifacts'/('MP'+role+'UserData')
+                path = data/'Config/ModsConfig.xml'
+                game_id = 'total-fog-mp-'+role.lower()+'-16'
+                # SteamManaged tracks the spawned PID. A shared process-name fallback
+                # would mistake the other client for this profile or stop both clients.
+                entry = {'id':game_id,'name':'Total Fog Multiplayer '+role+' 1.6',
+                    'launchMode':'SteamManaged','target':'294100','gabpMode':'local',
+                    'args':['-savedatafolder='+str(data),'-logFile',str(data/'Logs/Player.log')],
+                    'description':'Isolated public Total Fog Multiplayer '+role.lower()+' verification'}
+                if path.exists() and [m.text.lower() for m in ET.parse(path).findall('activeMods/li')] != order:
+                    raise RuntimeError('Existing Multiplayer '+role.lower()+' loadout differs; preserve it for review')
+                if game_id in config['games'] and config['games'][game_id] != entry:
+                    raise RuntimeError('Existing Multiplayer '+role.lower()+' registration differs; preserve it for review')
+                profiles.append((data,path,game_id,entry))
+            for data,path,game_id,entry in profiles:
+                (data/'Config').mkdir(parents=True,exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
+                if not path.exists():
+                    doc = ET.Element('ModsConfigData'); ET.SubElement(doc,'version').text='1.6.4871 rev597'
+                    active = ET.SubElement(doc,'activeMods')
+                    for package in order: ET.SubElement(active,'li').text=package
+                    ET.ElementTree(doc).write(path,encoding='utf-8',xml_declaration=True)
+                    settings = 'Mod_TotalFog_TotalFogMod.xml'
+                    source = ROOT/'artifacts/UserData/Config'/settings
+                    if source.exists(): shutil.copy2(source,data/'Config'/settings)
+                config['games'][game_id] = entry
+            cfg.write_text(json.dumps(config,indent=2)+'\n')
+            written = json.loads(cfg.read_text())
+            for data,path,game_id,entry in profiles:
+                if written['games'][game_id] != entry or [m.text.lower() for m in ET.parse(path).findall('activeMods/li')] != order:
+                    raise RuntimeError('The isolated Multiplayer profile did not retain its configuration')
         if mode == 'dpa-setup':
             stopped()
             if len(sys.argv) > 3 or (len(sys.argv) == 3 and sys.argv[2] not in {'on', 'off'}):

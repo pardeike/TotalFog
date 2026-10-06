@@ -103,6 +103,17 @@ DPA setup changes configuration only and never redeploys a tracked release DLL.
 Use `./scripts/mod ce-setup` for `total-fog-ce-16`, the separate Steam profile
 under artifacts/CEUserData with installed Combat Extended and all DLCs. It
 preserves the core performance profile and existing CE settings/loadout.
+Use `./scripts/mod mp-setup` to configure isolated public Steam 1.6 host/client
+profiles `total-fog-mp-host-16` and `total-fog-mp-client-16` under
+artifacts/MPHostUserData and artifacts/MPClientUserData. It verifies installed
+Multiplayer/Prepatcher support, preserves existing profiles and does not build
+or deploy. Each profile uses its own GABS endpoint and tracked SteamManaged PID;
+do not add a shared process-name stop fallback. Startup alone does not establish
+Multiplayer compatibility.
+After each launch of the pair, run `./scripts/mod mp-layout`. It identifies the
+two processes by their isolated savedata arguments and verifies host-left,
+client-right half-screen windows on the main display. It does not build or
+change gameplay state.
 Use `totalfog/ce_ammo_fixture` for the scoped no-magazine short-bow control.
 It observes CE's own attack orders, ammunition preparation and shot results;
 play through ordinary Normal playback. Remove/recreate its real security bell
