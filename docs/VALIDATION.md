@@ -5617,3 +5617,25 @@ adapter and settings watches. Compilation and tests do not establish native
 separate-faction, independent-clock, notification replay or performance acceptance.
 The earlier shared-colony runtime remains on its separately recorded bytes until
 a fresh pair is deployed. No Multiplayer build or update is sent to Mortal.
+
+
+The 65c07a54... gameplay / 43426096... companion pair is then deployed and
+independently restarted on both profiles. Loading native save G, resuming
+hosting and joining reaches matching paused tick 14174 with identical complete
+fog snapshots after removing bridge operation metadata. Both have 15,629 known
+cells, 5,654 currently visible cells, 9,793 coverage contributions and 300
+observed objects. Faction 16 owns that discovery/observation; spectator faction
+17 has none. All source schedules also match. Evidence is
+artifacts/multiplayer-startup/fog-faction-shared-cold-join.json. This is still
+shared-colony acceptance only. Both logs retain the prior InputLegacyModule
+loading exception and are not clean-log acceptance.
+
+A subsequent source-linked regression catches an observation before a second
+faction's grid exists: changing only the local viewer prevented the primary
+observer from learning about a newly spawned visible item. The regression fails
+before the fix (primary-observer-regression-red.log). CompVisibility now records
+the primary observer explicitly when the local view differs, and the full suite
+passes 311 tests. This preserves the common primary-view path without another
+sight query. b1cc0a3c... is the next built gameplay candidate and is not covered
+by the older 65c07a54 native result. Both remain separate from prior performance
+and package acceptance.

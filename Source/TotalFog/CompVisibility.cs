@@ -81,7 +81,10 @@ public class CompVisibility : FogSubcomponent
         var fog =
             mainComponent.ComponentsPositionTracker?.CurrentVisibility
             ?? parent.Map.GetVisibility();
-        if (fog.OtherPlayerFactions.Count > 0)
+        bool primaryView = Faction.OfPlayer?.loadID == fog.PrimaryPlayerFactionId;
+        // The primary observer can see a newly spawned thing before a foreign
+        // viewer has any sources. Record that knowledge in either client view.
+        if (!primaryView || fog.OtherPlayerFactions.Count > 0)
         {
             RecordObservation(fog.PrimaryPlayerFaction, fog);
             foreach (var faction in fog.OtherPlayerFactions)
@@ -107,6 +110,7 @@ public class CompVisibility : FogSubcomponent
         {
             if (
                 !WasSeenBy(Faction.OfPlayer)
+                && primaryView
                 && fog.OtherPlayerFactions.Count == 0
                 && fog.Initialized
                 && (

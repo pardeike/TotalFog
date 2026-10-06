@@ -7,6 +7,29 @@ namespace TotalFog.Tests;
 public sealed class FactionVisibilityTests
 {
     [Fact]
+    public void ALocalViewerCannotSuppressAnotherFactionsObservationBeforeItsOwnGridExists()
+    {
+        var primary = Faction.OfPlayer;
+        var viewer = new Faction { loadID = 2, IsPlayer = true };
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        item.Map.Fog.knownCells[0] = true;
+        item.Map.Fog.InSight[0] = true;
+        item.Map.Fog.FactionSight[viewer] = new bool[4];
+        try
+        {
+            Faction.OfPlayer = viewer;
+            var comp = AttachVisibility(item);
+            Assert.True(comp.WasSeenBy(primary));
+            Assert.False(comp.WasSeenBy(viewer));
+        }
+        finally
+        {
+            Faction.OfPlayer = primary;
+        }
+    }
+
+    [Fact]
     public void DiscoveryAndRememberedThingsBelongToTheirObserverFaction()
     {
         var first = Faction.OfPlayer;
