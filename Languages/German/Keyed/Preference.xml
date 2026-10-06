@@ -27,11 +27,11 @@
   <mapRevealAtStart>Enthüllt die Karte beim Start. Bietet jedoch keine Sicht</mapRevealAtStart>
   <baseHearingRange>Hörweite der Basis (die in FoW verborgene Position der Spielfiguren wird aufgedeckt, wenn sie sich bewegen). Zum Deaktivieren auf 0 setzen</baseHearingRange>
   <censorMode>Verstecken Sie das kleine 17x28 Pixel Bild für den Puritaner</censorMode>
-  <hideEventNegative>Negatives Ereignis ausblenden (z. B. Feuerbrand)</hideEventNegative>
-  <hideEventNeutral>Neutrales Ereignis ausblenden (z. B.: Besucher)</hideEventNeutral>
-  <hideEventPositive>Positives Ereignis ausblenden (z. B.: Ankunft eines Wohnwagens)</hideEventPositive>
-  <hideThreatBig>Großes Bedrohungsereignis ausblenden (z. B. Überfall)</hideThreatBig>
-  <hideThreatSmall>Verstecken Sie kleine Bedrohungen (z. B. ein einzelnes Mensch-Jagd-Tier)</hideThreatSmall>
+  <hideEventNegative>Ungesehene negative Ereignisse verwerfen</hideEventNegative>
+  <hideEventNeutral>Ungesehene neutrale Ereignisse verwerfen</hideEventNeutral>
+  <hideEventPositive>Ungesehene positive Ereignisse verwerfen</hideEventPositive>
+  <hideThreatBig>Ungesehene große Bedrohungen verwerfen</hideThreatBig>
+  <hideThreatSmall>Ungesehene kleine Bedrohungen verwerfen</hideThreatSmall>
   <prisonerGiveVision>Gefangene bieten Sicht bei reduzierter Reichweite</prisonerGiveVision>
   <allyGiveVision>Verbündete bieten Sicht bei leicht reduzierter Reichweite</allyGiveVision>
   <fogAlphaSetting_title>Nebelpegel</fogAlphaSetting_title>

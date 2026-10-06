@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Core/TotalFog.Core.csproj" />
+  <Project Path="TotalFog/TotalFog.csproj" />
+  <Project Path="Tests/TotalFog.Tests.csproj" />
+  <Project Path="BridgeTools/TotalFog.BridgeTools.csproj" />
+</Solution>

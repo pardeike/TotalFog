@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
 <loadFolders>
   <v1.2>
     <li>/</li>
@@ -24,5 +24,6 @@
     <li>/</li>
     <li>1.6</li>
     <li>Assets</li>
+    <li>LegacyAssets</li>
   </v1.6>
 </loadFolders>

@@ -1,11 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Manifest>
-  <identifier>NWNRealFogOfWar</identifier>
-  <version>1.6.16</version>
-  <dependencies />
-  <incompatibleWith />
-  <loadBefore />
-  <loadAfter />
-  <manifestUri>https://raw.githubusercontent.com/emipa606/NWNRealFogOfWar/master/About/Manifest.xml</manifestUri>
-  <downloadUri>https://github.com/emipa606/NWNRealFogOfWar/releases</downloadUri>
-</Manifest>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
+<Manifest><identifier>TotalFog</identifier><version>0.1.0</version><dependencies/><incompatibleWith/><loadBefore/><loadAfter/></Manifest>

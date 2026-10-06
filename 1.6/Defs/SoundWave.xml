@@ -2,7 +2,7 @@
 <Defs>
   <!--=============== Bases ==============-->
   <ThingDef Name="MoteSoundWaveBase" ParentName="MoteBase" Abstract="True">
-    <thingClass>RimWorldRealFoW.MoteSoundWave</thingClass>
+    <thingClass>TotalFog.Mote_HearingCue</thingClass>
     <graphicData>
       <shaderType>MoteWater</shaderType>
     </graphicData>
@@ -15,7 +15,7 @@
       <fadeOutTime>0</fadeOutTime>
     </mote>
     <graphicData>
-      <graphicClass>RimWorldRealFoW.Graphic_MoteSoundWave</graphicClass>
+      <graphicClass>TotalFog.Graphic_HearingCue</graphicClass>
       <texPath>Things/Mote/Horseshoe</texPath>
       <!-- actually unused atm, this is just a stub to avoid errors -->
     </graphicData>

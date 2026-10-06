@@ -1,0 +1,50 @@
+- Keep splitting fleshbeasts hidden while they fly through unrevealed terrain.
+- Check walking pawns at their drawn position so crossing a sight boundary does not reveal a pawn still outside view.
+- Correct hidden-pawn visibility after landing, transport, or respawning.
+- Keep visibility updates working when game ticks advance in larger intervals.
+- Restore camera and watchtower textures on macOS.
+- Keep renderer registration under the game's ownership, including held and flying pawns.
+- Preserve deferred letters and messages across saves, including their original sounds and targets.
+- Add settings to suppress combat music and mute hidden sound sources.
+- Add an optional Silent Raids setting for enemy raid and manhunter arrival letters and slowdown, while preserving their spawning and normal combat slowdown.
+- Apply audio settings to already-running loops and restore their volume when filtering is disabled.
+- Calculate nearby audio from living listeners rather than previously explored terrain.
+- Correct fog updates on rectangular maps and shared section borders.
+- Add an explicit option for hearing indicators.
+- Filter custom overlays, shot tooltips, and mouseover entities through the same visibility policy.
+- Keep rare-ticking sources and blockers up to date.
+- Make fog borders deterministic between adjacent sections.
+- Keep terrain, fertility, roof overlays, and placement rules consistent with discovery and colony visibility settings.
+- Keep newly spawned objects hidden in explored cells until someone observes them.
+- Delay offscreen events even when their static target has been seen before.
+- Require current sight for live labels, tooltips, overlays and selection, including selection proxies.
+- Close an object's live inspection when sight is lost.
+- Hide live mouseover and environment details outside current sight, and limit beauty sampling to visible cells.
+- Keep unobserved owned objects and projectiles behind fog.
+- Stop walls and other buildings without active vision from revealing their own footprint.
+- Organize settings into Appearance, Vision, Information and Audio tabs with a fixed footer and a wider gap between controls and the scrollbar.
+- Clarify which notification, wildlife, hearing and gravship options can reveal unseen activity.
+- Keep tree-blocking controls disabled while a game is loaded, including after resetting adjustable settings.
+- Use native rendering for observed scenery instead of expensive visual snapshots and drawing archives.
+- Fix power-grid rendering errors caused by flying pawns during save loading.
+- Keep colony health and global notifications immediate; discard settings now apply only to unseen events.
+- Avoid rebuilding terrain and other section meshes when realtime pawns become hidden or visible.
+- Skip enemy sight calculations while enemy fog targeting is disabled, preserving the game's enemy targeting and other AI mods.
+- Apply vision and enemy-targeting setting changes immediately, including while paused.
+- Reduce repeated map-component searches and duplicate fog-section cell sampling.
+- Skip cell-index rewrites when one-cell things turn in place; preserve immediate movement and larger footprint updates.
+- Skip unnecessary fog lookups when drawing owned pawns.
+- Apply fog targeting to Combat Extended weapons while preserving its ballistics and the enemy-fog setting.
+- Reduce sight-update work in open terrain while preserving blocked-cell visibility and combat targeting.
+- Reduce visibility-listener lookup work and index memory on populated maps.
+- Reduce fog memory use and recurring allocations as pawns move through populated maps.
+- Reduce work when walls and other sight blockers change near large colonies.
+- Avoid repeated sight calculations when movement or another update has already refreshed a pawn.
+- Keep fog updates requested by mod callbacks during a refresh.
+- Refresh fog rendering when sight changes while the game is paused.
+- With the updated Zombieland, show only visible parts of a Symbiant body and its rotating core, including when the root is hidden.
+- With the updated Zombieland, allow inspection of a visible Symbiant core even when its root is hidden, and offer manual body targets only in visible cells. Hidden roots cannot show labels or overlays through a visible core.
+- With the updated Zombieland, apply hidden-sound and hearing settings to its electric/tank ambient loops and spitter/rising-wave sirens.
+- Hide live explosion flashes and smoke outside current sight while preserving their normal movement, lifetime and gameplay effects.
+- With the updated Zombieland, play electric combat sounds at the event and prevent hidden or rapid hits from accumulating flashes and repeated sounds.
+- With the updated Zombieland, enemy fog targeting checks each Symbiant body cell against the humanlike attacker's faction sight.

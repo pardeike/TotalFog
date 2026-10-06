@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "mod": {
+    "name": "Total Fog",
+    "fileName": "TotalFog",
+    "packageId": "brrainz.totalfog",
+    "version": "0.1.0",
+    "rimworldVersion": "1.6",
+    "requiredDlc": []
+  },
+  "dependencies": {
+    "Krafs.Rimworld.Ref": "1.6.4871",
+    "Lib.Harmony.Ref": "2.4.2",
+    "Microsoft.NETFramework.ReferenceAssemblies.net472": "1.0.3",
+    "RimBridgeServer.Sdk": "2.0.0",
+    "Microsoft.NET.Test.Sdk": "18.10.1",
+    "xunit": "2.9.3",
+    "xunit.runner.visualstudio": "4.0.0"
+  },
+  "deployment": {
+    "pairedBridgeTools": true,
+    "gabsGame": "total-fog-16",
+    "gabsProfile": "",
+    "order": [
+      "brrainz.harmony",
+      "brrainz.rimbridgeserver",
+      "ludeon.rimworld",
+      "ludeon.rimworld.royalty",
+      "ludeon.rimworld.ideology",
+      "ludeon.rimworld.biotech",
+      "ludeon.rimworld.anomaly",
+      "ludeon.rimworld.odyssey",
+      "brrainz.totalfog"
+    ]
+  },
+  "packaging": {
+    "archiveRoot": "wrapped"
+  },
+  "artwork": {
+    "preview": {
+      "path": "About/Preview.png",
+      "width": 640,
+      "height": 360
+    },
+    "icon": {
+      "path": "About/ModIcon.png",
+      "width": 64,
+      "height": 64
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/pardeike/steam-mods/main/schemas/mod-project.schema.json"
+}

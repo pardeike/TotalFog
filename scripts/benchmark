@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+"""Compare pure sight workloads with the retained inherited caster, outside Unity."""
+import json, os, subprocess, tempfile
+from pathlib import Path
+root = Path(__file__).resolve().parents[1]
+reference = 'e1b07e9'
+with tempfile.TemporaryDirectory(prefix='totalfog-benchmark-') as name:
+    work = Path(name)
+    inherited = subprocess.check_output(['git','show','c7056eb:Source/rimworld-mod-real-fow/ShadowCaster.cs'],cwd=root,text=True)
+    (work/'Inherited.cs').write_text(inherited)
+    previous = subprocess.check_output(['git','show',reference+':Source/Core/FieldOfView.cs'],cwd=root,text=True)
+    (work/'Previous.cs').write_text(previous.replace('public static class FieldOfView', 'public static class PreviousFieldOfView'))
+    (work/'Boundary.cs').write_text('namespace RimWorld { public class Faction {} } namespace RimWorldRealFoW { public class MapComponentSeenFog { public void IncrementSeen(RimWorld.Faction faction, short[] counts, int index) => throw new System.InvalidOperationException("Engine side effects must be disabled in this benchmark."); } }')
+    (work/'Benchmark.csproj').write_text(f'<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><LangVersion>latest</LangVersion><PackageId>TotalFog.Benchmark</PackageId></PropertyGroup><ItemGroup><ProjectReference Include="{root}/Source/Core/TotalFog.Core.csproj" /></ItemGroup></Project>')
+    (work/'Program.cs').write_text('''using System;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using RimWorldRealFoW;
+using TotalFog.Core;
+const int width=500,height=350,radius=60,iterations=5000,samples=5;
+var results=new List<object>();
+var footprintResults=new List<object>();
+var pointResults=new List<object>();
+var validation=new Random(419);
+const int comparisonCases=512;
+for(int c=0;c<comparisonCases;c++)
+{
+    int w=validation.Next(1,66),h=validation.Next(1,42),x=validation.Next(w),z=validation.Next(h);
+    int r=new[]{0,1,4,20,60}[c%5];double density=new[]{0d,.03,.15,.35}[c%4];
+    var blockers=new bool[w*h];for(int i=0;i<blockers.Length;i++)blockers[i]=validation.NextDouble()<density;
+    var before=new bool[w*h];var after=new bool[w*h];
+    PreviousFieldOfView.Compute(w,h,x,z,r,blockers,i=>before[i]=true);
+    FieldOfView.Compute(w,h,x,z,r,blockers,i=>after[i]=true);
+    if(!before.SequenceEqual(after))throw new InvalidOperationException($"Changed sight mask in case {c}.");
+    var footprint=new VisibilityMask();footprint.Reset(0,0,w,h,w);
+    FieldOfView.ComputeMask(w,h,x,z,r,blockers,footprint);
+    for(int i=0;i<before.Length;i++)
+        if(before[i]!=footprint.Contains(i))throw new InvalidOperationException($"Changed direct footprint in case {c}.");
+    for(int p=0;p<8;p++)
+    {
+        int tx=validation.Next(w),tz=validation.Next(h);
+        if(PreviousFieldOfView.CanSee(w,h,x,z,tx,tz,r,blockers)!=FieldOfView.CanSee(w,h,x,z,tx,tz,r,blockers))
+            throw new InvalidOperationException($"Changed point query in case {c}.");
+    }
+}
+foreach(double density in new[]{0d,.03,.15,.35})
+{
+    var blockers=new bool[width*height];var mask=new bool[blockers.Length];var random=new Random(413);
+    for(int i=0;i<blockers.Length;i++) blockers[i]=random.NextDouble()<density;
+    blockers[175*width+250]=false;
+    Action<int> reveal=i=>mask[i]=true;
+    Action current=()=>{Array.Clear(mask);FieldOfView.Compute(width,height,250,175,radius,blockers,reveal);};
+    Action previous=()=>{Array.Clear(mask);PreviousFieldOfView.Compute(width,height,250,175,radius,blockers,reveal);};
+    Action inherited=()=>{Array.Clear(mask);ShadowCaster.computeFieldOfViewWithShadowCasting(250,175,radius,blockers,width,height,false,null,null,null,mask,0,0,width,null,0,0,0,0,0);};
+    foreach(var pair in new[]{("inherited",inherited),("previous",previous),("current",current)})
+    {
+        for(int i=0;i<30;i++) pair.Item2();
+        var times=new double[samples];long allocated=0;
+        for(int s=0;s<samples;s++)
+        {
+            var watch=new Stopwatch();long before=GC.GetAllocatedBytesForCurrentThread();watch.Start();
+            for(int i=0;i<iterations;i++)pair.Item2();
+            watch.Stop();allocated+=GC.GetAllocatedBytesForCurrentThread()-before;times[s]=watch.Elapsed.TotalMilliseconds;
+        }
+        Array.Sort(times);
+        int cells=0;foreach(bool value in mask)if(value)cells++;
+        results.Add(new{caster=pair.Item1,density,iterations,samples,milliseconds=times[samples/2],allocatedBytes=allocated,visibleCells=cells});
+    }
+    var direct=new VisibilityMask();
+    Action footprintCurrent=()=>{direct.Reset(190,115,121,121,width);FieldOfView.ComputeMask(width,height,250,175,radius,blockers,direct);};
+    Action footprintPrevious=()=>{direct.Reset(190,115,121,121,width);PreviousFieldOfView.ComputeMask(width,height,250,175,radius,blockers,direct);};
+    foreach(var pair in new[]{("previous",footprintPrevious),("current",footprintCurrent)})
+    {
+        for(int i=0;i<30;i++)pair.Item2();
+        var times=new double[samples];long allocated=0;
+        for(int s=0;s<samples;s++)
+        {
+            var watch=new Stopwatch();long before=GC.GetAllocatedBytesForCurrentThread();watch.Start();
+            for(int i=0;i<iterations;i++)pair.Item2();
+            watch.Stop();allocated+=GC.GetAllocatedBytesForCurrentThread()-before;times[s]=watch.Elapsed.TotalMilliseconds;
+        }
+        Array.Sort(times);
+        footprintResults.Add(new{caster=pair.Item1,density,iterations,samples,milliseconds=times[samples/2],allocatedBytes=allocated});
+    }
+    var targets=new[]{(251,175),(258,184),(265,200),(300,185),(309,205),(330,240)};
+    int cursor=0,hits=0;
+    Action queryCurrent=()=>{var t=targets[cursor++%targets.Length];if(FieldOfView.CanSee(width,height,250,175,t.Item1,t.Item2,radius,blockers))hits++;};
+    Action queryPrevious=()=>{var t=targets[cursor++%targets.Length];if(PreviousFieldOfView.CanSee(width,height,250,175,t.Item1,t.Item2,radius,blockers))hits++;};
+    foreach(var pair in new[]{("previous",queryPrevious),("current",queryCurrent)})
+    {
+        for(int i=0;i<30;i++)pair.Item2();
+        var times=new double[samples];long allocated=0;
+        for(int s=0;s<samples;s++)
+        {
+            cursor=0;hits=0;
+            var watch=new Stopwatch();long before=GC.GetAllocatedBytesForCurrentThread();watch.Start();
+            for(int i=0;i<iterations;i++)pair.Item2();
+            watch.Stop();allocated+=GC.GetAllocatedBytesForCurrentThread()-before;times[s]=watch.Elapsed.TotalMilliseconds;
+        }
+        Array.Sort(times);
+        pointResults.Add(new{caster=pair.Item1,density,iterations,samples,milliseconds=times[samples/2],allocatedBytes=allocated,visibleQueries=hits});
+    }
+}
+Console.WriteLine(JsonSerializer.Serialize(new{width,height,radius,comparisonCases,pointQueries=comparisonCases*8,referenceCommit="REFERENCE_COMMIT",results,footprintResults,pointResults},new JsonSerializerOptions{WriteIndented=true}));
+'''.replace('REFERENCE_COMMIT', reference))
+    built = subprocess.run(['dotnet','build',str(work/'Benchmark.csproj'),'-c','Release','--nologo','-v:q'],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    if built.returncode: raise RuntimeError(built.stdout)
+    output = subprocess.check_output(['dotnet',str(work/'bin/Release/net10.0/Benchmark.dll')],text=True,env={**os.environ,'DOTNET_TieredCompilation':'0'})
+    report = json.loads(output)
+    destination = root/'artifacts/benchmark.json';destination.write_text(json.dumps(report,indent=2)+'\n')

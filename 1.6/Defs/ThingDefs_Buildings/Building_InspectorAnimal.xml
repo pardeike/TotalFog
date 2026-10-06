@@ -33,7 +33,7 @@
       <Cleanliness>-4</Cleanliness>
     </statBases>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>10</viewRadius>
       </li>
     </comps>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_SuppressCombatMusic>Suppress combat music</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Use normal music during combat so a music change cannot reveal a raid.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Mute sounds from hidden sources</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Silence hidden sound sources completely, including ongoing loops. This takes priority over hearing-based filtering.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Use hearing-based sound filtering</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Allow muffled sounds from nearby hidden sources that living player-controlled pawns can hear. Sources beyond the hearing range are silent.</TotalFog_FilterHiddenSoundsDesc>
+  <TotalFog_ShowHearingCues>Show hearing indicators</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Show nearby hidden movement that a player-controlled pawn can hear. Disable this to remove hearing indicators.</TotalFog_ShowHearingCuesDesc>
+  <TotalFog_PageAppearance>Appearance</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Vision</TotalFog_PageVision>
+  <TotalFog_PageInformation>Information</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Audio</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Choose how explored terrain looks when it is outside current sight.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Configure who provides vision and how far they can see.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Choose which messages and information may reveal activity outside sight.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Combat music, hidden sounds and hearing indicators can reveal activity through fog. Control them separately.</TotalFog_IntroAudio>
+  <TotalFog_ResetDesc>Reset adjustable settings. Tree blocking remains unchanged while a game is loaded.</TotalFog_ResetDesc>
+  <TotalFog_AdditionalObservers>Additional observers</TotalFog_AdditionalObservers>
+  <TotalFog_TerrainAndMaps>Terrain and maps</TotalFog_TerrainAndMaps>
+  <TotalFog_DiscardEvents>Discard letter categories</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Discard the selected categories only while their targets are unseen. Colony health events, visible events and global events without targets remain immediate. Use delay to keep unseen notifications until their targets are observed.</TotalFog_DiscardEventsDesc>
+  <TotalFog_InformationOptions>Other information</TotalFog_InformationOptions>
+  <TotalFog_SilentRaids>Silent raids and manhunter packs</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Remove arrival letters and arrival slowdown for enemy raids and manhunter packs, even when they are visible. No delayed arrival warning is kept. Their attacks and normal combat slowdown remain. Combat music is controlled separately.</TotalFog_SilentRaidsDesc>
+  <TotalFog_HearingIndicators>Hearing indicators</TotalFog_HearingIndicators>
+  <TotalFog_TurretVisionDesc>Scale the sight range of powered, fueled automatic turrets.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVisionDesc>Scale vision from trained animals that provide sight.</TotalFog_AnimalVisionDesc>
+  <TotalFog_AllyVisionDesc>Allied and neutral pawns provide vision at half their normal range.</TotalFog_AllyVisionDesc>
+  <TotalFog_PrisonerVisionDesc>Colony prisoners provide vision at one fifth of their normal range.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_MapRevealDesc>Mark terrain as explored when a map initializes. This does not provide current sight.</TotalFog_MapRevealDesc>
+  <TotalFog_HearingRangeDesc>Maximum distance in tiles for indicators of nearby hidden movement.</TotalFog_HearingRangeDesc>
+</LanguageData>

@@ -1,14 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <ModMetaData>
-  <name>(NWN) Real Fog of War (Continued)</name>
-  <packageId>Mlie.NWNRealFogOfWar</packageId>
-  <author>Luca De Petrillo</author>
-  <url>https://github.com/emipa606/NWNRealFogOfWar</url>
+  <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. Original attribution is retained in NOTICE.md. --><name>Total Fog</name>
+  <packageId>brrainz.totalfog</packageId>
+  <author>Andreas Pardeike</author>
   <supportedVersions>
-    <li>1.2</li>
-    <li>1.3</li>
-    <li>1.4</li>
-    <li>1.5</li>
     <li>1.6</li>
   </supportedVersions>
   <modDependencies>
@@ -21,94 +16,8 @@
   </modDependencies>
   <loadAfter>
     <li>brrainz.harmony</li>
+    <li>CETeam.CombatExtended</li>
   </loadAfter>
-  <description>[img]https://img.litet.net/logos/Info.png[/img]
-Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
-
-- Reported to be compatible with CAI 5000 - Advanced AI + Fog Of War as long as the fog of war in that mod is turned off
- - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
-- Added option to show threat letters when enemies are spotted instead of just hiding them.
-- Added option to not show fog of war during gravship takeoff and landing
-- Added option to let trees block vision as well. Only trees with 50%+ growth affects vision. NOTE: this will require even more of the CPU
-- Added support for [url=https://steamcommunity.com/sharedfiles/filedetails/?id=1662119905]Dubs Mint Minimap[/url]
-
-[img]https://img.litet.net/logos/Notice.png[/img]
-
-[table]
-    [tr][td][url=https://discord.gg/h5TY6DA][img]https://img.litet.net/logos/Discord.png[/img][/url][/td] [td][url=https://github.com/emipa606/NWNRealFogOfWar][img]https://img.litet.net/logos/Github.png[/img][/url][/td]
-    [/tr]
-    [tr]
-        [td][img]https://img.litet.net/logos/SafeToAdd.png[/img][/td]
-        [td][img]https://img.litet.net/logos/RemoveMayWork.png[/img][/td]
-    [/tr]
-[/table]
-	
-[img]https://img.litet.net/logos/OriginalDescription.png[/img]
-[h1] Original feature [/h1]
-[list]
-  [*]The map is initially unrevealed and must be explored.
-  [*]Both players and AI's humans, animals, mechanoids, and some objects have and are affected by a Field of View, shared among faction components.
-  [*]Animals participate in Faction Fog of War only if trained for release and with a master set.
-  [*]Only things revealed by a Field of View can be attacked by ranged weapons; Mortars and similar weapons can attack unrevealed and unseen places.
-  [*]Field of View of humans, animals, and mechanoids is adjusted to sight attribute and are affected by darkness (mechanoids are immune) and weather.
-  [*]Bionic eyes reduce the darkness debuff (one by half, two completely).
-  [*]Standing and attacking humans, animals and mechanoids have a slightly increased Field of View as they "peek" in nearby spaces.
-  [*]When attacking and not moving, the sight range is adjusted to weapon range over time (time-based on weapon warm-up time and range).
-  [*]Sleeping humans and animals have a base Field of View reduced to 20%
-  [*]At rough and lower difficulties, player's automatic turrets extend the Field of View in their target area.
-  [*]Added surveillance cameras, to monitor an area (research required), and watchtowers, to increase view range when colonists stand on them.
-  [*]Works with existing saves, but the map will be unrevealed.
-[/list]
-
-[h1] New stuff[/h1]
-[img]https://img.litet.net/xsz4cBX.png[/img]
-[img]https://img.litet.net/DOv7EBE.png[/img]
-[img]https://img.litet.net/edLM0pX.png[/img]
-[img]https://img.litet.net/6T54lIo.png[/img]
-[img]https://img.litet.net/qMcT6Dq.png[/img]
-
-[h1] New feature [/h1]
-[list]
-[*]New settings for you to tweak with. Finally, adjustable vision range. (I recommend setting it 55 to vanilla and 65 to CE.
-[*]Blind people can provide vision by hearing too.
-[*]Integrated changes from Yayo versions
-[*]A few bugfix and performance improvements.
-[*]Night vision integration from other mod-like nocturnal animals sees further at night. Vanilla expanded apparel night vision goggles allow better vision at night.
-[*]Animal body size matters at providing vision
-[*]Colonists can hear people moving in FoW.
-[*]Built-in raid letter suppressor
-[*]Toggle for prisoner providing vision
-[/list]
-[h1] Recommended mods[/h1]
-Mods that add non-view obstructing building:
-[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2050680665&amp;amp;searchtext=fence] Vanilla fence [/url]
-[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2407128339&amp;amp;searchtext=tent] Tent [/url]
-
-For the RTS experience:
-[url=https://steamcommunity.com/sharedfiles/filedetails/?id=1662119905&amp;amp;searchtext=dubs+minimap] Dubs mint minimap (for minimap durr)[/url]
-[url=https://steamcommunity.com/sharedfiles/filedetails/?id=1855885448]Guard for me (patrolling colonists have an actual purpose now)[/url]
-[h1]Know and possible issues[/h1]
-This version might makes the game lag if used with any mod that makes pawn calculate target to shoot constantly.
-Also the hiding Interaction bubble in FoW function cause lot of lag and might even break the UI. It's recommended to disable it.
-[h1]Credit and license [/h1]
-The original mod belongs to Luca De Petrillo under Apache License 2.0.
-https://github.com/lukakama/rimworld-mod-real-fow/
-
-SaberVS7 for the 1.4 update
-YAYO for the forked version new building.
-inbae for korean translation (though newer update to this mod led to some missing translation) I'll appreciate any updated translation.
-
-[img]https://img.litet.net/logos/ReportingIssues.png[/img]
-[list]
-[*] See if the the error persists if you just have this mod and its requirements active.
-[*] If not, try adding your other mods until it happens again.
-[*] Always post your log using the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Log Uploader[/url]
-[*] For best support, please use the Discord-channel for error-reporting.
-[*] Do not report errors by making a discussion-thread, I get no notification of that.
-[*] If you have the solution for a problem, please post it to the GitHub repository.
-[*] Use [url=https://github.com/RimSort/RimSort/releases/latest]RimSort[/url] to sort your mods
-[/list] 
-
-[url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3391128917][img]https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&amp;style=plastic&amp;color=9f1111&amp;labelColor=black[/img][/url] | vision, tactics</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.6.16</modVersion>
-</ModMetaData>
+  <description>Fog of war and shared field of view for RimWorld. Independently maintained by Andreas Pardeike, based on Real Fog of War by Luca De Petrillo and the NWN continuation maintained by Mlie. Licensed under Apache 2.0. Enable this instead of other Real Fog of War versions.</description>
+  <modVersion IgnoreIfNoMatchingField="True">0.1.0</modVersion>
+<incompatibleWith><li>Mlie.NWNRealFogOfWar</li></incompatibleWith></ModMetaData>

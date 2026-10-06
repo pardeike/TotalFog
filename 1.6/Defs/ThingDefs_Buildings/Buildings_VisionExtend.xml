@@ -41,7 +41,7 @@
       <Beauty>-10</Beauty>
     </statBases>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+      <li Class="TotalFog.CompProperties_SightModifier">
         <fovMultiplier>1.5</fovMultiplier>
       </li>
     </comps>
@@ -93,7 +93,7 @@
 				<glowRadius>10</glowRadius>
 				<glowColor>(217,217,208,0)</glowColor>
 			</li>
-			<li Class="RimWorldRealFoW.CompProperties_AffectVision">
+			<li Class="TotalFog.CompProperties_SightModifier">
 				<fovMultiplier>1.5</fovMultiplier>
 				<denyDarkness>true</denyDarkness>
 			</li>
@@ -142,7 +142,7 @@
       <Beauty>-10</Beauty>
     </statBases>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+      <li Class="TotalFog.CompProperties_SightModifier">
         <fovMultiplier>1.5</fovMultiplier>
         <denyWeather>true</denyWeather>
       </li>
@@ -202,7 +202,7 @@
         <glowRadius>6</glowRadius>
         <glowColor>(217,217,208,0)</glowColor>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+      <li Class="TotalFog.CompProperties_SightModifier">
         <fovMultiplier>1.05</fovMultiplier>
         <denyDarkness>true</denyDarkness>
       </li>
@@ -265,7 +265,7 @@
 				<glowRadius>6</glowRadius>
 				<glowColor>(217,217,208,0)</glowColor>
 			</li>
-			<li Class="RimWorldRealFoW.CompProperties_AffectVision">
+			<li Class="TotalFog.CompProperties_SightModifier">
 				<fovMultiplier>1.05</fovMultiplier>
 				<denyDarkness>true</denyDarkness>
 			</li>
@@ -295,7 +295,7 @@
 		</weaponTags>
 		    <verbs>
 		<li>
-        <verbClass>RimWorldRealFoW.Verb_Look</verbClass>
+        <verbClass>TotalFog.Verb_ExtendSight</verbClass>
         <range>24.9</range>
         <muzzleFlashScale>0</muzzleFlashScale>
         <consumeFuelPerShot>0</consumeFuelPerShot>
@@ -340,7 +340,7 @@
       <Beauty>0</Beauty>
     </statBases>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_AffectVision">
+      <li Class="TotalFog.CompProperties_SightModifier">
         <fovMultiplier>2</fovMultiplier>
       </li>
     </comps>

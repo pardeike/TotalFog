@@ -1,0 +1,680 @@
+#!/usr/bin/env python3
+"""Verify preserved Total Fog rendering and save/load acceptance evidence."""
+from pathlib import Path
+import hashlib
+import json
+import math
+import sys
+from PIL import Image, ImageChops
+
+sys.dont_write_bytecode = True
+root = Path(sys.argv[1]).resolve()
+# A failed recheck must not leave a success record from another scenario or attempt.
+(root / "verification.json").unlink(missing_ok=True)
+
+
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+
+def saved_file(original):
+    # Read the preserved evidence, never a later run at its original path.
+    return root / Path(original).name
+
+
+if (root / "contamination-overlay-live.json").exists():
+    report = json.loads((root / "contamination-overlay-live.json").read_text())
+    require(report["operation"]["Success"] and not report["operation"]["Warnings"] and
+            report["passed"] and report["advancedTicks"] == 0, "Contamination scenario failed")
+    rows = report["rows"]
+    controls = {(mode, state) for mode in ("detailed", "cached")
+                for state in ("hidden", "visible", "hidden-again", "colony-bypass")}
+    if report.get("refreshChecks"):
+        controls |= {("cached", state) for state in ("hidden-mutated", "revealed-mutated", "offscreen-mutated-return",
+            "zoom-mutated-return", "closed-mutated-reopen", "revealed-cleared")}
+    require(len(rows) == len(controls) and {(r["mode"], r["state"]) for r in rows} == controls,
+            "Missing contamination overlay controls")
+    require(len(report["pictures"]) == 2*len(rows) and len({r["tick"] for r in rows}) == 1,
+            "Contamination captures or paused state changed")
+    comparisons = []
+    for i, row in enumerate(rows):
+        expected = row["state"] not in {"hidden", "hidden-again", "hidden-mutated"}
+        value = row.get("expectedValue", 0.65)
+        expected_marker = expected and value > 0
+        require(row["passed"] and row["expected"] == expected and row["selected"] == expected and
+                row["cachedRoute"] == (row["mode"] == "cached") and
+                abs(row["value"]-value) < 1e-6 and abs(row["groundValue"]-value) < 1e-6,
+                "Contamination data, selection or route failed")
+        on, off = (report["pictures"][2*i+j]["Result"] for j in range(2))
+        require(on["success"] and off["success"] and on["fullyVisible"] and off["fullyVisible"] and
+                on["clipRect"] == off["clipRect"] and on["cameraDuringCapture"] == off["cameraDuringCapture"],
+                "Contamination comparison camera or crop changed")
+        a, b = (Image.open(saved_file(p["path"])).convert("RGB") for p in (on, off))
+        difference = ImageChops.difference(a, b)
+        changed = sum(max(pixel) > 8 for pixel in difference.get_flattened_data())
+        require(changed > 0 if expected_marker else difference.getbbox() is None,
+                f"Contamination pixels disagree with sight in {row['mode']}/{row['state']}")
+        comparisons.append({"mode": row["mode"], "state": row["state"], "changedPixelsAbove8": changed,
+            "pixelDifferenceStrength": sum(sum(pixel) for pixel in difference.get_flattened_data())})
+    require((root / "player-log-summary.txt").read_text() == "", "Contamination scenario has runtime diagnostics")
+    if report.get("refreshChecks"):
+        baseline = next(r for r in comparisons if r["mode"] == "cached" and r["state"] == "visible")
+        cleared = next(r for r in comparisons if r["state"] == "revealed-cleared")
+        require(baseline["changedPixelsAbove8"] > 0 and cleared["changedPixelsAbove8"] == 0,
+                "Cached contamination did not clear after mutation")
+        for row in comparisons:
+            if row["state"] in {"revealed-mutated", "offscreen-mutated-return", "zoom-mutated-return", "closed-mutated-reopen"}:
+                require(0 < row["pixelDifferenceStrength"] < baseline["pixelDifferenceStrength"] * 0.95,
+                        "Cached contamination retained its old intensity after mutation: " + row["state"])
+    (root / "verification.json").write_text(json.dumps({"kind": "contamination-overlay", "nativeCases": len(rows),
+        "refreshChecks": report.get("refreshChecks", False),
+        "nativeSightSource": not report["stagedSight"], "advancedTicks": 0,
+        "comparisons": comparisons}, indent=2) + "\n")
+    sys.exit(0)
+
+
+if (root / "symbiant-boundary-live.json").exists():
+    report = json.loads((root / "symbiant-boundary-live.json").read_text())
+    require(report["operation"]["Success"] and not report["operation"]["Warnings"], "Symbiant scenario failed")
+    require(report["matureTick"] - report["startTick"] >= 61 and report["endTick"] == report["matureTick"],
+            "Symbiant was not matured and then tested while paused")
+    rows = report["rows"]
+    require({row["sample"] for row in rows} == {"0", "8", "-10", "vanilla-root", "off-camera",
+            "fallback-root", "fallback-end", "core-boundary", "resource-rebuild", "after-fallback",
+            "selection-root-hidden", "selection-core-hidden"} and len(rows) == 12, "Missing Symbiant cases")
+    comparisons, interactions, picture_index = [], [], 0
+    for row in rows:
+        require(row["bodySubmissionMatchesSight"] and row["state"]["Registrations"] == 1,
+                "Symbiant body submission or registration failed")
+        require(all(part["hiddenCenters"] == part["invalidUvs"] == 0 for part in row["geometry"] or []),
+                "Symbiant geometry disclosed hidden cells or damaged UVs")
+        interaction = row.get("interaction")
+        if interaction is not None:
+            require(interaction["selected"] == interaction["coreListed"] == interaction["hoverAllowed"] == interaction["coreVisible"],
+                    "Symbiant inspection or core hover did not follow its current core")
+            require(interaction["labelAllowed"] == (interaction["coreVisible"] and interaction["rootVisible"]) and
+                    (interaction["tooltipCell"] == interaction["core"] if interaction["coreVisible"] else interaction["tooltipCellIsInvalid"]),
+                    "Symbiant labels or tooltip anchors disclosed a hidden root/core")
+            require(len(interaction["manual"]) == 18 and
+                    all(cell["offered"] == cell["visible"] for cell in interaction["manual"]),
+                    "Symbiant manual targeting did not follow current cell sight")
+            interactions.append(row["sample"])
+        if row["Away"]:
+            require(row["state"]["DrawAtCalls"] == 0, "Off-camera Symbiant drew")
+            continue
+        on, off = (report["pictures"][picture_index + i]["Result"] for i in range(2))
+        picture_index += 2
+        require(on["clipRect"] == off["clipRect"] and on["cameraDuringCapture"] == off["cameraDuringCapture"],
+                "Symbiant pixel comparison camera or crop changed")
+        a, b = (Image.open(saved_file(picture["path"])).convert("RGB") for picture in (on, off))
+        difference = ImageChops.difference(a, b)
+        changed = sum(max(pixel) > 8 for pixel in difference.get_flattened_data())
+        if row["sample"] in {"-10", "fallback-end"}:
+            require(difference.getbbox() is None, "All-hidden Symbiant produced pixels")
+        else:
+            require(changed > 0, "Visible Symbiant control produced no pixels")
+        padded = on["paddedRect"]
+        sx, sy = a.width / padded["width"], a.height / padded["height"]
+        hidden_cells = [cell for cell in row["capturedCellSight"] if not cell["visible"]]
+        require(hidden_cells, "Symbiant pixel comparison has no hidden-cell controls")
+        for cell in hidden_cells:
+            roi = (math.ceil((cell["x"] + .15 - padded["x"]) * sx),
+                   math.ceil((padded["z"] + padded["height"] - cell["z"] - .85) * sy),
+                   math.floor((cell["x"] + .85 - padded["x"]) * sx),
+                   math.floor((padded["z"] + padded["height"] - cell["z"] - .15) * sy))
+            require(difference.crop(roi).getbbox() is None, f"Hidden Symbiant pixels in {row['sample']} at {cell}")
+        comparisons.append({"sample": row["sample"], "changedPixelsAbove8": changed, "hiddenCells": len(hidden_cells)})
+    require(picture_index == len(report["pictures"]) and
+            set(interactions) == {"core-boundary", "selection-root-hidden", "selection-core-hidden"},
+            "Symbiant screenshots or interaction controls are missing")
+    boundary = next(row for row in rows if row["sample"] == "core-boundary")
+    # A clipped quad can legitimately contain two triangles at some rotation
+    # angles. Require actual area removal instead of a tessellation count.
+    require(any(part["part"] == "core" and not part["full"] and
+                0 < part["renderedArea"] < part["originalArea"] * (1 - 1e-5)
+                for part in boundary["geometry"]), "Symbiant core did not exercise partial clipping")
+    log = (root / "player.log").read_text(errors="replace")
+    require(not any(word in line.lower() for line in log.splitlines() for word in ("error", "exception", "warning")),
+            "Symbiant scenario has runtime diagnostics")
+    (root / "verification.json").write_text(json.dumps({"kind": "symbiant-boundary", "nativeCases": 12,
+        "manualTargetChecks": 54, "comparisons": comparisons, "interactionCases": interactions}, indent=2) + "\n")
+    sys.exit(0)
+
+
+if (root / "loaded-combat-live.json").exists():
+    report = json.loads((root / "loaded-combat-live.json").read_text())["result"]["structuredContent"]
+    loaded = json.loads((root / "load.json").read_text())["result"]["structuredContent"]
+    save = json.loads((root / "save-metadata.json").read_text())
+    data = (root / "original-save.rws").read_bytes()
+    require(len(data) == save["bytes"] and hashlib.sha256(data).hexdigest() == save["sha256"],
+            "The player combat save differs from the preserved original")
+    require(loaded["operation"]["Success"] and loaded["state"]["visualReady"] and loaded["state"]["paused"] and
+            loaded["compatibilityCheckIgnored"] and
+            {item["packageId"] for item in loaded["compatibility"]["missingMods"]} == {"mlie.nwnrealfogofwar"},
+            "The player save did not load with the declared Total Fog substitution")
+    require(report["operation"]["Success"] and not report["operation"]["Warnings"] and report["paused"] and
+            report["step"]["Success"] and report["step"]["CompletedTicks"] == 900 and
+            report["endTick"] - report["startTick"] == 900 and
+            report["deadInitialPawns"].get("Fingerspike", 0) > 0,
+            "The loaded combat did not exercise actual Fingerspike deaths for 900 ticks")
+    require(not report["errors"] and not report["duplicates"] and not report["hiddenDraws"] and
+            all(value == 0 for key, value in report["phases"].items() if key.startswith("hidden")),
+            "Loaded combat has render errors, duplicate registration or drawing outside current sight")
+    for prefix in ("visible/", "visible-held/"):
+        require(all(report["phases"].get(prefix + phase, 0) > 0
+                    for phase in ("EnsureInitialized", "ParallelPreDraw", "Draw")),
+                "Loaded combat lacks visible and held-pawn drawing controls")
+    log = (root / "player.log").read_text(errors="replace")
+    require(not any(word in line.lower() for line in log.splitlines() for word in ("error", "exception", "warning")),
+            "Loaded combat has runtime diagnostics")
+    (root / "verification.json").write_text(json.dumps({"kind": "loaded-combat", "ticks": 900,
+        "deadInitialPawns": report["deadInitialPawns"], "phases": report["phases"], "hiddenDraws": 0,
+        "renderErrors": 0, "duplicateRegistrations": 0, "saveSha256": save["sha256"],
+        "scope": "Total Fog substituted into the original player save on the installed Mac engine"}, indent=2) + "\n")
+    sys.exit(0)
+
+
+if (root / "static-interface-live.json").exists():
+    report = json.loads((root / "static-interface-live.json").read_text())["result"]["structuredContent"]
+    require(report["operation"]["Success"] and not report["operation"]["Warnings"], "Static drawing scenario failed")
+    observed, hidden, revealed = (report[key] for key in ("observed", "hidden", "revealed"))
+    require(observed["state"]["inSight"] and revealed["state"]["inSight"] and not hidden["state"]["inSight"] and
+            hidden["state"]["seen"] and hidden["state"]["visible"] and hidden["state"]["Spawned"] and
+            not hidden["state"]["Destroyed"], "Hidden static observation or simulation state failed")
+    for state in (observed, revealed):
+        require(len(state["phases"]) == 3 and all(value > 0 for value in state["phases"]),
+                "Visible static drawing did not execute every native phase")
+        require(state["Overlays"] > 0 and state["Tooltips"] > 0,
+                "Visible static interface callbacks did not execute")
+        if state["readoutEnabled"]:
+            require(state["Mouseovers"] > 0, "Visible mouseover readout did not execute")
+    require((observed["readoutEnabled"] or revealed["readoutEnabled"]) and hidden["readoutEnabled"],
+            "The mouseover readout has no visible/hidden controls")
+    require(hidden["phases"] == [0, 0, 0] and
+            all(hidden[key] == 0 for key in ("Overlays", "Tooltips", "Mouseovers")) and not hidden["selected"],
+            "A remembered static object used live drawing or interface callbacks")
+    require(report["observedThroughProxy"] and report["revealedThroughProxy"] and not report["hiddenThroughProxy"],
+            "Static selection proxy visibility failed")
+    log = (root / "static-interface-player.log").read_text(errors="replace")
+    require(not any(word in line.lower() for line in log.splitlines() for word in ("error", "exception", "warning")),
+            "Static drawing scenario has runtime diagnostics")
+    (root / "verification.json").write_text(json.dumps({"kind": "static-interface", "phases": {
+        key: report[key]["phases"] for key in ("observed", "hidden", "revealed")},
+        "hiddenLiveCallbacks": 0, "hiddenThingStillSpawned": True}, indent=2) + "\n")
+    sys.exit(0)
+
+
+if (root / "section-save-damaged-status.json").exists():
+    status = json.loads((root / "section-save-damaged-status.json").read_text())["result"]["structuredContent"]
+    loaded = json.loads((root / "section-save-damaged-load.json").read_text())["result"]["structuredContent"]
+    require(loaded["operation"]["Success"] and loaded["state"]["visualReady"] and loaded["state"]["paused"] and
+            status["operation"]["Success"] and not status["operation"]["Warnings"] and status["Initialized"] and status["paused"] and
+            all(status[key] == 0 for key in ("RestoredOwnerCount", "RestoredCellCount", "currentlyVisible", "remembered", "rememberedTerrain")),
+            "Damaged observation data prevented safe fog initialization")
+    if "rememberedLighting" in status:
+        require(status["rememberedLighting"] == 0, "Damaged archive imported hidden lighting")
+    if "rememberedMask" in status:
+        require(status["rememberedMask"] == 0, "Damaged archive imported a hidden roof mask")
+    expected = "[Total Fog] Could not restore remembered section drawings: System.IO.InvalidDataException: Unknown observed section archive."
+    log = (root / "Player.log").read_text(errors="replace")
+    require(log.count(expected) == 1, "Expected damaged-archive diagnostic is missing or repeated")
+    require(not any(word in line.lower() for line in log.splitlines() if line != expected
+                    for word in ("error", "exception", "warning")), "Damaged-save recovery has unexpected diagnostics")
+    (root / "verification.json").write_text(json.dumps({"kind": "save-recovery", "initialized": True,
+        "rememberedCells": 0, "currentlyVisible": 0, "expectedDiagnosticCount": 1}, indent=2) + "\n")
+    sys.exit(0)
+
+
+if (root / "post-light-draws-live.json").exists():
+    kind, prefix = "post-light", "post-light-draws"
+elif (root / "lighting-memory-live.json").exists():
+    kind, prefix = "lighting", "lighting-memory"
+elif (root / "layer-resource-live.json").exists():
+    kind, prefix = "layer-resource", "layer-resource"
+elif (root / "section-save-inspect-live.json").exists():
+    kind = "save-picture" if (root / "section-save-picture-proof.json").exists() else "save"
+    prefix = "section-save-inspect"
+elif (root / "section-save-prepare-live.json").exists():
+    kind, prefix = "save-preparation", "section-save-prepare"
+elif (root / "section-memory-live.json").exists():
+    kind, prefix = "gameplay", "section-memory"
+elif (root / "layer-scene-live.json").exists():
+    kind, prefix = "scene", "layer-scene"
+elif (root / "scissor-owned-live.json").exists():
+    kind, prefix = "scissor", "scissor-owned"
+else:
+    kind, prefix = "resource", "texture-archive"
+report = json.loads((root / (prefix + "-live.json")).read_text())["result"]["structuredContent"]
+require(report["operation"]["Success"] and not report["operation"]["Warnings"], "Scenario operation failed")
+log = (root / (prefix + "-player.log")).read_text(errors="replace")
+require(not any(word in line.lower() for line in log.splitlines()
+                for word in ("error", "exception", "warning", "doesn't have a texture property")),
+        "Scenario has runtime diagnostics")
+records = {item["phase"]: item for item in report["evidence"]}
+metrics = {"kind": kind, "comparisons": {}}
+if kind in {"save", "save-picture"}:
+    prepared = json.loads((root / "section-save-prepare-live.json").read_text())["result"]["structuredContent"]
+    require(prepared["operation"]["Success"] and not prepared["operation"]["Warnings"], "Save preparation failed")
+    require(prepared["clip"] == report["clip"] and prepared["pixelHeight"] == report["pixelHeight"], "Save comparison camera differs")
+    records.update({item["phase"]: item for item in prepared["evidence"]})
+    before_log = (root / "section-save-prepare-player.log").read_text(errors="replace")
+    require(not any(word in line.lower() for line in before_log.splitlines()
+                    for word in ("error", "exception", "warning")), "Save preparation has runtime diagnostics")
+    stopped = json.loads((root / "section-save-stop.json").read_text())["result"]["structuredContent"]
+    started = json.loads((root / "section-save-restart.json").read_text())["result"]["structuredContent"]
+    loaded = json.loads((root / "section-save-reload.json").read_text())["result"]["structuredContent"]
+    saved = json.loads((root / "section-save-created.json").read_text())["result"]["structuredContent"]
+    require(stopped["code"] == "terminated" and started["code"] == "started_connected" and
+            started["processStarted"] and loaded["operation"]["Success"] and loaded["state"]["visualReady"] and
+            saved["success"] and saved["exists"] and saved["sizeBytes"] > 0 and
+            saved["saveName"] == loaded["saveName"], "A real save/restart/load did not complete")
+
+if kind != "scissor":
+    h = report["pixelHeight"]
+    clip = report["clip"]
+    box = (clip["XMin"], h - clip["YMax"], clip["XMax"], h - clip["YMin"])
+else:
+    with Image.open(saved_file(records["native"]["screenshot"]["path"])) as image:
+        h = image.height
+    scissors = records["BeforeForwardAlpha-cells"]["commands"]["scissors"]
+    box = (min(r["XMin"] for r in scissors), h - max(r["YMax"] for r in scissors),
+           max(r["XMax"] for r in scissors), h - min(r["YMin"] for r in scissors))
+require(box[2] > box[0] and box[3] > box[1], "Empty comparison region")
+metrics["box"] = box
+
+
+def compare(left, right, equal=True):
+    def pixels(phase):
+        with Image.open(saved_file(records[phase]["screenshot"]["path"])) as image:
+            require(0 <= box[0] < box[2] <= image.width and 0 <= box[1] < box[3] <= image.height,
+                    "Comparison region exceeds screenshot")
+            return image.convert("RGB").crop(box)
+    diff = ImageChops.difference(pixels(left), pixels(right))
+    changed, maximum = 0, 0
+    for pixel in diff.get_flattened_data():
+        changed += any(pixel)
+        maximum = max(maximum, *pixel)
+    result = {"changedPixels": changed, "totalPixels": diff.width * diff.height,
+              "maxChannelDelta": maximum, "bounds": diff.getbbox()}
+    metrics["comparisons"][left + " vs " + right] = result
+    require((changed == 0) == equal, "Unexpected pixels: " + left + " vs " + right +
+            f" ({changed} changed, maximum channel delta {maximum})")
+    return result
+
+
+if kind == "post-light":
+    require(report["simulationStayedPaused"] and report["calls"] > 0 and report["shader"] == "Custom/Transparent post light",
+            "Native post-light scenario failed")
+    compare("owned", "native")
+    compare("owned-moved", "native-moved")
+    compare("owned", "owned-moved", equal=False)
+    with Image.open(saved_file(records["owned"]["screenshot"]["path"])) as main:
+        colors = main.convert("RGB").crop(box)
+        require(any(r > 100 and g < 20 and b < 20 for r, g, b in colors.get_flattened_data()),
+                "The primary camera lost its red all-camera draw")
+        require(any(g > 100 and r < 20 and b < 20 for r, g, b in colors.get_flattened_data()),
+                "The primary camera lost its green explicit-camera draw")
+    auxiliary = {}
+    for phase in ("owned", "native", "owned-moved", "native-moved"):
+        with Image.open(saved_file(records[phase]["auxiliary"])) as pixels:
+            auxiliary[phase] = pixels.convert("RGB")
+        colors = auxiliary[phase].get_flattened_data()
+        require(any(r > 100 and g < 20 and b < 20 for r, g, b in colors), "Auxiliary camera lost its red all-camera draw")
+        colors = auxiliary[phase].get_flattened_data()
+        require(any(g > 100 and r < 20 and b < 20 for r, g, b in colors), "Auxiliary camera lost its green explicit-camera draw")
+        require(not any(b > 100 and r < 20 and g < 20 for r, g, b in auxiliary[phase].get_flattened_data()),
+                "A later property-block mutation changed an earlier auxiliary draw")
+    for left, right in (("owned", "native"), ("owned-moved", "native-moved")):
+        require(ImageChops.difference(auxiliary[left], auxiliary[right]).getbbox() is None,
+                "Native and redirected auxiliary cameras differ")
+    require(ImageChops.difference(auxiliary["owned"], auxiliary["owned-moved"]).getbbox() is not None,
+            "The auxiliary matrix positive control did not change")
+    metrics["auxiliaryExact"] = True
+elif kind == "save-preparation":
+    require(report["treeDestroyed"] and report["simulationStayedPaused"] and report["retainedCells"] == 81 and
+            report["terrainMemory"]["hiddenTerrainOwnersUnchanged"] and report["terrainMemory"]["unknownTerrainCellRemainsUnknown"] and
+            report["lightingMemory"]["torchDestroyed"] and report["lightingMemory"]["nativeChangedLightingVertices"] > 0 and
+            report["lightingMemory"]["hiddenLightingOwnersUnchanged"] and report["lightingMemory"]["retainedLightingCells"] == 81 and
+            report["maskMemory"]["hiddenMaskOwnersUnchanged"] and report["maskMemory"]["retainedMaskCells"] == 81 and
+            {item["layer"] for item in report["layers"] if item["owners"] > 0} == {"ThingsGeneral", "Terrain", "Lighting", "IndoorMask"},
+            "Four-layer observation preparation failed")
+    pose = report["poses"][0]
+    require(all(item[key] == pose[key] for item in report["poses"] for key in ("projection", "view", "sky")),
+            "Save preparation camera or sky changed")
+    compare("hidden-before-changes", "before-save")
+    compare("before-save", "before-save-background", equal=False)
+    compare("visible", "visible-native")
+elif kind == "layer-resource":
+    require(report["simulationStayedPaused"] and report["textureBytesExact"] and report["completeArchiveExact"] and
+            report["MeshCount"] > 0 and report["MaterialCount"] > 0 and report["TextureCount"] > 0,
+            "Layer resource reconstruction changed drawing data")
+    pose = report["poses"][0]
+    require(all(item["projection"] == pose["projection"] and item["view"] == pose["view"]
+                for item in report["poses"]), "Layer comparison camera changed")
+    compare("captured", "captured-repeat")
+    compare("captured", "restored")
+    compare("restored", "empty", equal=False)
+elif kind == "resource":
+    rgb = report["rgb24Proof"]
+    require(rgb["exact"] and rgb["TextureFormat"] == 3 and rgb["MipmapCount"] == 5 and rgb["IsDataSRGB"],
+            "Native RGB24 byte/metadata restoration failed")
+    for key in ("sourceWasUnreadable", "sourceDestroyed", "treeDestroyed", "simulationStayedPaused",
+                "sourceGeometryCleared", "restoredGeometryIndependent"):
+        require(report[key], key + " failed")
+    for left, right in (("atlas-shared", "atlas-owned"), ("atlas-owned", "atlas-restored"),
+                        ("atlas-owned-unseen", "atlas-restored-released"),
+                        ("procedural-owned-destroyed", "procedural-restored-unseen"),
+                        ("procedural-restored-unseen", "procedural-restored-released"),
+                        ("procedural-shared-before", "procedural-owned-before"),
+                        ("procedural-owned-before", "procedural-owned-after"),
+                        ("procedural-owned-unseen", "procedural-owned-destroyed")):
+        compare(left, right)
+    if "mapArchive" in report:
+        graph = report["mapArchive"]
+        require(graph["nativeGraphRoundTripExact"] and graph["cellAssignmentsExact"] and
+                graph["originalPictureResourcesReleased"] and graph["emptyPictureHasNoGeometry"],
+                "Complete observed map reconstruction failed")
+        require(graph["TextureCount"] == 4 and graph["MaterialCount"] == 4 and graph["MeshCount"] == 4 and
+                graph["PictureCount"] == 3 and graph["observedCells"] == 81 and graph["observedEmptyCells"] == 1 and
+                graph["CellCount"] == graph["Width"] * graph["Height"], "Unexpected map resource graph")
+        original = saved_file(graph["path"])
+        recaptured = saved_file(graph["recapturedPath"])
+        require(original.stat().st_size == graph["bytes"], "Map archive size differs")
+        for file in (original, recaptured):
+            with file.open("rb") as source:
+                require(hashlib.file_digest(source, "sha256").hexdigest() == graph["sha256"],
+                        "Map archive does not match scenario")
+        compare("atlas-restored-released", "atlas-map-archive")
+        compare("procedural-restored-released", "procedural-map-archive")
+        metrics["mapArchiveBytes"] = graph["bytes"]
+        if "updatedMapArchive" in report:
+            require(report["decodedCpuPixelsReleased"], "Restored resources retained CPU pixel payloads")
+            update = report["updatedMapArchive"]
+            require(update["captureCalls"] == 1 and update["unseenPicturesUnchanged"] and
+                    update["visibleCellSavedEmpty"] and update["supersededPictureRetired"] and
+                    update["oldVisibleCellDraws"] > 0 and update["updatedVisibleCellDraws"] == 0,
+                    "Current observed-cell export failed")
+            path = saved_file(update["path"])
+            require(path.stat().st_size == update["bytes"], "Updated map archive size differs")
+            with path.open("rb") as source:
+                require(hashlib.file_digest(source, "sha256").hexdigest() == update["sha256"],
+                        "Updated map archive does not match scenario")
+            metrics["decodedCpuPixelsReleased"] = True
+        if "mapRendererProof" in report:
+            renderer = report["mapRendererProof"]
+            require(renderer["MeshCount"] == graph["MeshCount"] and renderer["RegionCount"] > 1 and
+                    renderer["DrawCount"] > 0 and renderer["idleFrames"] >= 100 and
+                    renderer["idleCommandRebuilds"] == 0 and renderer["identicalRefreshCommandRebuilds"] == 0 and
+                    renderer["cameraChanges"] == 3 and
+                    renderer["cameraCommandRebuilds"] == 3 and renderer["cullingMaskRespected"] and
+                    renderer["invalidRefreshPreservedBatch"] and renderer["nativeMeshesDestroyed"] and
+                    renderer["cameraBuffersRemoved"] and renderer["disposedRendererRejectedUpdate"] and
+                    renderer["resourceOwnerStillAlive"], "Stored-picture renderer acceptance failed")
+            compare("map-regions-control", "map-regions-renderer")
+            metrics["mapRendererVerified"] = True
+        if "texturePoolProof" in report:
+            pool = report["texturePoolProof"]
+            checks = pool["checks"]
+            require(pool["nativeTexturesDestroyed"] and checks["retiredTextures"] == 6 and
+                    checks["atlasRepeatSamples"] == 8 and all(checks[key] for key in
+                    ("identicalSourcesShare", "releasedLeaseRejected", "otherLeasesRemainValid", "gpuWriteDetected",
+                     "oldPixelsFrozen", "restoredPixelsReuse", "samplerHasOwnSnapshot", "hashCollisionChecked",
+                     "closedPoolRejectedCapture", "closedPoolPreservedLeases", "lastReleaseEmptiedPools")),
+                    "Shared texture ownership acceptance failed")
+            metrics["texturePoolVerified"] = True
+    if "fixtureBackground" in report:
+        background = report["fixtureBackground"]
+        require(background["excludedTextureMapDraws"] > 0 and background["excludedTextureWeatherDraws"] > 0,
+                "Resource comparison did not isolate live map/weather drawing")
+    if "nativeMeshCaptureProof" in report:
+        capture = report["nativeMeshCaptureProof"]
+        require(capture["meshes"] > 0 and capture["vertices"] > 0 and all(capture[key] for key in
+                ("capturedFromNativeMesh", "scratchListMutationIgnored", "nativeChangesDetected",
+                 "earlierGeometryFrozen", "nativeBoundsAndFlagsExact")),
+                "Completed native mesh capture failed")
+        metrics["nativeMeshCaptureVerified"] = True
+    if "completedLayerProof" in report:
+        layer = report["completedLayerProof"]
+        require(layer["MeshCount"] > 0 and layer["MaterialCount"] > 0 and layer["TextureCount"] > 0 and
+                layer["sharedTextures"] and layer["observationCells"] == 81 and layer["capturedGraphBytes"] > 0,
+                "Completed layer resource ownership failed")
+        compare("completed-layer-native", "completed-layer-captured")
+        compare("completed-layer-captured", "completed-layer-captured-mutated")
+        compare("completed-layer-captured", "completed-layer-source-destroyed")
+        compare("completed-layer-native", "completed-layer-native-mutated", equal=False)
+        metrics["completedLayerVerified"] = True
+        failures, lifetime = report["completedLayerFailureProof"], report["completedLayerLifetimeProof"]
+        require(all(failures[key] for key in ("observedEmptyLayerPreserved", "unsupportedTextureRejected", "failedCaptureReleasedLeases")) and
+                lifetime["lastOwnerReleasedAllLeases"] and lifetime["nativeMeshesMaterialsTexturesDestroyed"] and
+                lifetime["meshCount"] == layer["MeshCount"] and lifetime["materialCount"] == layer["MaterialCount"] and
+                lifetime["textureCount"] == layer["TextureCount"], "Completed layer failure/retirement ownership failed")
+    compare("procedural-shared-before", "procedural-shared-after", equal=False)
+    fields = ("piece", "property", "width", "height", "mipmapCount", "format", "isDataSRGB",
+              "filterMode", "wrapModeU", "wrapModeV", "wrapModeW", "anisoLevel", "mipMapBias")
+    for before, after in (("atlasSource", "atlasOwned"), ("atlasOwned", "atlasRestoredState"),
+                          ("proceduralBefore", "proceduralOwned"), ("proceduralOwned", "proceduralRestoredState")):
+        source, owned = report[before], report[after]
+        require(len(source) == len(owned), "Changed texture binding count")
+        for a, b in zip(source, owned):
+            require(a["piece"] == b["piece"] and a["property"] == b["property"], "Changed texture binding")
+            if a.get("id") is not None:
+                require(a["id"] != b["id"] and not b["isReadable"], "Texture ownership failed")
+                require(all(a[field] == b[field] for field in fields), "Changed texture metadata")
+    expected_textures = 6 if "materialArchives" in report else 4
+    require(len(report["meshArchives"]) == 4 and len(report["archives"]) == expected_textures, "Incomplete resource archives")
+    for archive in report["meshArchives"]:
+        data = saved_file(archive["path"]).read_bytes()
+        require(len(data) == archive["bytes"] and hashlib.sha256(data).hexdigest() == archive["sha256"],
+                "Mesh archive does not match scenario")
+        require(archive["geometryRoundTripExact"] and archive["VertexCount"] > 0 and not archive["Disabled"],
+                "Mesh reconstruction failed")
+    if "materialArchives" in report:
+        require(report["runtimeTextureBindingsOwned"], "Runtime oak texture ownership failed")
+        require(len(report["materialArchives"]) == len(report["meshArchives"]), "Incomplete material archives")
+        for archive in report["materialArchives"]:
+            data = saved_file(archive["path"]).read_bytes()
+            require(len(data) == archive["bytes"] and hashlib.sha256(data).hexdigest() == archive["sha256"],
+                    "Material archive does not match scenario")
+            require(archive["nativeMaterialRoundTripExact"] and archive["ShaderName"], "Material reconstruction failed")
+        metrics["materialArchivesVerified"] = len(report["materialArchives"])
+    for archive in report["archives"]:
+        data = saved_file(archive["path"]).read_bytes()
+        require(len(data) == archive["bytes"] > sum(archive["mipBytes"]),
+                "Texture archive size differs")
+        require(hashlib.sha256(data).hexdigest() == archive["sha256"], "Texture archive does not match scenario")
+        require(archive["gpuRoundTripExact"] and archive["rejectedInvalidLegacyFormat"] in (None, True),
+                "Texture reconstruction failed")
+    require(sum(a["rejectedInvalidLegacyFormat"] is True for a in report["archives"]) >= 2,
+            "Missing malformed texture format controls")
+    controls = report["compressionControls"]
+    require({c["format"] for c in controls} == {"DXT1", "DXT5"} and
+            all(c["uploadedReferenceMatchesGpu"] and c["mipmapCount"] == 5 for c in controls),
+            "Compressed texture byte controls failed")
+elif kind == "scissor":
+    for key in ("simulationStayedPaused", "unseenPicturesUnchanged", "observedPictureChanged",
+                "restoredPicturesMatch", "allOutsideCoverage", "destroyed"):
+        require(report[key], key + " failed")
+    require(report["captureCalls"] == 1 and report["initialTick"] == report["finalTick"], "Simulation changed")
+    owned = report["ownedTextureStates"]
+    require(len(owned) == 2, "Missing observed pictures")
+    identities = []
+    for picture in owned:
+        bindings = [b for b in picture["bindings"] if b.get("id") is not None]
+        require(bindings and all(b["texture"].startswith("TotalFog_Observed_") and not b["isReadable"]
+                                for b in bindings), "Missing owned picture resources")
+        identities.append({b["id"] for b in bindings})
+    require(not identities[0].intersection(identities[1]), "Pictures share borrowed resources")
+    for left, right in (("native", "queued-whole"), ("BeforeForwardAlpha-whole", "BeforeForwardAlpha-cells"),
+                        ("AfterForwardAlpha-whole", "AfterForwardAlpha-cells"), ("queued-whole", "split-whole"),
+                        ("split-whole", "split-cells"), ("split-cells", "split-regions"),
+                        ("split-unseen-original", "split-unseen-original-regions"),
+                        ("split-mixed", "split-mixed-regions")):
+        compare(left, right)
+    for phase, expected in (("split-cells", 162), ("split-regions", 2), ("split-mixed", 162), ("split-mixed-regions", 10)):
+        command = records[phase]["commands"]
+        require(command["early"]["draws"] + command["late"]["draws"] == expected, "Unexpected draw count: " + phase)
+    require(len(records["split-regions"]["commands"]["regions"]) == 1 and
+            len(records["split-mixed-regions"]["commands"]["regions"]) == 5, "Unexpected region count")
+    change = compare("split-unseen-original-regions", "split-mixed-regions", equal=False)
+    bounds = change["bounds"]
+    absolute = (bounds[0] + box[0], bounds[1] + box[1], bounds[2] + box[0], bounds[3] + box[1])
+    rect = report["rootScissor"]
+    require(absolute[0] >= rect["XMin"] and absolute[1] >= h - rect["YMax"] and
+            absolute[2] <= rect["XMax"] and absolute[3] <= h - rect["YMin"], "Refresh changed pixels outside its cell")
+elif kind == "scene":
+    require(report["simulationStayedPaused"] and report["ordinaryTerrainLightingFogWeather"] and
+            report["MeshCount"] > 0 and report["MaterialCount"] > 0 and report["TextureCount"] > 0 and
+            report["suppressedNativeDraws"] > 0 and report["replayDraws"] > 0, "Scene replacement did not execute")
+    compare("native", "native-repeat")
+    compare("native", "replay")
+elif kind == "lighting":
+    require(all(report[key] for key in ("simulationStayedPaused", "hiddenOwnersUnchanged",
+                "onlyRevisitedCellChangedOwner", "idleCapturesUnchanged", "idleCommandsUnchanged")) and
+            report["observationCells"] == 81 and report["idleFrames"] == 100 and
+            report["nativeChangedVertices"] > 0 and report["nativeRoofChangedVertices"] > 0 and report["glowBefore"] != report["glowAfter"],
+            "Installed lighting ownership or native glow control failed")
+    pose = report["poses"][0]
+    require(all(item["projection"] == pose["projection"] and item["view"] == pose["view"]
+                for item in report["poses"]), "Lighting comparison camera changed")
+    compare("visible", "visible-native")
+    if "ambientOwnersUnchanged" in report:
+        require(report["ambientOwnersUnchanged"] and report["ambientCapturesUnchanged"] and report["ambientCommandsUnchanged"],
+                "Ambient sky change recaptured lighting or rebuilt commands")
+        compare("visible", "sky-changed", equal=False)
+        compare("sky-changed", "sky-changed-native")
+        compare("visible", "sky-restored")
+    compare("hidden", "hidden-lit")
+    compare("hidden", "hidden-roof-changed")
+    compare("hidden-native", "hidden-lit-native", equal=False)
+    compare("hidden-lit-native", "hidden-roof-native", equal=False)
+    change = compare("hidden-roof-changed", "root-revisited", equal=False)
+    bounds = change["bounds"]
+    absolute = (bounds[0] + box[0], bounds[1] + box[1], bounds[2] + box[0], bounds[3] + box[1])
+    rect = report["rootClip"]
+    require(absolute[0] >= rect["XMin"] and absolute[1] >= h - rect["YMax"] and
+            absolute[2] <= rect["XMax"] and absolute[3] <= h - rect["YMin"], "Lighting refresh changed unseen cells")
+elif kind == "gameplay":
+    require(all(report[key] for key in ("simulationStayedPaused", "hiddenOwnersUnchanged",
+                "onlyRevisitedCellChangedOwner", "treeDestroyed", "idleCapturesUnchanged", "idleCommandsUnchanged")) and
+            report["idleFrames"] == 100 and report["observationCells"] == 81 and
+            report["CaptureCount"] > 0 and report["OwnerCount"] > 0 and report["DrawCount"] > 0,
+            "Installed gameplay ownership failed")
+    compare("hidden", "hidden-native")
+    compare("hidden", "hidden-changed")
+    compare("hidden", "hidden-destroyed")
+    compare("visible", "hidden", equal=False)
+    change = compare("hidden-destroyed", "root-revisited", equal=False)
+    bounds = change["bounds"]
+    absolute = (bounds[0] + box[0], bounds[1] + box[1], bounds[2] + box[0], bounds[3] + box[1])
+    rect = report["rootClip"]
+    require(absolute[0] >= rect["XMin"] and absolute[1] >= h - rect["YMax"] and
+            absolute[2] <= rect["XMax"] and absolute[3] <= h - rect["YMin"], "Gameplay refresh changed unseen cells")
+else:
+    require(prepared["treeDestroyed"] and prepared["simulationStayedPaused"] and prepared["retainedCells"] == 81 and
+            report["destroyedOakAbsent"] and report["onlyRevisitedCellChangedOwner"] and report["simulationStayedPaused"] and
+            report["retainedCells"] == 81 and report["RestoredOwnerCount"] == prepared["RecordCount"] and
+            report["RestoredCellCount"] >= 81, "Saved gameplay ownership failed")
+    if "terrainMemory" in prepared:
+        terrain = prepared["terrainMemory"]
+        expected_layers = {"ThingsGeneral", "Terrain"}
+        if "lightingMemory" in prepared:
+            expected_layers.add("Lighting")
+            light = prepared["lightingMemory"]
+            restored_light = report["lightingMemory"]
+            require(light["torchDestroyed"] and light["retainedLightingCells"] == 81 and
+                    light["nativeChangedLightingVertices"] > 0 and light["hiddenLightingOwnersUnchanged"] and
+                    restored_light["torchAbsent"] and restored_light["roofsAbsent"] and
+                    restored_light["retainedLightingCells"] == 81 and restored_light["onlyRevisitedLightingCellChangedOwner"],
+                    "Lighting observation or save ownership failed")
+            require(report["RestoredCellCount"] == sum(item["cells"] for item in prepared["layers"]),
+                    "The game did not restore every saved cell assignment")
+        if "maskMemory" in prepared:
+            expected_layers.add("IndoorMask")
+            mask = prepared["maskMemory"]
+            restored_mask = report["maskMemory"]
+            require(mask["retainedMaskCells"] == 81 and mask["hiddenMaskOwnersUnchanged"] and
+                    restored_mask["retainedMaskCells"] == 81 and restored_mask["onlyRevisitedMaskCellChangedOwner"],
+                    "Roof mask observation or save ownership failed")
+            pose = prepared["poses"][0]
+            require(all(item[key] == pose[key] for item in prepared["poses"] for key in ("projection", "view", "sky")),
+                    "Save preparation camera or sky changed")
+        require(terrain["originalTerrain"] != terrain["changedTerrain"] and terrain["initialKnownTerrainCells"] == 81 and
+                terrain["unknownTerrainCellRemainsUnknown"] and terrain["hiddenTerrainOwnersUnchanged"] and
+                report["terrainMemory"]["changedTerrainPresent"] and report["terrainMemory"]["retainedTerrainCells"] == 81 and
+                report["terrainMemory"]["onlyRevisitedTerrainCellChangedOwner"] and
+                {item["layer"] for item in prepared["layers"] if item["owners"] > 0} == expected_layers,
+                "Terrain observation or save ownership failed")
+        compare("visible", "visible-native")
+        compare("hidden-before-changes", "before-save")
+        compare("before-save", "before-save-background", equal=False)
+    comparison_preparation = prepared
+    if (root / "section-save-reference-live.json").exists():
+        import xml.etree.ElementTree as ET
+        reference = json.loads((root / "section-save-reference-live.json").read_text())["result"]["structuredContent"]
+        require(reference["operation"]["Success"] and not reference["operation"]["Warnings"] and
+                reference["referenceAfterSave"] and not report["referenceAfterSave"] and reference["simulationStayedPaused"],
+                "The native load-tick reference did not complete")
+        reference_log = (root / "section-save-reference-player.log").read_text(errors="replace")
+        require(not any(word in line.lower() for line in reference_log.splitlines()
+                        for word in ("error", "exception", "warning")), "Load-tick reference has runtime diagnostics")
+        saved_tick = int(ET.parse(saved_file(saved["path"])).getroot().find("./game/tickManager/ticksGame").text)
+        environment = reference["isolatedPicture"]["environment"]
+        require(reference["savedTick"] == saved_tick and environment["ticksGame"] == saved_tick + 1 and
+                environment["PauseOnLoad"] and environment == report["isolatedPicture"]["environment"],
+                "Save comparison uses different simulation time or native rendering inputs")
+        require(reference["clip"] == report["clip"] and reference["pixelHeight"] == report["pixelHeight"],
+                "Load-tick reference camera differs")
+        if reference.get("windControl", {}).get("enabled") or report.get("windControl", {}).get("enabled"):
+            for attempt in (reference, report):
+                control = attempt.get("windControl", {})
+                require(control.get("enabled") and control.get("materials", 0) > 0 and
+                        control.get("allNativeValuesZero") and control.get("restoredOriginalValues"),
+                        "Native wind comparison lacks a verified control or restoration")
+            metrics["nativeWindControl"] = {"referenceMaterials": reference["windControl"]["materials"],
+                "loadedMaterials": report["windControl"]["materials"], "restoredOriginalValues": True}
+        require(reference["savedResources"]["textures"] == report["savedResources"]["textures"],
+                "Restored GPU texture bytes or sampler metadata differ from the reference")
+        if "currentlyVisible" in reference["savedResources"] or "currentlyVisible" in report["savedResources"]:
+            from observed_archive import compare_hidden_observations
+            metrics["hiddenArchive"] = compare_hidden_observations(
+                saved_file(reference["savedResources"]["path"]), reference["savedResources"],
+                saved_file(report["savedResources"]["path"]), report["savedResources"])
+        reference_records = {item["phase"]: item for item in reference["evidence"]}
+        for before, after in (("before-save", "after-load"), ("before-save-background", "after-load-background"),
+                              ("before-save-picture", "after-load-picture"), ("before-save-empty", "after-load-empty")):
+            records[before] = reference_records[after]
+        comparison_preparation = reference
+        metrics["nativeLoadTick"] = {"savedTick": saved_tick, "comparisonTick": saved_tick + 1}
+    if kind == "save-picture":
+        scope = json.loads((root / "section-save-picture-proof.json").read_text())
+        require(scope == {"scope": "installed remembered drawings with ordinary map and weather excluded"},
+                "Unknown saved-picture comparison scope")
+        if "projection" in comparison_preparation["isolatedPicture"]:
+            for key in ("projection", "view"):
+                require(comparison_preparation["isolatedPicture"][key] == report["isolatedPicture"][key] == report["isolatedRevisitedPicture"][key],
+                        "Saved-picture camera changed: " + key)
+        for proof in (comparison_preparation["isolatedPicture"], report["isolatedPicture"], report["isolatedRevisitedPicture"]):
+            require(proof["attachedCommands"] > 0 and proof["rememberedDraws"] > 0 and
+                    proof["excludedMapDraws"] > 0 and proof["excludedWeatherDraws"] > 0,
+                    "Saved-picture isolation did not execute")
+            if proof["includesEmptyControl"]:
+                require(0 <= proof["detachedCommands"] < proof["attachedCommands"], "Empty control did not detach memory")
+        require(prepared["isolatedPicture"]["includesEmptyControl"] and report["isolatedPicture"]["includesEmptyControl"],
+                "Missing saved-picture positive controls")
+        compare("before-save-empty", "after-load-empty")
+        compare("before-save-picture", "after-load-picture")
+        compare("before-save-empty", "before-save-picture", equal=False)
+        compare("after-load-empty", "after-load-picture", equal=False)
+        change = compare("after-load-picture", "after-load-picture-revisited", equal=False)
+    else:
+        compare("before-save-background", "after-load-background")
+        compare("before-save", "after-load")
+        change = compare("after-load", "after-load-revisited", equal=False)
+    bounds = change["bounds"]
+    absolute = (bounds[0] + box[0], bounds[1] + box[1], bounds[2] + box[0], bounds[3] + box[1])
+    rect = report["rootClip"]
+    require(absolute[0] >= rect["XMin"] and absolute[1] >= h - rect["YMax"] and
+            absolute[2] <= rect["XMax"] and absolute[3] <= h - rect["YMin"], "Loaded refresh changed unseen cells")
+
+(root / "verification.json").write_text(json.dumps(metrics, indent=2) + "\n")

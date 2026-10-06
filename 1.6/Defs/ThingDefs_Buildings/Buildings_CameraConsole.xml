@@ -4,7 +4,7 @@
     <defName>CameraConsole</defName>
     <label>Central camera console</label>
     <description>A central hub for monitoring camera, allowing them to actually deliver vision</description>
-    <thingClass>RimWorldRealFoW.Building_CameraConsole</thingClass>
+    <thingClass>TotalFog.Building_VisionConsole</thingClass>
     <building>
       <joyKind>Television</joyKind>
       <watchBuildingStandDistanceRange>
@@ -73,14 +73,14 @@
   </ThingDef>
   <JobDef>
     <defName>SurveilCameraConsole</defName>
-    <driverClass>RimWorldRealFoW.JobDriver_SurveilCameraConsole</driverClass>
+    <driverClass>TotalFog.JobDriver_MonitorVision</driverClass>
     <reportString>surveil TargetA.</reportString>
     <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
   </JobDef>
   <WorkGiverDef>
     <defName>SurveilCameraConsole</defName>
     <label>surveil camera Console</label>
-    <giverClass>RimWorldRealFoW.WorkGiver_SurveilCameraConsole</giverClass>
+    <giverClass>TotalFog.WorkGiver_MonitorVision</giverClass>
     <workType>BasicWorker</workType>
     <priorityInType>150</priorityInType>
     <verb>operate</verb>

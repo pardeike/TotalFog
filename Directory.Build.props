@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <ModName>Total Fog</ModName>
+    <ModFileName>TotalFog</ModFileName>
+    <PackageId>brrainz.totalfog</PackageId>
+    <ModVersion>0.1.0</ModVersion>
+    <Version>$(ModVersion)</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+</Project>

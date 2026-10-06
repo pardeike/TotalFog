@@ -30,4 +30,9 @@
   <fogFadeSpeedSetting_Medium>보통</fogFadeSpeedSetting_Medium>
   <fogFadeSpeedSetting_Fast>빠름</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>비활성화</fogFadeSpeedSetting_Disabled>
+  <hideEventNegative>관찰하지 못한 부정적 사건 알림 삭제</hideEventNegative>
+  <hideEventNeutral>관찰하지 못한 중립적 사건 알림 삭제</hideEventNeutral>
+  <hideEventPositive>관찰하지 못한 긍정적 사건 알림 삭제</hideEventPositive>
+  <hideThreatBig>관찰하지 못한 큰 위협 알림 삭제</hideThreatBig>
+  <hideThreatSmall>관찰하지 못한 작은 위협 알림 삭제</hideThreatSmall>
 </LanguageData>

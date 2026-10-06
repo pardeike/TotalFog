@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>TotalFog.Tests</PackageId>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Core/TotalFog.Core.csproj" />
+    <Compile Include="../TotalFog/Compatibility/LegacySaveTypes.cs" Link="Production/LegacySaveTypes.cs" />
+    <Compile Include="../TotalFog/Compatibility/GravshipVisibility.cs" Link="Production/GravshipVisibility.cs" />
+    <Compile Include="../TotalFog/Compatibility/CombatExtendedIntegration.cs" Link="Production/CombatExtendedIntegration.cs" />
+    <Compile Include="../TotalFog/Detours/Verb.cs" Link="Production/Verb.cs" />
+    <Compile Include="../TotalFog/CompPresentationState.cs" Link="Production/CompPresentationState.cs" />
+    <Compile Include="../TotalFog/CompVisibility.cs" Link="Production/CompVisibility.cs" />
+    <Compile Include="../TotalFog/CompCellRegistration.cs" Link="Production/CompCellRegistration.cs" />
+    <Compile Include="../TotalFog/Presentation/ThingVisibility.cs" Link="Production/ThingVisibility.cs" />
+    <Compile Include="../TotalFog/Visibility.cs" Link="Production/Visibility.cs" />
+    <Compile Include="../TotalFog/Notifications/NotificationVisibility.cs" Link="Production/NotificationVisibility.cs" />
+    <Compile Include="../TotalFog/Notifications/SilentRaidPolicy.cs" Link="Production/SilentRaidPolicy.cs" />
+    <Compile Include="../TotalFog/Presentation/DynamicVisibility.cs" Link="Production/DynamicVisibility.cs" />
+    <Compile Include="../TotalFog/Presentation/CustomRenderVisibility.cs" Link="Production/CustomRenderVisibility.cs" />
+    <Compile Include="../TotalFog/Presentation/CustomInspectionCell.cs" Link="Production/CustomInspectionCell.cs" />
+    <Compile Include="../TotalFog/Presentation/InterfaceVisibility.cs" Link="Production/InterfaceVisibility.cs" />
+    <Compile Include="../TotalFog/FogSubcomponent.cs" Link="Production/FogSubcomponent.cs" />
+    <Compile Include="../TotalFog/FogMapUtility.cs" Link="Production/FogMapUtility.cs" />
+    <Compile Include="../TotalFog/Audio/SustainerVisibility.cs" Link="Production/SustainerVisibility.cs" />
+    <Compile Include="../TotalFog/Presentation/DiscoveryOverlays.cs" Link="Production/DiscoveryOverlays.cs" />
+    <Compile Include="../TotalFog/Presentation/CellVisibility.cs" Link="Production/CellVisibility.cs" />
+    <Compile Include="../TotalFog/Presentation/FleckVisibility.cs" Link="Production/FleckVisibility.cs" />
+    <Compile Include="../TotalFog/Detours/EnvironmentStatsDrawer.cs" Link="Production/EnvironmentStatsDrawer.cs" />
+    <Compile Include="../TotalFog/Detours/BeautyUtility.cs" Link="Production/BeautyUtility.cs" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

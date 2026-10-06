@@ -243,3 +243,7 @@ build_output.txt
 # SonarQube
 .sonarlint
 .sonarqube
+# Total Fog local verification
+/artifacts/
+/dist/
+/.runs/

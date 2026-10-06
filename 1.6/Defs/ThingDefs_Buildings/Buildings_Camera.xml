@@ -8,7 +8,7 @@
   <ThingDef Name="BaseCamera" ParentName="BaseVisionStuff" Abstract="True">
     <tickerType>Normal</tickerType>
     <designatorDropdown>SurveillanceCamera</designatorDropdown>
-    <thingClass>RimWorldRealFoW.Building_SurveillanceCamera</thingClass>
+    <thingClass>TotalFog.Building_VisionCamera</thingClass>
     <minifiedDef>MinifiedThing</minifiedDef>
     <passability>Standable</passability>
     <rotatable>false</rotatable>
@@ -65,7 +65,7 @@
     </costList>
     <designationCategory>Security</designationCategory>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>3</viewRadius>
       </li>
     </comps>
@@ -106,7 +106,7 @@
     </costList>
     <designationCategory>Security</designationCategory>
     <comps>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>5</viewRadius>
       </li>
     </comps>
@@ -151,7 +151,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>50</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>24</viewRadius>
         <needManned>true</needManned>
       </li>
@@ -204,7 +204,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>70</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>24</viewRadius>
         <needManned>True</needManned>
       </li>
@@ -253,7 +253,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>70</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>24</viewRadius>
         <needManned>True</needManned>
       </li>
@@ -274,7 +274,7 @@
     <clearBuildingArea>false</clearBuildingArea>
     <passability>Standable</passability>
     <placeWorkers>
-      <li>RimWorldRealFoW.PlaceWorker_UnderRoof</li>
+      <li>TotalFog.PlaceWorker_VisionRoof</li>
     </placeWorkers>
     <graphicData>
       <texPath>Things/Buildings/SurveillanceCamera_UnderRoof</texPath>
@@ -298,7 +298,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>50</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>25</viewRadius>
         <needManned>true</needManned>
       </li>
@@ -339,7 +339,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>75</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>35</viewRadius>
         <needManned>True</needManned>
       </li>
@@ -381,7 +381,7 @@
         <basePowerConsumption>-5</basePowerConsumption>
         <transmitsPower>true</transmitsPower>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>40</viewRadius>
         <needManned>True</needManned>
       </li>
@@ -421,7 +421,7 @@
         <compClass>CompPowerTrader</compClass>
         <basePowerConsumption>125</basePowerConsumption>
       </li>
-      <li Class="RimWorldRealFoW.CompProperties_ProvideVision">
+      <li Class="TotalFog.CompProperties_BuildingSight">
         <viewRadius>65</viewRadius>
         <needManned>true</needManned>
       </li>

@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+"""Measure an unchanged saved fixture in three fresh native game processes."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+GAME_ID = os.environ.get('TOTALFOG_GAME_ID', 'total-fog-16')
+PROFILE_DATA = {'total-fog-16': 'UserData', 'total-fog-ce-16': 'CEUserData',
+                'total-fog-zombieland-16': 'ZombielandUserData'}
+if GAME_ID not in PROFILE_DATA:
+    raise ValueError('Use a configured Total Fog test profile for TOTALFOG_GAME_ID')
+DATA = ROOT / 'artifacts' / PROFILE_DATA[GAME_ID]
+label, save_name, *rest = sys.argv[1:]
+if not re.fullmatch(r'[a-z0-9-]+', label):
+    raise ValueError('Use a lowercase benchmark label with letters, digits and hyphens')
+speed = rest[0] if rest else 'Normal'
+if speed not in {'Normal', 'Fast', 'Superfast', 'Ultrafast'}:
+    raise ValueError('Use Normal, Fast, Superfast or Ultrafast')
+force_option = os.environ.get('TOTALFOG_FORCE_SPEED', '0')
+if force_option not in {'0', '1'}:
+    raise ValueError('Use 0 or 1 for TOTALFOG_FORCE_SPEED')
+force_speed = force_option == '1'
+overlay_option = os.environ.get('TOTALFOG_CONTAMINATION_OVERLAY', '0')
+if overlay_option not in {'0', '1'}:
+    raise ValueError('Use 0 or 1 for TOTALFOG_CONTAMINATION_OVERLAY')
+contamination_overlay = overlay_option == '1'
+if contamination_overlay and GAME_ID != 'total-fog-zombieland-16':
+    raise ValueError('The contamination overlay requires the Zombieland profile')
+sample_count = int(rest[1]) if len(rest) > 1 else 3
+warmup_ticks = int(os.environ.get('TOTALFOG_WARMUP_TICKS', '0'))
+profile_zombies = os.environ.get('TOTALFOG_PROFILE_ZOMBIES', '0') == '1'
+if not 0 <= warmup_ticks <= 600:
+    raise ValueError('Use 0..600 native ticks for TOTALFOG_WARMUP_TICKS')
+if profile_zombies and GAME_ID != 'total-fog-zombieland-16':
+    raise ValueError('Zombie work accounting requires the Zombieland profile')
+if sample_count not in {1, 3}:
+    raise ValueError('Use one or three native samples')
+fixture = DATA / 'Saves' / (save_name + '.rws')
+before = hashlib.sha256(fixture.read_bytes()).hexdigest()
+process = subprocess.Popen(
+    ['/Users/ap/.codex/mcp-servers/gabs/gabs', 'server', 'stdio'],
+    stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+request_id = 0
+game_started = False
+
+def check_zombieland_log(path):
+    if not path.is_file():
+        raise RuntimeError('Native Player.log is missing: ' + str(path))
+    summary = subprocess.check_output(
+        [str(ROOT.parent / 'Zombieland/scripts/summarize-rimworld-log.sh'), str(path)], text=True)
+    if summary.strip():
+        raise RuntimeError('Native runtime errors; inspect ' + str(path))
+
+def call(method, params):
+    global request_id
+    request_id += 1
+    process.stdin.write(json.dumps({'jsonrpc': '2.0', 'id': request_id,
+                                   'method': method, 'params': params}) + '\n')
+    process.stdin.flush()
+    while True:
+        line = process.stdout.readline()
+        if not line:
+            raise RuntimeError('GABS ended before replying')
+        result = json.loads(line)
+        if result.get('id') != request_id:
+            continue
+        if 'error' in result:
+            raise RuntimeError(result['error'])
+        result = result['result']
+        if result.get('isError'):
+            raise RuntimeError(result.get('content'))
+        return result
+
+def tool(name, arguments):
+    result = call('tools/call', {'name': name, 'arguments': arguments})
+    value = result.get('structuredContent')
+    if value is None:
+        raise RuntimeError('Tool did not return structured evidence: ' + name)
+    return value
+
+def stop_game():
+    global game_started
+    tool('games_stop', {'gameId': GAME_ID})
+    status = tool('games_status', {'gameId': GAME_ID})
+    if status['status'] not in {'stopped', 'stale-runtime-cleaned'}:
+        raise RuntimeError('RimWorld did not terminate after the sample')
+    game_started = False
+
+try:
+    call('initialize', {'protocolVersion': '2024-11-05', 'capabilities': {},
+                        'clientInfo': {'name': 'Total Fog runtime benchmark', 'version': '1'}})
+    process.stdin.write(json.dumps({'jsonrpc': '2.0', 'method': 'notifications/initialized'}) + '\n')
+    process.stdin.flush()
+    report_path = ROOT / 'artifacts' / ('runtime-' + label + '.json')
+    report = {'gameId': GAME_ID, 'save': save_name, 'saveSha256': before, 'speed': speed,
+              'forceRequestedSpeed': force_speed, 'ultraSpeedBoost': force_speed,
+              'warmupTicks': warmup_ticks, 'profileZombieWork': profile_zombies,
+              'contaminationOverlay': contamination_overlay,
+              'freshProcessPerSample': True, 'complete': False, 'samples': []}
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
+    for index in range(sample_count):
+        # GABS verifies termination; do not reload maps while old pathing jobs may
+        # still be completing. A blocked attention stops the run for review.
+        status = tool('games_status', {'gameId': GAME_ID})
+        if status['status'] not in {'stopped', 'stale-runtime-cleaned'}:
+            tool('games_connect', {'gameId': GAME_ID, 'forceTakeover': True})
+            tool('games_stop', {'gameId': GAME_ID})
+        # Even partial startup must be stopped before the caller restores a DLL.
+        game_started = True
+        started = tool('games_start', {'gameId': GAME_ID, 'timeout': 120})
+        if not started.get('gabpConnected'):
+            tool('games_connect', {'gameId': GAME_ID, 'forceTakeover': True})
+        discovery = tool('games_tool_names', {'gameId': GAME_ID, 'query': 'runtime_performance'})
+        matches = discovery['tools']
+        if len(matches) != 1:
+            raise RuntimeError('The performance companion must be installed and discoverable')
+        dpa = tool('games_call_tool', {'tool': GAME_ID + '_rimworld_dpa_status',
+            'arguments': {'includePresets': False}})['dpa']
+        if dpa['currentlyProfiling'] or dpa['isPatched']:
+            raise RuntimeError('Stop and clean up DPA before measuring uninstrumented playback')
+        instrumentation = {k: dpa[k] for k in ['available', 'packageActive', 'currentlyProfiling', 'isPatched']}
+        instrumentation['activePackageIds'] = sorted(p.lower() for p in dpa['activePackageIds'])
+        if report.get('instrumentation', instrumentation) != instrumentation:
+            raise RuntimeError('Profiling state or active mods changed between samples')
+        report['instrumentation'] = instrumentation
+        try:
+            load = tool('games_call_tool', {
+                'tool': GAME_ID + '_rimworld_load_game_ready', 'timeout': 180,
+                'arguments': {'saveName': save_name, 'readiness': 'visual',
+                              'pauseIfNeeded': True, 'ignoreModCompatibility': True}})
+            if not load.get('success'):
+                raise RuntimeError('Comparison save did not become ready')
+            # The bridge enables its private ultrafast debug default on startup.
+            # Explicitly declare both modes so the ordinary player comparison
+            # cannot silently inherit the debug boost even without forced speed.
+            speed_options = tool('games_call_tool', {
+                'tool': GAME_ID + '_rimworld_set_time_speed',
+                'arguments': {'speed': 'Paused', 'ultraSpeedBoost': force_speed}})
+            if not speed_options.get('success') or speed_options.get('currentUltraSpeedBoost') != force_speed:
+                raise RuntimeError('The bridge did not establish the declared player/stress speed mode')
+            if contamination_overlay:
+                framed = tool('games_call_tool', {
+                    'tool': GAME_ID + '_rimworld_frame_cell_rect',
+                    'arguments': {'x': 40, 'z': 40, 'width': 159, 'height': 99, 'rootSize': 80}})
+                if not framed.get('success'):
+                    raise RuntimeError('The contamination comparison camera could not be established')
+            sample = tool('games_call_tool', {
+                'tool': matches[0]['name'], 'timeout': 60,
+                'arguments': {'durationMs': 15000, 'speed': speed, 'forceRequestedSpeed': force_speed,
+                              'warmupTicks': warmup_ticks, 'profileZombieWork': profile_zombies,
+                              'contaminationOverlay': contamination_overlay}})
+        finally:
+            player_log = DATA / 'Logs/Player.log'
+            if player_log.exists():
+                shutil.copy2(player_log, ROOT / 'artifacts' / f'runtime-{label}-{index + 1}.log')
+        # Retain the native result even when a later evidence guard rejects it.
+        report['pendingSample'] = {'loadMs': load['operation']['DurationMs'], 'measurement': sample}
+        report_path.write_text(json.dumps(report, indent=2) + '\n')
+        if GAME_ID == 'total-fog-zombieland-16':
+            check_zombieland_log(ROOT / 'artifacts' / f'runtime-{label}-{index + 1}.log')
+        if not sample.get('success'):
+            report['failedSample'] = sample
+            report_path.write_text(json.dumps(report, indent=2) + '\n')
+            raise RuntimeError('Performance sample failed; inspect ' + str(report_path))
+        playback = sample['playback']
+        if playback.get('forceRequestedSpeed') != force_speed or playback.get('finalUltraSpeedBoost') != force_speed:
+            raise RuntimeError('Playback did not retain the declared player/stress speed mode')
+        speeds = sample.get('timeSpeedSamples')
+        if not speeds or len(speeds) != 1 or speeds[0]['speed'] != speed or speeds[0]['ticks'] != sample['tickCpuMs']['count']:
+            raise RuntimeError('Actual native ticks did not all use the requested time-speed selection')
+        rates = sample.get('tickRateSamples')
+        if not rates or sum(row['ticks'] for row in rates) != sample['tickCpuMs']['count']:
+            raise RuntimeError('The sample lacks native tick-rate accounting')
+        if not force_speed and any(row['multiplier'] > 15 for row in rates):
+            raise RuntimeError('Player-speed playback used a debug tick-rate multiplier')
+        environment = sample['environment']
+        if environment.get('contaminationOverlay') != contamination_overlay or (contamination_overlay and
+                environment.get('contaminationInput', {}).get('count') != 4000):
+            raise RuntimeError('The companion did not establish the declared contamination input and overlay')
+        warmup = sample.get('warmup', {})
+        if warmup.get('requestedTicks') != warmup_ticks or warmup.get('endTick', 0) - warmup.get('startTick', 0) != warmup_ticks:
+            raise RuntimeError('The companion did not execute the declared native tick warmup')
+        if sample.get('profileZombieWork') != profile_zombies:
+            raise RuntimeError('The companion did not use the declared zombie telemetry mode')
+        if 'isFocused' not in environment or 'FocusLost' not in sample:
+            raise RuntimeError('Install the current performance companion to verify game focus')
+        if not environment['isFocused'] or sample['FocusLost']:
+            raise RuntimeError('RimWorld must remain focused during every comparison sample')
+        if report['samples'] and report['samples'][0]['measurement']['environment'] != environment:
+            raise RuntimeError('Map, rendering environment or effective settings changed between samples')
+        settings = DATA / 'Config' / ('Mod_TotalFog_' + environment['starterTypeName'] + '.xml')
+        settings_hash = hashlib.sha256(settings.read_bytes()).hexdigest() if settings.exists() else None
+        if report.get('settingsSha256', settings_hash) != settings_hash:
+            raise RuntimeError('Settings changed between samples')
+        report['settingsSha256'] = settings_hash
+        report['settingsPath'] = str(settings)
+        binary_hash = hashlib.sha256(Path(environment['Location']).read_bytes()).hexdigest()
+        if report.get('mainSha256', binary_hash) != binary_hash:
+            raise RuntimeError('The installed binary changed between samples')
+        report['mainSha256'] = binary_hash
+        if 'zoom' not in environment.get('camera', {}) or 'engineMvid' not in environment:
+            raise RuntimeError('Install the current companion to record camera zoom and engine identity')
+        zombie = environment.get('zombieAssembly')
+        zombie_identity = None if zombie is None else {
+            'mainSha256': hashlib.sha256(Path(zombie['Location']).read_bytes()).hexdigest(),
+            'mvid': zombie['mvid'], 'scalarSettings': zombie['scalarSettings'],
+            'configSha256': {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                             for path in sorted((DATA / 'Config').glob('*Zombieland*'))}}
+        if report.get('zombielandIdentity', zombie_identity) != zombie_identity:
+            raise RuntimeError('Zombieland bytes or settings changed between samples')
+        report['zombielandIdentity'] = zombie_identity
+        if profile_zombies:
+            work = sample.get('zombieWork')
+            if not work or not work['success'] or not work['scheduler']['selectedEqualsActuallyTicked']:
+                raise RuntimeError('The sample lacks complete actual zombie work accounting')
+            if work['timing']['gameTicks'] != sample['tickCpuMs']['count']:
+                raise RuntimeError('Zombie telemetry and whole-tick timing cover different native ticks')
+        report['samples'].append({'loadMs': load['operation']['DurationMs'], 'measurement': sample})
+        del report['pendingSample']
+        report_path.write_text(json.dumps(report, indent=2) + '\n')
+        # Ending the MCP subprocess only requests game shutdown asynchronously.
+        # Explicitly await GABS termination before another variant can deploy.
+        stop_game()
+    if hashlib.sha256(fixture.read_bytes()).hexdigest() != before:
+        raise RuntimeError('The comparison fixture changed')
+    report['complete'] = True
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
+finally:
+    primary_error = sys.exc_info()[1]
+    try:
+        if game_started:
+            try:
+                stop_game()
+            except Exception as cleanup_error:
+                if primary_error is None:
+                    raise
+                print('Game cleanup also failed: ' + str(cleanup_error), file=sys.stderr)
+    finally:
+        process.terminate()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait()

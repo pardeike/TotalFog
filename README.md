@@ -1,100 +1,55 @@
-# [(NWN) Real Fog of War (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=3391128917)
-
-![Image](https://img.litet.net/logos/Info.png)
+# Total Fog
 
-Update of Luca De Petrillos mod https://steamcommunity.com/sharedfiles/filedetails/?id=2560931731
+Development source for a preliminary RimWorld 1.6 mod. Development and
+compatibility testing are ongoing. Build from source before installing this
+checkout; tracked assemblies are previous snapshots. Separately delivered test
+ZIPs contain their validated assemblies. See [PRELIMINARY.md](PRELIMINARY.md) for
+installation and testing notes.
 
-- Reported to be compatible with CAI 5000 - Advanced AI + Fog Of War as long as the fog of war in that mod is turned off
- - Wall and ceiling cameras can now be placed over other items, using the same mechanic as wall-mounted lights. Thanks to ODevil who made the original patch!
-- Added option to show threat letters when enemies are spotted instead of just hiding them.
-- Added option to not show fog of war during gravship takeoff and landing
-- Added option to let trees block vision as well. Only trees with 50%+ growth affects vision. NOTE: this will require even more of the CPU
-- Added support for [Dubs Mint Minimap](https://steamcommunity.com/sharedfiles/filedetails/?id=1662119905)
+Source and issues: [pardeike/TotalFog](https://github.com/pardeike/TotalFog).
 
-![Image](https://img.litet.net/logos/Notice.png)
-	
-![Image](https://img.litet.net/logos/OriginalDescription.png)
+Fog of war and shared field of view for RimWorld. An independent continuation of
+Real Fog of War, based on Mlie's NWN continuation. See [NOTICE.md](NOTICE.md) for
+attribution and [LICENSE.md](LICENSE.md) for Apache 2.0 terms.
 
-#  Original feature 
+Enable Harmony and Total Fog. Disable other Real Fog of War versions.
 
+The active runtime uses `TotalFog` namespaces and independently named types.
+Specific original save types are read through the engine compatibility boundary;
+Total Fog does not export classes in the original mod's namespace.
 
+## Development
 
-  - The map is initially unrevealed and must be explored.
-  - Both players and AI's humans, animals, mechanoids, and some objects have and are affected by a Field of View, shared among faction components.
-  - Animals participate in Faction Fog of War only if trained for release and with a master set.
-  - Only things revealed by a Field of View can be attacked by ranged weapons; Mortars and similar weapons can attack unrevealed and unseen places.
-  - Field of View of humans, animals, and mechanoids is adjusted to sight attribute and are affected by darkness (mechanoids are immune) and weather.
-  - Bionic eyes reduce the darkness debuff (one by half, two completely).
-  - Standing and attacking humans, animals and mechanoids have a slightly increased Field of View as they "peek" in nearby spaces.
-  - When attacking and not moving, the sight range is adjusted to weapon range over time (time-based on weapon warm-up time and range).
-  - Sleeping humans and animals have a base Field of View reduced to 20%
-  - At rough and lower difficulties, player's automatic turrets extend the Field of View in their target area.
-  - Added surveillance cameras, to monitor an area (research required), and watchtowers, to increase view range when colonists stand on them.
-  - Works with existing saves, but the map will be unrevealed.
+Run `./scripts/mod build`, `./scripts/mod deploy`, or `./scripts/mod package`.
+Run `./scripts/mod benchmark` for the retained pure-caster comparison.
+Run `./scripts/mod runtime-benchmark <label> <save name> [Normal|Ultrafast]`
+against a running paused test game for three native load/playback samples.
+Use the same save, settings, view and hardware for each binary; results are in
+`artifacts/runtime-<label>.json`. The development companion measures whole-tick
+CPU time and frame intervals, removes its instrumentation, and leaves the game paused.
+Full command output is retained in `artifacts/logs/`. Local reproduction uses
+RimWorld 1.6, all DLCs, Harmony, Total Fog, and RimBridgeServer for automation.
+`./scripts/mod setup` installs the current build and creates the isolated Steam GABS profile.
+`./scripts/mod baseline` installs the inherited binary for comparison tests.
+Only RimWorld 1.6 is currently advertised as supported. Historical folders stay in the source tree.
+The clip and test saves stay in ignored `artifacts/`.
 
+The canonical commands run the independent contract suite before building the
+main mod and its development-only BridgeTools companion. The solution is
+`Source/TotalFog.slnx`. See [architecture](docs/ARCHITECTURE.md),
+[coverage](docs/COVERAGE.md), and [validation](docs/VALIDATION.md) for boundaries
+and evidence.
 
+Other mods can integrate without depending on Total Fog. See the
+[optional integration example](docs/ARCHITECTURE.md#optional-integration-example)
+and [public API](Source/TotalFog/Visibility.cs). Bind the queries once and retain
+ordinary behavior when Total Fog is absent. Confirmed upstream integration
+blockers follow the issue-reporting rule in [AGENTS.md](AGENTS.md#blocked-integrations-with-other-mods).
 
-#  New stuff
+`./scripts/mod source-publish` pushes committed source and verifies the remote
+commit. It does not publish a player ZIP or a Steam Workshop update.
 
-![Image](https://img.litet.net/xsz4cBX.png)
-
-![Image](https://img.litet.net/DOv7EBE.png)
-
-![Image](https://img.litet.net/edLM0pX.png)
-
-![Image](https://img.litet.net/6T54lIo.png)
-
-![Image](https://img.litet.net/qMcT6Dq.png)
-
-#  New feature 
-
-
-
-- New settings for you to tweak with. Finally, adjustable vision range. (I recommend setting it 55 to vanilla and 65 to CE.
-- Blind people can provide vision by hearing too.
-- Integrated changes from Yayo versions
-- A few bugfix and performance improvements.
-- Night vision integration from other mod-like nocturnal animals sees further at night. Vanilla expanded apparel night vision goggles allow better vision at night.
-- Animal body size matters at providing vision
-- Colonists can hear people moving in FoW.
-- Built-in raid letter suppressor
-- Toggle for prisoner providing vision
-
-
-#  Recommended mods
-
-Mods that add non-view obstructing building:
-[ Vanilla fence ](https://steamcommunity.com/sharedfiles/filedetails/?id=2050680665&amp;searchtext=fence)
-[ Tent ](https://steamcommunity.com/sharedfiles/filedetails/?id=2407128339&amp;searchtext=tent)
-
-For the RTS experience:
-[ Dubs mint minimap (for minimap durr)](https://steamcommunity.com/sharedfiles/filedetails/?id=1662119905&amp;searchtext=dubs+minimap)
-[Guard for me (patrolling colonists have an actual purpose now)](https://steamcommunity.com/sharedfiles/filedetails/?id=1855885448)
-# Know and possible issues
-
-This version might makes the game lag if used with any mod that makes pawn calculate target to shoot constantly.
-Also the hiding Interaction bubble in FoW function cause lot of lag and might even break the UI. It's recommended to disable it.
-# Credit and license 
-
-The original mod belongs to Luca De Petrillo under Apache License 2.0.
-https://github.com/lukakama/rimworld-mod-real-fow/
-
-SaberVS7 for the 1.4 update
-YAYO for the forked version new building.
-inbae for korean translation (though newer update to this mod led to some missing translation) I'll appreciate any updated translation.
-
-![Image](https://img.litet.net/logos/ReportingIssues.png)
-
-
-
--  See if the the error persists if you just have this mod and its requirements active.
--  If not, try adding your other mods until it happens again.
--  Always post your log using the [Log Uploader](https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404)
--  For best support, please use the Discord-channel for error-reporting.
--  Do not report errors by making a discussion-thread, I get no notification of that.
--  If you have the solution for a problem, please post it to the GitHub repository.
--  Use [RimSort](https://github.com/RimSort/RimSort/releases/latest) to sort your mods
-
- 
-
-[![Image](https://img.shields.io/github/v/release/emipa606/NWNRealFogOfWar?label=latest%20version&style=plastic&color=9f1111&labelColor=black)](https://steamcommunity.com/sharedfiles/filedetails/changelog/3391128917) | vision, tactics
+Combat-music suppression, hidden-source muting, hearing-based audio filtering,
+and hearing indicators are separate settings. Filtering range and muffling
+strength are adjustable.
+The public ZIP contains one `TotalFog/` folder. Extract it into `RimWorld/Mods`.

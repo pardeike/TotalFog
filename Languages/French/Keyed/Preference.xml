@@ -21,11 +21,11 @@
   <Revealing>Revealing area...</Revealing>
   <baseHearingRange>Base hearing range (pawn position hidden in FoW will be revealed if they are moving). Set to 0 to disable</baseHearingRange>
   <censorMode>Hide that little thing for the puritan</censorMode>
-  <hideEventNegative>Cacher évènements négatifs (ex: Blight)</hideEventNegative>
-  <hideEventNeutral>Cacher évènements neutres (ex: visiteurs)</hideEventNeutral>
-  <hideEventPositive>Cacher évènements positifs (ex: caravane)</hideEventPositive>
-  <hideThreatBig>Cacher les grandes menaces (ex: Raid)</hideThreatBig>
-  <hideThreatSmall>Cacher les petites menaces (ex: animal enragé)</hideThreatSmall>
+  <hideEventNegative>Ignorer les événements négatifs non observés</hideEventNegative>
+  <hideEventNeutral>Ignorer les événements neutres non observés</hideEventNeutral>
+  <hideEventPositive>Ignorer les événements positifs non observés</hideEventPositive>
+  <hideThreatBig>Ignorer les menaces majeures non observées</hideThreatBig>
+  <hideThreatSmall>Ignorer les menaces mineures non observées</hideThreatSmall>
   <prisonerGiveVision>Prisoner provide vision at reduced range</prisonerGiveVision>
   <fogAlphaSetting_title>Niveau de brouillard</fogAlphaSetting_title>
   <fogAlphaSetting_desc>Fog covering level for discovered but not currently seen places</fogAlphaSetting_desc>

@@ -27,11 +27,11 @@
   <mapRevealAtStart>开始时显示地图。但不提供视野</mapRevealAtStart>
   <baseHearingRange>基础听力范围（如果小兵正在移动，则会显示隐藏在 FoW 中的小兵位置）。设置为 0 则禁用</baseHearingRange>
   <censorMode>为清教徒隐藏那张 17x28 像素的小图片</censorMode>
-  <hideEventNegative>隐藏负面事件（例如：枯萎病）</hideEventNegative>
-  <hideEventNeutral>隐藏中性事件（例如：游客）</hideEventNeutral>
-  <hideEventPositive>隐藏积极事件（例如：大篷车抵达）</hideEventPositive>
-  <hideThreatBig>隐藏重大威胁事件（例如：突袭）</hideThreatBig>
-  <hideThreatSmall>隐藏小型威胁事件（例如：单人猎杀动物）</hideThreatSmall>
+  <hideEventNegative>丢弃未观察到的负面事件</hideEventNegative>
+  <hideEventNeutral>丢弃未观察到的中性事件</hideEventNeutral>
+  <hideEventPositive>丢弃未观察到的正面事件</hideEventPositive>
+  <hideThreatBig>丢弃未观察到的重大威胁</hideThreatBig>
+  <hideThreatSmall>丢弃未观察到的轻微威胁</hideThreatSmall>
   <prisonerGiveVision>囚犯提供缩小范围的视野</prisonerGiveVision>
   <allyGiveVision>盟友可在略微缩小的范围内提供视野</allyGiveVision>
   <fogAlphaSetting_title>雾度</fogAlphaSetting_title>

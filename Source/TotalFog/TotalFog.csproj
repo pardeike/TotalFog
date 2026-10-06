@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
+  <PropertyGroup>
+    <OutputPath>../../1.6/Assemblies</OutputPath>
+    <TargetFramework>net472</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <DebugType>None</DebugType>
+    <LangVersion>latest</LangVersion>
+    <FileVersion>$(ModVersion).0</FileVersion>
+    <AssemblyName>TotalFog</AssemblyName>
+    <Copyright>© Luca De Petrillo 2026 - </Copyright>
+    <AssemblyVersion>$(ModVersion).0</AssemblyVersion>
+    <Product>Total Fog</Product>
+    <Nullable>warnings</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref">
+      <Version>1.6.4871</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony.Ref">
+      <Version>2.4.2</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <Compile Remove="BridgeTools\**\*.cs" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(RIMWORLD_MOD_DIR)' != ''">
+    <GlobalBridgeToolsDir>$(RIMWORLD_MOD_DIR)\..\BridgeTools</GlobalBridgeToolsDir>
+  </PropertyGroup>
+  <Target Name="BuildBridgeTools" AfterTargets="Build" Condition="'$(SkipBridgeTools)' != 'true'">
+    <Exec Command="dotnet build &quot;$(MSBuildProjectDirectory)/../BridgeTools/TotalFog.BridgeTools.csproj&quot; -c $(Configuration) --nologo -v:q" />
+  </Target>
+  <Target Name="DeployPair" AfterTargets="Build" Condition="'$(RIMWORLD_MOD_DIR)' != ''">
+    <Exec Command="&quot;$(MSBuildProjectDirectory)/../../scripts/mod&quot; deploy-built" EnvironmentVariables="RIMWORLD_MOD_DIR=$(RIMWORLD_MOD_DIR)" />
+  </Target>
+</Project>
