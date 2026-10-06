@@ -7,6 +7,10 @@ the existing SDK install under ~/Library/Application Support/dotnet when present
 including for nested companion builds. Gameplay and companion DLLs still target
 net472 for RimWorld; independent tests run on net10.0.
 Use the canonical quiet command `./scripts/mod build|deploy|package|setup|baseline|benchmark`.
+The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
+`./scripts/mod format` after edits; build checks formatting before compiling.
+`./scripts/mod format-check` checks without changing files. Frozen historical
+payloads and Originals/ are excluded. Do not add an auto-modifying commit hook.
 Use `./scripts/mod source-publish` to push committed source to
 https://github.com/pardeike/TotalFog. It verifies the public repository and
 remote commit without building, tagging, releasing or updating Steam.

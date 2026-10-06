@@ -18,6 +18,19 @@ if (pinned_dotnet/'dotnet').is_file():
     workflow_env['PATH'] = str(pinned_dotnet)+os.pathsep+workflow_env.get('PATH', '')
 def run(args, log):
     subprocess.run(args, cwd=ROOT, env=workflow_env, stdout=log, stderr=subprocess.STDOUT, check=True)
+def format_sources(log, check=False):
+    run(['dotnet', 'tool', 'restore'], log)
+    # Explicit active roots keep frozen payloads and upstream originals untouched.
+    sources = [str(path) for folder in ['TotalFog', 'Core', 'Tests', 'BridgeTools']
+               for path in sorted((ROOT/'Source'/folder).rglob('*.cs'))
+               if not {'obj', 'bin'}.intersection(path.parts)]
+    run(['dotnet', 'csharpier', 'check' if check else 'format', *sources], log)
+    scripts = [str(path) for path in sorted((ROOT/'scripts').iterdir())
+               if path.is_file() and (path.suffix == '.py' or
+                  path.read_bytes().startswith(b'#!/usr/bin/env python3'))]
+    run(['uv', 'tool', 'run', '--cache-dir', str(ROOT/'artifacts/tool-cache'),
+         '--from', 'ruff==0.16.10', 'ruff', 'format', *(['--check'] if check else []),
+         *scripts], log)
 def stopped():
     listing = subprocess.check_output(['ps', 'ax', '-o', 'comm='], text=True)
     if any(line.endswith('/RimWorld by Ludeon Studios') for line in listing.splitlines()):
@@ -72,10 +85,13 @@ try:
     guard = (LOGS/'workflow.lock').open('w')
     fcntl.flock(guard, fcntl.LOCK_EX)
     mode = sys.argv[1]
-    if mode not in {'build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','mp-setup','mp-layout','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
+    if mode not in {'format','format-check','build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','mp-setup','mp-layout','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use format, format-check, build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
     if mode == 'runtime-compare' and len(sys.argv) not in {4, 5}:
         raise RuntimeError('Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]')
     with logpath.open('w') as log:
+        if mode in {'format', 'format-check'}:
+            step = 'formatting'
+            format_sources(log, check=mode == 'format-check')
         if mode != 'source-publish' and (MODS.name != 'Mods' or not MODS.is_dir()): raise RuntimeError('RIMWORLD_MOD_DIR must name an existing Mods folder')
         if mode == 'source-publish':
             step = 'public source publication'
@@ -96,7 +112,9 @@ try:
             if len(sys.argv) != 3: raise RuntimeError('Use feedback-verify <completed comparison label>')
             stopped()
             run(['python3', str(ROOT/'scripts/feedback-verify'), sys.argv[2]], log)
-        if mode not in {'baseline','deploy-built','dpa-setup','mp-setup','mp-layout','zombieland-fallback-setup','verify-rendered','runtime-benchmark','feedback-verify','source-publish'}:
+        if mode not in {'format','format-check','baseline','deploy-built','dpa-setup','mp-setup','mp-layout','zombieland-fallback-setup','verify-rendered','runtime-benchmark','feedback-verify','source-publish'}:
+            step = 'formatting'
+            format_sources(log, check=True)
             step = 'tests'
             run(['dotnet','test',str(ROOT/'Source/Tests/TotalFog.Tests.csproj'),'-c','Release','--nologo','-v:q'],log)
             step = 'build'
