@@ -166,7 +166,7 @@ try:
                     if primary_error is None:
                         raise
                     print('Candidate restore also failed: ' + str(cleanup_error), file=log)
-        if mode in {'deploy','deploy-built','setup','dpa-setup','ce-setup','ce-zombieland-setup','zombieland-setup','baseline'}:
+        if mode in {'deploy','deploy-built','setup','ce-setup','ce-zombieland-setup','zombieland-setup','baseline'}:
             step = 'deploy'; deploy_pair(mode == 'baseline')
         if mode in {'ce-setup', 'ce-zombieland-setup'}:
             step = 'CE Steam installation'
@@ -268,6 +268,14 @@ try:
             if [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')] != order:
                 raise RuntimeError('The isolated Zombieland profile did not retain its loadout')
         if mode == 'dpa-setup':
+            stopped()
+            if len(sys.argv) > 3 or (len(sys.argv) == 3 and sys.argv[2] not in {'on', 'off'}):
+                raise RuntimeError('Use dpa-setup [on|off]')
+            enabled = len(sys.argv) < 3 or sys.argv[2] == 'on'
+            profile = os.environ.get('TOTALFOG_GAME_ID', 'total-fog-16')
+            profiles = {'total-fog-16': 'UserData', 'total-fog-ce-16': 'CEUserData',
+                'total-fog-zombieland-16': 'ZombielandUserData', 'total-fog-ce-zombieland-16': 'CEZombielandUserData'}
+            if profile not in profiles: raise RuntimeError('Use an existing Total Fog test profile for TOTALFOG_GAME_ID')
             step = 'DPA Steam installation'
             metadata = GAME.parents[2]/'workshop/content/294100/2038874626/About/About.xml'
             dpa = ET.parse(metadata).getroot()
@@ -275,15 +283,18 @@ try:
             if package_id != 'dubwise.dubsperformanceanalyzer.steam' or '1.6' not in [v.text for v in dpa.findall('supportedVersions/li')]:
                 raise RuntimeError('The Steam DPA installation must support RimWorld 1.6')
             step = 'isolated DPA configuration'
-            config_path = ROOT/'artifacts/UserData/Config/ModsConfig.xml'
+            config_path = ROOT/'artifacts'/profiles[profile]/'Config/ModsConfig.xml'
             config = ET.parse(config_path)
             active = config.getroot().find('activeMods')
             if active is None: raise RuntimeError('Set up the isolated test profile first')
-            if package_id not in [m.text.lower() for m in active]:
+            if enabled and package_id not in [m.text.lower() for m in active]:
                 entry = ET.Element('li'); entry.text = package_id
                 active.insert(2, entry)
+            if not enabled:
+                for entry in list(active):
+                    if entry.text.lower() == package_id: active.remove(entry)
             config.write(config_path, encoding='utf-8', xml_declaration=True)
-            if package_id not in [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]:
+            if (package_id in [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]) != enabled:
                 raise RuntimeError('The isolated profile did not retain DPA')
         if mode == 'setup':
             step = 'test dependencies'

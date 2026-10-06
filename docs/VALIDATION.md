@@ -4920,3 +4920,40 @@ preceding wrong-save-name preflight fails before any measurement and is kept
 separately. This is a correctness-tested source candidate, not performance
 acceptance or a superseding Mortal ZIP. The comparison does not establish the
 cause of the measured slowdown; profile before changing code or repeating it.
+
+### Current-candidate CE tick profiling
+
+Two eight-second DPA captures use the unchanged CE 350x350 fixture and the
+same 2f15cad0... gameplay. DPA resolves all thirteen initial targets. The
+latest 2,000 captured tick entries average 1.55510 ms for DoSingleTick,
+0.16853 ms for CompFog.CompTick, 0.11007 ms for CompSightSource.CompTick,
+0.09385 ms for UpdateFoV and 0.01780 ms for CompVisibility.CompTick. The CE
+guards resolve but produce no snapshot rows; this does not establish whether
+they executed, and does not attribute the failed TPS floor to those guards.
+
+The deeper capture resolves all twelve targets and reports inclusive averages
+of 0.07073 ms for FieldOfView.ComputeMask and 0.02710 ms for
+VisibilityMask.ApplyDifference, with about 1.93 calls per tick each.
+CompCellRegistration.CompTick averages 0.01301 ms. Nested instrumentation adds
+overhead, so averages from the two captures are not a before/after comparison.
+The initial deep-target request mistakenly names CompCellTracker, resolves only
+eleven targets, and is cleaned up before retrying with CompCellRegistration.
+Only the complete captures are used as profiling evidence.
+
+These diagnostic captures use the existing dpa_playback forced/debug mode,
+with actual native tick multiplier 150. They do not establish ordinary player
+fourth-speed performance or explain a 0.96% whole-game difference. Their
+purpose is to select actual fog hot paths for a bounded optimization.
+Receipts: artifacts/ce-dpa-logical-cell-tick.json and
+artifacts/ce-dpa-logical-cell-deep-tick.json. Native DPA cleanup is observed
+not profiling/not patched before verified process termination.
+
+The canonical dpa-setup is now configuration-only, supports on/off and selects
+the existing isolated profile through TOTALFOG_GAME_ID. Enabling DPA must not
+redeploy the tracked last-release DLL over the installed development candidate.
+The CE on/capture/cleanup/stop/off sequence retains the exact installed
+2f15cad0... gameplay and 71f9507d... companion. The final ten-mod active order
+excludes DPA. The original configuration XML byte hash was not recorded, so
+only active-order and installed-binary preservation are established. See
+artifacts/ce-dpa-logical-cell-cleanup.json. The README's command table is
+updated within the user's otherwise uncommitted rewrite.

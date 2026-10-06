@@ -243,6 +243,14 @@ and runtime acceptance.
   1.56362 ms and frame p95 70.27 versus 68.64 ms. Matching identity, actual
   fourth-speed multiplier 15 and clean logs pass. This failed measurement is
   retained; 2f15cad0... is not performance-accepted or a new feedback package.
+  Its subsequent instrumented CE tick captures identify ComputeMask and
+  ApplyDifference as measured fog costs, about 0.07073 and 0.02710 ms per tick
+  respectively. The CE guards resolve but produce no snapshot rows. These
+  forced/debug multiplier-150 captures are diagnostic, not player-speed or
+  before/after acceptance. DPA cleanup, stopped-process state, its removal from
+  the CE profile and unchanged installed DLL pair are verified. The performance
+  floor remains open until an evidence-backed change passes a matched native
+  comparison. See `artifacts/ce-dpa-logical-cell-*.json`.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

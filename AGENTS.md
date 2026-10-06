@@ -88,6 +88,10 @@ Use `./scripts/mod dpa-setup` to verify the installed Steam Dubs Performance
 Analyzer supports 1.6 and enable it in this isolated profile. Profile through
 RimBridgeServer's `dpa_*` tools, then stop and clean up instrumentation before
 performance comparisons. DPA is excluded from feedback ZIPs.
+Set `TOTALFOG_GAME_ID` to another configured Total Fog profile to profile that
+loadout. `./scripts/mod dpa-setup off` removes only DPA from the selected profile
+after native stop/cleanup; retain its original active-mod list as evidence.
+DPA setup changes configuration only and never redeploys a tracked release DLL.
 Use `./scripts/mod ce-setup` for `total-fog-ce-16`, the separate Steam profile
 under artifacts/CEUserData with installed Combat Extended and all DLCs. It
 preserves the core performance profile and existing CE settings/loadout.
