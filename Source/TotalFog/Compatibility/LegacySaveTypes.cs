@@ -8,7 +8,8 @@ internal static partial class LegacySaveTypes
 {
     public static void ResolvePostfix(Type baseType, string providedClassName, ref Type __result)
     {
-        if (__result != null || Scribe.mode != LoadSaveMode.LoadingVars) return;
+        if (__result != null || Scribe.mode != LoadSaveMode.LoadingVars)
+            return;
         var replacement = providedClassName switch
         {
             "RimWorldRealFoW.MapComponentSeenFog" => typeof(MapVisibility),
@@ -19,8 +20,9 @@ internal static partial class LegacySaveTypes
             "RimWorldRealFoW.Building_SurveillanceCamera" => typeof(Building_VisionCamera),
             "RimWorldRealFoW.MoteSoundWave" => typeof(Mote_HearingCue),
             "RimWorldRealFoW.JobDriver_SurveilCameraConsole" => typeof(JobDriver_MonitorVision),
-            _ => null
+            _ => null,
         };
-        if (replacement != null && baseType != null && baseType.IsAssignableFrom(replacement)) __result = replacement;
+        if (replacement != null && baseType != null && baseType.IsAssignableFrom(replacement))
+            __result = replacement;
     }
 }

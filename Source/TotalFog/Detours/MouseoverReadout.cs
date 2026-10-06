@@ -1,6 +1,6 @@
+using TotalFog.Presentation;
 using UnityEngine;
 using Verse;
-using TotalFog.Presentation;
 
 namespace TotalFog.Detours;
 

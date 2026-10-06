@@ -30,7 +30,10 @@ public sealed class FleckVisibilityTests
             // Owner resolution happens once per batch, never per particle.
             Assert.Equal(1, map.ComponentLookups);
         }
-        finally { FleckVisibility.EndDrawing(prior); }
+        finally
+        {
+            FleckVisibility.EndDrawing(prior);
+        }
         Assert.True(FleckVisibility.DrawPrefix(ref particle));
     }
 
@@ -48,19 +51,33 @@ public sealed class FleckVisibilityTests
         try
         {
             Assert.False(FleckVisibility.DrawPrefix(ref particle));
-            Assert.Throws<InvalidOperationException>((Action)(() =>
-            {
-                FleckVisibility.BeginDrawing(new FleckManager { parent = inner }, out var nested);
-                try
-                {
-                    Assert.True(FleckVisibility.DrawPrefix(ref particle));
-                    throw new InvalidOperationException("Native draw failed");
-                }
-                finally { FleckVisibility.EndDrawing(nested); }
-            }));
+            Assert.Throws<InvalidOperationException>(
+                (Action)(
+                    () =>
+                    {
+                        FleckVisibility.BeginDrawing(
+                            new FleckManager { parent = inner },
+                            out var nested
+                        );
+                        try
+                        {
+                            Assert.True(FleckVisibility.DrawPrefix(ref particle));
+                            throw new InvalidOperationException("Native draw failed");
+                        }
+                        finally
+                        {
+                            FleckVisibility.EndDrawing(nested);
+                        }
+                    }
+                )
+            );
             Assert.False(FleckVisibility.DrawPrefix(ref particle));
         }
-        finally { FleckVisibility.EndDrawing(prior); Find.CurrentMap = null; }
+        finally
+        {
+            FleckVisibility.EndDrawing(prior);
+            Find.CurrentMap = null;
+        }
         Assert.True(FleckVisibility.DrawPrefix(ref particle));
     }
 
@@ -68,7 +85,12 @@ public sealed class FleckVisibilityTests
     [InlineData(false, false, false, true)]
     [InlineData(true, true, false, true)]
     [InlineData(true, true, true, false)]
-    public void InitializationAndColonyFallbackStillRespectVanillaFog(bool initialized, bool colony, bool vanillaFog, bool expected)
+    public void InitializationAndColonyFallbackStillRespectVanillaFog(
+        bool initialized,
+        bool colony,
+        bool vanillaFog,
+        bool expected
+    )
     {
         var map = new Map { IsPlayerHome = colony };
         map.Fog.Initialized = initialized;
@@ -76,8 +98,15 @@ public sealed class FleckVisibilityTests
         FogSettings.OnlyOutsideColony = colony;
         var particle = new FleckStatic { DrawPos = new Vector3(.5f, 0, .5f) };
         FleckVisibility.BeginDrawing(new FleckManager { parent = map }, out var prior);
-        try { Assert.Equal(expected, FleckVisibility.DrawPrefix(ref particle)); }
-        finally { FleckVisibility.EndDrawing(prior); FogSettings.OnlyOutsideColony = false; }
+        try
+        {
+            Assert.Equal(expected, FleckVisibility.DrawPrefix(ref particle));
+        }
+        finally
+        {
+            FleckVisibility.EndDrawing(prior);
+            FogSettings.OnlyOutsideColony = false;
+        }
     }
 
     [Fact]
@@ -92,6 +121,9 @@ public sealed class FleckVisibilityTests
             Assert.False(FleckVisibility.DrawPrefix(ref particle));
             Assert.Equal(0, map.Fog.VisibilityQueries);
         }
-        finally { FleckVisibility.EndDrawing(prior); }
+        finally
+        {
+            FleckVisibility.EndDrawing(prior);
+        }
     }
 }

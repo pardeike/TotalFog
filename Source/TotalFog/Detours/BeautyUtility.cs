@@ -10,6 +10,7 @@ public static class BeautyUtility
         // entire sample set rather than once per sampled cell.
         var fog = map?.GetVisibility();
         RimWorld.BeautyUtility.beautyRelevantCells.RemoveAll(c =>
-            !Presentation.CellVisibility.IsCurrent(map, c, fog));
+            !Presentation.CellVisibility.IsCurrent(map, c, fog)
+        );
     }
 }

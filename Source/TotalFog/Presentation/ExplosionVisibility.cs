@@ -18,7 +18,11 @@ internal static class ExplosionVisibility
     // creates effects and processes every damaged cell normally.
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var original = AccessTools.Method(typeof(CameraShaker), nameof(CameraShaker.DoShake), new[] { typeof(float) });
+        var original = AccessTools.Method(
+            typeof(CameraShaker),
+            nameof(CameraShaker.DoShake),
+            new[] { typeof(float) }
+        );
         var replacement = AccessTools.Method(typeof(ExplosionVisibility), nameof(Shake));
         int matches = 0;
         var result = new List<CodeInstruction>();
@@ -33,7 +37,10 @@ internal static class ExplosionVisibility
             }
             result.Add(instruction);
         }
-        if (matches != 1) throw new InvalidOperationException($"Total Fog: expected one explosion camera shake, found {matches}.");
+        if (matches != 1)
+            throw new InvalidOperationException(
+                $"Total Fog: expected one explosion camera shake, found {matches}."
+            );
         return result;
     }
 }

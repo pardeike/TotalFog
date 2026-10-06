@@ -32,10 +32,7 @@ public static class FogThingUtility
         }
         else
         {
-            var array = new[]
-            {
-                intVec3
-            };
+            var array = new[] { intVec3 };
             peekArrayCache[intVec3] = array;
             result = array;
         }
@@ -50,18 +47,21 @@ public static class FogThingUtility
 
     extension(Thing _this)
     {
-        public bool IsFogVisible(bool forRender = false) => Presentation.ThingVisibility.IsVisible(_this);
+        public bool IsFogVisible(bool forRender = false) =>
+            Presentation.ThingVisibility.IsVisible(_this);
 
         public ThingComp TryGetCompLocal(CompProperties def)
         {
             var category = _this.def.category;
 
-            if (category != ThingCategory.Pawn
+            if (
+                category != ThingCategory.Pawn
                 && category != ThingCategory.Building
                 && category != ThingCategory.Item
                 && category != ThingCategory.Filth
                 && category != ThingCategory.Gas
-                && !_this.def.IsBlueprint)
+                && !_this.def.IsBlueprint
+            )
             {
                 return null;
             }

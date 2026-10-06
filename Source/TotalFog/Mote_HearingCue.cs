@@ -12,7 +12,6 @@ public class Mote_HearingCue : Mote
 
     public override bool EndOfLife => AgeSecs >= targetSize / velocity;
 
-
     public override float Alpha
     {
         get

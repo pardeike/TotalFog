@@ -10,18 +10,30 @@ namespace TotalFog.Tests;
 public sealed class CustomRenderVisibilityTests
 {
     private sealed class BodyPawn : Pawn { }
+
     private sealed class OtherPawn : Pawn { }
 
     [Theory]
     [InlineData(false, true)]
     [InlineData(true, false)]
-    public void BodyGateCanDisagreeWithRootWithoutChangingLiveInformation(bool rootVisible, bool bodyVisible)
+    public void BodyGateCanDisagreeWithRootWithoutChangingLiveInformation(
+        bool rootVisible,
+        bool bodyVisible
+    )
     {
         var pawn = new BodyPawn();
         pawn.Map.Fog.Initialized = true;
         pawn.Map.Fog.InSight[0] = rootVisible;
         var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-            new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true, shouldDrawShadow = true } });
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
         Visibility.RegisterRenderer(typeof(BodyPawn), _ => bodyVisible);
         try
         {
@@ -31,7 +43,10 @@ public sealed class CustomRenderVisibilityTests
             Assert.Equal(rootVisible, Visibility.IsVisible(pawn));
             Assert.Equal(rootVisible, InterfaceVisibility.PawnLabelPrefix(pawn));
         }
-        finally { Visibility.RegisterRenderer(typeof(BodyPawn), null); }
+        finally
+        {
+            Visibility.RegisterRenderer(typeof(BodyPawn), null);
+        }
     }
 
     [Fact]
@@ -39,17 +54,28 @@ public sealed class CustomRenderVisibilityTests
     {
         var pawn = new BodyPawn();
         int calls = 0;
-        Visibility.RegisterRenderer(typeof(BodyPawn), _ => { calls++; return true; });
+        Visibility.RegisterRenderer(
+            typeof(BodyPawn),
+            _ =>
+            {
+                calls++;
+                return true;
+            }
+        );
         try
         {
             var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-                new[] { new DynamicDrawManager.ThingCullDetails() });
+                new[] { new DynamicDrawManager.ThingCullDetails() }
+            );
             DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
             Assert.False(details[0].shouldDraw);
             Assert.False(details[0].shouldDrawShadow);
             Assert.Equal(0, calls);
         }
-        finally { Visibility.RegisterRenderer(typeof(BodyPawn), null); }
+        finally
+        {
+            Visibility.RegisterRenderer(typeof(BodyPawn), null);
+        }
     }
 
     [Fact]
@@ -61,11 +87,15 @@ public sealed class CustomRenderVisibilityTests
         try
         {
             var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-                new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true } });
+                new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true } }
+            );
             DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
             Assert.False(details[0].shouldDraw);
         }
-        finally { Visibility.RegisterRenderer(typeof(BodyPawn), null); }
+        finally
+        {
+            Visibility.RegisterRenderer(typeof(BodyPawn), null);
+        }
     }
 
     [Fact]
@@ -74,13 +104,28 @@ public sealed class CustomRenderVisibilityTests
         var pawn = new BodyPawn();
         pawn.Map.Fog.Initialized = pawn.Map.Fog.InSight[0] = true;
         int calls = 0;
-        Visibility.RegisterRenderer(typeof(BodyPawn), _ => { calls++; throw new InvalidOperationException("fixture fault"); });
+        Visibility.RegisterRenderer(
+            typeof(BodyPawn),
+            _ =>
+            {
+                calls++;
+                throw new InvalidOperationException("fixture fault");
+            }
+        );
         try
         {
             for (int frame = 0; frame < 2; frame++)
             {
                 var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-                    new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true, shouldDrawShadow = true } });
+                    new[]
+                    {
+                        new DynamicDrawManager.ThingCullDetails
+                        {
+                            shouldDraw = true,
+                            shouldDrawShadow = true,
+                        },
+                    }
+                );
                 DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
                 Assert.False(details[0].shouldDraw);
                 Assert.False(details[0].shouldDrawShadow);
@@ -90,7 +135,10 @@ public sealed class CustomRenderVisibilityTests
             Assert.True(CustomRenderVisibility.TryQuery(pawn, out bool visible));
             Assert.True(visible);
         }
-        finally { Visibility.RegisterRenderer(typeof(BodyPawn), null); }
+        finally
+        {
+            Visibility.RegisterRenderer(typeof(BodyPawn), null);
+        }
     }
 
     [Fact]
@@ -110,6 +158,9 @@ public sealed class CustomRenderVisibilityTests
             Assert.False(Visibility.IsVisible(map, new IntVec3(-1, 0)));
             Assert.False(Visibility.IsVisible(null, new IntVec3(0, 0)));
         }
-        finally { FogSettings.OnlyOutsideColony = false; }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = false;
+        }
     }
 }

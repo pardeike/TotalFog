@@ -1,186 +1,403 @@
 #!/usr/bin/env python3
 """Quiet, bounded build and reproduction workflow for Total Fog."""
+
 from pathlib import Path
 import fcntl, hashlib, json, os, shutil, statistics, subprocess, sys, traceback, zipfile
 import xml.etree.ElementTree as ET
+
 ROOT = Path(__file__).resolve().parents[1]
-GAME = Path.home() / 'Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app'
-MODS = Path(os.environ.get('RIMWORLD_MOD_DIR', str(GAME / 'Mods'))).expanduser().resolve()
-PROJECT = ROOT / 'Source/TotalFog/TotalFog.csproj'
-LOGS = ROOT / 'artifacts/logs'
-PAYLOAD = ['About', '1.6', 'Assets', 'LegacyAssets', 'Languages', 'LoadFolders.xml', 'LICENSE.md', 'NOTICE.md', 'README.md', 'PRELIMINARY.md']
+GAME = Path.home() / "Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app"
+MODS = Path(os.environ.get("RIMWORLD_MOD_DIR", str(GAME / "Mods"))).expanduser().resolve()
+PROJECT = ROOT / "Source/TotalFog/TotalFog.csproj"
+LOGS = ROOT / "artifacts/logs"
+PAYLOAD = [
+    "About",
+    "1.6",
+    "Assets",
+    "LegacyAssets",
+    "Languages",
+    "LoadFolders.xml",
+    "LICENSE.md",
+    "NOTICE.md",
+    "README.md",
+    "PRELIMINARY.md",
+]
 LOGS.mkdir(parents=True, exist_ok=True)
-step = 'arguments'
-logpath = LOGS / ((sys.argv[1] if len(sys.argv) > 1 else 'usage') + '.log')
+step = "arguments"
+logpath = LOGS / ((sys.argv[1] if len(sys.argv) > 1 else "usage") + ".log")
 workflow_env = os.environ.copy()
-pinned_dotnet = Path.home()/'Library/Application Support/dotnet/sdk-10.0.301'
-if (pinned_dotnet/'dotnet').is_file():
-    workflow_env['PATH'] = str(pinned_dotnet)+os.pathsep+workflow_env.get('PATH', '')
+pinned_dotnet = Path.home() / "Library/Application Support/dotnet/sdk-10.0.301"
+if (pinned_dotnet / "dotnet").is_file():
+    workflow_env["PATH"] = str(pinned_dotnet) + os.pathsep + workflow_env.get("PATH", "")
+
+
 def run(args, log):
-    subprocess.run(args, cwd=ROOT, env=workflow_env, stdout=log, stderr=subprocess.STDOUT, check=True)
+    subprocess.run(
+        args, cwd=ROOT, env=workflow_env, stdout=log, stderr=subprocess.STDOUT, check=True
+    )
+
+
 def format_sources(log, check=False):
-    run(['dotnet', 'tool', 'restore'], log)
+    run(["dotnet", "tool", "restore"], log)
     # Explicit active roots keep frozen payloads and upstream originals untouched.
-    sources = [str(path) for folder in ['TotalFog', 'Core', 'Tests', 'BridgeTools']
-               for path in sorted((ROOT/'Source'/folder).rglob('*.cs'))
-               if not {'obj', 'bin'}.intersection(path.parts)]
-    run(['dotnet', 'csharpier', 'check' if check else 'format', *sources], log)
-    scripts = [str(path) for path in sorted((ROOT/'scripts').iterdir())
-               if path.is_file() and (path.suffix == '.py' or
-                  path.read_bytes().startswith(b'#!/usr/bin/env python3'))]
-    run(['uv', 'tool', 'run', '--cache-dir', str(ROOT/'artifacts/tool-cache'),
-         '--from', 'ruff==0.16.10', 'ruff', 'format', *(['--check'] if check else []),
-         *scripts], log)
+    sources = [
+        str(path)
+        for folder in ["TotalFog", "Core", "Tests", "BridgeTools"]
+        for path in sorted((ROOT / "Source" / folder).rglob("*.cs"))
+        if not {"obj", "bin"}.intersection(path.parts)
+    ]
+    run(["dotnet", "csharpier", "check" if check else "format", *sources], log)
+    scripts = [
+        str(path)
+        for path in sorted((ROOT / "scripts").iterdir())
+        if path.is_file()
+        and (path.suffix == ".py" or path.read_bytes().startswith(b"#!/usr/bin/env python3"))
+    ]
+    run(
+        [
+            "uv",
+            "tool",
+            "run",
+            "--cache-dir",
+            str(ROOT / "artifacts/tool-cache"),
+            "--from",
+            "ruff==0.16.10",
+            "ruff",
+            "format",
+            *(["--check"] if check else []),
+            *scripts,
+        ],
+        log,
+    )
+
+
 def stopped():
-    listing = subprocess.check_output(['ps', 'ax', '-o', 'comm='], text=True)
-    if any(line.endswith('/RimWorld by Ludeon Studios') for line in listing.splitlines()):
-        raise RuntimeError('Stop RimWorld through GABS before deploying')
+    listing = subprocess.check_output(["ps", "ax", "-o", "comm="], text=True)
+    if any(line.endswith("/RimWorld by Ludeon Studios") for line in listing.splitlines()):
+        raise RuntimeError("Stop RimWorld through GABS before deploying")
+
+
 def stage(destination, baseline=False):
     destination.mkdir(parents=True, exist_ok=True)
     for name in PAYLOAD:
         src, dst = ROOT / name, destination / name
-        if not src.exists(): continue
-        if src.is_dir(): shutil.copytree(src, dst, dirs_exist_ok=True)
-        else: shutil.copy2(src, dst)
-    assemblies = destination / '1.6/Assemblies'
+        if not src.exists():
+            continue
+        if src.is_dir():
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+        else:
+            shutil.copy2(src, dst)
+    assemblies = destination / "1.6/Assemblies"
     # Remove the inherited updater metadata from previously staged installs.
-    (destination / 'About/ModSync.xml').unlink(missing_ok=True)
-    (assemblies / 'rimworld-mod-real-fow.dll').unlink(missing_ok=True)
+    (destination / "About/ModSync.xml").unlink(missing_ok=True)
+    (assemblies / "rimworld-mod-real-fow.dll").unlink(missing_ok=True)
     if baseline:
         # The native baseline must retain the original runtime XML bindings.
         # Total Fog's renamed classes cannot be resolved by the inherited DLL.
-        revision = 'upstream-baseline'
-        baseline_dir = ROOT / 'artifacts/baseline'
+        revision = "upstream-baseline"
+        baseline_dir = ROOT / "artifacts/baseline"
         baseline_dir.mkdir(parents=True, exist_ok=True)
-        for name in ['rimworld-mod-real-fow.dll', 'VersionFromManifest.dll']:
-            original = subprocess.check_output(['git', 'show', revision + ':1.6/Assemblies/' + name], cwd=ROOT)
+        for name in ["rimworld-mod-real-fow.dll", "VersionFromManifest.dll"]:
+            original = subprocess.check_output(
+                ["git", "show", revision + ":1.6/Assemblies/" + name], cwd=ROOT
+            )
             retained = baseline_dir / name
             if retained.exists() and retained.read_bytes() != original:
-                raise RuntimeError('Retained baseline differs from the public upstream snapshot: ' + name)
-            if not retained.exists(): retained.write_bytes(original)
-        folders = ['1.6/Defs', '1.6/Patches']
-        names = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', revision, *folders],
-                                        cwd=ROOT, text=True).splitlines()
-        if not names: raise RuntimeError('Original baseline definitions are missing')
+                raise RuntimeError(
+                    "Retained baseline differs from the public upstream snapshot: " + name
+                )
+            if not retained.exists():
+                retained.write_bytes(original)
+        folders = ["1.6/Defs", "1.6/Patches"]
+        names = subprocess.check_output(
+            ["git", "ls-tree", "-r", "--name-only", revision, *folders], cwd=ROOT, text=True
+        ).splitlines()
+        if not names:
+            raise RuntimeError("Original baseline definitions are missing")
         for folder in folders:
             shutil.rmtree(destination / folder, ignore_errors=True)
         for name in names:
             target = destination / name
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(subprocess.check_output(['git', 'show', revision + ':' + name], cwd=ROOT))
-        shutil.copy2(ROOT / 'artifacts/baseline/rimworld-mod-real-fow.dll', assemblies / 'TotalFog.dll')
-        shutil.copy2(ROOT / 'artifacts/baseline/VersionFromManifest.dll', assemblies / 'VersionFromManifest.dll')
-    for path in destination.rglob('*'):
-        if path.is_file() and (path.suffix in {'.pdb','.mdb'} or path.name in {'.DS_Store','0Harmony.dll'} or path.name.startswith('._') or (not baseline and path.name == 'VersionFromManifest.dll' and '1.6' in path.parts)):
+            target.write_bytes(
+                subprocess.check_output(["git", "show", revision + ":" + name], cwd=ROOT)
+            )
+        shutil.copy2(
+            ROOT / "artifacts/baseline/rimworld-mod-real-fow.dll", assemblies / "TotalFog.dll"
+        )
+        shutil.copy2(
+            ROOT / "artifacts/baseline/VersionFromManifest.dll",
+            assemblies / "VersionFromManifest.dll",
+        )
+    for path in destination.rglob("*"):
+        if path.is_file() and (
+            path.suffix in {".pdb", ".mdb"}
+            or path.name in {".DS_Store", "0Harmony.dll"}
+            or path.name.startswith("._")
+            or (not baseline and path.name == "VersionFromManifest.dll" and "1.6" in path.parts)
+        ):
             path.unlink()
-    if not (assemblies / 'TotalFog.dll').is_file(): raise RuntimeError('TotalFog.dll is missing')
+    if not (assemblies / "TotalFog.dll").is_file():
+        raise RuntimeError("TotalFog.dll is missing")
+
+
 def deploy_pair(baseline=False):
-    stopped(); stage(MODS/'TotalFog', baseline)
-    companion = ROOT/'artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll'
+    stopped()
+    stage(MODS / "TotalFog", baseline)
+    companion = ROOT / "artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll"
     if companion.exists():
-        bundle = MODS.parent/'BridgeTools/TotalFog'
+        bundle = MODS.parent / "BridgeTools/TotalFog"
         bundle.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(companion, bundle/companion.name)
+        shutil.copy2(companion, bundle / companion.name)
+
+
 try:
-    guard = (LOGS/'workflow.lock').open('w')
+    guard = (LOGS / "workflow.lock").open("w")
     fcntl.flock(guard, fcntl.LOCK_EX)
     mode = sys.argv[1]
-    if mode not in {'format','format-check','build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','mp-setup','mp-layout','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use format, format-check, build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
-    if mode == 'runtime-compare' and len(sys.argv) not in {4, 5}:
-        raise RuntimeError('Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]')
-    with logpath.open('w') as log:
-        if mode in {'format', 'format-check'}:
-            step = 'formatting'
-            format_sources(log, check=mode == 'format-check')
-        if mode != 'source-publish' and (MODS.name != 'Mods' or not MODS.is_dir()): raise RuntimeError('RIMWORLD_MOD_DIR must name an existing Mods folder')
-        if mode == 'source-publish':
-            step = 'public source publication'
-            run(['python3', str(ROOT/'scripts/publish-source')], log)
-        if mode == 'verify-rendered':
-            step = 'rendered evidence'
-            if len(sys.argv) != 3: raise RuntimeError('Use verify-rendered <evidence folder>')
+    if mode not in {
+        "format",
+        "format-check",
+        "build",
+        "deploy",
+        "deploy-built",
+        "package",
+        "feedback-package",
+        "feedback-verify",
+        "setup",
+        "dpa-setup",
+        "mp-setup",
+        "mp-layout",
+        "ce-setup",
+        "ce-zombieland-setup",
+        "zombieland-setup",
+        "zombieland-fallback-setup",
+        "baseline",
+        "benchmark",
+        "runtime-benchmark",
+        "runtime-compare",
+        "verify-rendered",
+        "source-publish",
+    }:
+        raise RuntimeError(
+            "Use format, format-check, build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+        )
+    if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
+        raise RuntimeError(
+            "Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]"
+        )
+    with logpath.open("w") as log:
+        if mode in {"format", "format-check"}:
+            step = "formatting"
+            format_sources(log, check=mode == "format-check")
+        if mode != "source-publish" and (MODS.name != "Mods" or not MODS.is_dir()):
+            raise RuntimeError("RIMWORLD_MOD_DIR must name an existing Mods folder")
+        if mode == "source-publish":
+            step = "public source publication"
+            run(["python3", str(ROOT / "scripts/publish-source")], log)
+        if mode == "verify-rendered":
+            step = "rendered evidence"
+            if len(sys.argv) != 3:
+                raise RuntimeError("Use verify-rendered <evidence folder>")
             evidence = Path(sys.argv[2]).expanduser().resolve()
-            if not evidence.is_relative_to(ROOT/'artifacts'): raise RuntimeError('Evidence must be in this project\'s artifacts folder')
-            python = ROOT/'artifacts/pixel-analysis-env/bin/python'
-            run([str(python) if python.exists() else sys.executable, str(ROOT/'scripts/verify-rendered'), str(evidence)],log)
-        if mode == 'runtime-benchmark':
-            step = 'runtime benchmark'
-            if len(sys.argv) not in {4, 5}: raise RuntimeError('Use runtime-benchmark <label> <save name> [Normal|Ultrafast]')
-            run(['python3', str(ROOT/'scripts/runtime-benchmark'), *sys.argv[2:]], log)
-        if mode == 'feedback-verify':
-            step = 'paired native feedback verification'
-            if len(sys.argv) != 3: raise RuntimeError('Use feedback-verify <completed comparison label>')
+            if not evidence.is_relative_to(ROOT / "artifacts"):
+                raise RuntimeError("Evidence must be in this project's artifacts folder")
+            python = ROOT / "artifacts/pixel-analysis-env/bin/python"
+            run(
+                [
+                    str(python) if python.exists() else sys.executable,
+                    str(ROOT / "scripts/verify-rendered"),
+                    str(evidence),
+                ],
+                log,
+            )
+        if mode == "runtime-benchmark":
+            step = "runtime benchmark"
+            if len(sys.argv) not in {4, 5}:
+                raise RuntimeError("Use runtime-benchmark <label> <save name> [Normal|Ultrafast]")
+            run(["python3", str(ROOT / "scripts/runtime-benchmark"), *sys.argv[2:]], log)
+        if mode == "feedback-verify":
+            step = "paired native feedback verification"
+            if len(sys.argv) != 3:
+                raise RuntimeError("Use feedback-verify <completed comparison label>")
             stopped()
-            run(['python3', str(ROOT/'scripts/feedback-verify'), sys.argv[2]], log)
-        if mode not in {'format','format-check','baseline','deploy-built','dpa-setup','mp-setup','mp-layout','zombieland-fallback-setup','verify-rendered','runtime-benchmark','feedback-verify','source-publish'}:
-            step = 'formatting'
+            run(["python3", str(ROOT / "scripts/feedback-verify"), sys.argv[2]], log)
+        if mode not in {
+            "format",
+            "format-check",
+            "baseline",
+            "deploy-built",
+            "dpa-setup",
+            "mp-setup",
+            "mp-layout",
+            "zombieland-fallback-setup",
+            "verify-rendered",
+            "runtime-benchmark",
+            "feedback-verify",
+            "source-publish",
+        }:
+            step = "formatting"
             format_sources(log, check=True)
-            step = 'tests'
-            run(['dotnet','test',str(ROOT/'Source/Tests/TotalFog.Tests.csproj'),'-c','Release','--nologo','-v:q'],log)
-            step = 'build'
-            run(['dotnet','build',str(PROJECT),'-c','Release','--no-incremental','--nologo','-v:q','-p:RIMWORLD_MOD_DIR='],log)
-        if mode == 'runtime-compare':
-            step = 'runtime comparison'
-            pairs = int(os.environ.get('TOTALFOG_COMPARISON_PAIRS', '3'))
-            if pairs not in {1, 2, 3}: raise RuntimeError('Use 1..3 for TOTALFOG_COMPARISON_PAIRS')
+            step = "tests"
+            run(
+                [
+                    "dotnet",
+                    "test",
+                    str(ROOT / "Source/Tests/TotalFog.Tests.csproj"),
+                    "-c",
+                    "Release",
+                    "--nologo",
+                    "-v:q",
+                ],
+                log,
+            )
+            step = "build"
+            run(
+                [
+                    "dotnet",
+                    "build",
+                    str(PROJECT),
+                    "-c",
+                    "Release",
+                    "--no-incremental",
+                    "--nologo",
+                    "-v:q",
+                    "-p:RIMWORLD_MOD_DIR=",
+                ],
+                log,
+            )
+        if mode == "runtime-compare":
+            step = "runtime comparison"
+            pairs = int(os.environ.get("TOTALFOG_COMPARISON_PAIRS", "3"))
+            if pairs not in {1, 2, 3}:
+                raise RuntimeError("Use 1..3 for TOTALFOG_COMPARISON_PAIRS")
             label, save_name = sys.argv[2:4]
-            speed = sys.argv[4] if len(sys.argv) == 5 else 'Ultrafast'
-            report = {'save': save_name, 'speed': speed, 'comparisonPairs': pairs,
-                'scope': 'performance-floor' if pairs == 3 else 'spot-check', 'complete': False, 'samples': []}
-            destination = ROOT/'artifacts'/('comparison-'+label+'.json')
+            speed = sys.argv[4] if len(sys.argv) == 5 else "Ultrafast"
+            report = {
+                "save": save_name,
+                "speed": speed,
+                "comparisonPairs": pairs,
+                "scope": "performance-floor" if pairs == 3 else "spot-check",
+                "complete": False,
+                "samples": [],
+            }
+            destination = ROOT / "artifacts" / ("comparison-" + label + ".json")
             try:
                 for index in range(pairs):
-                    order = ['original','candidate'] if index % 2 == 0 else ['candidate','original']
+                    order = (
+                        ["original", "candidate"] if index % 2 == 0 else ["candidate", "original"]
+                    )
                     for variant in order:
-                        deploy_pair(variant == 'original')
-                        sample_label = f'{label}-{variant}-{index+1}'
-                        run(['python3',str(ROOT/'scripts/runtime-benchmark'),sample_label,save_name,speed,'1'],log)
-                        evidence = json.loads((ROOT/'artifacts'/('runtime-'+sample_label+'.json')).read_text())
-                        if not evidence['complete'] or len(evidence['samples']) != 1:
-                            raise RuntimeError('Incomplete comparison sample: '+sample_label)
-                        sample = evidence['samples'][0]['measurement']
-                        environment = sample['environment']
-                        identity = {k:environment[k] for k in ['mapX','mapZ','pawns','width','height','renderer','cpu',
-                            'vSyncCount','targetFrameRate','effectiveSettings','automaticPauseBefore','gameVersion','engineMvid']}
-                        identity['saveSha256'] = evidence['saveSha256']
-                        identity['instrumentation'] = evidence['instrumentation']
-                        identity['camera'] = environment['camera']
-                        identity['wideView'] = environment['wideView']
-                        identity['contaminationOverlay'] = environment['contaminationOverlay']
-                        identity['contaminationInput'] = environment['contaminationInput']
-                        identity['zombieland'] = evidence['zombielandIdentity']
-                        identity['combatExtended'] = evidence['combatExtendedIdentity']
-                        identity['warmupTicks'] = evidence['warmupTicks']
-                        identity['warmupWindow'] = sample['warmup']
-                        identity['profileZombieWork'] = evidence['profileZombieWork']
-                        identity['forceRequestedSpeed'] = evidence['forceRequestedSpeed']
-                        identity['ultraSpeedBoost'] = evidence['ultraSpeedBoost']
-                        if report.get('identity', identity) != identity:
-                            raise RuntimeError('Original and candidate fixture, environment or settings differ')
-                        report['identity'] = identity
-                        expected = ROOT/('artifacts/baseline/rimworld-mod-real-fow.dll' if variant == 'original' else '1.6/Assemblies/TotalFog.dll')
-                        if evidence['mainSha256'] != hashlib.sha256(expected.read_bytes()).hexdigest():
-                            raise RuntimeError('Comparison loaded unexpected bytes: '+variant)
-                        playback = sample['playback']
-                        work = sample.get('zombieWork')
-                        report['samples'].append({'variant':variant,'report':sample_label,'mainSha256':evidence['mainSha256'],
-                            'tps':1000*playback['advancedTicks']/playback['elapsedMs'],
-                            'tickElapsedMs':sample['tickCpuMs']['mean'],'frameP95Ms':sample['frameIntervalMs']['p95'],
-                            'zombieWork':work,'zombiePopulation':sample.get('zombiePopulation'),
-                            'zombieRemovals':sample.get('zombieRemovals')})
-                        report['samples'][-1]['tickRateSamples'] = sample['tickRateSamples']
-                        destination.write_text(json.dumps(report,indent=2)+'\n')
-                report['medians'] = {v:{k:statistics.median(s[k] for s in report['samples'] if s['variant'] == v)
-                    for k in ['tps','tickElapsedMs','frameP95Ms']} for v in ['original','candidate']}
-                report['diagnosticInstrumentation'] = report['identity']['profileZombieWork']
-                report['unrestrictedPlayerUltrafast'] = speed == 'Ultrafast' and not report['identity']['forceRequestedSpeed'] and all(
-                    row['multiplier'] == 15 for sample in report['samples'] for row in sample['tickRateSamples'])
-                report['measuredFloorMet'] = report['medians']['candidate']['tps'] >= report['medians']['original']['tps']
-                report['performanceFloorMet'] = pairs == 3 and report['measuredFloorMet']
-                report['complete'] = True
-                destination.write_text(json.dumps(report,indent=2)+'\n')
-                if not report['measuredFloorMet']:
-                    raise RuntimeError('Candidate TPS is below the original; inspect '+str(destination))
+                        deploy_pair(variant == "original")
+                        sample_label = f"{label}-{variant}-{index + 1}"
+                        run(
+                            [
+                                "python3",
+                                str(ROOT / "scripts/runtime-benchmark"),
+                                sample_label,
+                                save_name,
+                                speed,
+                                "1",
+                            ],
+                            log,
+                        )
+                        evidence = json.loads(
+                            (ROOT / "artifacts" / ("runtime-" + sample_label + ".json")).read_text()
+                        )
+                        if not evidence["complete"] or len(evidence["samples"]) != 1:
+                            raise RuntimeError("Incomplete comparison sample: " + sample_label)
+                        sample = evidence["samples"][0]["measurement"]
+                        environment = sample["environment"]
+                        identity = {
+                            k: environment[k]
+                            for k in [
+                                "mapX",
+                                "mapZ",
+                                "pawns",
+                                "width",
+                                "height",
+                                "renderer",
+                                "cpu",
+                                "vSyncCount",
+                                "targetFrameRate",
+                                "effectiveSettings",
+                                "automaticPauseBefore",
+                                "gameVersion",
+                                "engineMvid",
+                            ]
+                        }
+                        identity["saveSha256"] = evidence["saveSha256"]
+                        identity["instrumentation"] = evidence["instrumentation"]
+                        identity["camera"] = environment["camera"]
+                        identity["wideView"] = environment["wideView"]
+                        identity["contaminationOverlay"] = environment["contaminationOverlay"]
+                        identity["contaminationInput"] = environment["contaminationInput"]
+                        identity["zombieland"] = evidence["zombielandIdentity"]
+                        identity["combatExtended"] = evidence["combatExtendedIdentity"]
+                        identity["warmupTicks"] = evidence["warmupTicks"]
+                        identity["warmupWindow"] = sample["warmup"]
+                        identity["profileZombieWork"] = evidence["profileZombieWork"]
+                        identity["forceRequestedSpeed"] = evidence["forceRequestedSpeed"]
+                        identity["ultraSpeedBoost"] = evidence["ultraSpeedBoost"]
+                        if report.get("identity", identity) != identity:
+                            raise RuntimeError(
+                                "Original and candidate fixture, environment or settings differ"
+                            )
+                        report["identity"] = identity
+                        expected = ROOT / (
+                            "artifacts/baseline/rimworld-mod-real-fow.dll"
+                            if variant == "original"
+                            else "1.6/Assemblies/TotalFog.dll"
+                        )
+                        if (
+                            evidence["mainSha256"]
+                            != hashlib.sha256(expected.read_bytes()).hexdigest()
+                        ):
+                            raise RuntimeError("Comparison loaded unexpected bytes: " + variant)
+                        playback = sample["playback"]
+                        work = sample.get("zombieWork")
+                        report["samples"].append(
+                            {
+                                "variant": variant,
+                                "report": sample_label,
+                                "mainSha256": evidence["mainSha256"],
+                                "tps": 1000 * playback["advancedTicks"] / playback["elapsedMs"],
+                                "tickElapsedMs": sample["tickCpuMs"]["mean"],
+                                "frameP95Ms": sample["frameIntervalMs"]["p95"],
+                                "zombieWork": work,
+                                "zombiePopulation": sample.get("zombiePopulation"),
+                                "zombieRemovals": sample.get("zombieRemovals"),
+                            }
+                        )
+                        report["samples"][-1]["tickRateSamples"] = sample["tickRateSamples"]
+                        destination.write_text(json.dumps(report, indent=2) + "\n")
+                report["medians"] = {
+                    v: {
+                        k: statistics.median(s[k] for s in report["samples"] if s["variant"] == v)
+                        for k in ["tps", "tickElapsedMs", "frameP95Ms"]
+                    }
+                    for v in ["original", "candidate"]
+                }
+                report["diagnosticInstrumentation"] = report["identity"]["profileZombieWork"]
+                report["unrestrictedPlayerUltrafast"] = (
+                    speed == "Ultrafast"
+                    and not report["identity"]["forceRequestedSpeed"]
+                    and all(
+                        row["multiplier"] == 15
+                        for sample in report["samples"]
+                        for row in sample["tickRateSamples"]
+                    )
+                )
+                report["measuredFloorMet"] = (
+                    report["medians"]["candidate"]["tps"] >= report["medians"]["original"]["tps"]
+                )
+                report["performanceFloorMet"] = pairs == 3 and report["measuredFloorMet"]
+                report["complete"] = True
+                destination.write_text(json.dumps(report, indent=2) + "\n")
+                if not report["measuredFloorMet"]:
+                    raise RuntimeError(
+                        "Candidate TPS is below the original; inspect " + str(destination)
+                    )
             finally:
                 primary_error = sys.exc_info()[1]
                 try:
@@ -188,411 +405,820 @@ try:
                 except Exception as cleanup_error:
                     if primary_error is None:
                         raise
-                    print('Candidate restore also failed: ' + str(cleanup_error), file=log)
-        if mode in {'deploy','deploy-built','setup','ce-setup','ce-zombieland-setup','zombieland-setup','baseline'}:
-            step = 'deploy'; deploy_pair(mode == 'baseline')
-        if mode in {'ce-setup', 'ce-zombieland-setup'}:
-            step = 'CE Steam installation'
-            metadata = GAME.parents[2]/'workshop/content/294100/2890901044/About/About.xml'
+                    print("Candidate restore also failed: " + str(cleanup_error), file=log)
+        if mode in {
+            "deploy",
+            "deploy-built",
+            "setup",
+            "ce-setup",
+            "ce-zombieland-setup",
+            "zombieland-setup",
+            "baseline",
+        }:
+            step = "deploy"
+            deploy_pair(mode == "baseline")
+        if mode in {"ce-setup", "ce-zombieland-setup"}:
+            step = "CE Steam installation"
+            metadata = GAME.parents[2] / "workshop/content/294100/2890901044/About/About.xml"
             ce = ET.parse(metadata).getroot()
-            if ce.findtext('packageId', '').lower() != 'ceteam.combatextended' or '1.6' not in [v.text for v in ce.findall('supportedVersions/li')]:
-                raise RuntimeError('The installed Combat Extended must support RimWorld 1.6')
-        if mode == 'ce-setup':
-            step = 'isolated CE configuration'
-            data = ROOT/'artifacts/CEUserData'
-            (data/'Config').mkdir(parents=True,exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
-            config_path = data/'Config/ModsConfig.xml'
-            order = ['brrainz.harmony','brrainz.rimbridgeserver','ludeon.rimworld','ludeon.rimworld.royalty',
-                'ludeon.rimworld.ideology','ludeon.rimworld.biotech','ludeon.rimworld.anomaly','ludeon.rimworld.odyssey',
-                'ceteam.combatextended','brrainz.totalfog']
+            if ce.findtext("packageId", "").lower() != "ceteam.combatextended" or "1.6" not in [
+                v.text for v in ce.findall("supportedVersions/li")
+            ]:
+                raise RuntimeError("The installed Combat Extended must support RimWorld 1.6")
+        if mode == "ce-setup":
+            step = "isolated CE configuration"
+            data = ROOT / "artifacts/CEUserData"
+            (data / "Config").mkdir(parents=True, exist_ok=True)
+            (data / "Logs").mkdir(exist_ok=True)
+            config_path = data / "Config/ModsConfig.xml"
+            order = [
+                "brrainz.harmony",
+                "brrainz.rimbridgeserver",
+                "ludeon.rimworld",
+                "ludeon.rimworld.royalty",
+                "ludeon.rimworld.ideology",
+                "ludeon.rimworld.biotech",
+                "ludeon.rimworld.anomaly",
+                "ludeon.rimworld.odyssey",
+                "ceteam.combatextended",
+                "brrainz.totalfog",
+            ]
             if config_path.exists():
-                active = [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]
-                if active != order: raise RuntimeError('Existing CE test loadout differs; preserve it for review')
+                active = [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")]
+                if active != order:
+                    raise RuntimeError("Existing CE test loadout differs; preserve it for review")
             else:
-                doc = ET.Element('ModsConfigData'); ET.SubElement(doc,'version').text='1.6.4871 rev595'
-                active = ET.SubElement(doc,'activeMods')
-                for package in order: ET.SubElement(active,'li').text=package
-                ET.ElementTree(doc).write(config_path,encoding='utf-8',xml_declaration=True)
-                settings = 'Mod_TotalFog_TotalFogMod.xml'
-                source = ROOT/'artifacts/UserData/Config'/settings
-                if source.exists(): shutil.copy2(source,data/'Config'/settings)
-            cfg = Path.home()/'.gabs/config.json'; config = json.loads(cfg.read_text())
-            game_id = 'total-fog-ce-16'
-            entry = {'id':game_id,'name':'Total Fog CE 1.6','launchMode':'SteamManaged','target':'294100',
-                'args':['-savedatafolder='+str(data),'-logFile',str(data/'Logs/Player.log')],
-                'stopProcessName':'RimWorld by Ludeon Studios','gabpMode':'local',
-                'description':'Isolated Total Fog Combat Extended verification with all DLCs'}
-            if game_id in config['games'] and config['games'][game_id] != entry:
-                raise RuntimeError('Existing CE game registration differs; preserve it for review')
-            config['games'][game_id]=entry
-            cfg.write_text(json.dumps(config,indent=2)+'\n')
-            if [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')] != order:
-                raise RuntimeError('The isolated CE profile did not retain its loadout')
-        if mode in {'zombieland-setup','zombieland-fallback-setup','ce-zombieland-setup'}:
-            fallback = mode == 'zombieland-fallback-setup'
-            combined_ce = mode == 'ce-zombieland-setup'
-            step = 'Zombieland metadata'
-            zombie_root = ROOT.parent/'Zombieland'
-            metadata = ET.parse(zombie_root/'About/About.xml').getroot()
-            package_id = metadata.findtext('packageId', '').lower()
-            if package_id != 'brrainz.zombieland' or '1.6' not in [v.text for v in metadata.findall('supportedVersions/li')]:
-                raise RuntimeError('The local Zombieland repository must support RimWorld 1.6')
-            step = 'Zombieland build and paired deployment'
+                doc = ET.Element("ModsConfigData")
+                ET.SubElement(doc, "version").text = "1.6.4871 rev595"
+                active = ET.SubElement(doc, "activeMods")
+                for package in order:
+                    ET.SubElement(active, "li").text = package
+                ET.ElementTree(doc).write(config_path, encoding="utf-8", xml_declaration=True)
+                settings = "Mod_TotalFog_TotalFogMod.xml"
+                source = ROOT / "artifacts/UserData/Config" / settings
+                if source.exists():
+                    shutil.copy2(source, data / "Config" / settings)
+            cfg = Path.home() / ".gabs/config.json"
+            config = json.loads(cfg.read_text())
+            game_id = "total-fog-ce-16"
+            entry = {
+                "id": game_id,
+                "name": "Total Fog CE 1.6",
+                "launchMode": "SteamManaged",
+                "target": "294100",
+                "args": ["-savedatafolder=" + str(data), "-logFile", str(data / "Logs/Player.log")],
+                "stopProcessName": "RimWorld by Ludeon Studios",
+                "gabpMode": "local",
+                "description": "Isolated Total Fog Combat Extended verification with all DLCs",
+            }
+            if game_id in config["games"] and config["games"][game_id] != entry:
+                raise RuntimeError("Existing CE game registration differs; preserve it for review")
+            config["games"][game_id] = entry
+            cfg.write_text(json.dumps(config, indent=2) + "\n")
+            if [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")] != order:
+                raise RuntimeError("The isolated CE profile did not retain its loadout")
+        if mode in {"zombieland-setup", "zombieland-fallback-setup", "ce-zombieland-setup"}:
+            fallback = mode == "zombieland-fallback-setup"
+            combined_ce = mode == "ce-zombieland-setup"
+            step = "Zombieland metadata"
+            zombie_root = ROOT.parent / "Zombieland"
+            metadata = ET.parse(zombie_root / "About/About.xml").getroot()
+            package_id = metadata.findtext("packageId", "").lower()
+            if package_id != "brrainz.zombieland" or "1.6" not in [
+                v.text for v in metadata.findall("supportedVersions/li")
+            ]:
+                raise RuntimeError("The local Zombieland repository must support RimWorld 1.6")
+            step = "Zombieland build and paired deployment"
             stopped()
             if not fallback:
-                subprocess.run([str(zombie_root/'scripts/build-quiet.sh'), '--no-stop-rimworld', '-c', 'Release',
-                     '-p:RIMWORLD_MOD_DIR='+str(MODS)], cwd=zombie_root, env=workflow_env,
-                     stdout=log, stderr=subprocess.STDOUT, check=True)
-            expected = zombie_root/'1.6/Assemblies/ZombieLand.dll'
-            installed = MODS/'ZombieLand/1.6/Assemblies/ZombieLand.dll'
-            companion = zombie_root/'artifacts/BridgeTools/Zombieland/Zombieland.BridgeTools.dll'
-            deployed_companion = MODS.parent/'BridgeTools/Zombieland/Zombieland.BridgeTools.dll'
+                subprocess.run(
+                    [
+                        str(zombie_root / "scripts/build-quiet.sh"),
+                        "--no-stop-rimworld",
+                        "-c",
+                        "Release",
+                        "-p:RIMWORLD_MOD_DIR=" + str(MODS),
+                    ],
+                    cwd=zombie_root,
+                    env=workflow_env,
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    check=True,
+                )
+            expected = zombie_root / "1.6/Assemblies/ZombieLand.dll"
+            installed = MODS / "ZombieLand/1.6/Assemblies/ZombieLand.dll"
+            companion = zombie_root / "artifacts/BridgeTools/Zombieland/Zombieland.BridgeTools.dll"
+            deployed_companion = MODS.parent / "BridgeTools/Zombieland/Zombieland.BridgeTools.dll"
             for built, deployed in [(expected, installed), (companion, deployed_companion)]:
-                if not built.is_file() or not deployed.is_file() or built.read_bytes() != deployed.read_bytes():
-                    raise RuntimeError('Zombieland paired deployment does not match its build: '+built.name)
-            step = 'isolated Zombieland configuration'
-            data = ROOT/'artifacts'/('CEZombielandUserData' if combined_ce else 'ZombielandFallbackUserData' if fallback else 'ZombielandUserData')
-            (data/'Config').mkdir(parents=True, exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
+                if (
+                    not built.is_file()
+                    or not deployed.is_file()
+                    or built.read_bytes() != deployed.read_bytes()
+                ):
+                    raise RuntimeError(
+                        "Zombieland paired deployment does not match its build: " + built.name
+                    )
+            step = "isolated Zombieland configuration"
+            data = (
+                ROOT
+                / "artifacts"
+                / (
+                    "CEZombielandUserData"
+                    if combined_ce
+                    else "ZombielandFallbackUserData"
+                    if fallback
+                    else "ZombielandUserData"
+                )
+            )
+            (data / "Config").mkdir(parents=True, exist_ok=True)
+            (data / "Logs").mkdir(exist_ok=True)
             # Reuse the tested rendering and pause-on-load preferences only
             # when this isolated profile has no preferences of its own.
-            prefs = data/'Config/Prefs.xml'
-            source_prefs = ROOT/'artifacts'/('CEUserData' if combined_ce else 'UserData')/'Config/Prefs.xml'
-            if not prefs.exists() and source_prefs.exists(): shutil.copy2(source_prefs, prefs)
-            config_path = data/'Config/ModsConfig.xml'
-            order = ['brrainz.harmony', 'brrainz.rimbridgeserver', 'ludeon.rimworld', 'ludeon.rimworld.royalty',
-                'ludeon.rimworld.ideology', 'ludeon.rimworld.biotech', 'ludeon.rimworld.anomaly', 'ludeon.rimworld.odyssey']
-            if combined_ce: order.append('ceteam.combatextended')
+            prefs = data / "Config/Prefs.xml"
+            source_prefs = (
+                ROOT
+                / "artifacts"
+                / ("CEUserData" if combined_ce else "UserData")
+                / "Config/Prefs.xml"
+            )
+            if not prefs.exists() and source_prefs.exists():
+                shutil.copy2(source_prefs, prefs)
+            config_path = data / "Config/ModsConfig.xml"
+            order = [
+                "brrainz.harmony",
+                "brrainz.rimbridgeserver",
+                "ludeon.rimworld",
+                "ludeon.rimworld.royalty",
+                "ludeon.rimworld.ideology",
+                "ludeon.rimworld.biotech",
+                "ludeon.rimworld.anomaly",
+                "ludeon.rimworld.odyssey",
+            ]
+            if combined_ce:
+                order.append("ceteam.combatextended")
             order.append(package_id)
-            if not fallback: order.append('brrainz.totalfog')
+            if not fallback:
+                order.append("brrainz.totalfog")
             if config_path.exists():
-                active = [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]
-                if active != order: raise RuntimeError('Existing Zombieland test loadout differs; preserve it for review')
+                active = [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")]
+                if active != order:
+                    raise RuntimeError(
+                        "Existing Zombieland test loadout differs; preserve it for review"
+                    )
             else:
-                doc = ET.Element('ModsConfigData'); ET.SubElement(doc, 'version').text = '1.6.4871 rev595'
-                active = ET.SubElement(doc, 'activeMods')
-                for package in order: ET.SubElement(active, 'li').text = package
-                ET.ElementTree(doc).write(config_path, encoding='utf-8', xml_declaration=True)
-                settings = 'Mod_TotalFog_TotalFogMod.xml'
-                source = ROOT/'artifacts/UserData/Config'/settings
-                if not fallback and source.exists(): shutil.copy2(source, data/'Config'/settings)
+                doc = ET.Element("ModsConfigData")
+                ET.SubElement(doc, "version").text = "1.6.4871 rev595"
+                active = ET.SubElement(doc, "activeMods")
+                for package in order:
+                    ET.SubElement(active, "li").text = package
+                ET.ElementTree(doc).write(config_path, encoding="utf-8", xml_declaration=True)
+                settings = "Mod_TotalFog_TotalFogMod.xml"
+                source = ROOT / "artifacts/UserData/Config" / settings
+                if not fallback and source.exists():
+                    shutil.copy2(source, data / "Config" / settings)
                 if combined_ce:
-                    for source in (ROOT/'artifacts/CEUserData/Config').glob('Mod_*CombatExtended*.xml'):
-                        shutil.copy2(source, data/'Config'/source.name)
-            cfg = Path.home()/'.gabs/config.json'; config = json.loads(cfg.read_text())
-            game_id = 'total-fog-ce-zombieland-16' if combined_ce else 'total-fog-zombieland-fallback-16' if fallback else 'total-fog-zombieland-16'
-            entry = {'id': game_id, 'name': 'Total Fog CE Zombieland 1.6' if combined_ce else 'Zombieland without Total Fog 1.6' if fallback else 'Total Fog Zombieland 1.6', 'launchMode': 'SteamManaged', 'target': '294100',
-                'args': ['-savedatafolder='+str(data), '-logFile', str(data/'Logs/Player.log')],
-                'stopProcessName': 'RimWorld by Ludeon Studios', 'gabpMode': 'local',
-                'description': 'Isolated Total Fog Combat Extended and Zombieland verification with all DLCs' if combined_ce else 'Isolated Zombieland optional-integration fallback with all DLCs' if fallback else 'Isolated Total Fog Zombieland verification with all DLCs'}
-            if game_id in config['games'] and config['games'][game_id] != entry:
-                raise RuntimeError('Existing Zombieland game registration differs; preserve it for review')
-            config['games'][game_id] = entry
-            cfg.write_text(json.dumps(config, indent=2)+'\n')
-            if [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')] != order:
-                raise RuntimeError('The isolated Zombieland profile did not retain its loadout')
-        if mode == 'mp-layout':
-            step = 'Multiplayer window layout'
-            if len(sys.argv) != 2: raise RuntimeError('Use mp-layout')
+                    for source in (ROOT / "artifacts/CEUserData/Config").glob(
+                        "Mod_*CombatExtended*.xml"
+                    ):
+                        shutil.copy2(source, data / "Config" / source.name)
+            cfg = Path.home() / ".gabs/config.json"
+            config = json.loads(cfg.read_text())
+            game_id = (
+                "total-fog-ce-zombieland-16"
+                if combined_ce
+                else "total-fog-zombieland-fallback-16"
+                if fallback
+                else "total-fog-zombieland-16"
+            )
+            entry = {
+                "id": game_id,
+                "name": "Total Fog CE Zombieland 1.6"
+                if combined_ce
+                else "Zombieland without Total Fog 1.6"
+                if fallback
+                else "Total Fog Zombieland 1.6",
+                "launchMode": "SteamManaged",
+                "target": "294100",
+                "args": ["-savedatafolder=" + str(data), "-logFile", str(data / "Logs/Player.log")],
+                "stopProcessName": "RimWorld by Ludeon Studios",
+                "gabpMode": "local",
+                "description": "Isolated Total Fog Combat Extended and Zombieland verification with all DLCs"
+                if combined_ce
+                else "Isolated Zombieland optional-integration fallback with all DLCs"
+                if fallback
+                else "Isolated Total Fog Zombieland verification with all DLCs",
+            }
+            if game_id in config["games"] and config["games"][game_id] != entry:
+                raise RuntimeError(
+                    "Existing Zombieland game registration differs; preserve it for review"
+                )
+            config["games"][game_id] = entry
+            cfg.write_text(json.dumps(config, indent=2) + "\n")
+            if [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")] != order:
+                raise RuntimeError("The isolated Zombieland profile did not retain its loadout")
+        if mode == "mp-layout":
+            step = "Multiplayer window layout"
+            if len(sys.argv) != 2:
+                raise RuntimeError("Use mp-layout")
+
             def desktop(*args):
-                result = json.loads(subprocess.check_output(['brrainztools', *args], text=True, stderr=log))
-                if not result.get('ok'): raise RuntimeError('Window control failed: '+str(result))
-                return result['data']
-            display = next(d for d in desktop('displays')['displays'] if d['isMain'])['frame']
-            half = int(display['width'])//2
-            processes = subprocess.check_output(['ps','-ax','-o','pid=,command='], text=True).splitlines()
+                result = json.loads(
+                    subprocess.check_output(["brrainztools", *args], text=True, stderr=log)
+                )
+                if not result.get("ok"):
+                    raise RuntimeError("Window control failed: " + str(result))
+                return result["data"]
+
+            display = next(d for d in desktop("displays")["displays"] if d["isMain"])["frame"]
+            half = int(display["width"]) // 2
+            processes = subprocess.check_output(
+                ["ps", "-ax", "-o", "pid=,command="], text=True
+            ).splitlines()
             windows = []
-            for index, role in enumerate(['Host','Client']):
-                marker = '-savedatafolder='+str(ROOT/'artifacts'/('MP'+role+'UserData'))
-                matches = [line.split(None,1)[0] for line in processes if marker in line.split()]
-                if len(matches) != 1: raise RuntimeError('Expected one running Multiplayer '+role.lower()+' process')
+            for index, role in enumerate(["Host", "Client"]):
+                marker = "-savedatafolder=" + str(ROOT / "artifacts" / ("MP" + role + "UserData"))
+                matches = [line.split(None, 1)[0] for line in processes if marker in line.split()]
+                if len(matches) != 1:
+                    raise RuntimeError(
+                        "Expected one running Multiplayer " + role.lower() + " process"
+                    )
                 pid = matches[0]
-                state = desktop('ax','--app',pid,'windows')
-                if state['application']['bundleIdentifier'] != 'ludeon.rimworld' or len(state['windows']) != 1:
-                    raise RuntimeError('Expected one RimWorld window for '+role)
-                windows.append((pid, int(display['x'])+index*half, int(display['y'])+30))
+                state = desktop("ax", "--app", pid, "windows")
+                if (
+                    state["application"]["bundleIdentifier"] != "ludeon.rimworld"
+                    or len(state["windows"]) != 1
+                ):
+                    raise RuntimeError("Expected one RimWorld window for " + role)
+                windows.append((pid, int(display["x"]) + index * half, int(display["y"]) + 30))
             for pid, x, y in windows:
-                desktop('ax','--app',pid,'resize',str(half-2)+','+str(int(display['height'])-30),'--window-index','0')
-                desktop('ax','--app',pid,'move',str(x)+','+str(y),'--window-index','0')
-                frame = desktop('ax','--app',pid,'windows')['windows'][0]['frame']
-                if any(abs(frame[key]-value)>2 for key,value in {'x':x,'y':y,'width':half-2,'height':int(display['height'])-30}.items()):
-                    raise RuntimeError('Window did not retain its requested half-screen rectangle')
-        if mode == 'mp-setup':
-            step = 'isolated Multiplayer configuration'
-            if len(sys.argv) != 2: raise RuntimeError('Use mp-setup')
+                desktop(
+                    "ax",
+                    "--app",
+                    pid,
+                    "resize",
+                    str(half - 2) + "," + str(int(display["height"]) - 30),
+                    "--window-index",
+                    "0",
+                )
+                desktop("ax", "--app", pid, "move", str(x) + "," + str(y), "--window-index", "0")
+                frame = desktop("ax", "--app", pid, "windows")["windows"][0]["frame"]
+                if any(
+                    abs(frame[key] - value) > 2
+                    for key, value in {
+                        "x": x,
+                        "y": y,
+                        "width": half - 2,
+                        "height": int(display["height"]) - 30,
+                    }.items()
+                ):
+                    raise RuntimeError("Window did not retain its requested half-screen rectangle")
+        if mode == "mp-setup":
+            step = "isolated Multiplayer configuration"
+            if len(sys.argv) != 2:
+                raise RuntimeError("Use mp-setup")
             stopped()
-            workshop = GAME.parents[2]/'workshop/content/294100'
-            for item, package in [('2934420800','zetrith.prepatcher'), ('2606448745','rwmt.multiplayer')]:
-                about = ET.parse(workshop/item/'About/About.xml').getroot()
-                if about.findtext('packageId','').lower() != package or '1.6' not in [v.text for v in about.findall('supportedVersions/li')]:
-                    raise RuntimeError('Installed Multiplayer and Prepatcher must support RimWorld 1.6')
-            order = ['zetrith.prepatcher','brrainz.harmony','brrainz.rimbridgeserver','ludeon.rimworld',
-                'ludeon.rimworld.royalty','ludeon.rimworld.ideology','ludeon.rimworld.biotech',
-                'ludeon.rimworld.anomaly','ludeon.rimworld.odyssey','rwmt.multiplayer','brrainz.totalfog']
-            cfg = Path.home()/'.gabs/config.json'; config = json.loads(cfg.read_text())
+            workshop = GAME.parents[2] / "workshop/content/294100"
+            for item, package in [
+                ("2934420800", "zetrith.prepatcher"),
+                ("2606448745", "rwmt.multiplayer"),
+            ]:
+                about = ET.parse(workshop / item / "About/About.xml").getroot()
+                if about.findtext("packageId", "").lower() != package or "1.6" not in [
+                    v.text for v in about.findall("supportedVersions/li")
+                ]:
+                    raise RuntimeError(
+                        "Installed Multiplayer and Prepatcher must support RimWorld 1.6"
+                    )
+            order = [
+                "zetrith.prepatcher",
+                "brrainz.harmony",
+                "brrainz.rimbridgeserver",
+                "ludeon.rimworld",
+                "ludeon.rimworld.royalty",
+                "ludeon.rimworld.ideology",
+                "ludeon.rimworld.biotech",
+                "ludeon.rimworld.anomaly",
+                "ludeon.rimworld.odyssey",
+                "rwmt.multiplayer",
+                "brrainz.totalfog",
+            ]
+            cfg = Path.home() / ".gabs/config.json"
+            config = json.loads(cfg.read_text())
             profiles = []
-            for role in ['Host','Client']:
-                data = ROOT/'artifacts'/('MP'+role+'UserData')
-                path = data/'Config/ModsConfig.xml'
-                game_id = 'total-fog-mp-'+role.lower()+'-16'
+            for role in ["Host", "Client"]:
+                data = ROOT / "artifacts" / ("MP" + role + "UserData")
+                path = data / "Config/ModsConfig.xml"
+                game_id = "total-fog-mp-" + role.lower() + "-16"
                 # SteamManaged tracks the spawned PID. A shared process-name fallback
                 # would mistake the other client for this profile or stop both clients.
-                entry = {'id':game_id,'name':'Total Fog Multiplayer '+role+' 1.6',
-                    'launchMode':'SteamManaged','target':'294100','gabpMode':'local',
-                    'args':['-savedatafolder='+str(data),'-logFile',str(data/'Logs/Player.log')],
-                    'description':'Isolated public Total Fog Multiplayer '+role.lower()+' verification'}
-                if path.exists() and [m.text.lower() for m in ET.parse(path).findall('activeMods/li')] != order:
-                    raise RuntimeError('Existing Multiplayer '+role.lower()+' loadout differs; preserve it for review')
-                if game_id in config['games'] and config['games'][game_id] != entry:
-                    raise RuntimeError('Existing Multiplayer '+role.lower()+' registration differs; preserve it for review')
-                profiles.append((data,path,game_id,entry))
-            for data,path,game_id,entry in profiles:
-                (data/'Config').mkdir(parents=True,exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
+                entry = {
+                    "id": game_id,
+                    "name": "Total Fog Multiplayer " + role + " 1.6",
+                    "launchMode": "SteamManaged",
+                    "target": "294100",
+                    "gabpMode": "local",
+                    "args": [
+                        "-savedatafolder=" + str(data),
+                        "-logFile",
+                        str(data / "Logs/Player.log"),
+                    ],
+                    "description": "Isolated public Total Fog Multiplayer "
+                    + role.lower()
+                    + " verification",
+                }
+                if (
+                    path.exists()
+                    and [m.text.lower() for m in ET.parse(path).findall("activeMods/li")] != order
+                ):
+                    raise RuntimeError(
+                        "Existing Multiplayer "
+                        + role.lower()
+                        + " loadout differs; preserve it for review"
+                    )
+                if game_id in config["games"] and config["games"][game_id] != entry:
+                    raise RuntimeError(
+                        "Existing Multiplayer "
+                        + role.lower()
+                        + " registration differs; preserve it for review"
+                    )
+                profiles.append((data, path, game_id, entry))
+            for data, path, game_id, entry in profiles:
+                (data / "Config").mkdir(parents=True, exist_ok=True)
+                (data / "Logs").mkdir(exist_ok=True)
                 if not path.exists():
-                    doc = ET.Element('ModsConfigData'); ET.SubElement(doc,'version').text='1.6.4871 rev597'
-                    active = ET.SubElement(doc,'activeMods')
-                    for package in order: ET.SubElement(active,'li').text=package
-                    ET.ElementTree(doc).write(path,encoding='utf-8',xml_declaration=True)
-                    settings = 'Mod_TotalFog_TotalFogMod.xml'
-                    source = ROOT/'artifacts/UserData/Config'/settings
-                    if source.exists(): shutil.copy2(source,data/'Config'/settings)
-                config['games'][game_id] = entry
-            cfg.write_text(json.dumps(config,indent=2)+'\n')
+                    doc = ET.Element("ModsConfigData")
+                    ET.SubElement(doc, "version").text = "1.6.4871 rev597"
+                    active = ET.SubElement(doc, "activeMods")
+                    for package in order:
+                        ET.SubElement(active, "li").text = package
+                    ET.ElementTree(doc).write(path, encoding="utf-8", xml_declaration=True)
+                    settings = "Mod_TotalFog_TotalFogMod.xml"
+                    source = ROOT / "artifacts/UserData/Config" / settings
+                    if source.exists():
+                        shutil.copy2(source, data / "Config" / settings)
+                config["games"][game_id] = entry
+            cfg.write_text(json.dumps(config, indent=2) + "\n")
             written = json.loads(cfg.read_text())
-            for data,path,game_id,entry in profiles:
-                if written['games'][game_id] != entry or [m.text.lower() for m in ET.parse(path).findall('activeMods/li')] != order:
-                    raise RuntimeError('The isolated Multiplayer profile did not retain its configuration')
-        if mode == 'dpa-setup':
+            for data, path, game_id, entry in profiles:
+                if (
+                    written["games"][game_id] != entry
+                    or [m.text.lower() for m in ET.parse(path).findall("activeMods/li")] != order
+                ):
+                    raise RuntimeError(
+                        "The isolated Multiplayer profile did not retain its configuration"
+                    )
+        if mode == "dpa-setup":
             stopped()
-            if len(sys.argv) > 3 or (len(sys.argv) == 3 and sys.argv[2] not in {'on', 'off'}):
-                raise RuntimeError('Use dpa-setup [on|off]')
-            enabled = len(sys.argv) < 3 or sys.argv[2] == 'on'
-            profile = os.environ.get('TOTALFOG_GAME_ID', 'total-fog-16')
-            profiles = {'total-fog-16': 'UserData', 'total-fog-ce-16': 'CEUserData',
-                'total-fog-zombieland-16': 'ZombielandUserData', 'total-fog-ce-zombieland-16': 'CEZombielandUserData'}
-            if profile not in profiles: raise RuntimeError('Use an existing Total Fog test profile for TOTALFOG_GAME_ID')
-            step = 'DPA Steam installation'
-            metadata = GAME.parents[2]/'workshop/content/294100/2038874626/About/About.xml'
+            if len(sys.argv) > 3 or (len(sys.argv) == 3 and sys.argv[2] not in {"on", "off"}):
+                raise RuntimeError("Use dpa-setup [on|off]")
+            enabled = len(sys.argv) < 3 or sys.argv[2] == "on"
+            profile = os.environ.get("TOTALFOG_GAME_ID", "total-fog-16")
+            profiles = {
+                "total-fog-16": "UserData",
+                "total-fog-ce-16": "CEUserData",
+                "total-fog-zombieland-16": "ZombielandUserData",
+                "total-fog-ce-zombieland-16": "CEZombielandUserData",
+            }
+            if profile not in profiles:
+                raise RuntimeError("Use an existing Total Fog test profile for TOTALFOG_GAME_ID")
+            step = "DPA Steam installation"
+            metadata = GAME.parents[2] / "workshop/content/294100/2038874626/About/About.xml"
             dpa = ET.parse(metadata).getroot()
-            package_id = dpa.findtext('packageId').lower()
-            if package_id != 'dubwise.dubsperformanceanalyzer.steam' or '1.6' not in [v.text for v in dpa.findall('supportedVersions/li')]:
-                raise RuntimeError('The Steam DPA installation must support RimWorld 1.6')
-            step = 'isolated DPA configuration'
-            config_path = ROOT/'artifacts'/profiles[profile]/'Config/ModsConfig.xml'
+            package_id = dpa.findtext("packageId").lower()
+            if package_id != "dubwise.dubsperformanceanalyzer.steam" or "1.6" not in [
+                v.text for v in dpa.findall("supportedVersions/li")
+            ]:
+                raise RuntimeError("The Steam DPA installation must support RimWorld 1.6")
+            step = "isolated DPA configuration"
+            config_path = ROOT / "artifacts" / profiles[profile] / "Config/ModsConfig.xml"
             config = ET.parse(config_path)
-            active = config.getroot().find('activeMods')
-            if active is None: raise RuntimeError('Set up the isolated test profile first')
+            active = config.getroot().find("activeMods")
+            if active is None:
+                raise RuntimeError("Set up the isolated test profile first")
             if enabled and package_id not in [m.text.lower() for m in active]:
-                entry = ET.Element('li'); entry.text = package_id
+                entry = ET.Element("li")
+                entry.text = package_id
                 active.insert(2, entry)
             if not enabled:
                 for entry in list(active):
-                    if entry.text.lower() == package_id: active.remove(entry)
-            config.write(config_path, encoding='utf-8', xml_declaration=True)
-            if (package_id in [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]) != enabled:
-                raise RuntimeError('The isolated profile did not retain DPA')
-        if mode == 'setup':
-            step = 'test dependencies'
-            for name, source in [('HarmonyMod',Path.home()/'Projects/HarmonyRimWorld'),('RimBridgeServer',Path.home()/'Projects/RimBridgeServer')]:
-                destination = MODS/name
+                    if entry.text.lower() == package_id:
+                        active.remove(entry)
+            config.write(config_path, encoding="utf-8", xml_declaration=True)
+            if (
+                package_id
+                in [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")]
+            ) != enabled:
+                raise RuntimeError("The isolated profile did not retain DPA")
+        if mode == "setup":
+            step = "test dependencies"
+            for name, source in [
+                ("HarmonyMod", Path.home() / "Projects/HarmonyRimWorld"),
+                ("RimBridgeServer", Path.home() / "Projects/RimBridgeServer"),
+            ]:
+                destination = MODS / name
                 if destination.exists():
                     # RimBridgeServer is already deployed here; keep the existing installation.
                     continue
                 destination.mkdir()
-                for item in ['About','LoadFolders.xml','1.4','1.5','1.6','Current']:
-                    src=source/item
-                    if not src.exists():continue
-                    if src.is_dir():shutil.copytree(src,destination/item)
-                    else:shutil.copy2(src,destination/item)
-            step = 'isolated configuration'
-            data = ROOT/'artifacts/UserData'; (data/'Config').mkdir(parents=True,exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
-            order=['brrainz.harmony','brrainz.rimbridgeserver','ludeon.rimworld','ludeon.rimworld.royalty','ludeon.rimworld.ideology','ludeon.rimworld.biotech','ludeon.rimworld.anomaly','ludeon.rimworld.odyssey','brrainz.totalfog']
-            previous_config = data/'Config/ModsConfig.xml'
-            if previous_config.exists() and 'dubwise.dubsperformanceanalyzer.steam' in [m.text.lower() for m in ET.parse(previous_config).findall('activeMods/li')]:
-                order.insert(2, 'dubwise.dubsperformanceanalyzer.steam')
-            doc=ET.Element('ModsConfigData'); ET.SubElement(doc,'version').text='1.6.4871 rev595'
-            active=ET.SubElement(doc,'activeMods')
-            for mod in order:ET.SubElement(active,'li').text=mod
-            ET.ElementTree(doc).write(data/'Config/ModsConfig.xml',encoding='utf-8',xml_declaration=True)
-            cfg=Path.home()/'.gabs/config.json'; config=json.loads(cfg.read_text())
-            config['games']['total-fog-16']={'id':'total-fog-16','name':'Total Fog 1.6','launchMode':'SteamManaged','target':'294100','args':['-savedatafolder='+str(data),'-logFile',str(data/'Logs/Player.log')],'stopProcessName':'RimWorld by Ludeon Studios','gabpMode':'local','description':'Isolated Total Fog Anomaly reproduction with all DLCs'}
-            cfg.write_text(json.dumps(config,indent=2)+'\n')
-        if mode == 'benchmark':
-            step = 'benchmark'
-            run(['python3',str(ROOT/'scripts/benchmark')],log)
-        if mode == 'feedback-package':
-            step = 'paired feedback acceptance'
+                for item in ["About", "LoadFolders.xml", "1.4", "1.5", "1.6", "Current"]:
+                    src = source / item
+                    if not src.exists():
+                        continue
+                    if src.is_dir():
+                        shutil.copytree(src, destination / item)
+                    else:
+                        shutil.copy2(src, destination / item)
+            step = "isolated configuration"
+            data = ROOT / "artifacts/UserData"
+            (data / "Config").mkdir(parents=True, exist_ok=True)
+            (data / "Logs").mkdir(exist_ok=True)
+            order = [
+                "brrainz.harmony",
+                "brrainz.rimbridgeserver",
+                "ludeon.rimworld",
+                "ludeon.rimworld.royalty",
+                "ludeon.rimworld.ideology",
+                "ludeon.rimworld.biotech",
+                "ludeon.rimworld.anomaly",
+                "ludeon.rimworld.odyssey",
+                "brrainz.totalfog",
+            ]
+            previous_config = data / "Config/ModsConfig.xml"
+            if previous_config.exists() and "dubwise.dubsperformanceanalyzer.steam" in [
+                m.text.lower() for m in ET.parse(previous_config).findall("activeMods/li")
+            ]:
+                order.insert(2, "dubwise.dubsperformanceanalyzer.steam")
+            doc = ET.Element("ModsConfigData")
+            ET.SubElement(doc, "version").text = "1.6.4871 rev595"
+            active = ET.SubElement(doc, "activeMods")
+            for mod in order:
+                ET.SubElement(active, "li").text = mod
+            ET.ElementTree(doc).write(
+                data / "Config/ModsConfig.xml", encoding="utf-8", xml_declaration=True
+            )
+            cfg = Path.home() / ".gabs/config.json"
+            config = json.loads(cfg.read_text())
+            config["games"]["total-fog-16"] = {
+                "id": "total-fog-16",
+                "name": "Total Fog 1.6",
+                "launchMode": "SteamManaged",
+                "target": "294100",
+                "args": ["-savedatafolder=" + str(data), "-logFile", str(data / "Logs/Player.log")],
+                "stopProcessName": "RimWorld by Ludeon Studios",
+                "gabpMode": "local",
+                "description": "Isolated Total Fog Anomaly reproduction with all DLCs",
+            }
+            cfg.write_text(json.dumps(config, indent=2) + "\n")
+        if mode == "benchmark":
+            step = "benchmark"
+            run(["python3", str(ROOT / "scripts/benchmark")], log)
+        if mode == "feedback-package":
+            step = "paired feedback acceptance"
             stopped()
-            gates = json.loads((ROOT/'artifacts/zombieland-current-package-gates.json').read_text())
-            comparison_path = Path(gates['comparison'])
+            gates = json.loads(
+                (ROOT / "artifacts/zombieland-current-package-gates.json").read_text()
+            )
+            comparison_path = Path(gates["comparison"])
             comparison = json.loads(comparison_path.read_text())
-            if not gates['passed'] or hashlib.sha256(comparison_path.read_bytes()).hexdigest() != gates['comparisonSha256'] or not comparison['performanceFloorMet']:
-                raise RuntimeError('Refresh exact paired native/performance gates with feedback-verify')
-            arrivals = json.loads((Path(gates['nativeEvidence'])/'silent-raid-arrivals.json').read_text())
-            if not (gates['silentArrivalControls'] == 4 and gates['incidentParameterLifetime'] == 'passed' and
-                    arrivals['operation']['Success'] and not arrivals['operation']['Warnings'] and
-                    arrivals['passed'] and len(arrivals['rows']) == 4 and
-                    all(row['passed'] for row in arrivals['rows']) and arrivals['lifetime']['passed']):
-                raise RuntimeError('Native silent arrival controls are unverified')
-            if gates.get('areaWarningControls') != 7:
-                raise RuntimeError('Refresh native danger-area warning controls with feedback-verify')
-            warnings = json.loads((Path(gates['nativeEvidence'])/'zombieland-area-warnings.json').read_text())
-            if not (warnings['operation']['Success'] and not warnings['operation']['Warnings'] and
-                    warnings['passed'] and len(warnings['rows']) == 7 and
-                    all(row['passed'] and row['simulationEntryRetained'] and row['nativeDrawCalls'] > 0 and
-                        row['tick'] == warnings['startTick'] for row in warnings['rows'])):
-                raise RuntimeError('Native danger-area warning controls are unverified')
-            if gates.get('albinoScreamControls') != 21:
-                raise RuntimeError('Refresh native Albino scream controls with feedback-verify')
-            for mode in ('hidden-muted', 'visible-muted', 'hidden-unfiltered'):
-                scream = json.loads((Path(gates['nativeEvidence'])/('zombieland-albino-scream-'+mode+'.json')).read_text())
-                if not (scream['operation']['Success'] and not scream['operation']['Warnings'] and
-                        scream['passed'] and len(scream['rows']) == 7 and all(row['passed'] for row in scream['rows']) and
-                        scream['normalPlayback'] and not scream['forcedScreamState'] and not scream['shortenedCooldown'] and
-                        not scream['startedAlbinoJob'] and scream['stagedRoomAndHeldVictims'] and
-                        not scream['naturalVictimCombat'] and scream['damageNotificationControl'] and not scream['resets']):
-                    raise RuntimeError('Native Albino scream controls are unverified')
-            explosions = json.loads((Path(gates['nativeEvidence'])/'explosion-camera.json').read_text())
-            if not (gates.get('explosionCameraControls') == 16 and
-                    explosions['operation']['Success'] and not explosions['operation']['Warnings'] and
-                    explosions['passed'] and len(explosions['rows']) == 16 and
-                    all(row['passed'] and row['completed'] and row['affectedCells'] > 0 for row in explosions['rows'])):
-                raise RuntimeError('Native explosion camera privacy controls are unverified')
-            ambient = json.loads((Path(gates['nativeEvidence'])/'zombieland-global-ambient.json').read_text())
-            if not (gates['globalAmbientControls'] == 5 and ambient['operation']['Success'] and
-                    not ambient['operation']['Warnings'] and ambient['passed'] and len(ambient['rows']) == 5 and
-                    all(row['passed'] and row['dictionaryUnchanged'] for row in ambient['rows'])):
-                raise RuntimeError('The global creepy ambience exemption is unverified')
-            acceptance = ROOT/'artifacts/symbiant-render-cost-acceptance'
-            python = ROOT/'artifacts/pixel-analysis-env/bin/python'
-            run([str(python) if python.exists() else sys.executable, str(ROOT/'scripts/verify-rendered'), str(acceptance)], log)
-            proof = json.loads((acceptance/'verification.json').read_text())
-            if proof.get('nativeCases') != 12 or proof.get('manualTargetChecks') != 54:
-                raise RuntimeError('The paired native visibility/interaction proof is incomplete')
-            contamination = Path(gates['nativeEvidence'])/'contamination'
-            run([str(python) if python.exists() else sys.executable, str(ROOT/'scripts/verify-rendered'), str(contamination)], log)
-            contamination_proof = json.loads((contamination/'verification.json').read_text())
-            if gates.get('contaminationControls') != 14 or contamination_proof.get('nativeCases') != 14 or not contamination_proof.get('refreshChecks'):
-                raise RuntimeError('The contamination sight and refresh proof is incomplete')
-            for count in (400,4000):
-                for shape in ('dense','sparse'):
-                    cost = json.loads((ROOT/f'artifacts/symbiant-render-cost-{count}-{shape}-green.json').read_text())
-                    if len(cost['rows']) != 10: raise RuntimeError('The render-cost matrix is incomplete')
-                    for row in cost['rows']:
-                        measurement, state = row['measurement'], row['state']
-                        if not measurement['success'] or measurement['FocusLost'] or state['cells'] != count or state['registrations'] != 1:
-                            raise RuntimeError('The render-cost row failed its native prerequisites')
-                        if row['mode'].startswith('hidden') and state['bodyCurrentCells'] != 0:
-                            raise RuntimeError('The hidden render-cost row has visible cells')
-            for pair in json.loads((ROOT/'artifacts/symbiant-render-cost-green-build-pairs.json').read_text()):
-                built, deployed = Path(pair['built']), Path(pair['deployed'])
+            if (
+                not gates["passed"]
+                or hashlib.sha256(comparison_path.read_bytes()).hexdigest()
+                != gates["comparisonSha256"]
+                or not comparison["performanceFloorMet"]
+            ):
+                raise RuntimeError(
+                    "Refresh exact paired native/performance gates with feedback-verify"
+                )
+            arrivals = json.loads(
+                (Path(gates["nativeEvidence"]) / "silent-raid-arrivals.json").read_text()
+            )
+            if not (
+                gates["silentArrivalControls"] == 4
+                and gates["incidentParameterLifetime"] == "passed"
+                and arrivals["operation"]["Success"]
+                and not arrivals["operation"]["Warnings"]
+                and arrivals["passed"]
+                and len(arrivals["rows"]) == 4
+                and all(row["passed"] for row in arrivals["rows"])
+                and arrivals["lifetime"]["passed"]
+            ):
+                raise RuntimeError("Native silent arrival controls are unverified")
+            if gates.get("areaWarningControls") != 7:
+                raise RuntimeError(
+                    "Refresh native danger-area warning controls with feedback-verify"
+                )
+            warnings = json.loads(
+                (Path(gates["nativeEvidence"]) / "zombieland-area-warnings.json").read_text()
+            )
+            if not (
+                warnings["operation"]["Success"]
+                and not warnings["operation"]["Warnings"]
+                and warnings["passed"]
+                and len(warnings["rows"]) == 7
+                and all(
+                    row["passed"]
+                    and row["simulationEntryRetained"]
+                    and row["nativeDrawCalls"] > 0
+                    and row["tick"] == warnings["startTick"]
+                    for row in warnings["rows"]
+                )
+            ):
+                raise RuntimeError("Native danger-area warning controls are unverified")
+            if gates.get("albinoScreamControls") != 21:
+                raise RuntimeError("Refresh native Albino scream controls with feedback-verify")
+            for mode in ("hidden-muted", "visible-muted", "hidden-unfiltered"):
+                scream = json.loads(
+                    (
+                        Path(gates["nativeEvidence"])
+                        / ("zombieland-albino-scream-" + mode + ".json")
+                    ).read_text()
+                )
+                if not (
+                    scream["operation"]["Success"]
+                    and not scream["operation"]["Warnings"]
+                    and scream["passed"]
+                    and len(scream["rows"]) == 7
+                    and all(row["passed"] for row in scream["rows"])
+                    and scream["normalPlayback"]
+                    and not scream["forcedScreamState"]
+                    and not scream["shortenedCooldown"]
+                    and not scream["startedAlbinoJob"]
+                    and scream["stagedRoomAndHeldVictims"]
+                    and not scream["naturalVictimCombat"]
+                    and scream["damageNotificationControl"]
+                    and not scream["resets"]
+                ):
+                    raise RuntimeError("Native Albino scream controls are unverified")
+            explosions = json.loads(
+                (Path(gates["nativeEvidence"]) / "explosion-camera.json").read_text()
+            )
+            if not (
+                gates.get("explosionCameraControls") == 16
+                and explosions["operation"]["Success"]
+                and not explosions["operation"]["Warnings"]
+                and explosions["passed"]
+                and len(explosions["rows"]) == 16
+                and all(
+                    row["passed"] and row["completed"] and row["affectedCells"] > 0
+                    for row in explosions["rows"]
+                )
+            ):
+                raise RuntimeError("Native explosion camera privacy controls are unverified")
+            ambient = json.loads(
+                (Path(gates["nativeEvidence"]) / "zombieland-global-ambient.json").read_text()
+            )
+            if not (
+                gates["globalAmbientControls"] == 5
+                and ambient["operation"]["Success"]
+                and not ambient["operation"]["Warnings"]
+                and ambient["passed"]
+                and len(ambient["rows"]) == 5
+                and all(row["passed"] and row["dictionaryUnchanged"] for row in ambient["rows"])
+            ):
+                raise RuntimeError("The global creepy ambience exemption is unverified")
+            acceptance = ROOT / "artifacts/symbiant-render-cost-acceptance"
+            python = ROOT / "artifacts/pixel-analysis-env/bin/python"
+            run(
+                [
+                    str(python) if python.exists() else sys.executable,
+                    str(ROOT / "scripts/verify-rendered"),
+                    str(acceptance),
+                ],
+                log,
+            )
+            proof = json.loads((acceptance / "verification.json").read_text())
+            if proof.get("nativeCases") != 12 or proof.get("manualTargetChecks") != 54:
+                raise RuntimeError("The paired native visibility/interaction proof is incomplete")
+            contamination = Path(gates["nativeEvidence"]) / "contamination"
+            run(
+                [
+                    str(python) if python.exists() else sys.executable,
+                    str(ROOT / "scripts/verify-rendered"),
+                    str(contamination),
+                ],
+                log,
+            )
+            contamination_proof = json.loads((contamination / "verification.json").read_text())
+            if (
+                gates.get("contaminationControls") != 14
+                or contamination_proof.get("nativeCases") != 14
+                or not contamination_proof.get("refreshChecks")
+            ):
+                raise RuntimeError("The contamination sight and refresh proof is incomplete")
+            for count in (400, 4000):
+                for shape in ("dense", "sparse"):
+                    cost = json.loads(
+                        (
+                            ROOT / f"artifacts/symbiant-render-cost-{count}-{shape}-green.json"
+                        ).read_text()
+                    )
+                    if len(cost["rows"]) != 10:
+                        raise RuntimeError("The render-cost matrix is incomplete")
+                    for row in cost["rows"]:
+                        measurement, state = row["measurement"], row["state"]
+                        if (
+                            not measurement["success"]
+                            or measurement["FocusLost"]
+                            or state["cells"] != count
+                            or state["registrations"] != 1
+                        ):
+                            raise RuntimeError(
+                                "The render-cost row failed its native prerequisites"
+                            )
+                        if row["mode"].startswith("hidden") and state["bodyCurrentCells"] != 0:
+                            raise RuntimeError("The hidden render-cost row has visible cells")
+            for pair in json.loads(
+                (ROOT / "artifacts/symbiant-render-cost-green-build-pairs.json").read_text()
+            ):
+                built, deployed = Path(pair["built"]), Path(pair["deployed"])
                 # Companions document the instrumentation used for that proof,
                 # but are not shipped. New probes do not change tested gameplay.
-                if built.name.endswith('.BridgeTools.dll'): continue
-                if hashlib.sha256(built.read_bytes()).hexdigest() != pair['sha256'] or built.read_bytes() != deployed.read_bytes():
-                    raise RuntimeError('The native-tested pair changed: '+built.name)
-            step = 'paired feedback package'
+                if built.name.endswith(".BridgeTools.dll"):
+                    continue
+                if (
+                    hashlib.sha256(built.read_bytes()).hexdigest() != pair["sha256"]
+                    or built.read_bytes() != deployed.read_bytes()
+                ):
+                    raise RuntimeError("The native-tested pair changed: " + built.name)
+            step = "paired feedback package"
             import copy, tempfile
-            zombie_root = ROOT.parent/'Zombieland'
-            expected = json.loads((ROOT/'.steam-mods.json').read_text())['mod']['rimworldVersion']
-            (ROOT/'dist').mkdir(exist_ok=True)
-            archive = ROOT/'dist/TotalFog-Zombieland-preliminary.zip'
-            allowed_dlls = {'TotalFog.dll','ZombieLand.dll','CrossPromotion.dll','Newtonsoft.Json.dll'}
-            with tempfile.TemporaryDirectory(prefix='totalfog-feedback-') as tmp:
+
+            zombie_root = ROOT.parent / "Zombieland"
+            expected = json.loads((ROOT / ".steam-mods.json").read_text())["mod"]["rimworldVersion"]
+            (ROOT / "dist").mkdir(exist_ok=True)
+            archive = ROOT / "dist/TotalFog-Zombieland-preliminary.zip"
+            allowed_dlls = {
+                "TotalFog.dll",
+                "ZombieLand.dll",
+                "CrossPromotion.dll",
+                "Newtonsoft.Json.dll",
+            }
+            with tempfile.TemporaryDirectory(prefix="totalfog-feedback-") as tmp:
                 staging = Path(tmp)
-                stage(staging/'TotalFog')
-                zombie = staging/'ZombieLand'
-                for name in ('About','1.6'):
-                    shutil.copytree(zombie_root/name,zombie/name)
-                shutil.copy2(zombie_root/'LICENSE',zombie/'LICENSE')
+                stage(staging / "TotalFog")
+                zombie = staging / "ZombieLand"
+                for name in ("About", "1.6"):
+                    shutil.copytree(zombie_root / name, zombie / name)
+                shutil.copy2(zombie_root / "LICENSE", zombie / "LICENSE")
                 # This test bundle contains only the active public game payload.
-                about = ET.parse(zombie/'About/About.xml')
-                versions = about.getroot().find('supportedVersions')
-                versions.clear(); ET.SubElement(versions,'li').text = expected
-                about.write(zombie/'About/About.xml',encoding='utf-8',xml_declaration=True)
-                load = ET.Element('loadFolders')
-                active = ET.parse(zombie_root/'LoadFolders.xml').getroot().find('v'+expected)
-                if active is None: raise RuntimeError('The active Zombieland load folder is missing')
+                about = ET.parse(zombie / "About/About.xml")
+                versions = about.getroot().find("supportedVersions")
+                versions.clear()
+                ET.SubElement(versions, "li").text = expected
+                about.write(zombie / "About/About.xml", encoding="utf-8", xml_declaration=True)
+                load = ET.Element("loadFolders")
+                active = ET.parse(zombie_root / "LoadFolders.xml").getroot().find("v" + expected)
+                if active is None:
+                    raise RuntimeError("The active Zombieland load folder is missing")
                 load.append(copy.deepcopy(active))
-                ET.ElementTree(load).write(zombie/'LoadFolders.xml',encoding='utf-8',xml_declaration=True)
-                shutil.copy2(ROOT/'PRELIMINARY.md',staging/'TESTING.md')
-                for path in staging.rglob('*'):
-                    if path.is_file() and (path.suffix in {'.pdb','.mdb'} or path.name == '.DS_Store' or path.name.startswith('._')):
+                ET.ElementTree(load).write(
+                    zombie / "LoadFolders.xml", encoding="utf-8", xml_declaration=True
+                )
+                shutil.copy2(ROOT / "PRELIMINARY.md", staging / "TESTING.md")
+                for path in staging.rglob("*"):
+                    if path.is_file() and (
+                        path.suffix in {".pdb", ".mdb"}
+                        or path.name == ".DS_Store"
+                        or path.name.startswith("._")
+                    ):
                         path.unlink()
-                with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as bundle:
-                    for path in sorted(staging.rglob('*')):
-                        if not path.is_file(): continue
+                with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
+                    for path in sorted(staging.rglob("*")):
+                        if not path.is_file():
+                            continue
                         relative = path.relative_to(staging)
-                        if any(part in {'Source','BridgeTools','artifacts','.git'} for part in relative.parts):
-                            raise RuntimeError('Unexpected feedback payload: '+str(relative))
-                        if path.suffix == '.dll' and path.name not in allowed_dlls:
-                            raise RuntimeError('Unexpected feedback assembly: '+str(relative))
-                        bundle.write(path,relative)
-            step = 'paired feedback package audit'
+                        if any(
+                            part in {"Source", "BridgeTools", "artifacts", ".git"}
+                            for part in relative.parts
+                        ):
+                            raise RuntimeError("Unexpected feedback payload: " + str(relative))
+                        if path.suffix == ".dll" and path.name not in allowed_dlls:
+                            raise RuntimeError("Unexpected feedback assembly: " + str(relative))
+                        bundle.write(path, relative)
+            step = "paired feedback package audit"
             with zipfile.ZipFile(archive) as bundle:
-                if bundle.testzip() is not None: raise RuntimeError('Feedback ZIP integrity check failed')
-                for name, built in [('TotalFog',ROOT/'1.6/Assemblies/TotalFog.dll'),('ZombieLand',zombie_root/'1.6/Assemblies/ZombieLand.dll')]:
-                    dll = 'TotalFog.dll' if name == 'TotalFog' else 'ZombieLand.dll'
-                    if bundle.read(f'{name}/1.6/Assemblies/{dll}') != built.read_bytes():
-                        raise RuntimeError('Feedback DLL differs from the native-tested build: '+name)
-                    about = ET.fromstring(bundle.read(f'{name}/About/About.xml'))
-                    if [li.text for li in about.findall('supportedVersions/li')] != [expected]:
-                        raise RuntimeError('Feedback game version metadata drifted: '+name)
-            archive.with_suffix('.zip.sha256').write_text(hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\n')
-            step = 'separate complete feedback packages'
+                if bundle.testzip() is not None:
+                    raise RuntimeError("Feedback ZIP integrity check failed")
+                for name, built in [
+                    ("TotalFog", ROOT / "1.6/Assemblies/TotalFog.dll"),
+                    ("ZombieLand", zombie_root / "1.6/Assemblies/ZombieLand.dll"),
+                ]:
+                    dll = "TotalFog.dll" if name == "TotalFog" else "ZombieLand.dll"
+                    if bundle.read(f"{name}/1.6/Assemblies/{dll}") != built.read_bytes():
+                        raise RuntimeError(
+                            "Feedback DLL differs from the native-tested build: " + name
+                        )
+                    about = ET.fromstring(bundle.read(f"{name}/About/About.xml"))
+                    if [li.text for li in about.findall("supportedVersions/li")] != [expected]:
+                        raise RuntimeError("Feedback game version metadata drifted: " + name)
+            archive.with_suffix(".zip.sha256").write_text(
+                hashlib.sha256(archive.read_bytes()).hexdigest() + "  " + archive.name + "\n"
+            )
+            step = "separate complete feedback packages"
             with zipfile.ZipFile(archive) as bundle:
-                seen = {'TESTING.md'}
-                for mod in ('TotalFog','ZombieLand'):
-                    part = archive.with_name(f'{mod}-preliminary.zip')
-                    members = [entry for entry in bundle.infolist()
-                        if entry.filename.startswith(mod+'/')]
-                    with zipfile.ZipFile(part, 'w', zipfile.ZIP_DEFLATED) as output:
-                        output.writestr(copy.copy(bundle.getinfo('TESTING.md')), bundle.read('TESTING.md'))
+                seen = {"TESTING.md"}
+                for mod in ("TotalFog", "ZombieLand"):
+                    part = archive.with_name(f"{mod}-preliminary.zip")
+                    members = [
+                        entry for entry in bundle.infolist() if entry.filename.startswith(mod + "/")
+                    ]
+                    with zipfile.ZipFile(part, "w", zipfile.ZIP_DEFLATED) as output:
+                        output.writestr(
+                            copy.copy(bundle.getinfo("TESTING.md")), bundle.read("TESTING.md")
+                        )
                         for entry in sorted(members, key=lambda entry: entry.filename):
                             output.writestr(copy.copy(entry), bundle.read(entry))
                     with zipfile.ZipFile(part) as output:
-                        if output.testzip() is not None: raise RuntimeError('Feedback part integrity check failed: '+part.name)
+                        if output.testzip() is not None:
+                            raise RuntimeError("Feedback part integrity check failed: " + part.name)
                         for entry in members:
-                            if entry.filename in seen or output.read(entry.filename) != bundle.read(entry):
-                                raise RuntimeError('Feedback part payload differs: '+entry.filename)
+                            if entry.filename in seen or output.read(entry.filename) != bundle.read(
+                                entry
+                            ):
+                                raise RuntimeError(
+                                    "Feedback part payload differs: " + entry.filename
+                                )
                             seen.add(entry.filename)
-                    part.with_suffix('.zip.sha256').write_text(hashlib.sha256(part.read_bytes()).hexdigest()+'  '+part.name+'\n')
+                    part.with_suffix(".zip.sha256").write_text(
+                        hashlib.sha256(part.read_bytes()).hexdigest() + "  " + part.name + "\n"
+                    )
                 if seen != set(bundle.namelist()):
-                    raise RuntimeError('Feedback ZIPs do not cover the complete paired package')
-        if mode == 'package':
-            step = 'package'
+                    raise RuntimeError("Feedback ZIPs do not cover the complete paired package")
+        if mode == "package":
+            step = "package"
             import tempfile
-            with tempfile.TemporaryDirectory(prefix='totalfog-package-') as tmp:
-                staged=Path(tmp)/'TotalFog';stage(staged)
-                (ROOT/'dist').mkdir(exist_ok=True)
-                with zipfile.ZipFile(ROOT/'dist/TotalFog.zip','w',zipfile.ZIP_DEFLATED) as z:
-                    for p in sorted(staged.rglob('*')):
-                        if p.is_file():z.write(p,Path('TotalFog')/p.relative_to(staged))
-            step = 'package audit'
-            archive = ROOT/'dist/TotalFog.zip'
+
+            with tempfile.TemporaryDirectory(prefix="totalfog-package-") as tmp:
+                staged = Path(tmp) / "TotalFog"
+                stage(staged)
+                (ROOT / "dist").mkdir(exist_ok=True)
+                with zipfile.ZipFile(ROOT / "dist/TotalFog.zip", "w", zipfile.ZIP_DEFLATED) as z:
+                    for p in sorted(staged.rglob("*")):
+                        if p.is_file():
+                            z.write(p, Path("TotalFog") / p.relative_to(staged))
+            step = "package audit"
+            archive = ROOT / "dist/TotalFog.zip"
             with zipfile.ZipFile(archive) as z:
-                if z.testzip() is not None: raise RuntimeError('ZIP integrity check failed')
+                if z.testzip() is not None:
+                    raise RuntimeError("ZIP integrity check failed")
                 for name in z.namelist():
-                    if not name.startswith('TotalFog/') or any(part in {'Source','BridgeTools','artifacts'} for part in Path(name).parts):
-                        raise RuntimeError('Unexpected ZIP payload: '+name)
-                    if name.endswith('.dll') and Path(name).name != 'TotalFog.dll':
-                        raise RuntimeError('Unexpected runtime DLL: '+name)
-                if z.read('TotalFog/1.6/Assemblies/TotalFog.dll') != (ROOT/'1.6/Assemblies/TotalFog.dll').read_bytes():
-                    raise RuntimeError('Packaged DLL does not match the build')
-                advertised = [n.text for n in ET.fromstring(z.read('TotalFog/About/About.xml')).findall('supportedVersions/li')]
-                expected = json.loads((ROOT/'.steam-mods.json').read_text())['mod']['rimworldVersion']
-                if advertised != [expected]: raise RuntimeError('Supported game version metadata drifted')
-            (ROOT/'dist/TotalFog.zip.sha256').write_text(hashlib.sha256(archive.read_bytes()).hexdigest()+'  TotalFog.zip\n')
-    print('ok')
+                    if not name.startswith("TotalFog/") or any(
+                        part in {"Source", "BridgeTools", "artifacts"} for part in Path(name).parts
+                    ):
+                        raise RuntimeError("Unexpected ZIP payload: " + name)
+                    if name.endswith(".dll") and Path(name).name != "TotalFog.dll":
+                        raise RuntimeError("Unexpected runtime DLL: " + name)
+                if (
+                    z.read("TotalFog/1.6/Assemblies/TotalFog.dll")
+                    != (ROOT / "1.6/Assemblies/TotalFog.dll").read_bytes()
+                ):
+                    raise RuntimeError("Packaged DLL does not match the build")
+                advertised = [
+                    n.text
+                    for n in ET.fromstring(z.read("TotalFog/About/About.xml")).findall(
+                        "supportedVersions/li"
+                    )
+                ]
+                expected = json.loads((ROOT / ".steam-mods.json").read_text())["mod"][
+                    "rimworldVersion"
+                ]
+                if advertised != [expected]:
+                    raise RuntimeError("Supported game version metadata drifted")
+            (ROOT / "dist/TotalFog.zip.sha256").write_text(
+                hashlib.sha256(archive.read_bytes()).hexdigest() + "  TotalFog.zip\n"
+            )
+    print("ok")
 except Exception as exc:
     diagnostic = str(exc)
-    if step in {'rendered evidence', 'runtime benchmark', 'runtime comparison', 'paired native feedback verification', 'public source publication'} and isinstance(exc, subprocess.CalledProcessError):
-        messages = [line for line in logpath.read_text(errors='replace').splitlines()
-                    if line.startswith(('RuntimeError:', 'ValueError:', 'FileNotFoundError:', 'ModuleNotFoundError:'))]
-        if messages: diagnostic = messages[-1]
-    elif step in {'build', 'tests', 'Zombieland build and paired deployment'} and isinstance(exc, subprocess.CalledProcessError):
-        messages = list(dict.fromkeys(line.strip() for line in logpath.read_text(errors='replace').splitlines()
-                                     if ': error ' in line or line.startswith('Failed ') or '[FAIL]' in line))
-        if messages: diagnostic = '\n'.join(messages[:4])
-    with logpath.open('a') as log:traceback.print_exc(file=log)
-    print(f'{step} failed: {diagnostic}\nFull log: {logpath}',file=sys.stderr)
+    if step in {
+        "rendered evidence",
+        "runtime benchmark",
+        "runtime comparison",
+        "paired native feedback verification",
+        "public source publication",
+    } and isinstance(exc, subprocess.CalledProcessError):
+        messages = [
+            line
+            for line in logpath.read_text(errors="replace").splitlines()
+            if line.startswith(
+                ("RuntimeError:", "ValueError:", "FileNotFoundError:", "ModuleNotFoundError:")
+            )
+        ]
+        if messages:
+            diagnostic = messages[-1]
+    elif step in {"build", "tests", "Zombieland build and paired deployment"} and isinstance(
+        exc, subprocess.CalledProcessError
+    ):
+        messages = list(
+            dict.fromkeys(
+                line.strip()
+                for line in logpath.read_text(errors="replace").splitlines()
+                if ": error " in line or line.startswith("Failed ") or "[FAIL]" in line
+            )
+        )
+        if messages:
+            diagnostic = "\n".join(messages[:4])
+    with logpath.open("a") as log:
+        traceback.print_exc(file=log)
+    print(f"{step} failed: {diagnostic}\nFull log: {logpath}", file=sys.stderr)
     sys.exit(1)

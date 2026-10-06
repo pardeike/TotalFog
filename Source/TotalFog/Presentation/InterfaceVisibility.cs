@@ -10,7 +10,8 @@ internal static partial class InterfaceVisibility
     // A visible proxy must not grant access to its unobserved target's live UI.
     private static bool CanRead(Thing thing, IntVec3? renderedCell = null)
     {
-        if (!ThingVisibility.IsVisible(thing, allowMemory: false, renderedCell: renderedCell)) return false;
+        if (!ThingVisibility.IsVisible(thing, allowMemory: false, renderedCell: renderedCell))
+            return false;
         var target = thing?.TryGetComp<CompSelectProxy>()?.thingToSelect;
         return target == null || ThingVisibility.IsVisible(target, allowMemory: false);
     }
@@ -20,12 +21,14 @@ internal static partial class InterfaceVisibility
 
     public static void DrawOverlay(Thing thing)
     {
-        if (CanRead(thing, thing?.PositionHeld)) thing.DrawGUIOverlay();
+        if (CanRead(thing, thing?.PositionHeld))
+            thing.DrawGUIOverlay();
     }
 
     public static IntVec3 TooltipPosition(Thing thing)
     {
-        if (thing == null || !CanRead(thing)) return IntVec3.Invalid;
+        if (thing == null || !CanRead(thing))
+            return IntVec3.Invalid;
         return CustomInspectionCell.TryGetCell(thing, out var cell) ? cell : thing.Position;
     }
 
@@ -33,13 +36,16 @@ internal static partial class InterfaceVisibility
     {
         var things = cell.GetThingList(map);
         int firstHidden = 0;
-        while (firstHidden < things.Count && CanRead(things[firstHidden])) firstHidden++;
-        if (firstHidden == things.Count) return things;
+        while (firstHidden < things.Count && CanRead(things[firstHidden]))
+            firstHidden++;
+        if (firstHidden == things.Count)
+            return things;
         // This local copy preserves the authoritative thing grid. It is needed
         // only when the currently hovered cell contains a hidden entity.
         var visible = new List<Thing>(things.Count);
         for (int i = 0; i < things.Count; i++)
-            if (i < firstHidden || CanRead(things[i])) visible.Add(things[i]);
+            if (i < firstHidden || CanRead(things[i]))
+                visible.Add(things[i]);
         return visible;
     }
 
@@ -54,15 +60,18 @@ internal static partial class InterfaceVisibility
             // A registered inspection core is independent of manual body
             // targeting. Its native adapter supplies shape-valid candidates;
             // current sight at the clicked cell still gates every body target.
-            bool visible = thing != null && CustomInspectionCell.TryGetCell(thing, out _)
-                ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
-                : CanRead(thing);
-            if (!visible) continue;
-            if (write != read) things[write] = thing;
+            bool visible =
+                thing != null && CustomInspectionCell.TryGetCell(thing, out _)
+                    ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
+                    : CanRead(thing);
+            if (!visible)
+                continue;
+            if (write != read)
+                things[write] = thing;
             write++;
         }
-        if (write != things.Count) things.RemoveRange(write, things.Count - write);
+        if (write != things.Count)
+            things.RemoveRange(write, things.Count - write);
         return things;
     }
-
 }

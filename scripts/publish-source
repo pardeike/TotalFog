@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Publish committed public source through scripts/mod source-publish."""
+
 import json
 import re
 import subprocess
@@ -11,50 +12,84 @@ def output(*args):
 
 
 def main():
-    if output('git', 'branch', '--show-current').strip() not in {b'public-main', b'main'}:
-        raise RuntimeError('Publish only the public development branch, not private history')
-    remote = output('git', 'remote', 'get-url', '--push', 'origin').decode().strip()
-    if remote not in {'https://github.com/pardeike/TotalFog.git', 'git@github.com:pardeike/TotalFog.git'}:
-        raise RuntimeError('origin must point to pardeike/TotalFog')
-    repo = json.loads(output('gh', 'repo', 'view', 'pardeike/TotalFog', '--json', 'visibility'))
-    if repo['visibility'] != 'PUBLIC':
-        raise RuntimeError('The source repository must be public')
-    metadata = ET.fromstring(output('git', 'show', 'HEAD:About/About.xml'))
-    if [node.text for node in metadata.findall('supportedVersions/li')] != ['1.6']:
-        raise RuntimeError('Public supported versions must match the approved public game target')
-    forbidden = re.compile(rb'discord\.com/channels/@me/|github_pat_[A-Za-z0-9_]{20,}|'
-                           rb'gh[pousr]_[A-Za-z0-9]{25,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----')
-    records = output('git', 'rev-list', '--objects', 'HEAD').decode().splitlines()
-    with subprocess.Popen(['git', 'cat-file', '--batch'], stdin=subprocess.PIPE, stdout=subprocess.PIPE) as reader:
+    if output("git", "branch", "--show-current").strip() not in {b"public-main", b"main"}:
+        raise RuntimeError("Publish only the public development branch, not private history")
+    remote = output("git", "remote", "get-url", "--push", "origin").decode().strip()
+    if remote not in {
+        "https://github.com/pardeike/TotalFog.git",
+        "git@github.com:pardeike/TotalFog.git",
+    }:
+        raise RuntimeError("origin must point to pardeike/TotalFog")
+    repo = json.loads(output("gh", "repo", "view", "pardeike/TotalFog", "--json", "visibility"))
+    if repo["visibility"] != "PUBLIC":
+        raise RuntimeError("The source repository must be public")
+    metadata = ET.fromstring(output("git", "show", "HEAD:About/About.xml"))
+    if [node.text for node in metadata.findall("supportedVersions/li")] != ["1.6"]:
+        raise RuntimeError("Public supported versions must match the approved public game target")
+    forbidden = re.compile(
+        rb"discord\.com/channels/@me/|github_pat_[A-Za-z0-9_]{20,}|"
+        rb"gh[pousr]_[A-Za-z0-9]{25,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"
+    )
+    records = output("git", "rev-list", "--objects", "HEAD").decode().splitlines()
+    with subprocess.Popen(
+        ["git", "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE
+    ) as reader:
         try:
             for record in records:
-                oid, _, path = record.partition(' ')
-                reader.stdin.write((oid + '\n').encode())
+                oid, _, path = record.partition(" ")
+                reader.stdin.write((oid + "\n").encode())
                 reader.stdin.flush()
                 header = reader.stdout.readline().decode().split()
-                if len(header) != 3: raise RuntimeError('Cannot inspect committed source')
+                if len(header) != 3:
+                    raise RuntimeError("Cannot inspect committed source")
                 _, kind, size = header
                 data = reader.stdout.read(int(size))
-                if len(data) != int(size) or reader.stdout.read(1) != b'\n':
-                    raise RuntimeError('Incomplete committed source inspection')
-                if kind == 'blob' and (path.startswith(('artifacts/', 'dist/')) or
-                    re.search(r'(?:^|/)(?:Assembly-CSharp|UnityEngine(?:\.[^/]+)?)\.dll$', path, re.I)):
-                    raise RuntimeError('Private/generated material in committed path: ' + path)
-                if kind in {'blob', 'commit'} and b'\x00' not in data[:8192] and forbidden.search(data):
-                    raise RuntimeError('Private reference or credential marker in committed object: ' + oid)
+                if len(data) != int(size) or reader.stdout.read(1) != b"\n":
+                    raise RuntimeError("Incomplete committed source inspection")
+                if kind == "blob" and (
+                    path.startswith(("artifacts/", "dist/"))
+                    or re.search(
+                        r"(?:^|/)(?:Assembly-CSharp|UnityEngine(?:\.[^/]+)?)\.dll$", path, re.I
+                    )
+                ):
+                    raise RuntimeError("Private/generated material in committed path: " + path)
+                if (
+                    kind in {"blob", "commit"}
+                    and b"\x00" not in data[:8192]
+                    and forbidden.search(data)
+                ):
+                    raise RuntimeError(
+                        "Private reference or credential marker in committed object: " + oid
+                    )
         finally:
             reader.stdin.close()
             reader.wait()
-    commit = output('git', 'rev-parse', 'HEAD').decode().strip()
-    subprocess.run(['git', 'push', '--atomic', '--set-upstream', 'origin', 'HEAD:main',
-                    'refs/tags/upstream-baseline:refs/tags/upstream-baseline'], check=True)
-    actual = output('gh', 'api', 'repos/pardeike/TotalFog/commits/main', '--jq', '.sha').decode().strip()
-    if actual != commit: raise RuntimeError('Remote main does not match the published source commit')
-    baseline = output('git', 'rev-parse', 'upstream-baseline').decode().strip()
-    remote_tag = output('git', 'ls-remote', 'origin', 'refs/tags/upstream-baseline').decode().split()
-    if not remote_tag or remote_tag[0] != baseline: raise RuntimeError('Remote baseline tag does not match')
-    print('ok')
+    commit = output("git", "rev-parse", "HEAD").decode().strip()
+    subprocess.run(
+        [
+            "git",
+            "push",
+            "--atomic",
+            "--set-upstream",
+            "origin",
+            "HEAD:main",
+            "refs/tags/upstream-baseline:refs/tags/upstream-baseline",
+        ],
+        check=True,
+    )
+    actual = (
+        output("gh", "api", "repos/pardeike/TotalFog/commits/main", "--jq", ".sha").decode().strip()
+    )
+    if actual != commit:
+        raise RuntimeError("Remote main does not match the published source commit")
+    baseline = output("git", "rev-parse", "upstream-baseline").decode().strip()
+    remote_tag = (
+        output("git", "ls-remote", "origin", "refs/tags/upstream-baseline").decode().split()
+    )
+    if not remote_tag or remote_tag[0] != baseline:
+        raise RuntimeError("Remote baseline tag does not match")
+    print("ok")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

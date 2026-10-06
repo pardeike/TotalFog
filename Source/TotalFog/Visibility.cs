@@ -15,10 +15,12 @@ public static class Visibility
     /// Null or mapless things follow the engine's unrestricted presentation policy.
     /// Call on the game thread; this method does not change simulation or sight.
     /// </summary>
-    public static bool IsVisible(Thing thing) => Presentation.ThingVisibility.IsVisible(thing, allowMemory: false);
+    public static bool IsVisible(Thing thing) =>
+        Presentation.ThingVisibility.IsVisible(thing, allowMemory: false);
 
     /// <summary>Current cell sight, including vanilla fog, initialization and colony bypasses.</summary>
-    public static bool IsVisible(Map map, IntVec3 cell) => Presentation.CellVisibility.IsCurrent(map, cell);
+    public static bool IsVisible(Map map, IntVec3 cell) =>
+        Presentation.CellVisibility.IsCurrent(map, cell);
 
     /// <summary>
     /// Whether the optional enemy-fog policy permits one target cell. Uses the
@@ -28,9 +30,13 @@ public static class Visibility
     /// Call on the game thread; this method does not change simulation or sight.
     /// </summary>
     public static bool AllowsTarget(Thing observer, IntVec3 cell) =>
-        observer is not Pawn pawn || pawn.Faction == null || pawn.Map == null ||
-        !FogSettings.AISmart || pawn.Faction == Faction.OfPlayer || !pawn.RaceProps.Humanlike ||
-        pawn.Map.GetVisibility().IsShown(pawn.Faction, cell);
+        observer is not Pawn pawn
+        || pawn.Faction == null
+        || pawn.Map == null
+        || !FogSettings.AISmart
+        || pawn.Faction == Faction.OfPlayer
+        || !pawn.RaceProps.Humanlike
+        || pawn.Map.GetVisibility().IsShown(pawn.Faction, cell);
 
     /// <summary>
     /// Register the current inspection/selection cell for an exact Thing type.

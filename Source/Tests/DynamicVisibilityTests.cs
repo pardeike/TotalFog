@@ -36,7 +36,15 @@ public sealed class DynamicVisibilityTests
         Assert.True(ThingVisibility.IsVisible(thing));
         Assert.True(thing.TryGetComp<CompFog>().HideFromPlayer.SeenByPlayer);
         var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-            new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true, shouldDrawShadow = true } });
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { thing });
 
@@ -58,7 +66,15 @@ public sealed class DynamicVisibilityTests
         main.Hiddenable.PostSpawnSetup(false);
         main.HideFromPlayer.PostSpawnSetup(false);
         var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-            new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true, shouldDrawShadow = true } });
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { fresh });
 
@@ -75,7 +91,15 @@ public sealed class DynamicVisibilityTests
     {
         var thing = Observed(ThingCategory.Building);
         var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-            new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = draw, shouldDrawShadow = shadow } });
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    shouldDraw = draw,
+                    shouldDrawShadow = shadow,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { thing });
 
@@ -88,13 +112,22 @@ public sealed class DynamicVisibilityTests
     [InlineData(true)]
     public void OwnedPawnPreservesItsExistingObserverException(bool flying)
     {
-        Thing thing = flying ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
+        Thing thing = flying
+            ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
             : new Pawn { Faction = Faction.OfPlayer };
         thing.Map.Fog.Initialized = true;
         Assert.False(thing.Map.Fog.InSight[0]);
         Assert.True(ThingVisibility.IsVisible(thing));
         var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
-            new[] { new DynamicDrawManager.ThingCullDetails { shouldDraw = true, shouldDrawShadow = true } });
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { thing });
 
@@ -107,7 +140,8 @@ public sealed class DynamicVisibilityTests
     [InlineData(true)]
     public void OwnedPawnPresentationNeedsNoFogComponentLookup(bool flying)
     {
-        Thing thing = flying ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
+        Thing thing = flying
+            ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
             : new Pawn { Faction = Faction.OfPlayer };
         thing.Map.Fog.Initialized = true;
 
@@ -122,14 +156,26 @@ public sealed class DynamicVisibilityTests
     [InlineData(false, true)]
     [InlineData(true, true)]
     [InlineData(false, false)]
-    public void WalkingPawnUsesTheNativeRenderedCellForAllDrawingPhases(bool logicalSight, bool renderedSight)
+    public void WalkingPawnUsesTheNativeRenderedCellForAllDrawingPhases(
+        bool logicalSight,
+        bool renderedSight
+    )
     {
         var pawn = new Pawn { PositionHeld = new IntVec3(1, 0) };
         pawn.Map.Fog.Initialized = true;
         pawn.Map.Fog.InSight[1] = logicalSight;
         pawn.Map.Fog.InSight[0] = renderedSight;
-        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(new[] {
-            new DynamicDrawManager.ThingCullDetails { cell = new IntVec3(0, 0), shouldDraw = true, shouldDrawShadow = true } });
+        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    cell = new IntVec3(0, 0),
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
 
@@ -141,12 +187,26 @@ public sealed class DynamicVisibilityTests
     [Fact]
     public void OversizedPawnKeepsItsWholeFootprintAtTheRenderedPosition()
     {
-        var pawn = new Pawn { PositionHeld = new IntVec3(1, 1), SizeX = 2, SizeZ = 2 };
+        var pawn = new Pawn
+        {
+            PositionHeld = new IntVec3(1, 1),
+            SizeX = 2,
+            SizeZ = 2,
+        };
         pawn.Map.Fog.Initialized = true;
         pawn.Map.Fog.InSight[2] = true;
         Assert.False(ThingVisibility.IsVisible(pawn));
-        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(new[] {
-            new DynamicDrawManager.ThingCullDetails { cell = new IntVec3(0, 0), shouldDraw = true, shouldDrawShadow = true } });
+        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    cell = new IntVec3(0, 0),
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
 
@@ -157,9 +217,20 @@ public sealed class DynamicVisibilityTests
     [Fact]
     public void WalkingPawnOutsideTheMapCannotBorrowItsLogicalCellsSight()
     {
-        var pawn = new Pawn(); pawn.Map.Fog.Initialized = true; pawn.Map.Fog.InSight[0] = true;
-        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(new[] {
-            new DynamicDrawManager.ThingCullDetails { cell = new IntVec3(-1, 0), shouldDraw = true, shouldDrawShadow = true } });
+        var pawn = new Pawn();
+        pawn.Map.Fog.Initialized = true;
+        pawn.Map.Fog.InSight[0] = true;
+        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    cell = new IntVec3(-1, 0),
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { pawn });
 
@@ -182,15 +253,30 @@ public sealed class DynamicVisibilityTests
     [Theory]
     [InlineData(false, true)]
     [InlineData(true, false)]
-    public void FlyerDrawingUsesItsActualRenderedCellAtTheSafeRenderBoundary(bool logicalSight, bool renderedSight)
+    public void FlyerDrawingUsesItsActualRenderedCellAtTheSafeRenderBoundary(
+        bool logicalSight,
+        bool renderedSight
+    )
     {
-        var flyer = new PawnFlyer { PositionHeld = new IntVec3(1, 0),
-            RenderedPosition = new DrawPosition { Cell = new IntVec3(0, 0) } };
+        var flyer = new PawnFlyer
+        {
+            PositionHeld = new IntVec3(1, 0),
+            RenderedPosition = new DrawPosition { Cell = new IntVec3(0, 0) },
+        };
         flyer.Map.Fog.Initialized = true;
         flyer.Map.Fog.InSight[1] = logicalSight;
         flyer.Map.Fog.InSight[0] = renderedSight;
-        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(new[] {
-            new DynamicDrawManager.ThingCullDetails { cell = flyer.Position, shouldDraw = true, shouldDrawShadow = true } });
+        var details = new NativeArray<DynamicDrawManager.ThingCullDetails>(
+            new[]
+            {
+                new DynamicDrawManager.ThingCullDetails
+                {
+                    cell = flyer.Position,
+                    shouldDraw = true,
+                    shouldDrawShadow = true,
+                },
+            }
+        );
 
         DynamicVisibility.ComputeCulledThings_Postfix(details, new List<Thing> { flyer });
 
@@ -205,13 +291,19 @@ public sealed class DynamicVisibilityTests
     [InlineData(DrawerType.RealtimeOnly, 0)]
     [InlineData(DrawerType.MapMeshOnly, 2)]
     [InlineData(DrawerType.MapMeshAndRealTime, 2)]
-    public void RealtimeVisibilityDoesNotRequestSectionMeshRebuilds(DrawerType drawer, int dirtyCalls)
+    public void RealtimeVisibilityDoesNotRequestSectionMeshRebuilds(
+        DrawerType drawer,
+        int dirtyCalls
+    )
     {
         var thing = new ThingWithComps { def = new ThingDef { drawerType = drawer } };
         thing.Map.Fog.Initialized = true;
         var comp = new CompPresentationState { parent = thing };
 
-        comp.Hide(); comp.Hide(); comp.Show(); comp.Show();
+        comp.Hide();
+        comp.Hide();
+        comp.Show();
+        comp.Show();
 
         Assert.Equal(dirtyCalls, thing.Map.mapDrawer.DirtyCalls);
     }

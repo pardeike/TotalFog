@@ -10,7 +10,10 @@ public static class Selector
     {
         var thing = obj as Thing;
         var pawn = obj as Verse.Pawn;
-        return !(thing is { Destroyed: false } && (pawn == null || !pawn.IsWorldPawn()) &&
-            !Presentation.ThingVisibility.IsVisible(thing, allowMemory: false));
+        return !(
+            thing is { Destroyed: false }
+            && (pawn == null || !pawn.IsWorldPawn())
+            && !Presentation.ThingVisibility.IsVisible(thing, allowMemory: false)
+        );
     }
 }

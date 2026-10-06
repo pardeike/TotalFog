@@ -7,7 +7,10 @@ namespace TotalFog.Tests;
 
 public sealed class CellRegistrationTests
 {
-    private static (ThingWithComps thing, CompCellRegistration tracker) Spawn(int width = 1, int height = 1)
+    private static (ThingWithComps thing, CompCellRegistration tracker) Spawn(
+        int width = 1,
+        int height = 1
+    )
     {
         Find.TickManager.TicksGame = 0;
         var thing = new ThingWithComps { SizeX = width, SizeZ = height };

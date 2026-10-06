@@ -25,7 +25,6 @@ public partial class FogSettings : ModSettings
     private static string audioSourceRangeBuffer;
     public static float VolumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
 
-
     public static bool HideSpeakBubble;
 
     public static bool AISmart;
@@ -56,9 +55,7 @@ public partial class FogSettings : ModSettings
         private set => treesBlockSightValue = value;
     }
 
-
     // public static bool doFilthReveal = true; // Whether filth should be automatically revealed when its created
-
 
     private static void applySettings()
     {
@@ -73,7 +70,8 @@ public partial class FogSettings : ModSettings
         foreach (var map in Find.Maps)
         {
             var sources = map.GetVisibility().fowWatchers;
-            for (int i = 0; i < sources.Count; i++) sources[i].UpdateFoV(true);
+            for (int i = 0; i < sources.Count; i++)
+                sources[i].UpdateFoV(true);
             map.mapDrawer?.RegenerateEverythingNow();
         }
     }
@@ -125,7 +123,7 @@ public partial class FogSettings : ModSettings
         VeryDark = 120,
         Dark = 100,
         Medium = 80,
-        Light = 60
+        Light = 60,
     }
 
     private enum FogFadeSpeedEnum
@@ -133,6 +131,6 @@ public partial class FogSettings : ModSettings
         Slow = 5,
         Medium = 20,
         Fast = 40,
-        Disabled = 100
+        Disabled = 100,
     }
 }

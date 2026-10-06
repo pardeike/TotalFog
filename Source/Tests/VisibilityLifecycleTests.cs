@@ -6,20 +6,27 @@ public class VisibilityLifecycleTests
 {
     private sealed class RareSource : FogSubcomponent
     {
-        public int Tick, NextCheck, Refreshes;
+        public int Tick,
+            NextCheck,
+            Refreshes;
+
         public override void CompTick()
         {
-            if (Tick < NextCheck) return;
-            Refreshes++; NextCheck = Tick + 30;
+            if (Tick < NextCheck)
+                return;
+            Refreshes++;
+            NextCheck = Tick + 30;
         }
     }
+
     [Fact]
     public void RareTickUpdatesSightEvenWhenItSkipsTheNormalDeadline()
     {
         var source = new RareSource { Tick = 250, NextCheck = 30 };
         source.CompTickRare();
         Assert.Equal(1, source.Refreshes);
-        source.Tick = 500; source.CompTickRare();
+        source.Tick = 500;
+        source.CompTickRare();
         Assert.Equal(2, source.Refreshes);
     }
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Refresh the paired native rendering gates for an already measured candidate."""
+
 from pathlib import Path
 import hashlib
 import json
@@ -13,243 +14,411 @@ import tempfile
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-GAME_ID = 'total-fog-zombieland-16'
-DATA = ROOT / 'artifacts/ZombielandUserData'
+GAME_ID = "total-fog-zombieland-16"
+DATA = ROOT / "artifacts/ZombielandUserData"
 label = sys.argv[1]
-if not re.fullmatch(r'[a-z0-9-]+', label):
-    raise ValueError('Use the completed comparison label')
-comparison_path = ROOT / 'artifacts' / ('comparison-' + label + '.json')
+if not re.fullmatch(r"[a-z0-9-]+", label):
+    raise ValueError("Use the completed comparison label")
+comparison_path = ROOT / "artifacts" / ("comparison-" + label + ".json")
 comparison = json.loads(comparison_path.read_text())
-if not (comparison['complete'] and comparison['performanceFloorMet'] and
-        comparison['unrestrictedPlayerUltrafast'] and not comparison['diagnosticInstrumentation'] and
-        len(comparison['samples']) == 6 and
-        sum(sample['variant'] == 'candidate' for sample in comparison['samples']) == 3 and
-        sum(sample['variant'] == 'original' for sample in comparison['samples']) == 3):
-    raise RuntimeError('Complete the uninstrumented ordinary fourth-speed comparison first')
-mods = Path(os.environ.get('RIMWORLD_MOD_DIR', str(Path.home() /
-    'Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods')))
+if not (
+    comparison["complete"]
+    and comparison["performanceFloorMet"]
+    and comparison["unrestrictedPlayerUltrafast"]
+    and not comparison["diagnosticInstrumentation"]
+    and len(comparison["samples"]) == 6
+    and sum(sample["variant"] == "candidate" for sample in comparison["samples"]) == 3
+    and sum(sample["variant"] == "original" for sample in comparison["samples"]) == 3
+):
+    raise RuntimeError("Complete the uninstrumented ordinary fourth-speed comparison first")
+mods = Path(
+    os.environ.get(
+        "RIMWORLD_MOD_DIR",
+        str(
+            Path.home()
+            / "Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods"
+        ),
+    )
+)
 pairs = []
-for name, repository, bundle in [('TotalFog', ROOT, 'TotalFog'),
-                                  ('ZombieLand', ROOT.parent / 'Zombieland', 'Zombieland')]:
-    for built, deployed in [(repository / '1.6/Assemblies' / (name + '.dll'),
-                            mods / name / '1.6/Assemblies' / (name + '.dll')),
-                           (repository / 'artifacts/BridgeTools' / bundle / (bundle + '.BridgeTools.dll'),
-                            mods.parent / 'BridgeTools' / bundle / (bundle + '.BridgeTools.dll'))]:
+for name, repository, bundle in [
+    ("TotalFog", ROOT, "TotalFog"),
+    ("ZombieLand", ROOT.parent / "Zombieland", "Zombieland"),
+]:
+    for built, deployed in [
+        (
+            repository / "1.6/Assemblies" / (name + ".dll"),
+            mods / name / "1.6/Assemblies" / (name + ".dll"),
+        ),
+        (
+            repository / "artifacts/BridgeTools" / bundle / (bundle + ".BridgeTools.dll"),
+            mods.parent / "BridgeTools" / bundle / (bundle + ".BridgeTools.dll"),
+        ),
+    ]:
         digest = hashlib.sha256(built.read_bytes()).hexdigest()
         if built.read_bytes() != deployed.read_bytes():
-            raise RuntimeError('Built/deployed pair differs: ' + name)
-        pairs.append({'built': str(built), 'deployed': str(deployed), 'sha256': digest, 'identical': True})
-if comparison['identity']['zombieland']['mainSha256'] != pairs[2]['sha256'] or any(
-        sample['mainSha256'] != pairs[0]['sha256'] for sample in comparison['samples'] if sample['variant'] == 'candidate'):
-    raise RuntimeError('The measured gameplay pair changed')
-save_name = 'TotalFog_Zombieland_Base'
-save = DATA / 'Saves' / (save_name + '.rws')
+            raise RuntimeError("Built/deployed pair differs: " + name)
+        pairs.append(
+            {"built": str(built), "deployed": str(deployed), "sha256": digest, "identical": True}
+        )
+if comparison["identity"]["zombieland"]["mainSha256"] != pairs[2]["sha256"] or any(
+    sample["mainSha256"] != pairs[0]["sha256"]
+    for sample in comparison["samples"]
+    if sample["variant"] == "candidate"
+):
+    raise RuntimeError("The measured gameplay pair changed")
+save_name = "TotalFog_Zombieland_Base"
+save = DATA / "Saves" / (save_name + ".rws")
 save_hash = hashlib.sha256(save.read_bytes()).hexdigest()
-attempt = Path(tempfile.mkdtemp(prefix='feedback-verification-' + label + '-', dir=ROOT / 'artifacts'))
-render = attempt / 'render'
+attempt = Path(
+    tempfile.mkdtemp(prefix="feedback-verification-" + label + "-", dir=ROOT / "artifacts")
+)
+render = attempt / "render"
 render.mkdir()
-config = tomllib.loads((Path.home() / '.codex/config.toml').read_text())['mcp_servers']['gabs']
-read_response = runpy.run_path('/Users/ap/Scripts/mcp-local')['read_mcp_response']
-process = subprocess.Popen([config['command'], *config.get('args', [])],
-    env={**os.environ, **config.get('env', {})}, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+config = tomllib.loads((Path.home() / ".codex/config.toml").read_text())["mcp_servers"]["gabs"]
+read_response = runpy.run_path("/Users/ap/Scripts/mcp-local")["read_mcp_response"]
+process = subprocess.Popen(
+    [config["command"], *config.get("args", [])],
+    env={**os.environ, **config.get("env", {})},
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    text=True,
+)
 sequence = 0
 started = False
-step = 'initialize GABS'
+step = "initialize GABS"
+
 
 def rpc(method, params):
     global sequence
     sequence += 1
-    process.stdin.write(json.dumps({'jsonrpc': '2.0', 'id': sequence, 'method': method, 'params': params}) + '\n')
+    process.stdin.write(
+        json.dumps({"jsonrpc": "2.0", "id": sequence, "method": method, "params": params}) + "\n"
+    )
     process.stdin.flush()
     reply = read_response(process, sequence, 240)
-    if 'error' in reply or reply['result'].get('isError'):
-        raise RuntimeError('GABS request failed during ' + step)
-    return reply['result']
+    if "error" in reply or reply["result"].get("isError"):
+        raise RuntimeError("GABS request failed during " + step)
+    return reply["result"]
+
 
 def tool(name, arguments):
-    response = rpc('tools/call', {'name': name, 'arguments': arguments})
-    if 'structuredContent' not in response:
-        raise RuntimeError('Missing structured evidence during ' + step)
-    return response['structuredContent']
+    response = rpc("tools/call", {"name": name, "arguments": arguments})
+    if "structuredContent" not in response:
+        raise RuntimeError("Missing structured evidence during " + step)
+    return response["structuredContent"]
+
 
 def native(local_name, arguments):
-    discovery = tool('games_tool_names', {'gameId': GAME_ID, 'query': local_name})
-    matches = [item for item in discovery['tools'] if item['localName'] == local_name]
+    discovery = tool("games_tool_names", {"gameId": GAME_ID, "query": local_name})
+    matches = [item for item in discovery["tools"] if item["localName"] == local_name]
     if len(matches) != 1:
-        raise RuntimeError('Native tool is missing: ' + local_name)
-    name = matches[0]['name']
-    tool('games_tool_detail', {'gameId': GAME_ID, 'tool': name})
-    return tool('games_call_tool', {'gameId': GAME_ID, 'tool': name, 'arguments': arguments, 'timeout': 180})
+        raise RuntimeError("Native tool is missing: " + local_name)
+    name = matches[0]["name"]
+    tool("games_tool_detail", {"gameId": GAME_ID, "tool": name})
+    return tool(
+        "games_call_tool", {"gameId": GAME_ID, "tool": name, "arguments": arguments, "timeout": 180}
+    )
+
 
 def save_log(destination):
-    source = DATA / 'Logs/Player.log'
+    source = DATA / "Logs/Player.log"
     if not source.is_file() or source.stat().st_size == 0:
-        raise RuntimeError('Native Player.log is missing')
+        raise RuntimeError("Native Player.log is missing")
     shutil.copyfile(source, destination)
-    result = subprocess.run([str(ROOT.parent / 'Zombieland/scripts/summarize-rimworld-log.sh'), str(destination)],
-        text=True, capture_output=True)
+    result = subprocess.run(
+        [str(ROOT.parent / "Zombieland/scripts/summarize-rimworld-log.sh"), str(destination)],
+        text=True,
+        capture_output=True,
+    )
     if result.returncode or result.stdout.strip() or result.stderr.strip():
-        raise RuntimeError('Native runtime diagnostics; inspect ' + str(destination))
+        raise RuntimeError("Native runtime diagnostics; inspect " + str(destination))
     return result.stdout
 
+
 try:
-    rpc('initialize', {'protocolVersion': '2025-06-18', 'capabilities': {},
-        'clientInfo': {'name': 'Total Fog paired feedback verification', 'version': '1'}})
-    process.stdin.write(json.dumps({'jsonrpc': '2.0', 'method': 'notifications/initialized'}) + '\n')
+    rpc(
+        "initialize",
+        {
+            "protocolVersion": "2025-06-18",
+            "capabilities": {},
+            "clientInfo": {"name": "Total Fog paired feedback verification", "version": "1"},
+        },
+    )
+    process.stdin.write(
+        json.dumps({"jsonrpc": "2.0", "method": "notifications/initialized"}) + "\n"
+    )
     process.stdin.flush()
-    if tool('games_status', {'gameId': GAME_ID})['status'] not in {'stopped', 'stale-runtime-cleaned'}:
-        raise RuntimeError('Stop the game before paired verification')
-    step = 'start paired game'
+    if tool("games_status", {"gameId": GAME_ID})["status"] not in {
+        "stopped",
+        "stale-runtime-cleaned",
+    }:
+        raise RuntimeError("Stop the game before paired verification")
+    step = "start paired game"
     started = True
-    launch = tool('games_start', {'gameId': GAME_ID, 'timeout': 120})
-    if not launch.get('gabpConnected'):
-        tool('games_connect', {'gameId': GAME_ID})
-    step = 'load base'
-    loaded = native('rimworld/load_game_ready', {'saveName': save_name, 'readiness': 'visual', 'pauseIfNeeded': True})
-    if not (loaded.get('success') and loaded['operation']['Success'] and
-            loaded['state']['visualReady'] and loaded['state']['paused']):
-        raise RuntimeError('The base did not become visual-ready and paused')
-    step = 'native silent raid and manhunter arrivals'
-    arrivals = native('totalfog/silent_raid_arrivals', {'saveName': save_name})
-    (attempt / 'silent-raid-arrivals.json').write_text(json.dumps(arrivals, indent=2) + '\n')
-    save_log(attempt / 'silent-raid-arrivals.log')
-    if not (arrivals['operation']['Success'] and not arrivals['operation']['Warnings'] and
-            arrivals['passed'] and len(arrivals['rows']) == 4 and
-            all(row['passed'] for row in arrivals['rows']) and arrivals['lifetime']['passed']):
-        raise RuntimeError('Silent raid arrival controls failed')
-    step = 'native danger-area warning presentation'
-    warnings = native('totalfog/zombieland_area_warnings',
-        {'saveName': save_name, 'includeSymbiant': True})
-    (attempt / 'zombieland-area-warnings.json').write_text(json.dumps(warnings, indent=2) + '\n')
-    save_log(attempt / 'zombieland-area-warnings.log')
-    if not (warnings['operation']['Success'] and not warnings['operation']['Warnings'] and
-            warnings['passed'] and len(warnings['rows']) == 7 and
-            all(row['passed'] and row['simulationEntryRetained'] and row['nativeDrawCalls'] > 0 and
-                row['tick'] == warnings['startTick'] for row in warnings['rows'])):
-        raise RuntimeError('Danger-area warning presentation failed')
-    for mode in ('hidden-muted', 'visible-muted', 'hidden-unfiltered'):
-        step = 'native Albino scream ' + mode
-        scream = native('totalfog/zombieland_albino_scream',
-            {'saveName': save_name, 'audioMode': mode})
-        (attempt / ('zombieland-albino-scream-' + mode + '.json')).write_text(json.dumps(scream, indent=2) + '\n')
-        save_log(attempt / ('zombieland-albino-scream-' + mode + '.log'))
-        if not (scream['operation']['Success'] and not scream['operation']['Warnings'] and
-                scream['passed'] and len(scream['rows']) == 7 and all(row['passed'] for row in scream['rows']) and
-                scream['normalPlayback'] and not scream['forcedScreamState'] and not scream['shortenedCooldown'] and
-                not scream['startedAlbinoJob'] and scream['stagedRoomAndHeldVictims'] and
-                not scream['naturalVictimCombat'] and scream['damageNotificationControl'] and not scream['resets']):
-            raise RuntimeError('Albino native scream controls failed')
-    step = 'native explosion camera privacy'
-    explosions = native('totalfog/explosion_camera', {'saveName': save_name})
-    (attempt / 'explosion-camera.json').write_text(json.dumps(explosions, indent=2) + '\n')
-    save_log(attempt / 'explosion-camera.log')
-    if not (explosions['operation']['Success'] and not explosions['operation']['Warnings'] and
-            explosions['passed'] and len(explosions['rows']) == 16 and
-            all(row['passed'] and row['completed'] and row['affectedCells'] > 0 for row in explosions['rows'])):
-        raise RuntimeError('Explosion camera privacy controls failed')
-    step = 'Symbiant native pixels and interaction'
-    boundary = native('totalfog/symbiant_boundary', {'saveName': save_name,
-        'evidenceLabel': 'feedback-' + label, 'frames': 12, 'extended': True})
-    (render / 'symbiant-boundary-live.json').write_text(json.dumps(boundary, indent=2) + '\n')
-    for picture in boundary['pictures']:
-        path = Path(picture['Result']['path']).resolve()
-        if not path.is_relative_to((DATA / 'Screenshots').resolve()):
-            raise RuntimeError('Screenshot is outside this test profile')
+    launch = tool("games_start", {"gameId": GAME_ID, "timeout": 120})
+    if not launch.get("gabpConnected"):
+        tool("games_connect", {"gameId": GAME_ID})
+    step = "load base"
+    loaded = native(
+        "rimworld/load_game_ready",
+        {"saveName": save_name, "readiness": "visual", "pauseIfNeeded": True},
+    )
+    if not (
+        loaded.get("success")
+        and loaded["operation"]["Success"]
+        and loaded["state"]["visualReady"]
+        and loaded["state"]["paused"]
+    ):
+        raise RuntimeError("The base did not become visual-ready and paused")
+    step = "native silent raid and manhunter arrivals"
+    arrivals = native("totalfog/silent_raid_arrivals", {"saveName": save_name})
+    (attempt / "silent-raid-arrivals.json").write_text(json.dumps(arrivals, indent=2) + "\n")
+    save_log(attempt / "silent-raid-arrivals.log")
+    if not (
+        arrivals["operation"]["Success"]
+        and not arrivals["operation"]["Warnings"]
+        and arrivals["passed"]
+        and len(arrivals["rows"]) == 4
+        and all(row["passed"] for row in arrivals["rows"])
+        and arrivals["lifetime"]["passed"]
+    ):
+        raise RuntimeError("Silent raid arrival controls failed")
+    step = "native danger-area warning presentation"
+    warnings = native(
+        "totalfog/zombieland_area_warnings", {"saveName": save_name, "includeSymbiant": True}
+    )
+    (attempt / "zombieland-area-warnings.json").write_text(json.dumps(warnings, indent=2) + "\n")
+    save_log(attempt / "zombieland-area-warnings.log")
+    if not (
+        warnings["operation"]["Success"]
+        and not warnings["operation"]["Warnings"]
+        and warnings["passed"]
+        and len(warnings["rows"]) == 7
+        and all(
+            row["passed"]
+            and row["simulationEntryRetained"]
+            and row["nativeDrawCalls"] > 0
+            and row["tick"] == warnings["startTick"]
+            for row in warnings["rows"]
+        )
+    ):
+        raise RuntimeError("Danger-area warning presentation failed")
+    for mode in ("hidden-muted", "visible-muted", "hidden-unfiltered"):
+        step = "native Albino scream " + mode
+        scream = native(
+            "totalfog/zombieland_albino_scream", {"saveName": save_name, "audioMode": mode}
+        )
+        (attempt / ("zombieland-albino-scream-" + mode + ".json")).write_text(
+            json.dumps(scream, indent=2) + "\n"
+        )
+        save_log(attempt / ("zombieland-albino-scream-" + mode + ".log"))
+        if not (
+            scream["operation"]["Success"]
+            and not scream["operation"]["Warnings"]
+            and scream["passed"]
+            and len(scream["rows"]) == 7
+            and all(row["passed"] for row in scream["rows"])
+            and scream["normalPlayback"]
+            and not scream["forcedScreamState"]
+            and not scream["shortenedCooldown"]
+            and not scream["startedAlbinoJob"]
+            and scream["stagedRoomAndHeldVictims"]
+            and not scream["naturalVictimCombat"]
+            and scream["damageNotificationControl"]
+            and not scream["resets"]
+        ):
+            raise RuntimeError("Albino native scream controls failed")
+    step = "native explosion camera privacy"
+    explosions = native("totalfog/explosion_camera", {"saveName": save_name})
+    (attempt / "explosion-camera.json").write_text(json.dumps(explosions, indent=2) + "\n")
+    save_log(attempt / "explosion-camera.log")
+    if not (
+        explosions["operation"]["Success"]
+        and not explosions["operation"]["Warnings"]
+        and explosions["passed"]
+        and len(explosions["rows"]) == 16
+        and all(
+            row["passed"] and row["completed"] and row["affectedCells"] > 0
+            for row in explosions["rows"]
+        )
+    ):
+        raise RuntimeError("Explosion camera privacy controls failed")
+    step = "Symbiant native pixels and interaction"
+    boundary = native(
+        "totalfog/symbiant_boundary",
+        {
+            "saveName": save_name,
+            "evidenceLabel": "feedback-" + label,
+            "frames": 12,
+            "extended": True,
+        },
+    )
+    (render / "symbiant-boundary-live.json").write_text(json.dumps(boundary, indent=2) + "\n")
+    for picture in boundary["pictures"]:
+        path = Path(picture["Result"]["path"]).resolve()
+        if not path.is_relative_to((DATA / "Screenshots").resolve()):
+            raise RuntimeError("Screenshot is outside this test profile")
         shutil.copyfile(path, render / path.name)
-    save_log(render / 'player.log')
-    python = ROOT / 'artifacts/pixel-analysis-env/bin/python'
-    subprocess.run([str(python) if python.exists() else sys.executable,
-        str(ROOT / 'scripts/verify-rendered'), str(render)], check=True)
-    proof = json.loads((render / 'verification.json').read_text())
-    if proof['nativeCases'] != 12 or proof['manualTargetChecks'] != 54:
-        raise RuntimeError('Native pixel/interaction matrix is incomplete')
+    save_log(render / "player.log")
+    python = ROOT / "artifacts/pixel-analysis-env/bin/python"
+    subprocess.run(
+        [
+            str(python) if python.exists() else sys.executable,
+            str(ROOT / "scripts/verify-rendered"),
+            str(render),
+        ],
+        check=True,
+    )
+    proof = json.loads((render / "verification.json").read_text())
+    if proof["nativeCases"] != 12 or proof["manualTargetChecks"] != 54:
+        raise RuntimeError("Native pixel/interaction matrix is incomplete")
     costs = []
     for count in (400, 4000):
         for sparse in (False, True):
-            shape = 'sparse' if sparse else 'dense'
-            step = f'Symbiant {count}-cell {shape} render cost'
-            cost = native('totalfog/symbiant_render_cost', {'saveName': save_name,
-                'count': count, 'sparse': sparse, 'frames': 60, 'pairs': 3})
-            filename = f'symbiant-render-cost-{count}-{shape}-green.json'
-            (attempt / filename).write_text(json.dumps(cost, indent=2) + '\n')
-            save_log(attempt / (filename.removesuffix('.json') + '.log'))
-            if not cost['operation']['Success'] or cost['operation']['Warnings'] or len(cost['rows']) != 10 or any(not row['measurement']['success'] or row['measurement']['FocusLost'] or
-                    row['state']['cells'] != count or row['state']['registrations'] != 1 or
-                    row['mode'].startswith('hidden') and row['state']['bodyCurrentCells'] != 0 for row in cost['rows']):
-                raise RuntimeError('Render-cost native prerequisites failed')
+            shape = "sparse" if sparse else "dense"
+            step = f"Symbiant {count}-cell {shape} render cost"
+            cost = native(
+                "totalfog/symbiant_render_cost",
+                {"saveName": save_name, "count": count, "sparse": sparse, "frames": 60, "pairs": 3},
+            )
+            filename = f"symbiant-render-cost-{count}-{shape}-green.json"
+            (attempt / filename).write_text(json.dumps(cost, indent=2) + "\n")
+            save_log(attempt / (filename.removesuffix(".json") + ".log"))
+            if (
+                not cost["operation"]["Success"]
+                or cost["operation"]["Warnings"]
+                or len(cost["rows"]) != 10
+                or any(
+                    not row["measurement"]["success"]
+                    or row["measurement"]["FocusLost"]
+                    or row["state"]["cells"] != count
+                    or row["state"]["registrations"] != 1
+                    or row["mode"].startswith("hidden")
+                    and row["state"]["bodyCurrentCells"] != 0
+                    for row in cost["rows"]
+                )
+            ):
+                raise RuntimeError("Render-cost native prerequisites failed")
             costs.append(filename)
-    step = 'global creepy ambience'
-    ambient = native('totalfog/zombieland_global_ambient', {'frames': 15})
-    (attempt / 'zombieland-global-ambient.json').write_text(json.dumps(ambient, indent=2) + '\n')
-    save_log(attempt / 'zombieland-global-ambient.log')
-    if not (ambient['operation']['Success'] and not ambient['operation']['Warnings'] and
-            ambient['passed'] and len(ambient['rows']) == 5 and
-            all(row['passed'] and row['dictionaryUnchanged'] for row in ambient['rows'])):
-        raise RuntimeError('Global creepy ambience changed under fog filtering')
-    step = 'native contamination sight and refresh pixels'
-    contamination_dir = attempt / 'contamination'
+    step = "global creepy ambience"
+    ambient = native("totalfog/zombieland_global_ambient", {"frames": 15})
+    (attempt / "zombieland-global-ambient.json").write_text(json.dumps(ambient, indent=2) + "\n")
+    save_log(attempt / "zombieland-global-ambient.log")
+    if not (
+        ambient["operation"]["Success"]
+        and not ambient["operation"]["Warnings"]
+        and ambient["passed"]
+        and len(ambient["rows"]) == 5
+        and all(row["passed"] and row["dictionaryUnchanged"] for row in ambient["rows"])
+    ):
+        raise RuntimeError("Global creepy ambience changed under fog filtering")
+    step = "native contamination sight and refresh pixels"
+    contamination_dir = attempt / "contamination"
     contamination_dir.mkdir()
-    contamination = native('totalfog/contamination_overlay', {'saveName': save_name,
-        'evidenceLabel': 'feedback-contamination-' + label, 'x': 212, 'z': 78,
-        'nativeSightSource': True, 'refreshChecks': True, 'frames': 12})
-    (contamination_dir / 'contamination-overlay-live.json').write_text(json.dumps(contamination, indent=2) + '\n')
-    for picture in contamination['pictures']:
-        path = Path(picture['Result']['path']).resolve()
-        if not path.is_relative_to((DATA / 'Screenshots').resolve()):
-            raise RuntimeError('Contamination screenshot is outside this test profile')
+    contamination = native(
+        "totalfog/contamination_overlay",
+        {
+            "saveName": save_name,
+            "evidenceLabel": "feedback-contamination-" + label,
+            "x": 212,
+            "z": 78,
+            "nativeSightSource": True,
+            "refreshChecks": True,
+            "frames": 12,
+        },
+    )
+    (contamination_dir / "contamination-overlay-live.json").write_text(
+        json.dumps(contamination, indent=2) + "\n"
+    )
+    for picture in contamination["pictures"]:
+        path = Path(picture["Result"]["path"]).resolve()
+        if not path.is_relative_to((DATA / "Screenshots").resolve()):
+            raise RuntimeError("Contamination screenshot is outside this test profile")
         shutil.copyfile(path, contamination_dir / path.name)
-    (contamination_dir / 'player-log-summary.txt').write_text(save_log(contamination_dir / 'player.log'))
-    subprocess.run([str(python) if python.exists() else sys.executable,
-        str(ROOT / 'scripts/verify-rendered'), str(contamination_dir)], check=True)
-    contamination_proof = json.loads((contamination_dir / 'verification.json').read_text())
-    if contamination_proof['nativeCases'] != 14 or not contamination_proof['refreshChecks']:
-        raise RuntimeError('Contamination sight and refresh matrix is incomplete')
+    (contamination_dir / "player-log-summary.txt").write_text(
+        save_log(contamination_dir / "player.log")
+    )
+    subprocess.run(
+        [
+            str(python) if python.exists() else sys.executable,
+            str(ROOT / "scripts/verify-rendered"),
+            str(contamination_dir),
+        ],
+        check=True,
+    )
+    contamination_proof = json.loads((contamination_dir / "verification.json").read_text())
+    if contamination_proof["nativeCases"] != 14 or not contamination_proof["refreshChecks"]:
+        raise RuntimeError("Contamination sight and refresh matrix is incomplete")
     if hashlib.sha256(save.read_bytes()).hexdigest() != save_hash:
-        raise RuntimeError('The unchanged base save changed')
-    step = 'verify candidate hashes'
+        raise RuntimeError("The unchanged base save changed")
+    step = "verify candidate hashes"
     for pair in pairs:
-        if hashlib.sha256(Path(pair['built']).read_bytes()).hexdigest() != pair['sha256'] or \
-                hashlib.sha256(Path(pair['deployed']).read_bytes()).hexdigest() != pair['sha256']:
-            raise RuntimeError('The paired binaries changed during verification')
-    step = 'stop verified game'
-    tool('games_stop', {'gameId': GAME_ID})
-    if tool('games_status', {'gameId': GAME_ID})['status'] not in {'stopped', 'stale-runtime-cleaned'}:
-        raise RuntimeError('RimWorld did not terminate after native verification')
+        if (
+            hashlib.sha256(Path(pair["built"]).read_bytes()).hexdigest() != pair["sha256"]
+            or hashlib.sha256(Path(pair["deployed"]).read_bytes()).hexdigest() != pair["sha256"]
+        ):
+            raise RuntimeError("The paired binaries changed during verification")
+    step = "stop verified game"
+    tool("games_stop", {"gameId": GAME_ID})
+    if tool("games_status", {"gameId": GAME_ID})["status"] not in {
+        "stopped",
+        "stale-runtime-cleaned",
+    }:
+        raise RuntimeError("RimWorld did not terminate after native verification")
     started = False
-    step = 'promote preserved native evidence'
-    canonical = ROOT / 'artifacts/symbiant-render-cost-acceptance'
+    step = "promote preserved native evidence"
+    canonical = ROOT / "artifacts/symbiant-render-cost-acceptance"
     if canonical.exists():
-        canonical.rename(attempt / 'prior-acceptance')
+        canonical.rename(attempt / "prior-acceptance")
     shutil.copytree(render, canonical)
     outputs = {filename: (attempt / filename).read_text() for filename in costs}
-    outputs['symbiant-render-cost-green-build-pairs.json'] = json.dumps(pairs, indent=2) + '\n'
-    outputs['zombieland-current-package-gates.json'] = json.dumps({'passed': True, 'nativeCases': 12,
-        'manualTargetChecks': 54, 'renderCostRows': 40, 'globalAmbientControls': 5,
-        'silentArrivalControls': 4, 'incidentParameterLifetime': 'passed', 'areaWarningControls': 7,
-        'albinoScreamControls': 21,
-        'explosionCameraControls': 16,
-        'contaminationControls': 14,
-        'buildPairs': pairs, 'recognizedNativeLogs': 'clean',
-        'comparison': str(comparison_path), 'comparisonSha256': hashlib.sha256(comparison_path.read_bytes()).hexdigest(),
-        'nativeEvidence': str(attempt), 'scope': 'Exact paired Mac native rendering/interaction, paused render diagnostics and matched ordinary fourth-speed performance. Broader gameplay and Windows remain open.'}, indent=2) + '\n'
+    outputs["symbiant-render-cost-green-build-pairs.json"] = json.dumps(pairs, indent=2) + "\n"
+    outputs["zombieland-current-package-gates.json"] = (
+        json.dumps(
+            {
+                "passed": True,
+                "nativeCases": 12,
+                "manualTargetChecks": 54,
+                "renderCostRows": 40,
+                "globalAmbientControls": 5,
+                "silentArrivalControls": 4,
+                "incidentParameterLifetime": "passed",
+                "areaWarningControls": 7,
+                "albinoScreamControls": 21,
+                "explosionCameraControls": 16,
+                "contaminationControls": 14,
+                "buildPairs": pairs,
+                "recognizedNativeLogs": "clean",
+                "comparison": str(comparison_path),
+                "comparisonSha256": hashlib.sha256(comparison_path.read_bytes()).hexdigest(),
+                "nativeEvidence": str(attempt),
+                "scope": "Exact paired Mac native rendering/interaction, paused render diagnostics and matched ordinary fourth-speed performance. Broader gameplay and Windows remain open.",
+            },
+            indent=2,
+        )
+        + "\n"
+    )
     for filename, contents in outputs.items():
-        destination = ROOT / 'artifacts' / filename
+        destination = ROOT / "artifacts" / filename
         if destination.exists():
-            shutil.copyfile(destination, attempt / ('prior-' + filename))
+            shutil.copyfile(destination, attempt / ("prior-" + filename))
         destination.write_text(contents)
-    print('ok')
+    print("ok")
 except Exception:
-    print('Native verification failed during ' + step + '; evidence: ' + str(attempt), file=sys.stderr)
+    print(
+        "Native verification failed during " + step + "; evidence: " + str(attempt), file=sys.stderr
+    )
     raise
 finally:
     failed = sys.exc_info()[0] is not None
     try:
         if started:
             try:
-                tool('games_stop', {'gameId': GAME_ID})
+                tool("games_stop", {"gameId": GAME_ID})
             except Exception as cleanup_error:
                 if failed:
-                    print('Game cleanup failed: ' + str(cleanup_error), file=sys.stderr)
+                    print("Game cleanup failed: " + str(cleanup_error), file=sys.stderr)
                 else:
                     raise
     finally:

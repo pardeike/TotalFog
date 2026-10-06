@@ -59,7 +59,10 @@ public sealed class TargetCandidateTests
         proxy.Proxy = new CompSelectProxy { thingToSelect = target };
         Assert.Empty(InterfaceVisibility.FilterTargetThings(new() { proxy }, proxy.Position));
         map.Fog.InSight[0] = true;
-        Assert.Equal(new[] { proxy }, InterfaceVisibility.FilterTargetThings(new() { proxy }, proxy.Position));
+        Assert.Equal(
+            new[] { proxy },
+            InterfaceVisibility.FilterTargetThings(new() { proxy }, proxy.Position)
+        );
     }
 
     [Fact]
@@ -67,6 +70,9 @@ public sealed class TargetCandidateTests
     {
         var map = new Map();
         var thing = At(map, 0);
-        Assert.Equal(new[] { thing }, InterfaceVisibility.FilterTargetThings(new() { thing }, thing.Position));
+        Assert.Equal(
+            new[] { thing },
+            InterfaceVisibility.FilterTargetThings(new() { thing }, thing.Position)
+        );
     }
 }

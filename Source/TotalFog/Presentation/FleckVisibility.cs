@@ -19,7 +19,8 @@ internal static class FleckVisibility
 
     // A finalizer restores nested calls and also clears the owner on failure.
     // Returning void preserves the engine's original exception.
-    internal static void EndDrawing(MapVisibility __state) => Volatile.Write(ref drawingFog, __state);
+    internal static void EndDrawing(MapVisibility __state) =>
+        Volatile.Write(ref drawingFog, __state);
 
     internal static bool DrawPrefix(ref FleckStatic __instance)
     {
@@ -27,6 +28,7 @@ internal static class FleckVisibility
         // Direct foreign drawing outside the map manager retains its behavior.
         // ExactPosition includes moving, attached and arcing draw offsets;
         // Draw's subsequent altitude assignment only changes the Y component.
-        return fog == null || CellVisibility.IsCurrent(fog.map, __instance.DrawPos.ToIntVec3(), fog);
+        return fog == null
+            || CellVisibility.IsCurrent(fog.map, __instance.DrawPos.ToIntVec3(), fog);
     }
 }

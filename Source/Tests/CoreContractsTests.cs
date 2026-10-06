@@ -40,7 +40,8 @@ public class CoreContractsTests
     public void FactionsAreSparseAndCountsDoNotOverflowAtShortBoundary()
     {
         var grid = new VisibilityGrid(1, 1);
-        for (int i = 0; i < 40000; i++) grid.Add(1000000, 0);
+        for (int i = 0; i < 40000; i++)
+            grid.Add(1000000, 0);
         Assert.Equal(40000, grid.Counts(1000000)[0]);
         Assert.False(grid.Known[0]);
         Assert.False(grid.IsVisible(0, 0, 0));
@@ -62,7 +63,8 @@ public class CoreContractsTests
         grid.Add(1000000, 4);
         Assert.False(grid.Known[4]);
         Assert.False(grid.IsVisible(0, 0, 2));
-        grid.Add(0, 4); grid.Add(0, 4);
+        grid.Add(0, 4);
+        grid.Add(0, 4);
         Assert.True(grid.Remove(1000000, 4));
         Assert.False(grid.Remove(0, 4));
         Assert.True(grid.IsVisible(0, 0, 2));
@@ -77,14 +79,18 @@ public class CoreContractsTests
     public void RepeatedCoverageUpdatesAndQueriesAllocateNothingAfterSetup()
     {
         var grid = new VisibilityGrid(2, 3);
-        grid.Counts(0); grid.Counts(12);
+        grid.Counts(0);
+        grid.Counts(12);
         void Exercise()
         {
             for (int i = 0; i < 1000; i++)
             {
-                grid.Add(0, 4); grid.Add(12, 4);
-                grid.IsVisible(0, 0, 2); grid.IsVisible(12, 0, 2);
-                grid.Remove(0, 4); grid.Remove(12, 4);
+                grid.Add(0, 4);
+                grid.Add(12, 4);
+                grid.IsVisible(0, 0, 2);
+                grid.IsVisible(12, 0, 2);
+                grid.Remove(0, 4);
+                grid.Remove(12, 4);
             }
         }
         Exercise();
@@ -97,8 +103,10 @@ public class CoreContractsTests
     public void DiscoveryLoadChecksDimensionsAndCopiesState()
     {
         var grid = new VisibilityGrid(2, 3);
-        var saved = new bool[6]; saved[4] = true;
-        grid.LoadKnown(saved); saved[4] = false;
+        var saved = new bool[6];
+        saved[4] = true;
+        grid.LoadKnown(saved);
+        saved[4] = false;
         Assert.True(grid.Known[4]);
         Assert.Throws<ArgumentException>(() => grid.LoadKnown(new bool[5]));
     }

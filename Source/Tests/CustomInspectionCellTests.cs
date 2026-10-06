@@ -8,6 +8,7 @@ namespace TotalFog.Tests;
 public sealed class CustomInspectionCellTests
 {
     private class CorePawn : Pawn { }
+
     private sealed class DerivedPawn : CorePawn { }
 
     [Theory]
@@ -15,7 +16,10 @@ public sealed class CustomInspectionCellTests
     [InlineData(true, false)]
     [InlineData(true, true)]
     [InlineData(false, false)]
-    public void InspectionFollowsCoreWithoutMovingOrChangingRootRendering(bool rootVisible, bool coreVisible)
+    public void InspectionFollowsCoreWithoutMovingOrChangingRootRendering(
+        bool rootVisible,
+        bool coreVisible
+    )
     {
         var pawn = new CorePawn();
         pawn.Map.Fog.Initialized = true;
@@ -26,15 +30,27 @@ public sealed class CustomInspectionCellTests
         {
             Assert.Equal(coreVisible, Visibility.IsVisible(pawn));
             Assert.Equal(coreVisible && rootVisible, InterfaceVisibility.PawnLabelPrefix(pawn));
-            Assert.Equal(coreVisible ? new IntVec3(1, 0) : IntVec3.Invalid, InterfaceVisibility.TooltipPosition(pawn));
-            Assert.Equal(rootVisible ? 1 : 0, InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(0, 0)).Count);
-            Assert.Equal(coreVisible ? 1 : 0, InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(1, 0)).Count);
+            Assert.Equal(
+                coreVisible ? new IntVec3(1, 0) : IntVec3.Invalid,
+                InterfaceVisibility.TooltipPosition(pawn)
+            );
+            Assert.Equal(
+                rootVisible ? 1 : 0,
+                InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(0, 0)).Count
+            );
+            Assert.Equal(
+                coreVisible ? 1 : 0,
+                InterfaceVisibility.FilterTargetThings(new() { pawn }, new IntVec3(1, 0)).Count
+            );
             Assert.Equal(rootVisible, ThingVisibility.IsVisible(pawn));
             Assert.Equal(new IntVec3(0, 0), pawn.PositionHeld);
             InterfaceVisibility.DrawOverlay(pawn);
             Assert.Equal(coreVisible && rootVisible ? 1 : 0, pawn.OverlayCalls);
         }
-        finally { Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Theory]
@@ -48,8 +64,15 @@ public sealed class CustomInspectionCellTests
         pawn.Map.IsPlayerHome = bypass;
         FogSettings.OnlyOutsideColony = bypass;
         Visibility.RegisterInspectionCell(typeof(CorePawn), _ => new IntVec3(1, 0));
-        try { Assert.Equal(!initialized || bypass, Visibility.IsVisible(pawn)); }
-        finally { FogSettings.OnlyOutsideColony = false; Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        try
+        {
+            Assert.Equal(!initialized || bypass, Visibility.IsVisible(pawn));
+        }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = false;
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
@@ -68,7 +91,11 @@ public sealed class CustomInspectionCellTests
             Visibility.RegisterInspectionCell(typeof(CorePawn), _ => IntVec3.Invalid);
             Assert.False(Visibility.IsVisible(pawn));
         }
-        finally { FogSettings.OnlyOutsideColony = false; Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = false;
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
@@ -86,7 +113,10 @@ public sealed class CustomInspectionCellTests
             Visibility.RegisterInspectionCell(typeof(CorePawn), null);
             Assert.False(Visibility.IsVisible(pawn));
         }
-        finally { Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
@@ -95,7 +125,14 @@ public sealed class CustomInspectionCellTests
         var pawn = new CorePawn();
         pawn.Map.Fog.Initialized = pawn.Map.Fog.InSight[0] = true;
         int calls = 0;
-        Visibility.RegisterInspectionCell(typeof(CorePawn), _ => { calls++; throw new InvalidOperationException("fixture fault"); });
+        Visibility.RegisterInspectionCell(
+            typeof(CorePawn),
+            _ =>
+            {
+                calls++;
+                throw new InvalidOperationException("fixture fault");
+            }
+        );
         try
         {
             Assert.False(Visibility.IsVisible(pawn));
@@ -104,15 +141,27 @@ public sealed class CustomInspectionCellTests
             Visibility.RegisterInspectionCell(typeof(CorePawn), _ => pawn.PositionHeld);
             Assert.True(Visibility.IsVisible(pawn));
         }
-        finally { Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
     public void MaplessPolicyDoesNotInvokeTheProvider()
     {
-        Visibility.RegisterInspectionCell(typeof(CorePawn), _ => throw new InvalidOperationException("must not query"));
-        try { Assert.True(Visibility.IsVisible(new CorePawn { Map = null })); }
-        finally { Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        Visibility.RegisterInspectionCell(
+            typeof(CorePawn),
+            _ => throw new InvalidOperationException("must not query")
+        );
+        try
+        {
+            Assert.True(Visibility.IsVisible(new CorePawn { Map = null }));
+        }
+        finally
+        {
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
@@ -120,7 +169,11 @@ public sealed class CustomInspectionCellTests
     {
         var target = new CorePawn();
         target.Map.Fog.Initialized = target.Map.Fog.InSight[0] = true;
-        var proxy = new Thing { Map = target.Map, Proxy = new RimWorld.CompSelectProxy { thingToSelect = target } };
+        var proxy = new Thing
+        {
+            Map = target.Map,
+            Proxy = new RimWorld.CompSelectProxy { thingToSelect = target },
+        };
         target.Map.Things.Add(proxy);
         Visibility.RegisterInspectionCell(typeof(CorePawn), _ => new IntVec3(1, 0));
         try
@@ -129,9 +182,15 @@ public sealed class CustomInspectionCellTests
             Assert.Equal(0, proxy.OverlayCalls);
             Assert.Empty(InterfaceVisibility.MouseoverThings(proxy.Position, proxy.Map));
             target.Map.Fog.InSight[1] = true;
-            Assert.Same(target.Map.Things, InterfaceVisibility.MouseoverThings(proxy.Position, proxy.Map));
+            Assert.Same(
+                target.Map.Things,
+                InterfaceVisibility.MouseoverThings(proxy.Position, proxy.Map)
+            );
         }
-        finally { Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 
     [Fact]
@@ -152,6 +211,10 @@ public sealed class CustomInspectionCellTests
             Assert.False(Find.Selector.IsSelected(pawn));
             Assert.True(ThingVisibility.IsVisible(pawn));
         }
-        finally { Find.Selector.Deselect(pawn); Visibility.RegisterInspectionCell(typeof(CorePawn), null); }
+        finally
+        {
+            Find.Selector.Deselect(pawn);
+            Visibility.RegisterInspectionCell(typeof(CorePawn), null);
+        }
     }
 }

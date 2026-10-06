@@ -5,7 +5,11 @@ namespace TotalFog.Detours;
 
 public static class DesignatorMine
 {
-    public static void CanDesignateCell_Postfix(IntVec3 c, ref Designator __instance, ref AcceptanceReport __result)
+    public static void CanDesignateCell_Postfix(
+        IntVec3 c,
+        ref Designator __instance,
+        ref AcceptanceReport __result
+    )
     {
         if (__result.Accepted)
         {
@@ -19,8 +23,11 @@ public static class DesignatorMine
         }
 
         var mapComponentSeenFog = value.GetVisibility();
-        if (mapComponentSeenFog != null && c.InBounds(value) &&
-            !mapComponentSeenFog.knownCells[value.cellIndices.CellToIndex(c)])
+        if (
+            mapComponentSeenFog != null
+            && c.InBounds(value)
+            && !mapComponentSeenFog.knownCells[value.cellIndices.CellToIndex(c)]
+        )
         {
             __result = true;
         }

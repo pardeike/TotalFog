@@ -25,7 +25,10 @@ public sealed class VisibilityIntegrationTests
             Assert.False(enemy.Map.Fog.knownCells[0]);
             Assert.Equal(0, enemy.ComponentQueries);
         }
-        finally { FogSettings.AISmart = old; }
+        finally
+        {
+            FogSettings.AISmart = old;
+        }
     }
 
     [Fact]
@@ -39,15 +42,21 @@ public sealed class VisibilityIntegrationTests
             Assert.True(Visibility.AllowsTarget(enemy, new IntVec3(0, 0)));
             FogSettings.AISmart = true;
             Assert.False(Visibility.AllowsTarget(enemy, new IntVec3(0, 0)));
-            Assert.True(Visibility.AllowsTarget(new Pawn { Faction = Faction.OfPlayer }, new IntVec3(0, 0)));
+            Assert.True(
+                Visibility.AllowsTarget(new Pawn { Faction = Faction.OfPlayer }, new IntVec3(0, 0))
+            );
             Assert.True(Visibility.AllowsTarget(new Pawn(), new IntVec3(0, 0)));
             enemy.RaceProps.Humanlike = false;
             Assert.True(Visibility.AllowsTarget(enemy, new IntVec3(0, 0)));
-            enemy.RaceProps.Humanlike = true; enemy.Map = null;
+            enemy.RaceProps.Humanlike = true;
+            enemy.Map = null;
             Assert.True(Visibility.AllowsTarget(enemy, new IntVec3(0, 0)));
             Assert.True(Visibility.AllowsTarget(null, new IntVec3(0, 0)));
         }
-        finally { FogSettings.AISmart = old; }
+        finally
+        {
+            FogSettings.AISmart = old;
+        }
     }
 
     [Fact]
@@ -100,7 +109,10 @@ public sealed class VisibilityIntegrationTests
             FogSettings.OnlyOutsideColony = false;
             Assert.False(Visibility.IsVisible(thing));
         }
-        finally { FogSettings.OnlyOutsideColony = old; }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = old;
+        }
     }
 
     [Fact]

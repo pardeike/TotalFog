@@ -4,6 +4,7 @@ using RimWorld;
 using TotalFog.Core;
 using UnityEngine;
 using Verse;
+
 namespace TotalFog;
 
 public class SectionLayerFog : SectionLayer
@@ -17,13 +18,20 @@ public class SectionLayerFog : SectionLayer
     private bool fading;
     private int lastFadeTick;
     private MapVisibility fog;
-    public SectionLayerFog(Section section) : base(section)
-        => relevantChangeTypes = FogDefOf.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
-    public override bool Visible => DebugViewSettings.drawFog && !Presentation.ThingVisibility.Bypass(Map);
+
+    public SectionLayerFog(Section section)
+        : base(section) => relevantChangeTypes = FogDefOf.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
+
+    public override bool Visible =>
+        DebugViewSettings.drawFog && !Presentation.ThingVisibility.Bypass(Map);
 
     // The existing nine-vertex topology is retained: it matches the vanilla
     // material and the independently tested shared-edge alpha contract.
-    private static void makeBaseGeometry(Section section, LayerSubMesh sm, AltitudeLayer altitudeLayer)
+    private static void makeBaseGeometry(
+        Section section,
+        LayerSubMesh sm,
+        AltitudeLayer altitudeLayer
+    )
     {
         var cellRect = new CellRect(section.botLeft.x, section.botLeft.z, 17, 17);
         cellRect.ClipInsideMap(section.map);
@@ -82,9 +90,11 @@ public class SectionLayerFog : SectionLayer
 
     public override void Regenerate()
     {
-        if (Current.ProgramState != ProgramState.Playing) return;
+        if (Current.ProgramState != ProgramState.Playing)
+            return;
         fog ??= Map.GetVisibility();
-        if (!fog.Initialized) return;
+        if (!fog.Initialized)
+            return;
         var mesh = GetSubMesh(MatBases.FogOfWar);
         bool first = mesh.mesh.vertexCount == 0;
         if (first)
@@ -97,7 +107,9 @@ public class SectionLayerFog : SectionLayer
         bool wasFading = fading;
         var rect = section.CellRect;
         var counts = fog.GetFactionShownCells(Faction.OfPlayer);
-        int width = Map.Size.x, height = Map.Size.z, stride = rect.Width + 2;
+        int width = Map.Size.x,
+            height = Map.Size.z,
+            stride = rect.Width + 2;
         // Each neighboring cell supplies up to nine vertices/cells. Read its
         // current fog state once, including the clipped section's border.
         for (int z = -1; z <= rect.Height; z++)
@@ -106,42 +118,75 @@ public class SectionLayerFog : SectionLayer
             int sx = Math.Max(0, Math.Min(width - 1, rect.minX + x));
             int sz = Math.Max(0, Math.Min(height - 1, rect.minZ + z));
             int index = sz * width + sx;
-            samples[(z + 1) * stride + x + 1] = FogAppearance.CellAlpha(Map.fogGrid.IsFogged(index),
-                fog.knownCells[index], counts[index], PrefFogAlpha);
+            samples[(z + 1) * stride + x + 1] = FogAppearance.CellAlpha(
+                Map.fogGrid.IsFogged(index),
+                fog.knownCells[index],
+                counts[index],
+                PrefFogAlpha
+            );
         }
         FogAppearance.FillSection(samples, rect.Width, rect.Height, targetAlphas);
         for (int vertex = 0; vertex < targetAlphas.Length; vertex++)
         {
             byte target = targetAlphas[vertex];
-            if (first || !PrefEnableFade) colors[vertex] = new Color32(255, 255, 255, target);
-            else if (colors[vertex].a != target) fading = true;
+            if (first || !PrefEnableFade)
+                colors[vertex] = new Color32(255, 255, 255, target);
+            else if (colors[vertex].a != target)
+                fading = true;
         }
-        if (first || !PrefEnableFade) { fading = false; Upload(mesh); }
-        if (first || !wasFading && fading) lastFadeTick = Find.TickManager.TicksGame;
+        if (first || !PrefEnableFade)
+        {
+            fading = false;
+            Upload(mesh);
+        }
+        if (first || !wasFading && fading)
+            lastFadeTick = Find.TickManager.TicksGame;
     }
+
     private void Upload(LayerSubMesh mesh)
     {
         bool opaque = false;
-        foreach (var color in colors) if (color.a != 0) { opaque = true; break; }
+        foreach (var color in colors)
+            if (color.a != 0)
+            {
+                opaque = true;
+                break;
+            }
         mesh.disabled = !opaque;
-        if (opaque) mesh.mesh.colors32 = colors;
+        if (opaque)
+            mesh.mesh.colors32 = colors;
     }
+
     public override void DrawLayer()
     {
         int tick = Find.TickManager.TicksGame;
         if (fading && Visible && tick > lastFadeTick)
         {
-            int speed = Math.Max(1, PrefFadeSpeedMult / Math.Max(1, (int)Find.TickManager.CurTimeSpeed));
+            int speed = Math.Max(
+                1,
+                PrefFadeSpeedMult / Math.Max(1, (int)Find.TickManager.CurTimeSpeed)
+            );
             bool changed = false;
             fading = false;
             for (int i = 0; i < colors.Length; i++)
             {
-                byte alpha = FogAppearance.Advance(colors[i].a, targetAlphas[i], tick - lastFadeTick, speed);
-                if (alpha != colors[i].a) { colors[i].a = alpha; changed = true; }
-                if (alpha != targetAlphas[i]) fading = true;
+                byte alpha = FogAppearance.Advance(
+                    colors[i].a,
+                    targetAlphas[i],
+                    tick - lastFadeTick,
+                    speed
+                );
+                if (alpha != colors[i].a)
+                {
+                    colors[i].a = alpha;
+                    changed = true;
+                }
+                if (alpha != targetAlphas[i])
+                    fading = true;
             }
             lastFadeTick = tick;
-            if (changed) Upload(GetSubMesh(MatBases.FogOfWar));
+            if (changed)
+                Upload(GetSubMesh(MatBases.FogOfWar));
         }
         base.DrawLayer();
     }

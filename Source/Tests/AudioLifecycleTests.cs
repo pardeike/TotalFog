@@ -10,7 +10,8 @@ public sealed class AudioLifecycleTests
     [Fact]
     public void LoopVolumeUsesEachCurrentPolicyWithoutChangingTheEngineInput()
     {
-        FogSettings.DoAudioCheck = true; FogSettings.MuteHiddenSounds = false;
+        FogSettings.DoAudioCheck = true;
+        FogSettings.MuteHiddenSounds = false;
         var sample = new SampleSustainer { Info = new SoundInfo { volumeFactor = .8f } };
         foreach (float factor in new[] { .5f, .5f, 0f, 1f })
         {

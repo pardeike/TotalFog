@@ -9,8 +9,12 @@ public static class ReservationUtility
     {
         public void CanReserve_Postfix(ref bool __result, LocalTargetInfo target)
         {
-            if (__result && p.Faction is { IsPlayer: true } && target.HasThing &&
-                target.Thing.def.category != ThingCategory.Pawn)
+            if (
+                __result
+                && p.Faction is { IsPlayer: true }
+                && target.HasThing
+                && target.Thing.def.category != ThingCategory.Pawn
+            )
             {
                 __result = target.Thing.IsFogVisible();
             }
@@ -18,8 +22,12 @@ public static class ReservationUtility
 
         public void CanReserveAndReach_Postfix(ref bool __result, LocalTargetInfo target)
         {
-            if (__result && p.Faction is { IsPlayer: true } && target.HasThing &&
-                target.Thing.def.category != ThingCategory.Pawn)
+            if (
+                __result
+                && p.Faction is { IsPlayer: true }
+                && target.HasThing
+                && target.Thing.def.category != ThingCategory.Pawn
+            )
             {
                 __result = target.Thing.IsFogVisible();
             }

@@ -20,11 +20,12 @@ public class Building_VisionConsole : Building
 
     private CompPowerTrader powerComp;
 
-
     public bool Manned => Find.TickManager.TicksGame < lastTick + deltaMonitor;
 
-    public bool WorkingNow => FlickUtility.WantsToBeOn(this) && (powerComp == null || powerComp.PowerOn) &&
-                              breakdownableComp is not { BrokenDown: true };
+    public bool WorkingNow =>
+        FlickUtility.WantsToBeOn(this)
+        && (powerComp == null || powerComp.PowerOn)
+        && breakdownableComp is not { BrokenDown: true };
 
     public override string GetInspectString()
     {
@@ -32,7 +33,9 @@ public class Building_VisionConsole : Building
         inspect.Append(base.GetInspectString());
         if (mapComp != null)
         {
-            inspect.AppendInNewLine("CameraCount".Translate() + ": " + mapComp.SurveillanceCameraCount());
+            inspect.AppendInNewLine(
+                "CameraCount".Translate() + ": " + mapComp.SurveillanceCameraCount()
+            );
         }
 
         return inspect.ToString();
@@ -78,7 +81,6 @@ public class Building_VisionConsole : Building
             deltaMonitor = delta;
         }
     }
-
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {

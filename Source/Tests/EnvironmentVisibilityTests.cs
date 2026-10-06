@@ -1,8 +1,8 @@
 using TotalFog;
 using Verse;
 using Xunit;
-using EnvironmentStatsDrawer = TotalFog.Detours.EnvironmentStatsDrawer;
 using BeautyUtility = TotalFog.Detours.BeautyUtility;
+using EnvironmentStatsDrawer = TotalFog.Detours.EnvironmentStatsDrawer;
 
 namespace TotalFog.Tests;
 
@@ -14,7 +14,13 @@ public sealed class EnvironmentVisibilityTests
     [InlineData(true, false, true, true, true)]
     [InlineData(false, false, false, true, true)]
     [InlineData(true, true, false, false, false)]
-    public void EnvironmentNeedsCurrentSightAndPreservesBaseRejections(bool initialized, bool inSight, bool bypass, bool original, bool expected)
+    public void EnvironmentNeedsCurrentSightAndPreservesBaseRejections(
+        bool initialized,
+        bool inSight,
+        bool bypass,
+        bool original,
+        bool expected
+    )
     {
         var map = new Map { IsPlayerHome = bypass };
         map.Fog.Initialized = initialized;
@@ -29,7 +35,11 @@ public sealed class EnvironmentVisibilityTests
             EnvironmentStatsDrawer.ShouldShowWindowNow_Postfix(ref result);
             Assert.Equal(expected, result);
         }
-        finally { FogSettings.OnlyOutsideColony = false; Find.CurrentMap = null; }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = false;
+            Find.CurrentMap = null;
+        }
     }
 
     [Fact]
@@ -44,7 +54,10 @@ public sealed class EnvironmentVisibilityTests
             EnvironmentStatsDrawer.ShouldShowWindowNow_Postfix(ref result);
             Assert.False(result);
         }
-        finally { Find.CurrentMap = null; }
+        finally
+        {
+            Find.CurrentMap = null;
+        }
     }
 
     [Fact]
@@ -63,7 +76,10 @@ public sealed class EnvironmentVisibilityTests
             BeautyUtility.FillBeautyRelevantCells_Postfix(map);
             Assert.Equal(new[] { seen }, cells);
         }
-        finally { cells.Clear(); }
+        finally
+        {
+            cells.Clear();
+        }
     }
 
     [Fact]
@@ -81,7 +97,10 @@ public sealed class EnvironmentVisibilityTests
             EnvironmentStatsDrawer.ShouldShowWindowNow_Postfix(ref result);
             Assert.False(result);
         }
-        finally { Find.CurrentMap = null; }
+        finally
+        {
+            Find.CurrentMap = null;
+        }
     }
 
     [Theory]
@@ -99,6 +118,10 @@ public sealed class EnvironmentVisibilityTests
             BeautyUtility.FillBeautyRelevantCells_Postfix(map);
             Assert.Single(cells);
         }
-        finally { cells.Clear(); FogSettings.OnlyOutsideColony = false; }
+        finally
+        {
+            cells.Clear();
+            FogSettings.OnlyOutsideColony = false;
+        }
     }
 }

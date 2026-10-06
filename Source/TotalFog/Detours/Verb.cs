@@ -6,8 +6,13 @@ namespace TotalFog.Detours;
 
 internal static class Verb
 {
-    internal static void CanHitCellFromCellIgnoringRange_Postfix(this Verse.Verb __instance, ref bool __result,
-        IntVec3 sourceSq, IntVec3 targetLoc, bool includeCorners = false)
+    internal static void CanHitCellFromCellIgnoringRange_Postfix(
+        this Verse.Verb __instance,
+        ref bool __result,
+        IntVec3 sourceSq,
+        IntVec3 targetLoc,
+        bool includeCorners = false
+    )
     {
         if (!__result || !__instance.verbProps.requireLineOfSight)
         {
@@ -22,8 +27,9 @@ internal static class Verb
 
         // Coverage and blockers can change while the game is paused or within
         // one tick. Always evaluate current sight; a per-tick cache is stale.
-        __result = caster.Faction != null && seenByFaction(caster, targetLoc) ||
-                   fovLineOfSight(sourceSq, targetLoc, caster);
+        __result =
+            caster.Faction != null && seenByFaction(caster, targetLoc)
+            || fovLineOfSight(sourceSq, targetLoc, caster);
     }
 
     private static bool seenByFaction(Thing thing, IntVec3 targetLoc)
@@ -80,14 +86,23 @@ internal static class Verb
         }
 
         var shouldMove = sourceSq != thing.Position && !thing.Position.AdjacentToCardinal(sourceSq);
-        var num = Mathf.RoundToInt(compFieldOfViewWatcher.CalcPawnSightRange(sourceSq, true, shouldMove));
+        var num = Mathf.RoundToInt(
+            compFieldOfViewWatcher.CalcPawnSightRange(sourceSq, true, shouldMove)
+        );
         if (!sourceSq.InHorDistOf(targetLoc, num))
         {
             return false;
         }
 
-        return TotalFog.Core.FieldOfView.CanSee(map.Size.x, map.Size.z, sourceSq.x, sourceSq.z,
-            targetLoc.x, targetLoc.z, num, mapComponentSeenFog.viewBlockerCells);
+        return TotalFog.Core.FieldOfView.CanSee(
+            map.Size.x,
+            map.Size.z,
+            sourceSq.x,
+            sourceSq.z,
+            targetLoc.x,
+            targetLoc.z,
+            num,
+            mapComponentSeenFog.viewBlockerCells
+        );
     }
-
 }

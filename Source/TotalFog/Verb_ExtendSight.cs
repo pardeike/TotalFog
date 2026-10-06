@@ -7,7 +7,11 @@ public class Verb_ExtendSight : Verb
 {
     public override bool TryCastShot()
     {
-        return (!currentTarget.HasThing || currentTarget.Thing.Map == caster.Map) && currentTarget.Thing is Pawn &&
-               (!verbProps.stopBurstWithoutLos || TryFindShootLineFromTo(caster.Position, currentTarget, out _));
+        return (!currentTarget.HasThing || currentTarget.Thing.Map == caster.Map)
+            && currentTarget.Thing is Pawn
+            && (
+                !verbProps.stopBurstWithoutLos
+                || TryFindShootLineFromTo(caster.Position, currentTarget, out _)
+            );
     }
 }

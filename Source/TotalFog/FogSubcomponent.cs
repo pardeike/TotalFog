@@ -8,25 +8,15 @@ public abstract class FogSubcomponent
 
     public ThingWithComps parent;
 
-    public virtual void CompTick()
-    {
-    }
+    public virtual void CompTick() { }
 
     public virtual void CompTickRare() => CompTick();
 
-    public virtual void PostDeSpawn(Map map)
-    {
-    }
+    public virtual void PostDeSpawn(Map map) { }
 
-    public virtual void PostExposeData()
-    {
-    }
+    public virtual void PostExposeData() { }
 
-    public virtual void PostSpawnSetup(bool respawningAfterLoad)
-    {
-    }
+    public virtual void PostSpawnSetup(bool respawningAfterLoad) { }
 
-    public virtual void ReceiveCompSignal(string signal)
-    {
-    }
+    public virtual void ReceiveCompSignal(string signal) { }
 }

@@ -200,9 +200,13 @@ public sealed class ObservationTests
     [InlineData(false, true)]
     [InlineData(true, false)]
     [InlineData(true, true)]
-    public void VanillaFogStillHidesOwnedPawnsBeforeAndAfterInitialization(bool initialized, bool flying)
+    public void VanillaFogStillHidesOwnedPawnsBeforeAndAfterInitialization(
+        bool initialized,
+        bool flying
+    )
     {
-        Thing thing = flying ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
+        Thing thing = flying
+            ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
             : new Pawn { Faction = Faction.OfPlayer };
         thing.Map.Fog.Initialized = initialized;
         thing.Map.Fog.InSight[0] = true;
@@ -216,7 +220,8 @@ public sealed class ObservationTests
     [InlineData(true)]
     public void OwnedPawnLiveInformationStillRequiresCurrentSight(bool flying)
     {
-        Thing thing = flying ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
+        Thing thing = flying
+            ? new PawnFlyer { FlyingPawn = new Pawn { Faction = Faction.OfPlayer } }
             : new Pawn { Faction = Faction.OfPlayer };
         thing.Map.Fog.Initialized = true;
         thing.Map.Fog.knownCells[0] = true;
@@ -296,14 +301,18 @@ public sealed class ObservationTests
     public void RememberedObjectsNeedCurrentSightToBecomeManualTargets(bool owned)
     {
         var item = Item();
-        if (owned) item.Faction = Faction.OfPlayer;
+        if (owned)
+            item.Faction = Faction.OfPlayer;
         item.Map.Fog.InSight[0] = true;
         item.TryGetComp<CompFog>().HideFromPlayer.UpdateVisibility(true);
         item.Map.Fog.InSight[0] = false;
         Assert.True(ThingVisibility.IsVisible(item));
         Assert.Empty(InterfaceVisibility.FilterTargetThings(new() { item }, item.Position));
         item.Map.Fog.InSight[0] = true;
-        Assert.Equal(new[] { item }, InterfaceVisibility.FilterTargetThings(new() { item }, item.Position));
+        Assert.Equal(
+            new[] { item },
+            InterfaceVisibility.FilterTargetThings(new() { item }, item.Position)
+        );
     }
 
     [Fact]
@@ -327,8 +336,12 @@ public sealed class ObservationTests
         target.Map.Fog.InSight[0] = true;
         target.TryGetComp<CompFog>().HideFromPlayer.UpdateVisibility(true);
         target.Map.Fog.InSight[0] = false;
-        var proxy = new Thing { Map = target.Map, PositionHeld = new IntVec3(1, 0),
-            Proxy = new RimWorld.CompSelectProxy { thingToSelect = target } };
+        var proxy = new Thing
+        {
+            Map = target.Map,
+            PositionHeld = new IntVec3(1, 0),
+            Proxy = new RimWorld.CompSelectProxy { thingToSelect = target },
+        };
         proxy.Map.Fog.InSight[1] = true;
         proxy.Map.Things.Add(proxy);
         InterfaceVisibility.DrawOverlay(proxy);
@@ -339,6 +352,9 @@ public sealed class ObservationTests
         InterfaceVisibility.DrawOverlay(proxy);
         Assert.Equal(1, proxy.OverlayCalls);
         Assert.Equal(proxy.Position, InterfaceVisibility.TooltipPosition(proxy));
-        Assert.Same(proxy.Map.Things, InterfaceVisibility.MouseoverThings(proxy.Position, proxy.Map));
+        Assert.Same(
+            proxy.Map.Things,
+            InterfaceVisibility.MouseoverThings(proxy.Position, proxy.Map)
+        );
     }
 }

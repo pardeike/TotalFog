@@ -65,7 +65,8 @@ public class CompPresentationState : FogSubcomponent
     {
         // Dynamic culling owns realtime objects. Their visibility transitions
         // cannot change section geometry, terrain, roofs or power-grid meshes.
-        if (parent.def.drawerType is DrawerType.RealtimeOnly or DrawerType.None) return;
+        if (parent.def.drawerType is DrawerType.RealtimeOnly or DrawerType.None)
+            return;
         if (map != parent.Map)
         {
             map = parent.Map;
@@ -81,12 +82,20 @@ public class CompPresentationState : FogSubcomponent
         rect.ClipInsideMap(map);
         foreach (var intVec in rect)
         {
-            map.mapDrawer.MapMeshDirty(intVec, MapMeshFlagDefOf.Things | MapMeshFlagDefOf.Buildings |
-                                               MapMeshFlagDefOf.GroundGlow |
-                                               MapMeshFlagDefOf.Terrain | MapMeshFlagDefOf.Roofs |
-                                               MapMeshFlagDefOf.Snow | MapMeshFlagDefOf.Pollution |
-                                               MapMeshFlagDefOf.Zone | MapMeshFlagDefOf.PowerGrid |
-                                               MapMeshFlagDefOf.BuildingsDamage | MapMeshFlagDefOf.Gas);
+            map.mapDrawer.MapMeshDirty(
+                intVec,
+                MapMeshFlagDefOf.Things
+                    | MapMeshFlagDefOf.Buildings
+                    | MapMeshFlagDefOf.GroundGlow
+                    | MapMeshFlagDefOf.Terrain
+                    | MapMeshFlagDefOf.Roofs
+                    | MapMeshFlagDefOf.Snow
+                    | MapMeshFlagDefOf.Pollution
+                    | MapMeshFlagDefOf.Zone
+                    | MapMeshFlagDefOf.PowerGrid
+                    | MapMeshFlagDefOf.BuildingsDamage
+                    | MapMeshFlagDefOf.Gas
+            );
         }
     }
 }

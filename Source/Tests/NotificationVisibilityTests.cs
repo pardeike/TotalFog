@@ -13,14 +13,25 @@ public sealed class NotificationVisibilityTests
     [InlineData(true)]
     public void ColonyHealthEventsRemainObservableOutsideCurrentSight(bool prisoner)
     {
-        var pawn = new Pawn { Faction = prisoner ? new Faction() : Faction.OfPlayer, IsPrisonerOfColony = prisoner };
+        var pawn = new Pawn
+        {
+            Faction = prisoner ? new Faction() : Faction.OfPlayer,
+            IsPrisonerOfColony = prisoner,
+        };
         pawn.Map.Fog.Initialized = true;
         var targets = For(pawn);
 
         Assert.False(Presentation.ThingVisibility.IsVisible(pawn, allowMemory: false));
         Assert.True(NotificationVisibility.HasVisibleTarget(targets));
-        Assert.Equal(NotificationDecision.Show, NotificationPolicy.Decide(
-            !NotificationVisibility.HasVisibleTarget(targets), suppress: true, delay: true, replay: false));
+        Assert.Equal(
+            NotificationDecision.Show,
+            NotificationPolicy.Decide(
+                !NotificationVisibility.HasVisibleTarget(targets),
+                suppress: true,
+                delay: true,
+                replay: false
+            )
+        );
     }
 
     [Fact]
@@ -30,7 +41,10 @@ public sealed class NotificationVisibilityTests
         pawn.Map.Fog.Initialized = true;
         var targets = For(pawn);
         Assert.False(NotificationVisibility.HasVisibleTarget(targets));
-        Assert.Equal(NotificationDecision.Defer, NotificationPolicy.Decide(true, false, true, false));
+        Assert.Equal(
+            NotificationDecision.Defer,
+            NotificationPolicy.Decide(true, false, true, false)
+        );
         Assert.Equal(NotificationDecision.Drop, NotificationPolicy.Decide(true, true, true, false));
         pawn.Map.Fog.InSight[0] = true;
         Assert.True(NotificationVisibility.HasVisibleTarget(targets));
@@ -52,8 +66,15 @@ public sealed class NotificationVisibilityTests
     {
         LookTargets targets = nullTargets ? null : new LookTargets();
         Assert.True(NotificationVisibility.HasVisibleTarget(targets));
-        Assert.Equal(NotificationDecision.Show, NotificationPolicy.Decide(
-            !NotificationVisibility.HasVisibleTarget(targets), true, true, false));
+        Assert.Equal(
+            NotificationDecision.Show,
+            NotificationPolicy.Decide(
+                !NotificationVisibility.HasVisibleTarget(targets),
+                true,
+                true,
+                false
+            )
+        );
     }
 
     [Fact]
@@ -65,8 +86,12 @@ public sealed class NotificationVisibilityTests
         Assert.False(NotificationVisibility.HasLiveTarget(For(pawn)));
     }
 
-    private static LookTargets For(Thing thing) => new()
-    {
-        targets = new List<TargetInfo> { new() { Thing = thing, IsValid = true } }
-    };
+    private static LookTargets For(Thing thing) =>
+        new()
+        {
+            targets = new List<TargetInfo>
+            {
+                new() { Thing = thing, IsValid = true },
+            },
+        };
 }

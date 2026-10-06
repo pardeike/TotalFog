@@ -9,7 +9,12 @@ public static class GenView
 
     private static Map lastUsedMap;
 
-    public static void ShouldSpawnMotesAt_Postfix(IntVec3 loc, Map map, bool drawOffscreen, ref bool __result)
+    public static void ShouldSpawnMotesAt_Postfix(
+        IntVec3 loc,
+        Map map,
+        bool drawOffscreen,
+        ref bool __result
+    )
     {
         if (!__result)
         {
@@ -23,6 +28,8 @@ public static class GenView
             mapComponentSeenFog = lastUsedMapComponent = map.GetComponent<MapVisibility>();
         }
 
-        __result = mapComponentSeenFog == null || mapComponentSeenFog.IsShown(Faction.OfPlayer, loc.x, loc.z);
+        __result =
+            mapComponentSeenFog == null
+            || mapComponentSeenFog.IsShown(Faction.OfPlayer, loc.x, loc.z);
     }
 }

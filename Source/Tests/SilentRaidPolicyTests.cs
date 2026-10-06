@@ -18,7 +18,11 @@ public sealed class SilentRaidPolicyTests
     [InlineData("manhunter", true, true, true)]
     [InlineData("other", false, true, true)]
     public void OnlySelectedThreatArrivalsBecomeSilentAndTheirParametersAreRestored(
-        string kind, bool enabled, bool wasSilent, bool expectedSilent)
+        string kind,
+        bool enabled,
+        bool wasSilent,
+        bool expectedSilent
+    )
     {
         bool previous = FogSettings.SilentRaids;
         var worker = Worker(kind);
@@ -51,7 +55,9 @@ public sealed class SilentRaidPolicyTests
             FogSettings.SilentRaids = true;
             SilentRaidPolicy.Prefix(Worker("enemy"), parms, out state);
             Assert.True(parms.silent);
-            Assert.Throws<InvalidOperationException>((Action)(() => throw new InvalidOperationException("failed worker")));
+            Assert.Throws<InvalidOperationException>(
+                (Action)(() => throw new InvalidOperationException("failed worker"))
+            );
         }
         finally
         {
@@ -67,23 +73,35 @@ public sealed class SilentRaidPolicyTests
     [InlineData("manhunter", false, true, 1)]
     [InlineData("other", true, true, 1)]
     public void ArrivalSlowdownExceptionIsLimitedToEnabledSilentManhunterPacks(
-        string kind, bool enabled, bool silent, int expectedSignals)
+        string kind,
+        bool enabled,
+        bool silent,
+        int expectedSignals
+    )
     {
         bool previous = FogSettings.SilentRaids;
         try
         {
             FogSettings.SilentRaids = enabled;
             var slower = new TimeSlower();
-            SilentRaidPolicy.ManhunterArrivalSlowdown(slower, Worker(kind), new IncidentParms { silent = silent });
+            SilentRaidPolicy.ManhunterArrivalSlowdown(
+                slower,
+                Worker(kind),
+                new IncidentParms { silent = silent }
+            );
             Assert.Equal(expectedSignals, slower.Signals);
         }
-        finally { FogSettings.SilentRaids = previous; }
+        finally
+        {
+            FogSettings.SilentRaids = previous;
+        }
     }
 
-    private static IncidentWorker Worker(string kind) => kind switch
-    {
-        "enemy" => new IncidentWorker_RaidEnemy(),
-        "manhunter" => new IncidentWorker { def = IncidentDefOf.ManhunterPack },
-        _ => new IncidentWorker { def = new IncidentDef() }
-    };
+    private static IncidentWorker Worker(string kind) =>
+        kind switch
+        {
+            "enemy" => new IncidentWorker_RaidEnemy(),
+            "manhunter" => new IncidentWorker { def = IncidentDefOf.ManhunterPack },
+            _ => new IncidentWorker { def = new IncidentDef() },
+        };
 }
