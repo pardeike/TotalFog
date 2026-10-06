@@ -26,6 +26,7 @@ public partial class FogSettings
         var color = GUI.color;
         var contentColor = GUI.contentColor;
         bool enabled = GUI.enabled;
+        bool watching = Compatibility.MultiplayerIntegration.BeginSettingsWatch();
         try
         {
             Text.Font = GameFont.Small;
@@ -114,6 +115,7 @@ public partial class FogSettings
         }
         finally
         {
+            Compatibility.MultiplayerIntegration.EndSettingsWatch(watching);
             Text.Font = font;
             Text.Anchor = anchor;
             GUI.color = color;

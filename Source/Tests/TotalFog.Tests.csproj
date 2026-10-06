@@ -11,6 +11,7 @@
     <Compile Include="../TotalFog/Compatibility/LegacySaveTypes.cs" Link="Production/LegacySaveTypes.cs" />
     <Compile Include="../TotalFog/Compatibility/GravshipVisibility.cs" Link="Production/GravshipVisibility.cs" />
     <Compile Include="../TotalFog/Compatibility/CombatExtendedIntegration.cs" Link="Production/CombatExtendedIntegration.cs" />
+    <Compile Include="../TotalFog/Compatibility/MultiplayerIntegration.cs" Link="Production/MultiplayerIntegration.cs" />
     <Compile Include="../TotalFog/Detours/Verb.cs" Link="Production/Verb.cs" />
     <Compile Include="../TotalFog/CompPresentationState.cs" Link="Production/CompPresentationState.cs" />
     <Compile Include="../TotalFog/CompVisibility.cs" Link="Production/CompVisibility.cs" />

@@ -262,7 +262,9 @@ solution is `Source/TotalFog.slnx`.
 
 | Command | What it does |
 |---|---|
-| `./scripts/mod build` | Runs the tests and builds the mod |
+| `./scripts/mod format` | Formats active C# and Python source with the pinned tools |
+| `./scripts/mod format-check` | Checks formatting without editing files |
+| `./scripts/mod build` | Checks formatting, runs the tests and builds the mod |
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |

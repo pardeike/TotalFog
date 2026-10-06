@@ -5348,3 +5348,60 @@ DLLs with build bytes and excludes test companions from player ZIPs.
 After each pair launch, `./scripts/mod mp-layout` identifies exact savedata/PIDs,
 arranges host-left/client-right half-screen windows on the main display and
 verifies both rectangles. Layout is presentation, not determinism evidence.
+
+
+## Native Multiplayer fog state and settings checkpoint, 2026-10-06
+
+Public RimWorld 1.6.4871 rev597, Multiplayer 0.11.5+4a3be27-dirty,
+Prepatcher, Harmony, all five DLCs and Total Fog run in separate Steam processes.
+The host/client profiles use independent save-data folders and bridge endpoints.
+Shared-colony faction 16, synchronous time, loopback hosting, no arbiter and
+desync tracing disabled are the exact tested configuration.
+
+The pre-format and formatted gameplay DLL both hash
+`ddb5c8fe3df8714d2bffa7d80723fb7e65b5bb2444a3b24692afe05958a8bd84`.
+CSharpier validated C# syntax equivalence, Python ASTs match before/after, and
+296 existing tests pass. The formatting-only commit is b066822 and is listed
+in .git-blame-ignore-revs. Frozen historical payloads and Originals/ are untouched.
+
+The read-only multiplayer_snapshot tool does not call state-creating
+GetVisibility/Counts accessors. It reads native state on the game thread, hashes
+coverage counts, known cells, wall/tree blocker masks and thing observation flags,
+and reports source state/order and pending refreshes.
+
+- Initial join: both tick 1218, all compared state matches.
+- Ordinary Superfast playback: both paused at tick 1820, 602 ticks later; state matches.
+- Native client leave and rejoin: both tick 1821; state matches after native replay.
+- These controls use the unchanged ddb5c8fe gameplay DLL. Receipts are
+  artifacts/multiplayer-startup/fog-baseline-{snapshots,played,rejoin}.json.
+
+The settings/cleanup gameplay candidate hashes
+`402b52dac1bc9fd9775697d6ff025924fc42801ed4b90cfd63ed7c8e1b7ce455`.
+The optional MPAPI adapter binds buffered settings watchers once, without a
+Multiplayer assembly reference. The unit binding test covers the absent-mod
+fallback, stable field order, buffering, inactive mode and cleanup after a watch
+throws. The canonical build passes 297 tests.
+
+- Client submits BaseViewRange 60 to 10 through the same watcher used by the UI.
+  The immediate value stays 60 until MP applies its synchronized command.
+- Both pause at tick 1593 with range 10, 1,183 visible cells, and identical complete
+  fog snapshots including source deadlines.
+- Host writes the actual mod settings file at paused tick 1593. The complete
+  before/after fog snapshot is unchanged.
+- Host restores range 60; client submits SilentRaids=true. After ordinary
+  Superfast playback both pause at tick 2629, range 60, SilentRaids=true,
+  15,538 visible cells and identical complete fog snapshots. Neither reports
+  a desync. This candidate interval spans 1,411 ticks, including natural movement.
+- Owned test changes are restored through MP commands to range 60 and SilentRaids=false.
+- One preliminary range-10 capture was made while the pause command was still
+  propagating: host tick 1589 and client tick 1593. It is retained separately
+  and is not a valid same-tick comparison. The subsequent matched capture is
+  fog-candidate-range10-matched.json; range-60 evidence is fog-candidate-range60.json.
+
+The load/rejoin logs still contain the reflection-only UnityEngine.InputLegacyModule
+resolution exception, without an identifying managed stack. The native Arm64
+stack-tracing failure matches upstream Multiplayer issue 944 and is excluded
+by the explicit diagnostic setting. These are not clean-log compatibility passes.
+The full saved-session/replay, dedicated combat, blockers/transfers, separate
+factions, independent map clocks, deferred notifications and combined CE gates
+remain outstanding. No compatibility completion is inferred from these controls.

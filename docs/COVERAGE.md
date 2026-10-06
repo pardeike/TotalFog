@@ -501,10 +501,33 @@ optional RimBridgeServer Multiplayer companion. Native host/join, player status,
 client leave/rejoin and main-menu return are verified. A host's synchronized
 Normal command and a client's synchronized pause advance both clients from tick
 1215 to the same paused tick 3004, with neither reporting a desync. This short
-control check does not compare Total Fog's gameplay state or close compatibility.
+control check does not by itself close compatibility.
+
+The subsequent fog check compares native coverage counts, discovery, blocker
+masks, observation flags and sight-source state at matching paused ticks.
+The unchanged gameplay DLL matches on join at tick 1218, after 602 simulated
+ticks at 1820, and after a client leaves/rejoins at 1821. The settings candidate
+then matches after a client changes BaseViewRange from 60 to 10 at tick 1593 and
+after the host restores 60 at tick 2629. Silent Raids also synchronizes from the
+client. This is 1,411 candidate ticks with shared-colony synchronous time;
+separate factions, independent map clocks, targeted combat, and a full saved
+Multiplayer session/replay remain outstanding. See exact hashes and limits in
+`docs/VALIDATION.md`.
+
+An optional MPAPI binding registers the public primitive settings in stable name
+order and uses its buffered field watcher around the settings UI. Reflection
+runs only during binding, with delegates retained for UI work. No Multiplayer
+assembly is required by Total Fog. Appearance changes and configuration saves
+no longer force sight recalculation. Source ticks apply vision settings within
+the existing 30-tick refresh bound. Saving host settings at paused tick 1593
+leaves the complete fog snapshot unchanged. Tree blocking remains a startup
+setting initialized through the host configuration, with its existing in-game
+reload restriction.
 
 Diagnostic stack capture is disabled after Multiplayer's native Arm64 tracer
-throws on the installed build. A separate reflection-only
+throws on the installed build, matching the already reported
+[Multiplayer Apple Silicon tracing issue #944](https://github.com/rwmt/Multiplayer/issues/944).
+A separate reflection-only
 `UnityEngine.InputLegacyModule` dependency exception still occurs during loading.
 Its cause is not isolated, and these runs are not clean-log acceptance. Native
 receipts and evidence limits are recorded in `docs/VALIDATION.md`.
@@ -520,7 +543,7 @@ positions; apply that distinction when auditing our calls.
 | Area | Required checks and pass condition |
 |---|---|
 | Deterministic simulation | Replay identical commands/ticks on both clients while sources move, blockers change, pawns sleep/down/die and events fire. Compare per-faction coverage, discovery, observation flags and deferred queues at matching map ticks; require matching serialized gameplay state and no desync reports. Change camera, selection, hover, open windows and frame rate on one client only; these must not alter simulation, RNG or thing IDs. Audit hearing-cue spawning and native calls for indirect RNG/state changes even though Total Fog has no direct random-number calls. |
-| Synchronized settings/actions | Inventory gameplay-affecting ranges, source/faction rules, tree blocking, enemy targeting, discovery/reveal and notification queue policies. Verify initialization from the host and either synchronized in-game changes/reset at the same tick or an explicit supported restriction. Change each from host and client, including while paused; reject differing gameplay settings. Review display/audio settings separately before allowing local changes. Current `applySettings` recasts all loaded maps, so a UI-only option cannot be assumed harmless merely from its label. |
+| Synchronized settings/actions | Inventory gameplay-affecting ranges, source/faction rules, tree blocking, enemy targeting, discovery/reveal and notification queue policies. Verify initialization from the host and either synchronized in-game changes/reset at the same tick or an explicit supported restriction. Change each from host and client, including while paused; reject differing gameplay settings. Review display/audio settings separately before allowing local changes. Appearance/configuration writes must leave gameplay coverage unchanged; the old `applySettings` sight recast has been removed. |
 | Fog refresh on both clients | Move/teleport/transport sources, open/close/build/destroy blockers and overlap/remove observers. Check reveal and loss of sight on both clients, including a client watching another map at a different camera position and supported independent map speeds. No one-time initial fog, stale cells or visibility tied to the rendering client's activity. |
 | Combat targeting | Order player and AI attacks into hidden/revealed cells, move the boundary, change blockers and toggle enemy fog through the supported synchronized path. Both clients must reach the same hit/job/shot result; native failed hits stay failed. Repeat with the exact supported CE loadout, manned/unmanned turrets and no-LOS weapons. |
 | Save/rejoin | Save and reload the Multiplayer session, join late, disconnect/rejoin and exercise supported resync/replay. Coverage must reconstruct without duplicate sources; discovery/observation and original deferred notification payloads must survive and replay once. Repeat during movement/events and across map removal or transfers. |

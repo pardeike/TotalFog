@@ -118,6 +118,13 @@ After each launch of the pair, run `./scripts/mod mp-layout`. It identifies the
 two processes by their isolated savedata arguments and verifies host-left,
 client-right half-screen windows on the main display. It does not build or
 change gameplay state.
+Use `totalfog/multiplayer_snapshot` to compare read-only fog state only after
+both native status receipts show the same paused tick. A submitted pause is
+asynchronous and does not establish a comparison boundary. The settings tool
+uses the same native MPAPI watcher as the UI; verify the applied value on both
+clients. Never run single-player mutation fixtures on only one connected client.
+The current acceptance loadout uses shared-colony synchronous time. Separate
+factions and independent map clocks remain explicit outstanding targets.
 Use `totalfog/ce_ammo_fixture` for the scoped no-magazine short-bow control.
 It observes CE's own attack orders, ammunition preparation and shot results;
 play through ordinary Normal playback. Remove/recreate its real security bell

@@ -62,18 +62,11 @@ public partial class FogSettings : ModSettings
         SectionLayerFog.PrefFadeSpeedMult = (int)fogFadeSpeed;
         SectionLayerFog.PrefEnableFade = fogFadeSpeed != FogFadeSpeedEnum.Disabled;
         SectionLayerFog.PrefFogAlpha = (byte)fogAlpha;
-        if (Current.ProgramState != ProgramState.Playing)
-        {
-            return;
-        }
-
-        foreach (var map in Find.Maps)
-        {
-            var sources = map.GetVisibility().fowWatchers;
-            for (int i = 0; i < sources.Count; i++)
-                sources[i].UpdateFoV(true);
-            map.mapDrawer?.RegenerateEverythingNow();
-        }
+        // Appearance and configuration serialization never publish gameplay
+        // sight. Source ticks apply synchronized vision changes within 30 ticks.
+        if (Current.ProgramState == ProgramState.Playing)
+            foreach (var map in Find.Maps)
+                map.mapDrawer?.RegenerateEverythingNow();
     }
 
     public override void ExposeData()
@@ -111,7 +104,8 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref ClearFogDuringTargeting, "clearFogDuringTargeting", true);
         Scribe_Values.Look(ref treesBlockSightValue, "treesBlockSight");
 
-        applySettings();
+        if (Scribe.mode != LoadSaveMode.Saving)
+            applySettings();
     }
 
     private enum FogAlpha
