@@ -5108,8 +5108,8 @@ Source review corrects the proposed Symbiant turret expectation. Zombieland's
 searchers, and `ZombieSymbiantCombat.IsPermittedHostileAttacker` excludes
 turrets. Do not introduce positive automatic turret acquisition merely to make
 Total Fog's root-cell guard accept a logical body cell. Preserving that native
-exclusion still needs its own combined native check; this source finding does
-not complete it.
+exclusion is now preserved by the bounded combined native control below;
+source evidence alone did not complete it.
 
 Existing native fixtures are sufficient to check an ordinary zombie instead.
 A player CE mini-turret has a native 48-cell weapon and 34-cell sight range.
@@ -5193,3 +5193,39 @@ Both retained native logs have empty recognized error summaries. Exact
 receipts, saved XML, native logs and assertions are in
 `artifacts/ce-zombie-save`. M240/mortar/special-zombie persistence, nonzero
 injury retention, broader combat and performance remain separate checks.
+
+### Native Symbiant turret exclusion and ordinary-zombie positive control
+
+The unchanged ddb5c8fe.../56daa1f2... gameplay pair and 00ff91d6... companion
+complete two short Normal-playback controls in one fresh process. The powered
+player CE mini-turret is at (79,6), has native range 48 and current sight 34,
+and initially holds fire while its power settles for 420 ticks. The generated
+human target is removed before firing. A controlled hostless Symbiant is staged
+12 cells east with four logical body cells. Its default native tick, rendering,
+host sync, path cost and benefit flags remain enabled. It stays alive, visible,
+not downed and in its native Symbiant job.
+
+With hold fire disabled, 238 unforced Normal ticks leave the turret without a
+current target or warmup, its magazine at 100 and lastShotTick at the never-fired
+sentinel. The existing fixture field nativeAcquirable is true, but that field
+checks only CE's IsValidTarget. It does not establish the result of automatic
+acquisition, which also applies Zombieland's targeting policy. This control
+preserves the deliberate Symbiant exclusion.
+
+The Symbiant is cleaned up and an ordinary zombie is spawned at the same starting
+cell. Without changing the powered turret, another 241 unforced Normal ticks
+acquire that zombie, consume ten rounds and record lastShotTick 859. The zombie
+remains alive, visible and in its native Stumble job at (92,7). Its final injury
+sum is zero. This is a positive acquisition/firing control, not proof of a hit
+or damage. Neither interval enables the diagnostic burst/impact/damage trace.
+No rendering claim follows from this off-camera targeting test, and it does
+not establish other CE weapon paths or linked-host behavior.
+
+The temporary population-cleanup override is disabled and its original grace,
+scheduled events and zero-threat removal settings are restored. Owned objects
+are removed, the unchanged base is reloaded, and GABS verifies process 68992
+has terminated. Installed gameplay/companion bytes, the base save and
+ModsConfig.xml match the preflight hashes. The retained native log has an empty
+recognized error summary. Exact native receipts, source findings, byte guards
+and assertions are in `artifacts/ce-special-targets`. No production change or
+new performance acceptance follows from these controls.

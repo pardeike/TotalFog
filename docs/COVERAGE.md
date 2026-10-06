@@ -239,8 +239,16 @@ and runtime acceptance.
   from automatic non-pawn target scans and permits logical hostile acquisition
   only for its selected humanlike/mechanoid pawn attackers. A positive Symbiant
   turret-acquisition expectation would change that policy, so do not add one.
-  Native preservation of this exclusion, combined special-zombie turret behavior,
-  long fights, combat-heavy performance and Windows remain open. Earlier
+  A bounded combined native control on ddb5c8fe.../56daa1f2... now preserves
+  this exclusion: the powered, unheld CE mini-turret ignores a living, visible
+  four-cell hostless Symbiant for 238 Normal ticks and retains 100 rounds.
+  Replacing it with an ordinary zombie lets the same turret acquire it and
+  fire ten rounds over 241 Normal ticks. The fixture's nativeAcquirable field
+  is CE's basic validator result, not the full automatic target scan; it is
+  true for both targets. Default Symbiant simulation/render flags remain on.
+  This accepts that controlled exclusion and positive control, not all weapon
+  routes, linked hosts, active-electric/roped zombies, long fights, combat-heavy
+  performance or Windows. Earlier
   candidate performance/package gates retain their own gameplay hashes. The
   completed current-byte six-process standalone CE comparison misses the floor:
   456.01 versus 460.41 median TPS (0.96% lower), tick elapsed 1.57487 versus
