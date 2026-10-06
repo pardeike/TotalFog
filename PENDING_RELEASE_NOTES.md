@@ -54,3 +54,4 @@
 - Hide live explosion flashes and smoke outside current sight while preserving their normal movement, lifetime and gameplay effects.
 - With the updated Zombieland, play electric combat sounds at the event and prevent hidden or rapid hits from accumulating flashes and repeated sounds.
 - With the updated Zombieland, enemy fog targeting checks each Symbiant body cell against the humanlike attacker's faction sight.
+- Let Combat Extended fire at visible logical body cells while their pawn position is hidden, and stop tracking when the selected cell leaves sight.

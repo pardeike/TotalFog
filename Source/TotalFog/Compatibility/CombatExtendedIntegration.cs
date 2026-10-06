@@ -75,30 +75,32 @@ internal static class CombatExtendedIntegration
 
     public static void TurretTargetPostfix(Building_Turret __instance, Thing __0, ref bool __result)
     {
-        if (__result && __0 != null) __result = CanTrack(__instance, __0);
+        if (__result && __0 != null) __result = CanTrack(__instance, __0, __0.Position);
     }
 
-    public static void ShootLinePostfix(Verse.Verb __instance, LocalTargetInfo __1, ref bool __result)
+    public static void ShootLinePostfix(Verse.Verb __instance, LocalTargetInfo __1, ref bool __result, ShootLine __2)
     {
         // Native Retarget runs before this check. Overhead weapons otherwise
         // bypass the hit-cell hook and can follow a now-hidden Thing.
-        if (__result && __1.HasThing) __result = CanTrack(__instance.caster, __1.Thing);
+        // Another mod can choose a logical body cell away from a Thing's root.
+        // Validate CE's actual selected destination, without repeating targeting.
+        if (__result && __1.HasThing) __result = CanTrack(__instance.caster, __1.Thing, __2.Dest);
     }
 
-    public static void BurstFallbackPostfix(Verse.Verb __instance, ref bool __result)
+    public static void BurstFallbackPostfix(Verse.Verb __instance, ref bool __result, ShootLine __1)
     {
         // CE may convert a locked burst to its last known cell. Keep that blind
         // fire; only a fallback still tracking an unseen Thing is restricted.
         var target = __instance.CurrentTarget;
-        if (__result && target.HasThing) __result = CanTrack(__instance.caster, target.Thing);
+        if (__result && target.HasThing) __result = CanTrack(__instance.caster, target.Thing, __1.Dest);
     }
 
-    private static bool CanTrack(Thing caster, Thing target)
+    private static bool CanTrack(Thing caster, Thing target, IntVec3 targetCell)
     {
         Thing observer = caster?.TryGetComp<CompMannable>()?.ManningPawn ?? caster;
         if (observer?.Map == null || observer.Faction == null || target.MapHeld != observer.Map ||
             observer.Faction != Faction.OfPlayer && !FogSettings.AISmart) return true;
         var fog = observer.Map.GetVisibility();
-        return fog?.Initialized != true || fog.IsShown(observer.Faction, target.Position);
+        return fog?.Initialized != true || fog.IsShown(observer.Faction, targetCell);
     }
 }

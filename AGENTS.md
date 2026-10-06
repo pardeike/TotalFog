@@ -106,6 +106,11 @@ Use `./scripts/mod zombieland-setup` for `total-fog-zombieland-16`, the isolated
 Steam profile under artifacts/ZombielandUserData with Total Fog, local Zombieland
 and all DLCs. This builds/deploys both mod/companion pairs and verifies their
 bytes before registering the profile. It preserves the core and CE test profiles.
+Use `./scripts/mod ce-zombieland-setup` for the separate
+`total-fog-ce-zombieland-16` profile under artifacts/CEZombielandUserData.
+It reuses the paired build/deploy path, validates installed CE and loads CE before
+Zombieland, preserving the standalone test profiles. Only a new combined profile
+is seeded with existing CE preferences/settings; subsequent settings are retained.
 Missing Zombieland-profile preferences are seeded from the core test profile;
 existing preferences remain untouched.
 Use `./scripts/mod zombieland-fallback-setup` to register a separate Steam

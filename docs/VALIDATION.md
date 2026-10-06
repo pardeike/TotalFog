@@ -4858,3 +4858,65 @@ distinct companion bytes; the archived 2b8e2742... pair identifies this proof.
 Gameplay bytes and Mortal's delivered ZIP remain unchanged. Naturally executed
 still-Thing fallback, combined overhaul loadouts and combat-heavy performance
 remain open; these checks do not complete all CE acceptance.
+
+### Combined CE/Zombieland logical shot destination
+
+The canonical ce-zombieland-setup reuses the paired build/deploy path and
+registers a separate eleven-mod Steam/all-DLC profile. It validates CE's
+installed public version, loads it before Zombieland, seeds only a new profile
+with existing preferences/settings and preserves the standalone profiles.
+The readonly native shot-line observer captures the actual result before Total
+Fog and the final result after it, removing its scoped Harmony patch after each
+query. Initial setup/load and all five paused acquisition states pass on
+450329a0..., but 25 seconds of actual combat never fires. The more specific
+native trace establishes the responsible guard: with a hidden root and visible
+logical destination (113,103), CE/Zombieland return true while Total Fog returns
+false. The other four shot-line controls retain their expected native results.
+Initial failure receipts are retained rather than rewritten as successful proof.
+
+Candidate 2f15cad01366deb29929a62daaf36af80a1344d0d907967c5135e91b49eb2a83
+checks CE's selected ShootLine.Dest for shot and still-Thing fallback guards.
+The existing map/faction/crew/initialization policies remain, as do false native
+results and blind-cell orders. No Zombieland type dependency, optional API,
+target search, per-tick state or additional visibility query is introduced.
+Four source-linked regression cases cover matching and differing sight. Both
+root/destination disagreement cases fail before the fix and pass afterward.
+All 295 tests
+pass through the quiet canonical deploy.
+
+With companion 71f9507d... and unchanged Zombieland 56daa1f2..., all five actual
+CE shot-line states pass after a fresh Steam startup. Ordinary Normal playback
+then fires at the visible body with the root hidden: shared health drops from
+3995 to 3975 and the linked host's injury sum remains two. The real sight bell
+keeps five HP and one of five body cells visible. The raider subsequently moves
+away on a native Steal job, which the fixture does not suppress; this proves
+actual firing/damage, not a sustained fight or active-fight save/rejoin.
+
+The same combined loadout replays the unchanged saved M240B visible-alternate
+burst (176 to 170 rounds, last shot 13482, hidden primary still rejected) and
+hidden-alternate negative control (177 rounds and last shot 13440 unchanged).
+A fresh visible burst starts with four shots, loses its real sight bell, then
+finishes six native suppressive fallbacks at its last known cell. All six retain
+native=true/final=true, HasThing=false and faction sight=false; it ends at 170
+rounds without hidden acquisition. Trace removal, owned-object cleanup,
+unchanged-base reload and verified process termination pass. Eleven receipt
+assertions and the clean recognized-error log are retained with the exact DLL
+pair in artifacts/ce-zombieland-native. Current candidate performance validation
+is separate; older candidate performance and preliminary ZIP evidence do not
+establish these new bytes. No new Mortal message or ZIP is justified by this
+CE-specific fix alone.
+
+The exact 2f15cad0... gameplay subsequently completes the existing standalone
+CE 350x350/410-pawn comparison in six fresh alternating processes, ordinary
+Ultrafast selection with actual multiplier 15, forced speed/UltraSpeedBoost off
+and DPA off. Original/candidate pair TPS values are 460.41/456.01,
+452.75/458.53 and 477.13/449.81. Candidate median 456.0069 is below original
+460.4127 by 0.9569%, so the canonical strict performance floor fails. Median
+tick elapsed is 1.57487 versus 1.56362 ms, and frame p95 70.2669 versus
+68.6353 ms. The identity/settings/camera/fixture/native-log guards all pass;
+the failure is retained in artifacts/comparison-ce-logical-cell-player-350.json.
+The workflow restores the exact candidate and stops all game processes. A
+preceding wrong-save-name preflight fails before any measurement and is kept
+separately. This is a correctness-tested source candidate, not performance
+acceptance or a superseding Mortal ZIP. The comparison does not establish the
+cause of the measured slowdown; profile before changing code or repeating it.

@@ -158,7 +158,7 @@ public sealed class CombatExtendedTurretFixture
                         "BurstFallbackPostfix");
                     fallbackPolicy = new[] { false, true }.Select(original =>
                     {
-                        var arguments = new object[] { verb, original };
+                        var arguments = new object[] { verb, original, new ShootLine(verb.caster.Position, verb.CurrentTarget.Cell) };
                         guard.Invoke(null, arguments);
                         return (object)new { originalResult = original, filteredResult = (bool)arguments[1],
                             hasThing = verb.CurrentTarget.HasThing, target = verb.CurrentTarget.Thing?.ThingID };

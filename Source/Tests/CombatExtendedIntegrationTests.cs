@@ -269,13 +269,13 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var (verb, _) = Shooter(); verb.verbProps.requireLineOfSight = requiresLos;
         var target = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
         bool result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result, new ShootLine(default, target.Position));
         Assert.False(result);
         verb.caster.Map.Fog.InSight[1] = true; result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result, new ShootLine(default, target.Position));
         Assert.True(result);
         verb.caster.Map.Fog.InSight[1] = false; result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result, new ShootLine(default, target.Position));
         Assert.False(result);
     }
 
@@ -285,7 +285,7 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var (verb, _) = Shooter(); verb.caster.Map.Fog.InSight[1] = true;
         var target = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
         bool result = false;
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(target), ref result, new ShootLine(default, target.Position));
         Assert.False(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
     }
 
@@ -294,11 +294,11 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
     {
         var (verb, _) = Shooter(); var cell = new LocalTargetInfo(new IntVec3(1, 0));
         bool result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, cell, ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, cell, ref result, new ShootLine(default, cell.Cell));
         Assert.True(result);
         // CE has already replaced the lost Thing with its last known cell.
         verb.CurrentTarget = cell;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
     }
 
@@ -308,13 +308,13 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var (verb, _) = Shooter();
         verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
         bool result = true;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.False(result);
         verb.caster.Map.Fog.InSight[1] = true; result = true;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result);
         verb.caster.Map.Fog.InSight[1] = false; result = true;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.False(result);
     }
 
@@ -324,7 +324,7 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var (verb, _) = Shooter(); verb.caster.Map.Fog.InSight[1] = true;
         verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
         bool result = false;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.False(result); Assert.Equal(0, verb.caster.Map.Fog.VisibilityQueries);
     }
 
@@ -336,10 +336,10 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var visible = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
         verb.CurrentTarget = new LocalTargetInfo(hidden); verb.caster.Map.Fog.InSight[1] = true;
         bool result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(visible), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(visible), ref result, new ShootLine(default, visible.Position));
         Assert.True(result);
         verb.CurrentTarget = new LocalTargetInfo(visible);
-        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(hidden), ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, new LocalTargetInfo(hidden), ref result, new ShootLine(default, hidden.Position));
         Assert.False(result);
     }
 
@@ -355,14 +355,14 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var verb = new CeVerb { caster = turret,
             CurrentTarget = new LocalTargetInfo(new Thing { Map = turret.Map, PositionHeld = new(1, 0) }) };
         bool result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.Equal(expected, result);
         result = true;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.Equal(expected, result);
         turret.Map.Fog.FactionSight[crew.Faction] = new[] { false, true, false, false };
         result = true;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result);
     }
 
@@ -372,13 +372,33 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         var verb = new CeVerb { caster = new Pawn { Faction = Faction.OfPlayer } };
         verb.CurrentTarget = new LocalTargetInfo(new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) });
         bool result = true;
-        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result);
+        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result);
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result);
         verb.caster.Map = null;
-        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref result, new ShootLine(default, verb.CurrentTarget.Cell));
         Assert.True(result);
+    }
+
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(false, false)]
+    [InlineData(true, true)]
+    public void NativeLogicalShotAndFallbackUseTheirChosenCell(bool rootVisible, bool shotVisible)
+    {
+        var (verb, _) = Shooter();
+        var target = new Thing { Map = verb.caster.Map, PositionHeld = new(1, 0) };
+        verb.CurrentTarget = new LocalTargetInfo(target);
+        verb.caster.Map.Fog.InSight[1] = rootVisible;
+        verb.caster.Map.Fog.InSight[2] = shotVisible;
+        var line = new ShootLine(default, new IntVec3(0, 1));
+        bool shot = true, fallback = true;
+        CombatExtendedIntegration.ShootLinePostfix(verb, verb.CurrentTarget, ref shot, line);
+        CombatExtendedIntegration.BurstFallbackPostfix(verb, ref fallback, line);
+        Assert.Equal(shotVisible, shot);
+        Assert.Equal(shotVisible, fallback);
     }
 
     private sealed class CeTurret : RimWorld.Building_Turret

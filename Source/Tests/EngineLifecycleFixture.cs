@@ -124,7 +124,11 @@ namespace Verse
         public bool HasThing => Thing != null;
         public IntVec3 Cell => Thing?.Position ?? cell;
     }
-    public struct ShootLine { }
+    public readonly struct ShootLine(IntVec3 source, IntVec3 dest)
+    {
+        public readonly IntVec3 Source = source;
+        public readonly IntVec3 Dest = dest;
+    }
     public static class GenTypes { public static IEnumerable<System.Type> AllTypes = System.Array.Empty<System.Type>(); }
     public record struct IntVec2(int x, int z);
     public record struct Rot4(int Value)

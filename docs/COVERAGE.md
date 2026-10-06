@@ -222,6 +222,27 @@ and runtime acceptance.
   warmups cancel before a shot while hidden; the stock mortar has no suppressive
   aim mode. Native mode toggle, bounded trace removal, owned cleanup, unchanged
   base reload and clean logs pass. See `artifacts/ce-suppressive-native`.
+  The new isolated CE/Zombieland profile reproduces a cross-mod shot-line bug
+  on 450329a0...: CE/Zombieland choose a visible logical body cell, but Total Fog
+  rejects their successful result because the Pawn root is hidden. Candidate
+  2f15cad0... gates the selected native shoot-line destination, including Thing
+  fallbacks, with the same single sight query and no new API/cache/search.
+  Four regression cases cover matching and differing root/destination sight;
+  both disagreement cases fail before the fix and pass afterward. All 295 tests
+  pass. Five actual combined native
+  shot-line states pass, and Normal playback damages shared health 3995 to 3975
+  with the host's injury sum and sight bell unchanged. The raider later chooses
+  a native Steal job, so this is not sustained-combat/save-rejoin acceptance.
+  Combined saved M240B visible/hidden retarget controls and six actual blind-cell
+  fallbacks also pass. Exact pairs/receipts and clean log are in
+  `artifacts/ce-zombieland-native`. Combined turret logical-cell acquisition,
+  long fights, combat-heavy performance and Windows remain open. Earlier
+  candidate performance/package gates retain their own gameplay hashes. The
+  completed current-byte six-process standalone CE comparison misses the floor:
+  456.01 versus 460.41 median TPS (0.96% lower), tick elapsed 1.57487 versus
+  1.56362 ms and frame p95 70.27 versus 68.64 ms. Matching identity, actual
+  fourth-speed multiplier 15 and clean logs pass. This failed measurement is
+  retained; 2f15cad0... is not performance-accepted or a new feedback package.
 - Vanilla Expanded Framework's extended biosculpter draws held occupants directly
   through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
   visibility together rather than assuming map drawable culling covers both.

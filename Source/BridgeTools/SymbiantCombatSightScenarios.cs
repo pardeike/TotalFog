@@ -15,6 +15,9 @@ namespace TotalFog.BridgeTools;
 
 public sealed class SymbiantCombatSightScenarios
 {
+    private const string CeProbeOwner = "brrainz.totalfog.ce-symbiant-probe";
+    private static Verse.Verb ceProbeVerb;
+    private static bool? ceNativeResult;
     [Tool("totalfog/symbiant_combat_sight", Description = "Use the existing combat fixture and real faction sight to check automatic Symbiant acquisition and logical hit cells across disabled enemy fog, hidden, visible-root and visible-body/hidden-root states. Ranged or melee variants use the native fight scan flags. If the paused matrix passes, order a native hostile attack for 25 seconds at Normal speed with enemy fog enabled while an actual security bell supplies partial player sight. No nearby player pawn competes for targeting. Requires shared damage, unchanged host injury and bell health, a hidden root and partly visible body. Optionally save/reload the active fight in process, verify exact identities, health, body, job and partial sight, then require further damage during 10 seconds of native playback. Retains the named PartialSymbiant fixture; restores options and reloads the unchanged named base. With resumeLoadedFight, load the previously prepared variant using the same sight settings and resume ten seconds of native combat without creating a new fixture. Caller must restart first and compare returned loaded identities/health/body/tick with preparation evidence. Not every weapon/sight range.")]
     public static async Task<object> SymbiantCombatSight(IRimBridgeContext ctx,
         CancellationToken cancellationToken, string saveName, bool melee = false, bool saveAndReload = false,
@@ -101,14 +104,19 @@ public sealed class SymbiantCombatSightScenarios
                     bool canHit = (bool)AccessTools.Method(combat, melee ? "TrySelectMeleeCells" : "TrySelectRangedCell").Invoke(null, args);
                     var hitCell = (IntVec3)args[3];
                     bool hitVisible = canHit && map.GetVisibility().IsShown(attacker.Faction, hitCell);
+                    var ceLine = melee ? null : ReadCeShootLine(attacker.CurrentEffectiveVerb, target);
                     bool valid = (acquired?.Thing == target) == expectedTarget && canHit == expectedTarget &&
-                        (!FogSettings.AISmart || !canHit || hitVisible);
+                        (!FogSettings.AISmart || !canHit || hitVisible) &&
+                        (ceLine == null || ceLine.Value.final == expectedTarget);
                     passed &= valid;
                     rows.Add(new { state, passed = valid, enemyFog = FogSettings.AISmart, expectedTarget,
                         acquired = acquired?.Thing?.ThingID, canHit, hitCell = hitCell.ToString(), hitVisible,
                         rootVisible = RootSeen(), visibleBodyCells = Seen(attacker.Faction),
                         playerVisibleBodyCells = Seen(Faction.OfPlayer), attackerCell = attacker.Position.ToString(),
                         actualSightRange = attacker.TryGetComp<CompFog>().FieldOfViewWatcher.LastSightRange,
+                        ceShootLine = ceLine == null ? null : (object)new { nativeResult = ceLine.Value.native,
+                            finalResult = ceLine.Value.final, destination = ceLine.Value.destination.ToString(),
+                            destinationVisible = map.GetVisibility().IsShown(attacker.Faction, ceLine.Value.destination) },
                         nativeCanSee = AttackTargetFinder.CanSee(attacker, target) });
                 }
                 Move(attacker, target.Position + new IntVec3(12, 0, 0));
@@ -292,6 +300,35 @@ public sealed class SymbiantCombatSightScenarios
                 pauseIfNeeded = true, timeoutMs = 120000 }, cancellationToken: CancellationToken.None);
             if (!restored.Succeeded() || !restored.ReadResult<bool>("success")) throw new InvalidOperationException("The unchanged base did not restore.");
         }
+    }
+
+    // Diagnostic only: observe the actual CE method around its ordinary fog
+    // postfix. Its chosen logical destination can differ from the Pawn's root.
+    private static (bool native, bool final, IntVec3 destination)? ReadCeShootLine(Verse.Verb verb, Thing target)
+    {
+        var type = AccessTools.TypeByName("CombatExtended.Verb_LaunchProjectileCE");
+        if (type == null || !type.IsInstanceOfType(verb)) return null;
+        var method = AccessTools.DeclaredMethod(type, "TryFindCEShootLineFromTo",
+            new[] { typeof(IntVec3), typeof(LocalTargetInfo), typeof(ShootLine).MakeByRefType(),
+                typeof(UnityEngine.Vector3).MakeByRefType() });
+        if (method == null) throw new InvalidOperationException("The supported CE shoot-line method is unavailable.");
+        var harmony = new Harmony(CeProbeOwner);
+        try
+        {
+            ceProbeVerb = verb; ceNativeResult = null;
+            harmony.Patch(method, postfix: new HarmonyMethod(typeof(SymbiantCombatSightScenarios), nameof(CeNativePostfix))
+                { priority = Priority.First, before = new[] { "brrainz.totalfog" } });
+            var arguments = new object[] { verb.caster.Position, new LocalTargetInfo(target), default(ShootLine), default(UnityEngine.Vector3) };
+            bool result = (bool)method.Invoke(verb, arguments);
+            if (ceNativeResult == null) throw new InvalidOperationException("The native CE shoot-line result was not observed.");
+            return (ceNativeResult.Value, result, ((ShootLine)arguments[2]).Dest);
+        }
+        finally { harmony.UnpatchAll(CeProbeOwner); ceProbeVerb = null; ceNativeResult = null; }
+    }
+
+    public static void CeNativePostfix(Verse.Verb __instance, bool __result)
+    {
+        if (__instance == ceProbeVerb) ceNativeResult = __result;
     }
 
     // The caller restarts the game before this mode and compares the returned

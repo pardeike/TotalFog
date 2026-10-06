@@ -72,7 +72,7 @@ try:
     guard = (LOGS/'workflow.lock').open('w')
     fcntl.flock(guard, fcntl.LOCK_EX)
     mode = sys.argv[1]
-    if mode not in {'build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','ce-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, ce-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
+    if mode not in {'build','deploy','deploy-built','package','feedback-package','feedback-verify','setup','dpa-setup','ce-setup','ce-zombieland-setup','zombieland-setup','zombieland-fallback-setup','baseline','benchmark','runtime-benchmark','runtime-compare','verify-rendered','source-publish'}: raise RuntimeError('Use build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish')
     if mode == 'runtime-compare' and len(sys.argv) not in {4, 5}:
         raise RuntimeError('Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]')
     with logpath.open('w') as log:
@@ -166,14 +166,15 @@ try:
                     if primary_error is None:
                         raise
                     print('Candidate restore also failed: ' + str(cleanup_error), file=log)
-        if mode in {'deploy','deploy-built','setup','dpa-setup','ce-setup','zombieland-setup','baseline'}:
+        if mode in {'deploy','deploy-built','setup','dpa-setup','ce-setup','ce-zombieland-setup','zombieland-setup','baseline'}:
             step = 'deploy'; deploy_pair(mode == 'baseline')
-        if mode == 'ce-setup':
+        if mode in {'ce-setup', 'ce-zombieland-setup'}:
             step = 'CE Steam installation'
             metadata = GAME.parents[2]/'workshop/content/294100/2890901044/About/About.xml'
             ce = ET.parse(metadata).getroot()
             if ce.findtext('packageId', '').lower() != 'ceteam.combatextended' or '1.6' not in [v.text for v in ce.findall('supportedVersions/li')]:
                 raise RuntimeError('The installed Combat Extended must support RimWorld 1.6')
+        if mode == 'ce-setup':
             step = 'isolated CE configuration'
             data = ROOT/'artifacts/CEUserData'
             (data/'Config').mkdir(parents=True,exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
@@ -204,8 +205,9 @@ try:
             cfg.write_text(json.dumps(config,indent=2)+'\n')
             if [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')] != order:
                 raise RuntimeError('The isolated CE profile did not retain its loadout')
-        if mode in {'zombieland-setup','zombieland-fallback-setup'}:
+        if mode in {'zombieland-setup','zombieland-fallback-setup','ce-zombieland-setup'}:
             fallback = mode == 'zombieland-fallback-setup'
+            combined_ce = mode == 'ce-zombieland-setup'
             step = 'Zombieland metadata'
             zombie_root = ROOT.parent/'Zombieland'
             metadata = ET.parse(zombie_root/'About/About.xml').getroot()
@@ -226,17 +228,18 @@ try:
                 if not built.is_file() or not deployed.is_file() or built.read_bytes() != deployed.read_bytes():
                     raise RuntimeError('Zombieland paired deployment does not match its build: '+built.name)
             step = 'isolated Zombieland configuration'
-            data = ROOT/'artifacts'/('ZombielandFallbackUserData' if fallback else 'ZombielandUserData')
+            data = ROOT/'artifacts'/('CEZombielandUserData' if combined_ce else 'ZombielandFallbackUserData' if fallback else 'ZombielandUserData')
             (data/'Config').mkdir(parents=True, exist_ok=True); (data/'Logs').mkdir(exist_ok=True)
             # Reuse the tested rendering and pause-on-load preferences only
             # when this isolated profile has no preferences of its own.
             prefs = data/'Config/Prefs.xml'
-            source_prefs = ROOT/'artifacts/UserData/Config/Prefs.xml'
+            source_prefs = ROOT/'artifacts'/('CEUserData' if combined_ce else 'UserData')/'Config/Prefs.xml'
             if not prefs.exists() and source_prefs.exists(): shutil.copy2(source_prefs, prefs)
             config_path = data/'Config/ModsConfig.xml'
             order = ['brrainz.harmony', 'brrainz.rimbridgeserver', 'ludeon.rimworld', 'ludeon.rimworld.royalty',
-                'ludeon.rimworld.ideology', 'ludeon.rimworld.biotech', 'ludeon.rimworld.anomaly', 'ludeon.rimworld.odyssey',
-                package_id]
+                'ludeon.rimworld.ideology', 'ludeon.rimworld.biotech', 'ludeon.rimworld.anomaly', 'ludeon.rimworld.odyssey']
+            if combined_ce: order.append('ceteam.combatextended')
+            order.append(package_id)
             if not fallback: order.append('brrainz.totalfog')
             if config_path.exists():
                 active = [m.text.lower() for m in ET.parse(config_path).findall('activeMods/li')]
@@ -249,12 +252,15 @@ try:
                 settings = 'Mod_TotalFog_TotalFogMod.xml'
                 source = ROOT/'artifacts/UserData/Config'/settings
                 if not fallback and source.exists(): shutil.copy2(source, data/'Config'/settings)
+                if combined_ce:
+                    for source in (ROOT/'artifacts/CEUserData/Config').glob('Mod_*CombatExtended*.xml'):
+                        shutil.copy2(source, data/'Config'/source.name)
             cfg = Path.home()/'.gabs/config.json'; config = json.loads(cfg.read_text())
-            game_id = 'total-fog-zombieland-fallback-16' if fallback else 'total-fog-zombieland-16'
-            entry = {'id': game_id, 'name': 'Zombieland without Total Fog 1.6' if fallback else 'Total Fog Zombieland 1.6', 'launchMode': 'SteamManaged', 'target': '294100',
+            game_id = 'total-fog-ce-zombieland-16' if combined_ce else 'total-fog-zombieland-fallback-16' if fallback else 'total-fog-zombieland-16'
+            entry = {'id': game_id, 'name': 'Total Fog CE Zombieland 1.6' if combined_ce else 'Zombieland without Total Fog 1.6' if fallback else 'Total Fog Zombieland 1.6', 'launchMode': 'SteamManaged', 'target': '294100',
                 'args': ['-savedatafolder='+str(data), '-logFile', str(data/'Logs/Player.log')],
                 'stopProcessName': 'RimWorld by Ludeon Studios', 'gabpMode': 'local',
-                'description': 'Isolated Zombieland optional-integration fallback with all DLCs' if fallback else 'Isolated Total Fog Zombieland verification with all DLCs'}
+                'description': 'Isolated Total Fog Combat Extended and Zombieland verification with all DLCs' if combined_ce else 'Isolated Zombieland optional-integration fallback with all DLCs' if fallback else 'Isolated Total Fog Zombieland verification with all DLCs'}
             if game_id in config['games'] and config['games'][game_id] != entry:
                 raise RuntimeError('Existing Zombieland game registration differs; preserve it for review')
             config['games'][game_id] = entry
