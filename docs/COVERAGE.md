@@ -654,6 +654,28 @@ selection or combined CE Multiplayer combat. The isolated fixture's original
 pirate prerequisite failed before spawning; the accepted case uses hostile
 ancients, with that prerequisite checked before submission.
 
+The same gameplay bytes also pass native enemy target acquisition on both
+clients. With vanilla's enemy-AI threat/LOS/reachability flags, the finder selects
+the single staged player pawn with enemy fog off, rejects it while hidden with
+enemy fog on, and selects it after restoring sight. Complete normalized fog
+matches before/after, including cleanup to 377/689 sources; neither client
+reports desync. This is the native target finder, not autonomous raid jobs.
+
+The loading dependency error is now reproduced with Prepatcher retained but
+both Multiplayer and Total Fog absent from the active/loaded mod list.
+Harmony, RimBridgeServer and all DLCs remain. Multiplayer is therefore not
+required for this reproduction. The exact responsible caller and whether a
+player-only loadout is affected remain unverified; do not add a loader workaround
+to Total Fog or describe this as a demonstrated Multiplayer defect.
+
+A short native fourth-speed run activates both asynchronous maps in two Steam
+processes on the same Mac. All sampled client/map speed multipliers are 15;
+the 12.967-second measured interval advances about 420 TPS per map/client.
+The native paused endpoint has identical world/map clocks and normalized fog,
+without desync or new attention. This closes one two-map throughput spot check,
+not a many-mod/horde baseline, cross-platform or long-session performance gate.
+The same gameplay DLL's existing original-mod single-player floor is unchanged.
+
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
 those versions/hashes and desync diagnostics with each result. Single-player

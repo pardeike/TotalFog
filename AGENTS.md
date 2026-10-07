@@ -153,6 +153,10 @@ hostile ancients and rejects missing faction prerequisites before submission.
 Compare vanilla eligibility with enemy fog off/on, then hidden and visible
 ordinary playback. This is not autonomous target-selection coverage. Clean up
 owned objects before saving; these probe saves also require handler four.
+Its `setup-ai` and `acquire` actions stage a drafted unarmed player pawn and run
+the native enemy target finder with ordinary flags and only that owned candidate.
+Compare fog off, hidden fog on, then restored sight on both clients. This is
+target-acquisition coverage, not autonomous raid-job coverage.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and

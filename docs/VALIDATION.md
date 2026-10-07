@@ -5990,3 +5990,63 @@ and native-enemy-caster-cleanup.json.
 This establishes one non-player attack pipeline, not autonomous target selection,
 enemy raids, turrets or combined CE Multiplayer targeting. The known loading
 reflection-only exception still prevents clean-log acceptance.
+
+## Multiplayer native target acquisition and speed spot check, 2026-10-07
+
+Gameplay remains `7fb181fed468adc337e1dc1b7387c510d621fe9ce8f6c3a8894af401fbcf2391`.
+The expanded opt-in enemy companion is `4965ea8f85efac04f167eb057530839ae1f8bc4f081e317d3933c735ed547c19`.
+Both main menus append handlers 761..764 in the established order, preserving
+native IDs. Native save S resumes at world 48674, map 0 36734 and map 1 42302.
+The setup-ai world command stages hostile-ancients Human55221 with a bolt-action
+rifle and one missing eye, and drafted unarmed player Human55225 twenty cells
+away. Native LOS/range permit an attack, but enemy sight is 18 cells and the
+target is hidden. The synchronized acquire action calls AttackTargetFinder with
+the same threat/LOS/reachability flags as JobGiver_AIFightEnemy.FindAttackTarget,
+restricting its candidates to the owned pawn without weakening native checks.
+Both clients return no target with AISmart on, Human55225 with it off, and
+Human55225 after AISmart is restored and the missing eye removed (range 24).
+Normalized complete fog matches before and after all commands. Cleanup restores
+377/689 registered sources and native save T is verified. No simulation ticks
+advance during these controls and neither client reports desync. This proves
+native target acquisition, not autonomous raid job selection or every AI branch.
+Evidence: `artifacts/multiplayer-startup/native-enemy-target-acquisition.json`
+and both preserved target-acquisition Player.log files.
+
+The bridge's time control initially allowed only speeds through Superfast.
+Installed Multiplayer 0.11.5 supports Ultrafast at native multiplier 15; its
+public source has the same switch. The optional Multiplayer bridge now accepts
+that native synchronized command and exposes TickRateMultiplier in clock status.
+Fresh host/client processes use RimBridgeServer `82d9b37c95a933fea13ad24bf251678b5f96a5838a888fa808387c6ca544f66b`
+and its Multiplayer companion `c13c0498447eea27be710d7cae60896f7edf950992a3839f0e2cb6f1d799b267`.
+Cold save T resumes at world 48676, map 0 36736 and map 1 42304, with client
+faction 18 and host faction 16. Both maps receive ordinary native Ultrafast
+commands. Twelve live status samples span 12.967 seconds; all 48 sampled
+client/map speed multipliers remain 15 with Ultrafast selected. Host map clocks
+advance 5,445 ticks in the measured interval (419.912 TPS per map); the client's
+advance 5,460 (421.069 TPS). These separate requests do not read the clients at
+the same instant. After native pause commands, both agree exactly on world
+57932, map 0 45947, map 1 51560, all paused, with identical normalized fog and
+377/689 sources. Neither reports desync or new blocking attention. Save U is
+verified. Evidence: `native-two-map-ultrafast.json`,
+`target-acquisition-ultrafast-build-pair.json` and both preserved Player.log files
+under artifacts/multiplayer-startup. This is one short instrumented two-process
+Mac throughput spot check, not an original-mod comparison, many-mod/horde
+benchmark, frame-pacing proof, cross-platform test or long-session acceptance.
+The existing exact-gameplay-byte single-player performance floor remains valid.
+
+A separate fresh quick-test control retains Prepatcher, Harmony, RimBridgeServer,
+Core and all five DLCs, but removes Multiplayer and Total Fog from both the active
+configuration and loaded-mod list. The same reflection-only InputLegacyModule
+exception occurs. Configuration issues are zero and visual readiness succeeds.
+The stopped profile's original mod selection is restored byte-for-byte; gameplay
+settings are retained. Installed PrepatcherImpl MVID is
+`532f91d20a724da5bec1158b6b915d86`; its inspected constructor registers a
+ReflectionOnlyAssemblyResolve listener that logs then returns null, while its
+reloader marks replaced assemblies reflection-only. This explains a plausible
+dependency-resolution path, but does not establish the responsible requester.
+Multiplayer is not required for this reproduction. A player-only loadout and the
+exact failing caller remain unverified; no upstream issue or Total Fog loader
+workaround is justified by this evidence yet. See
+`prepatcher-without-mp-control.json`, `prepatcher-without-mp-Player.log` and the
+preserved source/binary-inspection records under artifacts. The speed/load checks
+retain this known exception and therefore are not clean-log acceptance.
