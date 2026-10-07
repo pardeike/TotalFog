@@ -591,7 +591,10 @@ coverage, blockers and source schedules. When one colony advances 9,378 ticks,
 the paused colony's fog state remains unchanged. The f3ad33a1 candidate also
 passes cold rejoin and observer-specific colony exemption with synchronized
 settings while paused. See docs/VALIDATION.md for the exact evidence and loading
-errors. Deferred queue persistence/replay, remaining combat/transfers and the
+errors. The f3ad33a1 candidate also preserves hidden message/letter payloads and
+recipients through a cold save/rejoin, replays only the revealed colony's alerts
+once, retains another faction's hidden alerts and releases them correctly when
+the synchronized delay option is disabled. Remaining combat/transfers and the
 latest-byte performance floor are still outstanding. Multiplayer compatibility
 remains unverified overall; these bounded checks do not close the full target.
 

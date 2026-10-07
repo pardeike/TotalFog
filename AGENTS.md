@@ -123,6 +123,12 @@ both native status receipts show the same paused tick. A submitted pause is
 asynchronous and does not establish a comparison boundary. The settings tool
 uses the same native MPAPI watcher as the UI; verify the applied value on both
 clients. Never run single-player mutation fixtures on only one connected client.
+For recipient/save/replay checks, explicitly register
+`totalfog/multiplayer_notifications` on both main menus before loading or
+hosting. Require the same returned handler ID and preserved existing command IDs.
+Its queue action sends a native synchronized command; status is read-only.
+These probe saves require the same opt-in instrumentation to replay their commands.
+The companion and probe are excluded from player ZIPs.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and

@@ -5725,3 +5725,42 @@ transfer cases, cross-platform determinism, long-session stability or the latest
 gameplay bytes' performance floor. The known MP/Prepatcher InputLegacyModule
 loading error still prevents clean-log acceptance; the earlier generated-pawn
 needs error is not attributed to Total Fog without an isolation control.
+
+### Native deferred notification recipients and persistence, 2026-10-07
+
+Gameplay f3ad33a1 / Total Fog companion 563e42a4 registers an opt-in native sync
+handler on both main menus, ID 761. Existing command IDs are checked unchanged;
+registration is explicit test instrumentation and adds no player gameplay work.
+The probe sends actual Messages.Message and LetterStack.ReceiveLetter calls
+through Multiplayer's synchronized command path, with its native map/faction
+context. It never runs a mutation fixture on only one client or steps local ticks.
+
+At paused world 41246 / maps 31868 and 39722, both clients queue the same six
+historical alerts: one message and letter per colony, plus a message and letter
+on map 1 addressed to faction 16. Letter deadlines are 120 native map ticks
+later. A hidden non-historical message is discarded without entering the queue
+or archive. Native save K is CRC-verified; both processes restart, reload/rehost
+and rejoin. At world 41248 / maps 31870 and 39724, all original queue payloads,
+recipients, deadlines and empty recipient archives match the saved state exactly.
+DelayAlertsUntilSeen also survives as the host's synchronized session setting.
+
+With OnlyOutsideColony synchronized on, only map 1 runs first. At paused world
+41701 / maps 31870 and 40177, faction 18's message/letter appear once in that
+faction's native archive on both clients. Map 0's queue stays unchanged, and
+map 1's foreign-recipient alerts stay hidden. Running only map 0 next reaches
+world 42916 / maps 33086 and 40177: faction 16's own-colony alerts replay once,
+while the foreign-recipient pair still remains on map 1. Disabling the delay
+through the native watcher and running map 1 reaches paused world 43948 /
+maps 33086 and 41209. All queues are empty; the remaining pair appears once
+only in faction 16's archive. Faction 18 retains only its own pair, and the
+spectator receives none. Both clients' complete probe queues/archives match at
+each final paused boundary, with no desync or additional runtime attention.
+
+Evidence under artifacts/multiplayer-startup: `notification-probe-build-pair.json`,
+`native-notifications-queued.json`, `native-notifications-cold-rejoin.json`,
+`native-notifications-client-reveal.json`, `native-notifications-owner-reveal.json`
+and `native-notifications-delivered.json`. These probe saves require the same
+opt-in handler for replaying their probe commands. The companion is excluded
+from player packages. These checks accept the production queue's bounded
+recipient/persistence/replay behavior, not every native incident producer,
+destroyed target or map transfer. The known loading exception remains separate.
