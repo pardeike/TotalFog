@@ -5798,3 +5798,37 @@ artifacts/multiplayer-startup: `combat-current-build-pair.json`,
 `native-current-serialized-differences.json` and
 `native-current-totalfog-saved-comparison.json`. The known loading exception
 still prevents clean-log acceptance.
+
+### Native Multiplayer hearing cues, 2026-10-07
+
+Gameplay f3ad33a1 / companion 218f7786 cold-loads save N and joins native
+Multiplayer with host faction 16 viewing map 0 and client faction 18 viewing map
+1. Both maps start paused at 36145/41213 with identical native map RNG states.
+The existing colony has moving hidden creatures within the ordinary 10-cell
+hearing range. No synthetic cue, pawn mutation or single-client tick stepping
+is used.
+
+Ordinary Normal map-0 playback advances 136 ticks to 36281. Both clients report
+the same three native Mote_HearingCue objects, including positions, spawn tick
+36244, random offsets and non-real-time policy. Map-0 RNG state agrees exactly;
+the paused map-1 clock and RNG state remain unchanged. Public cue visibility is
+true only for faction 16 on both clients' respective viewing contexts. Motes do
+not appear in native ListerThings unless configured for GUI overlays; the
+read-only probe was corrected to use DynamicDrawManager.DrawThings before this
+accepted sample. The earlier zero-count probe is not cue acceptance.
+
+The client synchronizes ShowHearingCues off. Another 157 ordinary ticks reach
+36438, with no active cues and matching native RNG states. The host restores
+the option; a client hearing-range change to 30 and host restore to 10 both
+apply on both clients while paused. Another 143 ordinary ticks reach 36581 and
+produce three matching faction-16 cues again. Complete normalized fog/source
+state agrees, both clients report no desync, and no new attention appears.
+
+The full paired receipts and their evidence limits are retained in
+artifacts/multiplayer-startup/native-current-hearing-control.json, with the
+build pair in hearing-build-pair.json. This is one native production hearing
+case with a separate-map viewer, not all faction/held-pawn/transfer cases or a
+performance measurement. The known reflection-only loading exception still
+prevents clean-log startup acceptance. The added probe is excluded from player
+packages and does not change gameplay DLL bytes. All 315 tests and the build
+formatter gate pass.

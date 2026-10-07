@@ -603,6 +603,14 @@ colony-exempt visible control produces three native shots, two misses and a
 gunshot death. Both clients agree on the result, normalized fog and all persisted
 Total Fog map/observation/settings data. This closes the bounded player-rifle
 case, not enemy AI, CE turret/no-LOS, transfers or performance acceptance.
+The same gameplay bytes also pass a native hearing sample on separate colony
+views. Both clients create the same three non-real-time cues and retain matching
+map RNG states; only the hearing faction sees those cues. The synchronized off
+setting leaves no cues after ordinary playback, and restoring it creates three
+matching cues again. The client-to-host 30-cell hearing-range change and host
+restore to 10 also synchronize while paused. Complete normalized fog state
+still matches. This closes the bounded native cue/RNG/recipient case, not every
+faction or transfer configuration.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record

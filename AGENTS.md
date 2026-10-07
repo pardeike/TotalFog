@@ -123,6 +123,10 @@ both native status receipts show the same paused tick. A submitted pause is
 asynchronous and does not establish a comparison boundary. The settings tool
 uses the same native MPAPI watcher as the UI; verify the applied value on both
 clients. Never run single-player mutation fixtures on only one connected client.
+Use `totalfog/multiplayer_hearing` to read native cue recipients and per-map RNG
+states. Cues are read from the native drawing collection, not ListerThings.
+The settings probe accepts the UI's BaseHearingRange range of 0..30; compare
+applied values and cue state at a matching paused native map clock.
 For recipient/save/replay checks, explicitly register
 `totalfog/multiplayer_notifications` on both main menus before loading or
 hosting. Require the same returned handler ID and preserved existing command IDs.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -154,8 +155,89 @@ public sealed class MultiplayerScenarios
         };
 
     [Tool(
+        "totalfog/multiplayer_hearing",
+        Description = "Read native hearing motes, moving hidden hearing candidates and Multiplayer map RNG states without spawning cues or stepping ticks. Compare at matching paused native map clocks; cue visibility belongs to the local viewer."
+    )]
+    public static Task<object> Hearing(IRimBridgeContext context) =>
+        context.MainThread.InvokeAsync<object>(() =>
+        {
+            if (Current.Game == null)
+                return new { success = false, message = "Load a game first." };
+            var api = HarmonyLib.AccessTools.TypeByName("Multiplayer.Client.Multiplayer");
+            var game = api
+                ?.GetField("game", BindingFlags.Public | BindingFlags.Static)
+                ?.GetValue(null);
+            var clocks =
+                game == null
+                    ? Array.Empty<object>()
+                    : ((IEnumerable)Read(game, "asyncTimeComps")).Cast<object>().ToArray();
+            return new
+            {
+                success = true,
+                faction = Faction.OfPlayer?.loadID,
+                clocks = clocks
+                    .Select(clock => new
+                    {
+                        map = ((Map)Read(clock, "map")).uniqueID,
+                        ticks = Read(clock, "mapTicks"),
+                        randomState = ((ulong)Read(clock, "randState")).ToString("X16"),
+                    })
+                    .ToArray(),
+                maps = Find
+                    .Maps.OrderBy(map => map.uniqueID)
+                    .Select(map => new
+                    {
+                        map = map.uniqueID,
+                        cues = map
+                            .dynamicDrawManager.DrawThings.OfType<Mote_HearingCue>()
+                            .OrderBy(cue => cue.thingIDNumber)
+                            .Select(cue => new
+                            {
+                                id = cue.ThingID,
+                                cue.ObserverFactionId,
+                                cue.spawnTick,
+                                position = cue.exactPosition.ToString(),
+                                cue.offsetRandom,
+                                realTime = cue.def.mote.realTime,
+                                visible = Visibility.IsVisible(cue),
+                            })
+                            .ToArray(),
+                        candidates = map
+                            .mapPawns.AllPawnsSpawned.Where(pawn =>
+                                pawn.Faction?.IsPlayer == true && pawn.RaceProps.Humanlike
+                            )
+                            .SelectMany(listener =>
+                                map.mapPawns.AllPawnsSpawned.Where(other =>
+                                        other.Faction != listener.Faction
+                                        && other.pather?.Moving == true
+                                        && other.Position.InHorDistOf(
+                                            listener.Position,
+                                            FogSettings.BaseHearingRange
+                                                * listener.health.capacities.GetLevel(
+                                                    PawnCapacityDefOf.Hearing
+                                                )
+                                        )
+                                        && !map.GetComponent<MapVisibility>()
+                                            .IsShown(listener.Faction, other.Position)
+                                    )
+                                    .Select(other => new
+                                    {
+                                        listener = listener.ThingID,
+                                        faction = listener.Faction.loadID,
+                                        other = other.ThingID,
+                                        position = other.Position.ToString(),
+                                    })
+                            )
+                            .Take(32)
+                            .ToArray(),
+                    })
+                    .ToArray(),
+            };
+        });
+
+    [Tool(
         "totalfog/multiplayer_settings",
-        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100) or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
+        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
     )]
     public static Task<object> Settings(
         IRimBridgeContext context,
@@ -191,6 +273,7 @@ public sealed class MultiplayerScenarios
             );
             if (
                 name != "BaseViewRange"
+                && name != "BaseHearingRange"
                 && (
                     field == null
                     || field.FieldType != typeof(bool)
@@ -201,13 +284,29 @@ public sealed class MultiplayerScenarios
                 return new
                 {
                     success = false,
-                    message = "Use BaseViewRange or a public boolean FogSettings field from multiplayer_snapshot.",
+                    message = "Use BaseViewRange, BaseHearingRange or a public boolean FogSettings field from multiplayer_snapshot.",
                 };
             object parsed;
             if (name == "BaseViewRange")
             {
                 if (!int.TryParse(value, out var range) || range < 10 || range > 100)
                     return new { success = false, message = "BaseViewRange must be 10..100." };
+                parsed = range;
+            }
+            else if (name == "BaseHearingRange")
+            {
+                if (
+                    !float.TryParse(
+                        value,
+                        NumberStyles.Float,
+                        CultureInfo.InvariantCulture,
+                        out var range
+                    )
+                    || float.IsNaN(range)
+                    || range < 0
+                    || range > 30
+                )
+                    return new { success = false, message = "BaseHearingRange must be 0..30." };
                 parsed = range;
             }
             else
