@@ -629,10 +629,18 @@ restore the stationary sight range from 6 to 24 on both clients. Complete
 normalized fog state agrees at every paused boundary, and native save P loads
 in fresh host/client processes without duplicate sources or lost per-faction
 discovery. This closes the bounded caravan/world-command lifecycle case.
-It does not establish gravship/map removal, enemy AI/CE Multiplayer combat or
-world-context delayed-letter delivery. The map-clock fix has three focused
+It does not establish gravship/map removal or enemy AI/CE Multiplayer combat.
+The same gameplay bytes also pass a world-context delayed-letter control: a
+120-map-tick deadline survives cold save/rejoin, stays pending before its
+deadline even after delay-by-visibility is disabled, then delivers exactly once
+only to faction 16. Both clients agree on fog and queue/archive state. This
+closes that bounded world-command deadline/recipient case. The map-clock fix has three focused
 regressions among 318 passing tests. The f3ad33a1 performance results above are
-historical for these changed gameplay bytes; a fresh floor is required.
+historical. A fresh three-pair floor on 7fb181fe passes: median 309.67 versus
+288.10 TPS, +7.49%, on the same 1,000-zombie starting fixture at ordinary fourth
+speed. Frame-time p95 medians are 70.38/71.13 ms. This is single-player runtime
+performance evidence, not two-client Multiplayer throughput or a new wide-view
+measurement.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record

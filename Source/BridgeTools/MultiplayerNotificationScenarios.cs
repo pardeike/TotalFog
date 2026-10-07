@@ -15,13 +15,16 @@ public sealed class MultiplayerNotificationScenarios
 {
     private static object syncMethod;
     private static Func<object, object[], bool> submit;
+    private static object worldSyncMethod;
+    private static Func<object, object[], bool> submitWorld;
+    private static object lastWorldEnqueue;
     private static Action<Map, Faction, bool> push;
     private static Func<Map, Faction> pop;
     private const string Prefix = "Total Fog MP probe ";
 
     [Tool(
         "totalfog/multiplayer_notifications",
-        Description = "Opt-in native Multiplayer notification probe. Register on BOTH clients at the main menu before loading/hosting; appends a synchronized handler without changing existing command IDs. Queue submits a real historical message or letter for an explicit map/faction/cell through the native synchronized command path. Status reads all saved queues and per-faction probe archives. No single-client mutation, source creation or tick stepping."
+        Description = "Opt-in native Multiplayer notification probe. Register on BOTH main menus before loading/hosting; appends a handler without changing existing IDs. Queue submits a real message/letter in map context. For world-clock controls, register-world THIRD after notifications and caravan on BOTH main menus, then queue-world. World commands serialize primitive IDs, preserving the world clock while addressing a map. Status reads queues, per-faction archives and the last world enqueue clock. Probe saves require the same handlers; excluded from player ZIPs."
     )]
     public static Task<object> Notifications(
         IRimBridgeContext context,
@@ -39,11 +42,32 @@ public sealed class MultiplayerNotificationScenarios
         {
             if (action == "register")
                 return Register();
+            if (action == "register-world")
+            {
+                Register();
+                if (worldSyncMethod == null)
+                    worldSyncMethod = MultiplayerProbeRegistration.Register(
+                        typeof(MultiplayerNotificationScenarios).GetMethod(
+                            nameof(CreateWorldNotification),
+                            BindingFlags.NonPublic | BindingFlags.Static
+                        ),
+                        out submitWorld
+                    );
+                return new
+                {
+                    success = true,
+                    registered = true,
+                    existingCommandIdsPreserved = true,
+                    syncId = MultiplayerProbeRegistration.Id(worldSyncMethod),
+                };
+            }
             if (action == "status")
                 return Status();
-            if (action != "queue" || submit == null || Current.Game == null)
+            bool worldCommand = action == "queue-world";
+            var sender = worldCommand ? submitWorld : submit;
+            if ((action != "queue" && !worldCommand) || sender == null || Current.Game == null)
                 throw new InvalidOperationException(
-                    "Register on both main menus, then join a live game and use queue/status."
+                    "Register the requested handler on both main menus, then use queue/queue-world/status in a live game."
                 );
             var api = AccessTools.TypeByName("Multiplayer.Client.Multiplayer");
             var session = AccessTools.Field(api, "session").GetValue(null);
@@ -73,9 +97,19 @@ public sealed class MultiplayerNotificationScenarios
                 );
             if (kind != "message" && kind != "letter" || delayTicks < 0 || delayTicks > 600)
                 throw new ArgumentException("Use message/letter and delayTicks 0..600.");
-            bool submitted = submit(
+            bool submitted = sender(
                 null,
-                new object[] { map, factionId, x, z, label, kind, historical, delayTicks }
+                new object[]
+                {
+                    worldCommand ? (object)mapId : map,
+                    factionId,
+                    x,
+                    z,
+                    label,
+                    kind,
+                    historical,
+                    delayTicks,
+                }
             );
             return new
             {
@@ -85,6 +119,7 @@ public sealed class MultiplayerNotificationScenarios
                 factionId,
                 label,
                 kind,
+                worldCommand,
             };
         });
 
@@ -128,6 +163,29 @@ public sealed class MultiplayerNotificationScenarios
             registered = true,
             existingCommandIdsPreserved = true,
             syncId = Read(syncMethod, "syncId"),
+        };
+    }
+
+    private static void CreateWorldNotification(
+        int mapId,
+        int factionId,
+        int x,
+        int z,
+        string label,
+        string kind,
+        bool historical,
+        int delayTicks
+    )
+    {
+        var map = Find.Maps.Single(map => map.uniqueID == mapId);
+        CreateNotification(map, factionId, x, z, label, kind, historical, delayTicks);
+        lastWorldEnqueue = new
+        {
+            worldContextTicks = Find.TickManager.TicksGame,
+            mapId,
+            factionId,
+            label,
+            delayTicks,
         };
     }
 
@@ -182,6 +240,10 @@ public sealed class MultiplayerNotificationScenarios
             success = true,
             registered = true,
             syncId = Read(syncMethod, "syncId"),
+            worldSyncId = worldSyncMethod == null
+                ? (int?)null
+                : MultiplayerProbeRegistration.Id(worldSyncMethod),
+            lastWorldEnqueue,
             maps = Find
                 .Maps.OrderBy(map => map.uniqueID)
                 .Select(map => new

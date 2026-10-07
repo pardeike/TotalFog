@@ -5903,5 +5903,52 @@ InputLegacyModule exception still occurs and prevents clean-log acceptance.
 Ignored evidence under artifacts/multiplayer-startup:
 map-clock-tests-red.log, native-caravan-clock-red.json,
 native-caravan-clock-green.json, native-caravan-clock-cold-rejoin.json and
-map-clock-fixed-build-pair.json. These exact gameplay bytes require a fresh
-performance-floor check; the preceding f3ad33a1 result is historical.
+map-clock-fixed-build-pair.json. The preceding f3ad33a1 performance result is
+historical; the fixed bytes have their own comparison below.
+
+### Map-clock fix performance floor, 2026-10-07
+
+The canonical three-pair mp-map-clock-zombieland-1000 comparison passes on exact
+gameplay 7fb181fe versus inherited 9d011de0. Six fresh processes load the unchanged
+fixture with matching settings/loadout/camera and 1,000 zombies initially;
+population endpoints range from 998 to 1,000. All measured native ticks retain
+ordinary selected Ultrafast and rate multiplier 15, without forcing or the
+private speed boost. Median TPS is 288.10090 original / 309.67403 candidate,
++7.49%. Tick CPU medians are 2.45376/2.27587 ms and frame-time p95 medians
+71.1324/70.3766 ms. Complete native reports/logs and exact identities are retained
+in artifacts/comparison-mp-map-clock-zombieland-1000.json and its six sample
+reports. The runner completes successfully and leaves the candidate deployed.
+This closes the changed-DLL floor on this single-player Zombieland fixture.
+It does not establish Multiplayer throughput or close wide-view frame pacing.
+
+### World-command delayed letter and saved deadline, 2026-10-07
+
+The same 7fb181fe gameplay with companion 7fadf74a adds opt-in handler 763 after
+notification 761 and caravan 762 on both main menus; all prior IDs stay unchanged.
+The world command serializes an integer map ID, preserving the world clock.
+Both clients start world 47714, map 0 at 36728, map 1 at 41342. With the host's
+synchronized DelayAlertsUntilSeen enabled, the real neutral letter WorldClockA
+targets hidden map-1 cell (2,2), recipient faction 16, delay 120. Its native
+command receipt retains world 47714, but the queued deadline is correctly
+41462. It remains pending after 32 Normal map-1 ticks; map 0 stays paused.
+
+Native save Q is verified at 1,304,680 bytes. Fresh host/client processes load
+and rejoin at world 47748 and map clocks 36730/41376, retaining the same letter
+payload, target, recipient and deadline, synchronized delay setting, 377/689
+sources and matching fog. The client disables visibility-based delay through
+the native watcher. Both apply it; another 35 map ticks reach 41411 and the
+letter still waits for 41462. A further 144 Normal ticks reach 41555 and release
+it once into faction 16's archive only. Factions 17/18 never receive it. Another
+46 ticks to 41601 retain exactly one archived copy and empty queues on both
+clients. Complete normalized fog agrees; neither reports desync/new attention.
+Native save R is verified at 1,306,393 bytes for continuation.
+
+The full ignored paired evidence is
+artifacts/multiplayer-startup/native-world-letter-clock-control.json, with the
+pre-save state also retained in native-world-letter-before-cold.json. This closes
+one real world-command deadline/save/recipient control. It does not close every
+notification kind, gravship/map removal, enemy AI/CE Multiplayer combination or
+the known reflection-only loading exception. All 318 tests and formatting/build
+gates pass; adding this companion probe leaves gameplay bytes unchanged, so the
+three-pair performance proof above still applies. The probe is excluded from
+player ZIPs and its saved sessions require all three registered handlers.

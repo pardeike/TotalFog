@@ -141,6 +141,11 @@ Compare registrations and sight/hearing/observation deadlines against the
 destination map's clock, then play that map normally. Saves with this probe also
 require its handler when loading/rejoining. Never use a single-client teleport
 as Multiplayer transfer evidence.
+For world-context delayed letters, register notification action `register-world`
+THIRD on both main menus after those two probes, then use `queue-world`.
+Its primitive map ID preserves native world-command timing. Check the queued
+deadline against the target map's clock, not the world clock, before normal
+playback. Saves containing this third command require all three handlers.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and
