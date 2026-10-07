@@ -146,6 +146,13 @@ THIRD on both main menus after those two probes, then use `queue-world`.
 Its primitive map ID preserves native world-command timing. Check the queued
 deadline against the target map's clock, not the world clock, before normal
 playback. Saves containing this third command require all three handlers.
+For a bounded enemy attack-pipeline control, register
+`totalfog/multiplayer_enemy_combat` FOURTH on both main menus. Its setup,
+attack, reveal and cleanup use native synchronized world commands. It uses
+hostile ancients and rejects missing faction prerequisites before submission.
+Compare vanilla eligibility with enemy fog off/on, then hidden and visible
+ordinary playback. This is not autonomous target-selection coverage. Clean up
+owned objects before saving; these probe saves also require handler four.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and

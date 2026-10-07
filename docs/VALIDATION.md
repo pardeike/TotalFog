@@ -5952,3 +5952,41 @@ the known reflection-only loading exception. All 318 tests and formatting/build
 gates pass; adding this companion probe leaves gameplay bytes unchanged, so the
 three-pair performance proof above still applies. The probe is excluded from
 player ZIPs and its saved sessions require all three registered handlers.
+
+### Multiplayer non-player rifle pipeline, 2026-10-07
+
+Gameplay 7fb181fe / companion b88083ef registers opt-in handler 764 fourth on
+both main menus without renumbering any previous commands. Fresh save-R host/
+client processes reach world 47975, maps 36732/41603. A native synchronized
+world command stages Human55211 (hostile-ancients faction 9, non-player) with
+a bolt-action rifle and one missing eye, plus player steel Wall55216 20 cells
+away on an empty firing lane. Native LOS is true, weapon range 36.9, the verb
+is available, and CanHitTarget is true while AISmart is false. The client
+synchronizes AISmart true; CanHitTarget becomes false on both clients.
+
+The real AttackStatic job advances 335 Normal map-1 ticks to 41938; map 0 stays
+paused at 36732. Enemy sight capacity is 0.75, range 18, target unseen, verb
+idle and wall still 300 HP. Both clients match complete normalized fog and
+actor state with no desync. A synchronized native health change restores the
+missing eye. Capacity becomes 1, range 24, target visible and CanHitTarget true.
+Another 362 Normal ticks reach 42300 with the native gun in cooldown and wall
+at 282 HP on both clients; world reaches 48672. Fog still agrees and no new
+attention/desync appears. Synchronized cleanup returns both to 377/689 sources
+with matching fog and no active fixture. AISmart remains at its tested value.
+Native continuation save S is verified at 1,307,841 bytes after cleanup.
+Its host battle log attributes two native bolt-action rifle shots to Human55211,
+including an impact on a Wall. The four matching fire/impact entries are retained
+in artifacts/multiplayer-startup/native-enemy-caster-battle-log.xml. Damage and
+actor/fog state match on both clients; the log attribution is from the host save.
+
+The initial pirate-faction prerequisite failed before spawning on both clients;
+the known bridge attention was reviewed, the inactive fixture confirmed, and
+both processes stopped. This rejected setup is not gameplay acceptance. The
+accepted probe instead uses the existing hostile-ancients faction from the
+CE controls and checks that prerequisite before submitting setup. Independent
+tests/formatting/build pass; gameplay bytes and their TPS proof stay unchanged.
+Ignored evidence: artifacts/multiplayer-startup/native-enemy-caster-control.json
+and native-enemy-caster-cleanup.json.
+This establishes one non-player attack pipeline, not autonomous target selection,
+enemy raids, turrets or combined CE Multiplayer targeting. The known loading
+reflection-only exception still prevents clean-log acceptance.

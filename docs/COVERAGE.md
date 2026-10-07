@@ -642,6 +642,18 @@ speed. Frame-time p95 medians are 70.38/71.13 ms. This is single-player runtime
 performance evidence, not two-client Multiplayer throughput or a new wide-view
 measurement.
 
+The same 7fb181fe bytes now pass a bounded non-player enemy rifle pipeline with
+synchronized enemy fog off/on. Native range/LOS and availability allow the
+shot while the setting is off; enabling it blocks the hidden target on both
+clients. An AttackStatic job leaves the wall at 300 HP over 335 Normal ticks.
+Restoring sight changes the enemy's range from 18 to 24 and allows the shot;
+another 362 ticks damage the wall to 282 HP, identically on both clients.
+Normalized fog, actor state and cleanup/source counts agree without desync.
+This closes one non-player attack-pipeline case, not autonomous AI target
+selection or combined CE Multiplayer combat. The isolated fixture's original
+pirate prerequisite failed before spawning; the accepted case uses hostile
+ancients, with that prerequisite checked before submission.
+
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
 those versions/hashes and desync diagnostics with each result. Single-player
