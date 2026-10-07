@@ -77,7 +77,7 @@ public class CompVisibility : FogSubcomponent
             return;
         // Coverage, movement and signals already reconcile presentation. The
         // periodic fallback is needed only after twelve ticks without a check.
-        nextCheck = Find.TickManager.TicksGame + 12;
+        nextCheck = Compatibility.MultiplayerIntegration.TicksFor(parent.Map) + 12;
         var fog =
             mainComponent.ComponentsPositionTracker?.CurrentVisibility
             ?? parent.Map.GetVisibility();

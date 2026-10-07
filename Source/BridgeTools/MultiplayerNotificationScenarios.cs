@@ -101,48 +101,11 @@ public sealed class MultiplayerNotificationScenarios
                 registered = true,
                 syncId = Read(syncMethod, "syncId"),
             };
-        var api =
-            AccessTools.TypeByName("Multiplayer.API.MP")
-            ?? throw new InvalidOperationException("Load Multiplayer first.");
-        var registry = AccessTools.TypeByName("Multiplayer.Client.Sync");
-        var handlers = (IList)AccessTools.Field(registry, "handlers").GetValue(null);
-        var previousIds = handlers
-            .Cast<object>()
-            .Select(handler => (int)Read(handler, "syncId"))
-            .ToArray();
         var method = typeof(MultiplayerNotificationScenarios).GetMethod(
             nameof(CreateNotification),
             BindingFlags.NonPublic | BindingFlags.Static
         );
-        var register = api.GetMethods()
-            .Single(m =>
-                m.Name == "RegisterSyncMethod"
-                && m.GetParameters().Length == 2
-                && m.GetParameters()[0].ParameterType == typeof(MethodInfo)
-            );
-        syncMethod = register.Invoke(null, new object[] { method, null });
-        // Companion discovery happens after ordinary mod registration. Append
-        // at the highest version so native finalization preserves saved IDs.
-        AccessTools.Field(syncMethod.GetType(), "version").SetValue(syncMethod, int.MaxValue);
-        AccessTools.Method(registry, "PostInitHandlers").Invoke(null, null);
-        if (
-            !previousIds.SequenceEqual(
-                handlers
-                    .Cast<object>()
-                    .Take(previousIds.Length)
-                    .Select(handler => (int)Read(handler, "syncId"))
-            )
-        )
-            throw new InvalidOperationException(
-                "Native registration changed existing command IDs; stop this process."
-            );
-        submit =
-            (Func<object, object[], bool>)
-                Delegate.CreateDelegate(
-                    typeof(Func<object, object[], bool>),
-                    syncMethod,
-                    syncMethod.GetType().GetMethod("DoSync")
-                );
+        syncMethod = MultiplayerProbeRegistration.Register(method, out submit);
         var factions = AccessTools.TypeByName("Multiplayer.Client.Factions.FactionExtensions");
         push =
             (Action<Map, Faction, bool>)

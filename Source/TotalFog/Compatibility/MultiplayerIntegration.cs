@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using HarmonyLib;
 using RimWorld;
@@ -34,8 +35,16 @@ internal static class MultiplayerIntegration
     private static Action<object, object>[] watches = Array.Empty<Action<object, object>>();
     private static Action<Map, Faction, bool> pushFaction;
     private static Func<Map, Faction> popFaction;
+    private static Func<Map, int?> mapTicks;
 
     internal static bool Active => isActive();
+
+    // Tick callbacks already run under MP's map context. Deadline creation can
+    // also run from world commands or interface work, so use the owning map.
+    internal static int TicksFor(Map map) =>
+        mapTicks != null && map != null && Active
+            ? mapTicks(map) ?? Find.TickManager.TicksGame
+            : Find.TickManager.TicksGame;
 
     internal static void Install()
     {
@@ -67,6 +76,32 @@ internal static class MultiplayerIntegration
                     api.GetProperty("IsInMultiplayer").GetGetMethod()
                 );
         watches = bound;
+        var clockGetter =
+            AccessTools
+                .TypeByName("Multiplayer.Client.Extensions")
+                ?.GetMethod("AsyncTime", new[] { typeof(Map) })
+            ?? throw new MissingMethodException("Multiplayer map clock is unavailable.");
+        var clockField =
+            clockGetter.ReturnType.GetField("mapTicks")
+            ?? throw new MissingFieldException(clockGetter.ReturnType.FullName, "mapTicks");
+        var mapParameter = Expression.Parameter(typeof(Map), "map");
+        var clock = Expression.Variable(clockGetter.ReturnType, "clock");
+        // Bind once. No reflected field reads, boxing or per-map cache lifetime
+        // to maintain when commands create/remove maps or sessions restart.
+        mapTicks = Expression
+            .Lambda<Func<Map, int?>>(
+                Expression.Block(
+                    new[] { clock },
+                    Expression.Assign(clock, Expression.Call(clockGetter, mapParameter)),
+                    Expression.Condition(
+                        Expression.Equal(clock, Expression.Constant(null, clockGetter.ReturnType)),
+                        Expression.Constant(null, typeof(int?)),
+                        Expression.Convert(Expression.Field(clock, clockField), typeof(int?))
+                    )
+                ),
+                mapParameter
+            )
+            .Compile();
         // Deferred notifications retain their recipient even when their map
         // ticks under another player's faction. Use MP's own data context.
         var factions = AccessTools.TypeByName("Multiplayer.Client.Factions.FactionExtensions");

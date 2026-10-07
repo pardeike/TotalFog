@@ -44,7 +44,9 @@ public class DeferredNotifications : MapComponent
                 faction = Faction.OfPlayer,
                 debugInfo = debugInfo,
                 playSound = playSound,
-                earliestTick = checked(Find.TickManager.TicksGame + Math.Max(0, delayTicks)),
+                earliestTick = checked(
+                    MultiplayerIntegration.TicksFor(map) + Math.Max(0, delayTicks)
+                ),
             }
         );
 

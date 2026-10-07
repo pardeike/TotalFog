@@ -47,7 +47,7 @@ public class CompSightSource : FogSubcomponent
         setup = true;
         pawn = parent as Pawn;
         position = IntVec3.Invalid;
-        lastMovement = Find.TickManager.TicksGame;
+        lastMovement = Compatibility.MultiplayerIntegration.TicksFor(parent.Map);
         nextCheck = lastMovement;
         nextHearing = lastMovement + 100;
         UpdateFoV(true);

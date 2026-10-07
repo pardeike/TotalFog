@@ -619,6 +619,21 @@ A one-pair root-100 wide-view check gains 3.81% TPS but has worse frame-time
 p95, 86.44 versus 77.49 ms. Wide frame pacing remains outstanding; the spot
 check does not close a three-pair performance gate.
 
+The subsequent 7fb181fe candidate fixes map-clock deadlines created by world
+commands or interface callbacks. A native synchronized caravan exits map 0,
+becomes a world pawn and enters map 1, then returns through the same engine
+lifecycle. Each client removes the old source and registers the destination
+source exactly once. Deadline creation now reads the destination map's clock;
+125/143 ordinary destination-map ticks advance the sight/hearing schedules and
+restore the stationary sight range from 6 to 24 on both clients. Complete
+normalized fog state agrees at every paused boundary, and native save P loads
+in fresh host/client processes without duplicate sources or lost per-faction
+discovery. This closes the bounded caravan/world-command lifecycle case.
+It does not establish gravship/map removal, enemy AI/CE Multiplayer combat or
+world-context delayed-letter delivery. The map-clock fix has three focused
+regressions among 318 passing tests. The f3ad33a1 performance results above are
+historical for these changed gameplay bytes; a fresh floor is required.
+
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
 those versions/hashes and desync diagnostics with each result. Single-player

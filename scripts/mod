@@ -253,6 +253,8 @@ try:
                     "Release",
                     "--nologo",
                     "-v:q",
+                    "--logger",
+                    "console;verbosity=normal",
                 ],
                 log,
             )

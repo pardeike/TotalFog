@@ -692,7 +692,7 @@ namespace TotalFog
     {
         public static int BaseViewRange = 60;
         public static float BuildingVisionModifier = 1;
-        private static bool treesBlockSightValue;
+        private static bool treesBlockSightValue = false;
         public static bool TreesBlockSight => treesBlockSightValue;
         public static bool DoAudioCheck = true;
         public static bool MuteHiddenSounds;

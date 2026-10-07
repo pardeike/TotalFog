@@ -133,6 +133,14 @@ hosting. Require the same returned handler ID and preserved existing command IDs
 Its queue action sends a native synchronized command; status is read-only.
 These probe saves require the same opt-in instrumentation to replay their commands.
 The companion and probe are excluded from player ZIPs.
+For the native caravan lifecycle control, register
+`totalfog/multiplayer_caravan` SECOND on both main menus after notifications.
+Require equal appended IDs and unchanged existing IDs. Its transfer action uses
+a synchronized world command and native caravan exit/entry, skipping travel time.
+Compare registrations and sight/hearing/observation deadlines against the
+destination map's clock, then play that map normally. Saves with this probe also
+require its handler when loading/rejoining. Never use a single-client teleport
+as Multiplayer transfer evidence.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and

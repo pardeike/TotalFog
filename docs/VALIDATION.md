@@ -5864,3 +5864,44 @@ Both commands complete successfully and leave the measured candidate deployed.
 No new feedback package or mod release is produced. These results do not
 supersede the outstanding combined CE, Multiplayer transfer or wide-frame
 acceptance checks.
+
+### Multiplayer caravan deadlines and cold rejoin, 2026-10-07
+
+The opt-in companion uses a native synchronized world command with primitive
+IDs, CaravanExitMapUtility and CaravanEnterMapUtility. Native travel time is
+skipped; exit, world-pawn ownership, entry and source cleanup are engine-owned.
+The unchanged old f3ad33a1 gameplay sets arrival deadlines from world tick
+47445 despite destination map tick 41215. After 142 ordinary destination ticks,
+the deadlines remain unchanged and sight stays at movement range 6. Both clients
+agree on that incorrect state. This is a Total Fog bug, not an upstream blocker.
+
+Gameplay 7fb181fed468adc337e1dc1b7387c510d621fe9ce8f6c3a8894af401fbcf2391
+with companion 3298d7da39feabb60fd189819e71140565b0d4ee3bda3833ccd5e2f5ca08d9eb
+uses a once-bound native map-clock delegate for deadline creation. It adds no
+reflection or clock lookup to the ordinary sight tick loop. Observation and
+letter enqueue deadlines use the same helper; letter world-context delivery is
+not separately established by this transfer sample. Three focused source tests
+pass, including two observation cases that first failed. All 318 tests pass.
+
+Both clients start world 47445, map 0 at 36583 and map 1 at 41215. Human390
+exits map 0 into a native caravan with zero registrations, then enters map 1
+with exactly one registration. Movement/next sight ticks are 41215, hearing
+41315, observation 41227. After 125 Normal ticks, map 1 reaches 41340 while
+map 0 stays paused; sight advances to 41366, hearing to 41415 and range to 24.
+Returning through a second native caravan uses map-0 deadlines 36583/36683/
+36595. Another 143 Normal ticks reach map 0 at 36726 with sight/hearing advanced
+and range 24; map 1 stays paused. Complete normalized fog, source order and
+schedules match at every boundary. No new attention/desync occurs.
+
+Native save P is verified at 1,305,616 bytes. Two fresh processes register
+notification handler 761 followed by caravan handler 762, preserving every
+existing command ID. Cold load, hosting and client rejoin reach world 47714,
+maps 36728/41342. Both retain 377/689 sources and matching complete fog plus
+per-faction discovery, with no duplicate Human390 source. The known loading
+InputLegacyModule exception still occurs and prevents clean-log acceptance.
+
+Ignored evidence under artifacts/multiplayer-startup:
+map-clock-tests-red.log, native-caravan-clock-red.json,
+native-caravan-clock-green.json, native-caravan-clock-cold-rejoin.json and
+map-clock-fixed-build-pair.json. These exact gameplay bytes require a fresh
+performance-floor check; the preceding f3ad33a1 result is historical.

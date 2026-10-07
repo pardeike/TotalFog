@@ -12,6 +12,113 @@ namespace TotalFog.Tests;
 
 public class MultiplayerIntegrationTests
 {
+    [Theory]
+    [InlineData(100)]
+    [InlineData(41215)]
+    public void Observation_deadline_uses_its_map_clock_from_world_or_interface_context(
+        int mapTicks
+    )
+    {
+        var previousTicks = Find.TickManager.TicksGame;
+        var map = new Map();
+        AccessTools.Types.Add("Multiplayer.API.MP", typeof(FakeApi));
+        AccessTools.Types.Add(
+            "Multiplayer.Client.Factions.FactionExtensions",
+            typeof(FakeFactionContext)
+        );
+        AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
+        FakeApi.Fields.Clear();
+        FakeApi.Begins = FakeApi.Ends = 0;
+        try
+        {
+            FakeClockExtensions.Clocks.Add(map, new FakeMapClock { mapTicks = mapTicks });
+            MultiplayerIntegration.Install();
+            FakeApi.IsInMultiplayer = true;
+            Find.TickManager.TicksGame = 47445;
+            var parent = new ThingWithComps { Map = map };
+            var visibility = new CompVisibility { parent = parent, mainComponent = new CompFog() };
+            visibility.PostSpawnSetup(false);
+            Assert.Equal(
+                mapTicks + 12,
+                typeof(CompVisibility)
+                    .GetField("nextCheck", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(visibility)
+            );
+        }
+        finally
+        {
+            Find.TickManager.TicksGame = previousTicks;
+            FakeApi.IsInMultiplayer = false;
+            FakeApi.Fields.Clear();
+            FakeClockExtensions.Clocks.Clear();
+            AccessTools.Types.Remove("Multiplayer.API.MP");
+            AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+        }
+    }
+
+    public sealed class FakeMapClock
+    {
+        public int mapTicks;
+    }
+
+    [Fact]
+    public void Map_clock_binding_uses_each_map_and_skips_lookup_outside_multiplayer()
+    {
+        var previousTicks = Find.TickManager.TicksGame;
+        var first = new Map();
+        var second = new Map();
+        AccessTools.Types.Add("Multiplayer.API.MP", typeof(FakeApi));
+        AccessTools.Types.Add(
+            "Multiplayer.Client.Factions.FactionExtensions",
+            typeof(FakeFactionContext)
+        );
+        AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
+        FakeApi.Fields.Clear();
+        FakeApi.Begins = FakeApi.Ends = 0;
+        try
+        {
+            FakeClockExtensions.Clocks.Add(first, new FakeMapClock { mapTicks = 36583 });
+            FakeClockExtensions.Clocks.Add(second, new FakeMapClock { mapTicks = 41215 });
+            FakeClockExtensions.Reads = 0;
+            Find.TickManager.TicksGame = 47445;
+            MultiplayerIntegration.Install();
+            Assert.Equal(47445, MultiplayerIntegration.TicksFor(first));
+            Assert.Equal(0, FakeClockExtensions.Reads);
+            FakeApi.IsInMultiplayer = true;
+            Assert.Equal(36583, MultiplayerIntegration.TicksFor(first));
+            Assert.Equal(41215, MultiplayerIntegration.TicksFor(second));
+            Assert.Equal(47445, MultiplayerIntegration.TicksFor(null));
+            Assert.Equal(47445, MultiplayerIntegration.TicksFor(new Map()));
+            FakeApi.IsInMultiplayer = false;
+            int reads = FakeClockExtensions.Reads;
+            Assert.Equal(47445, MultiplayerIntegration.TicksFor(first));
+            Assert.Equal(reads, FakeClockExtensions.Reads);
+        }
+        finally
+        {
+            Find.TickManager.TicksGame = previousTicks;
+            FakeApi.IsInMultiplayer = false;
+            FakeApi.Fields.Clear();
+            FakeClockExtensions.Clocks.Clear();
+            AccessTools.Types.Remove("Multiplayer.API.MP");
+            AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+        }
+    }
+
+    public static class FakeClockExtensions
+    {
+        public static readonly Dictionary<Map, FakeMapClock> Clocks = new();
+        public static int Reads;
+
+        public static FakeMapClock AsyncTime(Map map)
+        {
+            Reads++;
+            return Clocks.TryGetValue(map, out var clock) ? clock : null;
+        }
+    }
+
     [Fact]
     public void Session_settings_round_trip_exact_float_values_and_startup_tree_policy()
     {
@@ -59,6 +166,7 @@ public class MultiplayerIntegrationTests
             "Multiplayer.Client.Factions.FactionExtensions",
             typeof(FakeFactionContext)
         );
+        AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
         try
         {
             MultiplayerIntegration.Install();
@@ -90,7 +198,7 @@ public class MultiplayerIntegrationTests
                 MultiplayerIntegration.EndFactionContext(map, pushed);
             }
             Assert.Same(originalFaction, Faction.OfPlayer);
-            Assert.Equal(0, FakeFactionContext.Stack.Count);
+            Assert.Empty(FakeFactionContext.Stack);
             Assert.True(MultiplayerIntegration.BeginSettingsWatch());
             MultiplayerIntegration.EndSettingsWatch(true);
             Assert.Equal(1, FakeApi.Begins);
@@ -108,6 +216,7 @@ public class MultiplayerIntegrationTests
             FakeApi.IsInMultiplayer = false;
             AccessTools.Types.Remove("Multiplayer.API.MP");
             AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Extensions");
         }
     }
 

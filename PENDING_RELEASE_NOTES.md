@@ -32,6 +32,7 @@
 - Skip enemy sight calculations while enemy fog targeting is disabled, preserving the game's enemy targeting and other AI mods.
 - Apply vision and enemy-targeting setting changes within the normal sight-refresh interval.
 - Synchronize shared fog settings in Multiplayer and preserve them in saved sessions.
+- Keep sight and hearing updates responsive when caravans enter maps running on different Multiplayer clocks.
 - Keep sight, explored cells, observed objects, hearing cues and deferred notifications separate between player factions.
 - Keep gravship landing previews from permanently revealing objects, hidden notifications or sound sources.
 - Keep hidden pawns and objects out of right-click action and attack menus.
