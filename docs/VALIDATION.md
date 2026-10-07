@@ -5680,3 +5680,48 @@ RimBridgeServer's optional Multiplayer companion now exposes the native faction
 setup wizard and join-faction packet, plus faction/time-mode status. These are
 test controls outside player mod packages. An immediate status read while the
 native replay loads also exercises the new world-null guard successfully.
+
+### Separate-colony playback, independent clocks and rejoin, 2026-10-07
+
+The 30362595 gameplay / 43426096 companion pair cold-loads the healthy two-colony
+save H. Host faction 16 and client faction 18 retain matching per-faction fog
+state and all source schedules after 12,312 shared synchronous ticks, ending at
+30340. No additional runtime attention appears; the pre-existing loading
+exception remains. Evidence: `native-multifaction-healthy-cold-join.json` and
+`native-multifaction-healthy-running.json` under artifacts/multiplayer-startup.
+
+RimBridgeServer companion 2ce67fd7 exposes native per-map time controls and
+clock receipts. After cold loading save I, running only map 0 advances its clock
+from 30342 to 31866 while map 1 stays at 30342. Then running only map 1 advances
+it by 9,378 ticks to 39720 while map 0 stays at 31866. Both clients agree on all
+normalized fog state and schedules; the paused map's complete state remains
+unchanged during the second phase. World time ends at 41244. Native save J and
+cold rejoin reconstruct matching state at world 41246, map 0 31868 and map 1
+39722. Evidence: `native-async-host-map-only.json`,
+`native-async-client-map-only.json`, `native-async-save-cold-join.json` and
+`async-installed-pair.json`. Empty local presentation coverage allocations and
+the intentionally observer-specific presentation hash are excluded; full source
+lists and per-faction hashes are compared.
+
+### Explicit observer colony exemption, 2026-10-07
+
+A source-linked regression fails when an explicit faction query uses the local
+viewer's home-map exemption (`colony-observer-regression-red.log`). The shared
+home-map helper now evaluates the explicit player owner while preserving native
+home-map eligibility, gravship landing and grav-engine rules. The current local
+viewer and non-player contexts retain the native property. Option-off queries
+short-circuit before this check. All 315 tests and formatting pass.
+
+Gameplay f3ad33a1 cold-loads/rehosts J with matching native map clocks and complete
+normalized fog state. The client changes OnlyOutsideColony through the native
+MPAPI watcher while paused; both clients apply it. At an undiscovered corner on
+each map, both clients report visible only for that map's owner (16 on map 0,
+18 on map 1), independent of their local viewing faction. The host then submits
+the option-off change through the same watcher. Evidence:
+`native-colony-observer-option.json` and `colony-observer-build-pair.json`.
+
+These checks do not accept deferred queue persistence/replay, all combat and
+transfer cases, cross-platform determinism, long-session stability or the latest
+gameplay bytes' performance floor. The known MP/Prepatcher InputLegacyModule
+loading error still prevents clean-log acceptance; the earlier generated-pawn
+needs error is not attributed to Total Fog without an isolation control.

@@ -6,6 +6,73 @@ namespace TotalFog.Tests;
 
 public sealed class FactionVisibilityTests
 {
+    [Theory]
+    [InlineData(true, false, true)]
+    [InlineData(false, true, true)]
+    [InlineData(false, false, false)]
+    public void ExplicitColonyExemptionRetainsNativeGravshipRules(
+        bool landed,
+        bool engine,
+        bool expected
+    )
+    {
+        var observer = new Faction { loadID = 2, IsPlayer = true };
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        item.Map.Fog.FactionSight[observer] = new bool[4];
+        item.Map.wasSpawnedViaGravShipLanding = landed;
+        item.Map.HasGravEngine = engine;
+        var before = FogSettings.OnlyOutsideColony;
+        try
+        {
+            FogSettings.OnlyOutsideColony = true;
+            Assert.Equal(
+                expected,
+                ThingVisibility.IsVisible(item, allowMemory: false, observerFaction: observer)
+            );
+            Assert.Equal(
+                expected,
+                CellVisibility.IsCurrent(item.Map, item.Position, observerFaction: observer)
+            );
+        }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = before;
+        }
+    }
+
+    [Fact]
+    public void ColonyExemptionUsesTheExplicitObserverInsteadOfTheLocalViewer()
+    {
+        var first = Faction.OfPlayer;
+        var owner = new Faction { loadID = 2, IsPlayer = true };
+        var item = new ThingWithComps();
+        item.Map.Fog.Initialized = true;
+        item.Map.Fog.FactionSight[owner] = new bool[4];
+        item.Map.Parent = new MapParent { Faction = owner };
+        var before = FogSettings.OnlyOutsideColony;
+        try
+        {
+            FogSettings.OnlyOutsideColony = true;
+            Assert.True(
+                ThingVisibility.IsVisible(item, allowMemory: false, observerFaction: owner)
+            );
+            Assert.True(CellVisibility.IsCurrent(item.Map, item.Position, observerFaction: owner));
+            Assert.False(ThingVisibility.IsVisible(item, allowMemory: false));
+            Faction.OfPlayer = owner;
+            item.Map.IsPlayerHome = true;
+            Assert.False(
+                ThingVisibility.IsVisible(item, allowMemory: false, observerFaction: first)
+            );
+            Assert.False(CellVisibility.IsCurrent(item.Map, item.Position, observerFaction: first));
+        }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = before;
+            Faction.OfPlayer = first;
+        }
+    }
+
     [Fact]
     public void ALocalViewerCannotSuppressAnotherFactionsObservationBeforeItsOwnGridExists()
     {

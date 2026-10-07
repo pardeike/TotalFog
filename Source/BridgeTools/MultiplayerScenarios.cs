@@ -17,12 +17,31 @@ public sealed class MultiplayerScenarios
 {
     [Tool(
         "totalfog/multiplayer_cell",
-        Description = "Read one current-map cell's native building/door state and fog blockers, discovery and sight without changing simulation. Compare only at matching paused native ticks."
+        Description = "Read one cell's native building/door state, fog blockers and observer-specific discovery/sight without changing simulation. Negative mapId/factionId use the current map/viewer. Compare at matching paused native map clocks."
     )]
-    public static Task<object> Cell(IRimBridgeContext context, int x, int z) =>
+    public static Task<object> Cell(
+        IRimBridgeContext context,
+        int x,
+        int z,
+        int mapId = -1,
+        int factionId = -1
+    ) =>
         context.MainThread.InvokeAsync<object>(() =>
         {
-            var map = Find.CurrentMap;
+            var map =
+                mapId < 0 ? Find.CurrentMap : Find.Maps.FirstOrDefault(m => m.uniqueID == mapId);
+            var observer =
+                factionId < 0
+                    ? Faction.OfPlayer
+                    : Find.FactionManager.AllFactionsListForReading.FirstOrDefault(f =>
+                        f.IsPlayer && f.loadID == factionId
+                    );
+            if (observer == null)
+                return new
+                {
+                    success = false,
+                    message = "Use an existing player observer faction.",
+                };
             var cell = new IntVec3(x, 0, z);
             var fog = map?.GetComponent<MapVisibility>();
             if (fog == null || !cell.InBounds(map))
@@ -34,13 +53,14 @@ public sealed class MultiplayerScenarios
                 success = true,
                 ticks = Find.TickManager.TicksGame,
                 map = map.uniqueID,
+                faction = observer.loadID,
                 x,
                 z,
                 initialized = fog.Initialized,
                 blocked = fog.viewBlockerCells[index],
                 treeBlocked = fog.treeBlockerCells[index],
-                known = StoredKnown(fog, Faction.OfPlayer)?[index] == true,
-                visible = fog.Initialized && fog.IsShown(Faction.OfPlayer, cell),
+                known = StoredKnown(fog, observer)?[index] == true,
+                visible = fog.Initialized && fog.IsShown(observer, cell),
                 vanillaFog = map.fogGrid.IsFogged(cell),
                 building = building == null
                     ? null
@@ -133,7 +153,7 @@ public sealed class MultiplayerScenarios
 
     [Tool(
         "totalfog/multiplayer_settings",
-        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100) or SilentRaids (true/false), or save local settings without changing sight. Returns command submission, not proof that the other client applied it."
+        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100) or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
     )]
     public static Task<object> Settings(
         IRimBridgeContext context,
@@ -163,11 +183,23 @@ public sealed class MultiplayerScenarios
                     success = false,
                     message = "Use status/save-local, or set in a joined Multiplayer game.",
                 };
-            if (name != "BaseViewRange" && name != "SilentRaids")
+            var field = typeof(FogSettings).GetField(
+                name,
+                BindingFlags.Public | BindingFlags.Static
+            );
+            if (
+                name != "BaseViewRange"
+                && (
+                    field == null
+                    || field.FieldType != typeof(bool)
+                    || field.IsLiteral
+                    || field.IsInitOnly
+                )
+            )
                 return new
                 {
                     success = false,
-                    message = "Supported setting names: BaseViewRange, SilentRaids.",
+                    message = "Use BaseViewRange or a public boolean FogSettings field from multiplayer_snapshot.",
                 };
             object parsed;
             if (name == "BaseViewRange")
@@ -178,11 +210,14 @@ public sealed class MultiplayerScenarios
             }
             else
             {
-                if (!bool.TryParse(value, out var silent))
-                    return new { success = false, message = "SilentRaids must be true/false." };
-                parsed = silent;
+                if (!bool.TryParse(value, out var boolean))
+                    return new
+                    {
+                        success = false,
+                        message = "Boolean settings must be true/false.",
+                    };
+                parsed = boolean;
             }
-            var field = typeof(FogSettings).GetField(name);
             var before = field.GetValue(null);
             var watching = (bool)
                 integration

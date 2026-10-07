@@ -15,7 +15,7 @@ internal static class CellVisibility
     {
         if (map == null || !cell.InBounds(map) || map.fogGrid.IsFogged(cell))
             return false;
-        if (ThingVisibility.Unrestricted(map))
+        if (ThingVisibility.Unrestricted(map, observerFaction))
             return true;
         fog ??= map.GetVisibility();
         return !fog.Initialized || fog.IsShown(observerFaction ?? Faction.OfPlayer, cell);

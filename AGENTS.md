@@ -125,8 +125,10 @@ uses the same native MPAPI watcher as the UI; verify the applied value on both
 clients. Never run single-player mutation fixtures on only one connected client.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
-The current acceptance loadout uses shared-colony synchronous time. Separate
-factions and independent map clocks remain explicit outstanding targets.
+Native coverage now includes shared-colony time, separate colony factions and
+independent map clocks. These bounded results do not complete Multiplayer
+acceptance; retain the remaining queue, combat, transfer and performance checks
+in docs/COVERAGE.md and match each result to its recorded gameplay bytes.
 Native MP save loading enters replay mode. The companion's host_local can resume
 hosting that loaded replay; it rejects an existing live session. Inspect status
 for completed hosting/join and compare fog only at matching paused ticks.

@@ -171,6 +171,10 @@ namespace Verse
         public IntVec3 Size = new(2, 2);
         public bool Bypass;
         public bool IsPlayerHome;
+        public bool wasSpawnedViaGravShipLanding;
+        public bool HasGravEngine;
+        public MapParent Parent;
+        public Faction ParentFaction => Parent?.Faction;
         public TotalFog.MapVisibility Fog;
         public List<MapComponent> components = new();
         public int ComponentLookups;
@@ -197,6 +201,17 @@ namespace Verse
         public Tooltips tooltipGiverList = new();
         public MapDrawer mapDrawer = new();
         public List<Thing> Things = new();
+    }
+
+    public class MapParent
+    {
+        public Faction Faction;
+        public MapParentDef def = new();
+    }
+
+    public class MapParentDef
+    {
+        public bool canBePlayerHome = true;
     }
 
     public class FogGrid
@@ -484,6 +499,11 @@ namespace Unity.Collections
 
 namespace RimWorld
 {
+    public static class GravshipUtility
+    {
+        public static bool PlayerHasGravEngine(Verse.Map map) => map.HasGravEngine;
+    }
+
     public class Building_Turret : Verse.Building { }
 
     public class IncidentDef { }

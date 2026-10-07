@@ -6,7 +6,20 @@ namespace TotalFog.Presentation;
 /// <summary>The common information boundary for game and modded things, including held pawns.</summary>
 internal static class ThingVisibility
 {
-    internal static bool Unrestricted(Map map) => FogSettings.OnlyOutsideColony && map.IsPlayerHome;
+    internal static bool Unrestricted(Map map, Faction observerFaction = null) =>
+        FogSettings.OnlyOutsideColony && IsHomeFor(map, observerFaction);
+
+    internal static bool IsHomeFor(Map map, Faction observerFaction = null)
+    {
+        observerFaction ??= Faction.OfPlayer;
+        if (observerFaction == Faction.OfPlayer || observerFaction?.IsPlayer != true)
+            return map.IsPlayerHome;
+        // Match native home-map rules for an explicit player observer without
+        // pushing shared faction/map data for each visibility query.
+        return map.wasSpawnedViaGravShipLanding
+            || map.ParentFaction == observerFaction && map.Parent?.def.canBePlayerHome == true
+            || GravshipUtility.PlayerHasGravEngine(map);
+    }
 
     internal static bool Bypass(Map map) =>
         Unrestricted(map) || Compatibility.GravshipVisibility.Revealed;
@@ -67,7 +80,7 @@ internal static class ThingVisibility
         // sight to effects, target information or saved notification state.
         if (
             !fog.Initialized
-            || Unrestricted(map)
+            || Unrestricted(map, observerFaction)
             || allowMemory && Compatibility.GravshipVisibility.Revealed
         )
             return true;

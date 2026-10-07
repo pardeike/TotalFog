@@ -142,7 +142,7 @@ public class MapVisibility : MapComponent
         coverage.InBounds(x, z)
         && faction != null
         && (
-            map.IsPlayerHome && FogSettings.OnlyOutsideColony
+            FogSettings.OnlyOutsideColony && Presentation.ThingVisibility.IsHomeFor(map, faction)
             || map.Biome.defName == OuterSpaceBiome
             || coverage.IsVisible(Key(faction), x, z)
         );
@@ -372,7 +372,8 @@ public class MapVisibility : MapComponent
         // IsPlayerHome and ColonistsSpawnedCount use the local player faction.
         // Both clients must seed a newly generated colony's discovery for its owner.
         if (
-            map.ParentFaction?.IsPlayer == true
+            PrimaryPlayerFaction?.IsPlayer == true
+            && Presentation.ThingVisibility.IsHomeFor(map, PrimaryPlayerFaction)
             && !map.mapPawns.AllPawnsSpawned.Any(pawn =>
                 pawn.Faction == PrimaryPlayerFaction && pawn.RaceProps.Humanlike && !pawn.IsPrisoner
             )

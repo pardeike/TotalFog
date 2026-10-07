@@ -1194,7 +1194,11 @@ try:
             )
     print("ok")
 except Exception as exc:
-    diagnostic = str(exc)
+    diagnostic = (
+        f"command exited with status {exc.returncode}"
+        if isinstance(exc, subprocess.CalledProcessError)
+        else str(exc)
+    )
     if step in {
         "rendered evidence",
         "runtime benchmark",

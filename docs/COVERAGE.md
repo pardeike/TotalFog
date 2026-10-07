@@ -584,10 +584,16 @@ bind Multiplayer's native push/pop context once to check and replay that recipie
 Hidden non-historical command feedback is discarded in Multiplayer rather than
 entering a shared saved queue from only the issuing client. Tooltip registration
 stays engine-owned; the existing current-sight tooltip gate owns disclosure.
-Source-linked regression checks and compilation cover this checkpoint, but it
-has not yet passed a two-faction native game, save/rejoin or performance comparison.
-Separate-faction compatibility remains unverified. Earlier native results above
-belong to their recorded older gameplay bytes.
+Native checks now cover two colony factions on two maps, faction switching,
+12,312 shared synchronous ticks, independent map clocks and native save/cold
+rejoin. The 30362595 candidate agrees on per-faction discovery, observations,
+coverage, blockers and source schedules. When one colony advances 9,378 ticks,
+the paused colony's fog state remains unchanged. The f3ad33a1 candidate also
+passes cold rejoin and observer-specific colony exemption with synchronized
+settings while paused. See docs/VALIDATION.md for the exact evidence and loading
+errors. Deferred queue persistence/replay, remaining combat/transfers and the
+latest-byte performance floor are still outstanding. Multiplayer compatibility
+remains unverified overall; these bounded checks do not close the full target.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record
