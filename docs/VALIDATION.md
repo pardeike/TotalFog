@@ -6050,3 +6050,26 @@ workaround is justified by this evidence yet. See
 `prepatcher-without-mp-control.json`, `prepatcher-without-mp-Player.log` and the
 preserved source/binary-inspection records under artifacts. The speed/load checks
 retain this known exception and therefore are not clean-log acceptance.
+
+The next opt-in diagnostic registers a bounded ReflectionOnlyAssemblyResolve
+observer, returning null to retain native resolution. One fresh native save-U
+load records a single InputLegacyModule request from
+`Assembly-CSharp, Version=1.6.9676.17924`, with ReflectionOnly true. The only
+managed caller is System.AppDomain.DoAssemblyResolve. Capture is stopped,
+overflow is zero and the game is stopped; the same native error is preserved.
+This identifies the old game assembly as the requester, not a Total Fog,
+Multiplayer or bridge managed function. Native caller ownership remains unknown.
+See `artifacts/multiplayer-startup/loader-requester.json` and its Player.log.
+
+The player-only follow-up reaches the Steam 1.6.4871 main menu with Prepatcher,
+Harmony, Core and all DLCs, excluding both Total Fog and Multiplayer and also
+RimBridgeServer. The expected absent-bridge startup receipt is not a failed
+game load. Native mouse controls are unreliable while keyboard page advancement
+works; the control stops in fresh-colony setup without loading a map. It supplies
+no player-only loading acceptance or failure. The historical base save is
+rejected as a control because it contains the upstream fog component. Native
+termination is verified and the original profile mod list restored byte-for-byte;
+DevMode and gameplay settings are not changed. See the player-only-menu log and
+preserved mod configuration. No upstream issue is filed from incomplete caller
+and player-only evidence. The optional bridge diagnostic is excluded from player
+ZIPs and does not install a resolver workaround.

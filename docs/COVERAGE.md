@@ -667,6 +667,12 @@ Harmony, RimBridgeServer and all DLCs remain. Multiplayer is therefore not
 required for this reproduction. The exact responsible caller and whether a
 player-only loadout is affected remain unverified; do not add a loader workaround
 to Total Fog or describe this as a demonstrated Multiplayer defect.
+An opt-in resolver diagnostic now identifies the dependency requester as the
+old reflection-only Assembly-CSharp. Its managed stack contains only the
+runtime assembly resolver, with no Total Fog, Multiplayer or bridge frame.
+This narrows the mechanism but does not identify the native caller. The
+player-only main-menu control has not reached a colony; unreliable bridge-free
+mouse input prevents accepting it as a loading reproduction.
 
 A short native fourth-speed run activates both asynchronous maps in two Steam
 processes on the same Mac. All sampled client/map speed multipliers are 15;
