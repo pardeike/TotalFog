@@ -14,10 +14,12 @@ resources, intercept material writes, or save drawing archives. Native drawing
 continues for observed static objects. Their appearance can change while unseen;
 exact last-observed pictures are intentionally outside this mod's requirements.
 
-Exploration is a saved boolean grid. Current sight is a reference-counted grid
-rebuilt from observers. Each static object's existing `seenByPlayer` value records
-whether it has been observed, rather than storing an appearance. A new object in
-an explored cell stays hidden until observed. Pawns, flyers, projectiles and
+Exploration is a saved boolean grid for each player faction. Current sight is a
+reference-counted grid rebuilt from faction observers. Object observation records
+which player factions have seen it, rather than storing an appearance. The
+primary faction retains the original `seenByPlayer` save value; extra factions
+have separate observation identities. A new object in an explored cell stays
+hidden until observed. Pawns, flyers, projectiles and
 ordinary motes require current sight. Player pawn observers retain their existing
 presentation exception.
 
@@ -37,12 +39,43 @@ presentation exception.
 
 ## Update and save rules
 
+### Multiplayer context
+
+Multiplayer is optional. Its API is bound once, with retained delegates and no
+hard assembly dependency. Shared primitive settings are registered in stable
+ordinal name order, watched through MPAPI around UI changes, and persisted in
+Multiplayer sessions before map initialization. Ordinary single-player saves do
+not acquire a second settings store. Appearance changes do not recalculate sight;
+vision settings take effect within the existing source-refresh interval.
+
+Simulation uses the observer's faction, independently of the client's current
+viewer. Primary-faction discovery uses direct arrays; extra player grids and
+object-observation lists are allocated only when needed. Legacy global knowledge
+belongs to the saved primary owner, rather than whichever client first draws it.
+Hearing cues retain their recipient faction. Deferred notifications save their
+recipient and temporarily use Multiplayer's native faction context when checked
+or replayed. Hidden non-historical local command feedback is not added to a shared
+saved queue.
+
+Tick callbacks already carry the native map context. Deadlines created by world
+commands or UI callbacks explicitly read the owning map's asynchronous clock,
+so sight, hearing, observation and delayed letters cannot inherit another map's
+or the world's time. This binding adds no clock lookup to ordinary sight loops.
+Temporary gravship previews change drawing only, not discovery, observations,
+notification eligibility or audio sight.
+
+Two-client evidence and remaining acceptance are in
+[COVERAGE.md](COVERAGE.md#zetriths-multiplayer-unverified). The optional bridge
+commands are diagnostics, not dependencies of the player mod.
+
+### Other mods
+
 Other mods can bind `TotalFog.Visibility.IsVisible(Verse.Thing)` once as a
 `Func<Thing, bool>` without a build dependency. It applies the existing current
 sight policy, including held-map lookup, vanilla fog and configured bypasses.
 Remembered static appearance and player ownership do not grant visibility for
-live effects. Null/mapless things and hearing indicators keep the existing
-unrestricted presentation policy. Call on the game thread; the query does not
+live effects. Null/mapless things keep the existing unrestricted presentation
+policy; hearing indicators follow their recipient faction. Call on the game thread; the query does not
 advance simulation, refresh sight, change registration or create effect state.
 
 Zombieland uses this optional query for the target of a visible healer's

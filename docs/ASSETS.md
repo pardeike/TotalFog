@@ -3,6 +3,16 @@
 Original Real Fog of War gameplay textures and assets retain their upstream
 Apache 2.0 attribution in NOTICE.md. The portable texture folder is loaded for
 the current supported game version as well as the historical versions.
+The active build loads ordinary PNGs from `LegacyAssets/Textures/`. It has no
+custom AssetBundle or shader. The removed upstream bundle contained only
+Texture2D assets duplicated by those PNG paths.
+
+The public `upstream-baseline` tag preserves the original payload for comparison.
+Baseline staging restores its AssetBundle and original `LoadFolders.xml`; normal
+staging removes any stale `Assets/` folder. Historical version payloads remain
+frozen. Upstream scratch projects, failure experiments, duplicate translation
+templates/ZIP and superseded branding binaries were removed from `Originals/`
+on 7 October; they remain recoverable in Git history, with attribution retained.
 
 ## Active branding
 
@@ -19,11 +29,11 @@ The manifest records the supplied preview's actual height. The shared validator'
 640 by 358 recommendation remains a documented warning for this user-supplied
 image; it does not require altering the provided artwork.
 
-## Retained generated artwork
+## Historical branding prompts
 
 The previous branding images were generated with OpenAI image generation on
-2026-10-04. Their originals remain in `Originals/Artwork/` and their prompts are
-retained below. They are no longer the active About images.
+2026-10-04. Their exact prompts remain below, and the superseded images remain
+recoverable in Git history. Neither is part of the current payload.
 
 ### Previous preview
 

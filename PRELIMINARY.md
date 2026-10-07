@@ -4,6 +4,12 @@ Private work-in-progress build, version 0.1.0, 6 October 2026, for RimWorld 1.6.
 The overhaul is ongoing. Windows confirmation, broader mod compatibility and
 long-session performance testing remain open. This is not a finished release.
 
+This guide describes the separately delivered **6 October Zombieland test pair**,
+not every later source commit. Its test counts and measurements belong to that
+pair. For current development status, see [README](https://github.com/pardeike/TotalFog#readme) and
+[coverage](https://github.com/pardeike/TotalFog/blob/main/docs/COVERAGE.md). A source update is not a new feedback ZIP.
+Feedback and support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
+
 ## Installation
 
 Discord delivery uses `TotalFog-preliminary.zip` and

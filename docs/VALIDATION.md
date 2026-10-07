@@ -1,5 +1,13 @@
 # Local validation
 
+This is the retained evidence ledger. Read dated checkpoints with their exact
+gameplay hashes, loadouts and stated limits: older test counts, “current” builds
+and outstanding lists refer to their checkpoint, not today. Rejected candidates
+remain recorded. For the current acceptance summary and remaining work, use
+[COVERAGE.md](COVERAGE.md#current-status-7-october-2026); for implementation rules,
+use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
+snapshot from later source commits.
+
 ## Symbiant cell clipping, 2026-10-05
 
 The production integration fixes both mature-body defects retained below. The
@@ -6073,3 +6081,33 @@ DevMode and gameplay settings are not changed. See the player-only-menu log and
 preserved mod configuration. No upstream issue is filed from incomplete caller
 and player-only evidence. The optional bridge diagnostic is excluded from player
 ZIPs and does not install a resolver workaround.
+
+
+## Documentation and inherited payload cleanup, 2026-10-07
+
+The documentation review checks all twelve active Markdown/changelog owners,
+local links/anchors, metadata and workflow descriptions. The README's three C#
+examples and the architecture example compile at C# 7.3/net472 against the pinned
+RimWorld/Harmony references. The Brrainz invite matches the user-owned Discord
+starter template. Compatibility summaries now distinguish current development,
+the delivered 6 October pair and dated evidence; Multiplayer remains unverified.
+
+The obsolete Originals scratch/branding copies and inherited Texture2D bundle
+are removed from the active checkout. All 47 bundle texture paths have portable
+PNG counterparts, and active building texture references resolve. A temporary
+baseline stage restores all 17 original bundle/load-folder/definition/patch files
+byte-for-byte from upstream-baseline. Reusing that stage for Total Fog removes
+the stale bundle/updater and restores the active load configuration and DLL.
+Licensing, contributor attribution, active branding hashes, required PNGs and
+frozen historical version payloads remain intact. Original files remain in Git
+history, and the public baseline owns the original source/comparison payload.
+
+The canonical formatting/build/test/package workflow passes 318 tests. The
+player ZIP contains neither Originals nor the inherited bundle, and its gameplay
+DLL is byte-identical to the previously native-tested 7fb181fe candidate. These
+are source/example and packaging checks, not a new native visual or Windows
+acceptance run. Removing the redundant bundle changes asset loading, so the next
+native candidate check should include visible camera/watchtower textures. No
+live game deployment, new feedback delivery or player release follows from this
+cleanup. Local review details are in artifacts/documentation-review.json and
+artifacts/logs/documentation-review.log; package output is in artifacts/logs/package.log.

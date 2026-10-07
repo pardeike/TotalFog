@@ -13,7 +13,6 @@ LOGS = ROOT / "artifacts/logs"
 PAYLOAD = [
     "About",
     "1.6",
-    "Assets",
     "LegacyAssets",
     "Languages",
     "LoadFolders.xml",
@@ -92,6 +91,10 @@ def stage(destination, baseline=False):
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
             shutil.copy2(src, dst)
+    # Portable PNGs supply the active textures. Only the original comparison
+    # loads the upstream bundle, restored from its immutable snapshot below.
+    if (destination / "Assets").exists():
+        shutil.rmtree(destination / "Assets")
     assemblies = destination / "1.6/Assemblies"
     # Remove the inherited updater metadata from previously staged installs.
     (destination / "About/ModSync.xml").unlink(missing_ok=True)
@@ -113,9 +116,11 @@ def stage(destination, baseline=False):
                 )
             if not retained.exists():
                 retained.write_bytes(original)
-        folders = ["1.6/Defs", "1.6/Patches"]
+        folders = ["1.6/Defs", "1.6/Patches", "Assets"]
         names = subprocess.check_output(
-            ["git", "ls-tree", "-r", "--name-only", revision, *folders], cwd=ROOT, text=True
+            ["git", "ls-tree", "-r", "--name-only", revision, *folders, "LoadFolders.xml"],
+            cwd=ROOT,
+            text=True,
         ).splitlines()
         if not names:
             raise RuntimeError("Original baseline definitions are missing")

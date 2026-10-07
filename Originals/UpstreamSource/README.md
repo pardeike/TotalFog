@@ -1,1 +1,0 @@
-﻿RimWorld Mod: Real Fog of War and Field of View

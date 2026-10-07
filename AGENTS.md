@@ -1,7 +1,9 @@
 # Total Fog
 
 Read ../steam-mods/AGENTS.md and its development/testing guidance.
-Preserve inherited attribution, license, historical version folders, and assets.
+Preserve inherited attribution, license, frozen historical version folders and
+the active portable textures. The public upstream-baseline tag owns the original
+source/payload; do not keep redundant upstream scratch files in the active tree.
 Build with the .NET 10.0.301 SDK pinned in global.json. The quiet workflow uses
 the existing SDK install under ~/Library/Application Support/dotnet when present,
 including for nested companion builds. Gameplay and companion DLLs still target
@@ -10,7 +12,7 @@ Use the canonical quiet command `./scripts/mod build|deploy|package|setup|baseli
 The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.
 `./scripts/mod format-check` checks without changing files. Frozen historical
-payloads and Originals/ are excluded. Do not add an auto-modifying commit hook.
+payloads are excluded. Do not add an auto-modifying commit hook.
 Use `./scripts/mod source-publish` to push committed source to
 https://github.com/pardeike/TotalFog. It verifies the public repository and
 remote commit without building, tagging, releasing or updating Steam.
@@ -160,9 +162,12 @@ target-acquisition coverage, not autonomous raid-job coverage.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and
-independent map clocks. These bounded results do not complete Multiplayer
-acceptance; retain the remaining queue, combat, transfer and performance checks
-in docs/COVERAGE.md and match each result to its recorded gameplay bytes.
+independent map clocks, recipient-private queues, cold rejoin, native caravan
+transfers, player/enemy rifles, target acquisition and a short fourth-speed run.
+These bounded results do not complete Multiplayer acceptance; use the current
+remaining-checks table in docs/COVERAGE.md and match each result to its recorded
+gameplay bytes. Do not reopen passed slices merely because an older checkpoint
+listed them as outstanding.
 Native MP save loading enters replay mode. The companion's host_local can resume
 hosting that loaded replay; it rejects an existing live session. Inspect status
 for completed hosting/join and compare fog only at matching paused ticks.
@@ -210,8 +215,11 @@ Do not publish or send a build unless requested. Keep local engine references,
 diagnostic media, and generated reports in ignored artifacts.
 
 The active projects are in Source/TotalFog, Core, Tests, and BridgeTools;
-Source/TotalFog.slnx opens all four. Upstream scratch files are preserved in
-Originals/UpstreamSource. The tests source-link visibility/lifecycle code with a small engine boundary;
+Source/TotalFog.slnx opens all four. Upstream source and comparison assets are
+preserved in the public upstream-baseline tag. The active payload uses portable
+LegacyAssets/Textures PNGs, with no inherited AssetBundle. Baseline staging restores
+the original bundle and LoadFolders.xml from that tag. The tests source-link
+visibility/lifecycle code with a small engine boundary;
 live BridgeTools scenarios prove actual registration and render behavior.
 Use TotalFog namespaces and independently named runtime types. Preserve frozen historical payloads.
 Legacy save import belongs only in Compatibility/LegacySaveTypes.cs; never add old namespace aliases.

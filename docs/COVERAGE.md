@@ -1,21 +1,48 @@
 # Visibility coverage
 
-This inventory separates implemented contracts, observed gameplay, and cases
+This inventory separates implemented contracts, observed gameplay and cases
 that still need acceptance. Loading all DLCs does not prove every DLC scenario.
+Detailed dated results, including rejected candidates, belong to
+[VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
+and a result applies only to its recorded gameplay bytes and loadout.
+
+## Current status: 7 October 2026
+
+The latest native-tested gameplay DLL is
+`7fb181fed468adc337e1dc1b7387c510d621fe9ce8f6c3a8894af401fbcf2391`.
+The latest build passes 318 independent tests. This is development evidence;
+tracked DLLs and the delivered 6 October test ZIPs are different snapshots.
+No public player release or Workshop item exists yet.
+
+| Target | Established evidence | Still open |
+|---|---|---|
+| Base game / all DLCs | Native rendering/registration, fleshbeast flight/deaths, live UI gates, notification persistence, audio controls, doors and save/reload have bounded checks | Windows confirmation, broader DLC mechanics/custom renderers, rectangular-map live acceptance and long-session soak |
+| Zombieland | Updated preliminary pair: ordinary/special pawn presentation, Symbiant cell clipping/interaction, healer/counter, contamination refresh, audio and warning controls; standalone fallback also passes | Windows, broader mechanics, full GPU fallback and long sessions. The published Workshop build does not yet include every paired fix |
+| Combat Extended | Native pawn weapons, powered turrets, mortar/manual blind fire, sight loss, ammunition/reload and some CE/Zombieland interactions pass their recorded scenarios | Combat-heavy/large combined loadouts, additional weapons and special states, naturally executed still-Thing suppressive fallback, Windows and wide-view performance |
+| Zetrith's Multiplayer | Two local Steam clients: shared settings, separate factions/maps/clocks, movement/doors, saved-session rejoin, recipient-private notifications/hearing, native caravans, player/enemy rifles and native target acquisition | **Overall unverified.** Autonomous raid AI, combined CE/turret/no-LOS combat, wider lifecycle/faction cases, cross-platform and long sessions; clean player-only loading is not established |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+
+Latest-byte evidence is in the map-clock performance and Multiplayer sections of
+[VALIDATION.md](VALIDATION.md#map-clock-fix-performance-floor-2026-10-07).
+Earlier CE/Zombieland results below keep their own candidate identities; they
+must not be relabeled as fresh tests of the latest DLL. Presentation-only bridge
+probes are excluded from player ZIPs.
+
+## Responsibility inventory
 
 | Responsibility | Completed evidence | Remaining acceptance |
 |---|---|---|
 | Coverage/discovery | Sparse factions, checked counters, overlapping/removing sources, discovery persistence, rectangular bounds in independent tests | Full rectangular-map live scenario |
 | Field of view | Newly authored symmetric caster; reciprocal floor sight, radius/edges, wall occlusion, unchanged blocker arrays, zero warm allocations in .NET tests | Dense multi-source end-to-end profiling and reliable native allocation evidence |
-| Sources | Rewritten movement/map/faction ownership and deadline logic; live observer sight transitions and 250-tick blocker rotation/despawn; native owned zero-range wall supplies no sight | Dedicated turret power/fuel, camera console, animals, weather/night, sleeping/downed, door/tree scenarios |
-| Rendering | Current-sight culling uses the native drawn pawn cell and preserves registration; earlier 900-tick fleshbeast test passes | Recheck lean build in the original save and fresh map. Static objects use native drawing after observation; exact last-observed appearance was removed for performance. The flyer/grid mutation error is fixed in native Mac reloads; Windows confirmation and broader custom renderers remain open. |
+| Sources | Rewritten movement/map/faction ownership and map-clock deadlines; native movement, blocker rotation/despawn, closed/open/closed door, powered CE turret and zero-range wall controls | Camera-console occupancy, fuel variants, animals, weather/night, sleeping/downed and wider tree cases |
+| Rendering | Current-sight native pawn culling/registration; 900-tick original fleshbeast-save control; flyer/grid mutation fix passes Mac reloads; paired Zombieland pixel gates | Windows confirmation, broader custom renderers, full Symbiant GPU fallback and live visuals after removing the redundant upstream bundle |
 | UI information | Audited virtual overlay, tooltip, mouseover and both pawn-label hooks; remembered-object/proxy gating; native unseen-cell readouts/window decisions/beauty sampling and colony bypass; roof/fertility/terrain methods across discovery states | Direct pawn-label, wildlife and designator interaction acceptance; room-wide aggregates and topology |
-| Simulation | Vanilla failed hit checks remain failed; current sight evaluated without a stale per-tick cache; hidden-item reservation/hauling guards retained | Dedicated targeting/reservation/hauling scenarios |
-| Notifications | Source-linked observability/queue/policy tests; native health/global/visible and hidden threat letters obey the boundary; original payloads survive save/load and archive once after reveal. Optional Silent Raids passes actual raid/manhunter off/on arrival controls and native failure/exception parameter restoration | Multi-map targets, delayed sounds/slowdown in live scenarios; modded silent arrivals and natural combat playback with the new option |
+| Simulation | Native failed hit checks remain failed; own vanilla/CE/player/enemy combat controls preserve range, LOS and damage; hidden reservation/hauling guards remain | Wider acquisition/job routes, dedicated hauling/reservation scenarios and combined CE Multiplayer combat |
+| Notifications | Health/global/visible notifications, original deferred payloads/save-load and native Silent Raids arrival controls pass; two-faction queues and world-context map-clock deadlines pass MP cold rejoin | More target forms/maps, modded silent arrivals, delayed sounds/slowdown and broader natural combat |
 | Audio | Actual danger-music getter toggles correctly; real Unity loops with cell and object sources mute, muffle, restore, and follow sight without ending or compounding volume | Physical listening and additional mod-defined sound classes |
 | Content | Late-created definition receives one component per instance; custom non-pawn drawable and 3x2 rare-ticking blocker exercised live | Named optional mod installations and custom drawers outside the tested contracts |
-| Persistence | Existing XML-facing names and exploration/object observation save keys retained; notification payloads round-trip | Recheck lean save/reload, including saves made by earlier preliminary builds. No drawing archives are written; large colonies, multiple maps and long-session soak remain open. |
-| Performance | Sparse indices, batched invalidation, reused masks; specialized clear-row mask writer; native Mono comparisons with 512 identical masks/4,096 queries, including the real stress-map blockers and 53 colonist origins; zero warm kernel allocations in .NET tests; inline singleton listeners pass native lifecycle checks and reduce list-creation churn; the earlier matching six-process stress TPS floor passes at 485.147 versus 479.997; the corrected 1,000-zombie six-process comparison passes at 209.816 versus 195.486 (7.33% higher), with optional zombie instrumentation disabled and 999..1,000 living zombies retained | The earlier cold shrinking-horde failure remains retained; native cause tracing identifies initial-grace cleanup as its main population confound. The corrected fixture removes that benchmark confound without changing production defaults. Matching camera/zoom, public engine, both mod bytes, settings/configuration and warmup are enforced. A separate corrected work diagnostic services all visible/priority zombies and executes 14.4% more actual CustomTicks per second; its instrumentation remains distinct from the passing floor. A paused dispatch ablation measures about 0.003 ms added per filter pass. Simulation randomness, frame tails and controlled spikes and broader maps/settings/mod loadouts remain open. Measure combat point-query repetition, blocker-change duplicate casts, hearing population scaling, hidden-sound work and repeated GUI count queries separately. Reliable native allocations, broader FPS/memory/scaling evidence and Windows remain open; raw kernel timing cannot establish acceptance |
+| Persistence | Legacy exploration/observation import and payload round-trips; ordinary and MP cold-save/rejoin, two maps, per-faction knowledge and native caravan deadlines have bounded checks | Earlier preliminary-save variants, map removal/held-flying lifecycles, large colonies and long-session soak; no drawing archives are written |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 
 Optional integrations are isolated from the core. Their contracts were inspected,
 but Minimap and Interaction Bubbles have not been accepted in a live loadout.
@@ -51,45 +78,36 @@ all block a preliminary tester build.
 
 ### Current delivery boundary
 
-Prioritize the next useful Zombieland tester build over expanding the feature
-matrix. Its gate is demonstrated fog leaks, regressions from changed code,
-representative performance, startup/play/save-load smoke checks and exact
-packaged bytes. Reuse accepted evidence when the gameplay code it covers is
-unchanged; repeat affected scenarios rather than the complete suite after every
-presentation fix. Confirm the contamination overlay's sight transitions and
-refresh behavior before delivering its current fix.
+The 6 October preliminary Zombieland pair has been delivered with its exact-byte
+native/pixel/performance/package gates. Contamination sight/refresh is among the
+accepted bounded controls, rather than an unimplemented delivery blocker.
+Follow up on concrete tester feedback; do not send Mortal CE or Multiplayer
+progress. He is testing the Zombieland integration, not those release targets.
 
-The C0..C5 contamination groups and other unchanged Zombieland mechanics remain
-follow-up coverage unless source evidence or a player report identifies a fog
-interaction. Do not mark them accepted merely to shorten the list. Do not add
-new gameplay machinery to close a speculative coverage gap. After delivering
-the current Zombieland fix, finish actual CE combat/turret/mortar checks, then
-Multiplayer's two-client determinism, settings, refresh and save/rejoin checks.
-Broader loadouts and long-session soak remain release work, guided by concrete
-failures and tester feedback.
+Before another useful Zombieland build, check demonstrated fog leaks and changed
+paths, representative performance, startup/play/save-load and exact packaged
+bytes. Reuse unaffected evidence, repeat affected scenarios and explain rough
+edges. Do not send minor source-only updates. The C0..C5 contamination groups and
+other speculative mechanics remain follow-up coverage unless source or player
+evidence identifies a fog interaction. The current development priority is the
+remaining Multiplayer acceptance, with broader loadouts/soak guided by failures.
 
 ### Current closeout priorities
 
-Andreas has asked us to avoid diminishing returns and keep the zoomed-out sample
-small. The delivered Zombieland tester build has its own accepted exact-byte
-gates. The newer ddb5c8fe... candidate is still in development: its normal-view
-CE median passes with substantial variation, its one-pair wide CE spot check
-is 2.25% slower, and it has not superseded the delivered tester package.
-Recent combined mini-turret/Symbiant/electrifier controls need no gameplay fix.
-The same candidate now passes the existing six-process Zombieland fixture at
-214.036 versus 203.497 median TPS (5.18% higher), with ordinary fourth speed,
-999..1,000 zombies retained and no DPA. This closes that fixture's performance
-gate; it does not resolve the wide CE spot check or refresh the final package.
+Continue the remaining Multiplayer checks below, starting with demonstrated
+failures and existing acceptance gaps. Core two-client queue, rifle, hearing,
+caravan and save/rejoin slices have passed; they are no longer general blockers.
+The reflection-only loading error also reproduces without Total Fog or
+Multiplayer. Its requester is the old game assembly, but the exact caller and
+player-only map-loading behavior remain unknown. Do not add a Total Fog resolver
+workaround or file an upstream issue from incomplete ownership evidence.
 
-Use the remaining acceptance evidence to close the release rather than expand
-an open-ended variant matrix. Resolve the current performance finding with a
-bounded matched check or an evidence-backed fix, complete the explicit
-Multiplayer two-client checklist below, then run the affected final native and
-packaging gates against one frozen candidate. Existing required compatibility
-and performance checks remain required; source inventories and broader follow-up
-rows must retain their actual unverified status. Add new CE/zoom/optimization
-scenarios when a concrete defect, changed path or existing acceptance gap calls
-for them. Unchanged gameplay does not require another complete regression run.
+Keep the wide-view sample small, as requested. The earlier CE wide spot check
+was slower and the later Zombieland wide sample had worse frame tails; neither
+is resolved by a normal-view TPS pass. Use bounded follow-up evidence rather
+than reopening every unchanged variant. Before a new tester ZIP, repeat affected
+native/pixel/package gates against one frozen candidate. Source publication does
+not supersede the already delivered preliminary pair.
 
 | Requirement | Evidence required or remaining gap |
 |---|---|
@@ -100,11 +118,11 @@ for them. Unchanged gameplay does not require another complete regression run.
 | Ideology | Rituals, roles, allied/slave/prisoner vision and event targets. |
 | Biotech | Mechs, remote control, gestation/held pawns, children, pollution and shield effects. |
 | Anomaly | Fleshbeast split/flight/landing, unnatural entities, invisibility, pit/multiple maps, held entities, anomalies with custom renderers and notifications. The existing fleshbeast scenario closes only its measured rendering contract. |
-| Odyssey | Gravship landing/targeting, map transitions, outer-space maps, sensors and flying/held entities. Existing global reveal exceptions need review against the information requirement. |
+| Odyssey | Gravship landing/targeting, map transitions, outer-space maps, sensors and flying/held entities. Landing-preview policy no longer grants live sight or permanent observation; full native flight/lifecycle acceptance remains open. |
 | Overhaul mods | Exact installed 1.6 versions of Combat Extended, Vehicle Framework, Zombieland and relevant Vanilla Expanded content. Inspect overrides and direct drawing paths, then test separate and combined supported loadouts. |
 | Zetrith's Multiplayer | **Unverified for Total Fog.** Establish deterministic simulation, synchronized gameplay settings/actions, fog refresh on both clients, combat targeting, save/rejoin and faction visibility. The reported upstream spreadsheet result does not close this target. See the evidence and acceptance checklist below. |
 | Fog of War parity | Compare original source/settings and gameplay responsibilities. Preserve useful exploration, vision sources, targeting, notification/audio options and integrations while correcting leaks. |
-| Performance | Profile representative small/large maps and colonies, stationary and moving sources, many factions, dense blockers and event bursts. The original mod is the minimum baseline. Compare load time, actual ticks per second, frame-time percentiles and allocations on matching saves/settings/hardware, as well as the casting kernel. Reject slower optional features and prove improvements without weakening sight correctness. |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 | Settings | Grouped, readable page, truthful descriptions, sensible defaults, reset, live setting changes and save persistence. Privacy options must explain intentional information cues. |
 | Translations | Use the language set of Andreas' most translated mod, as requested. The local inventory identifies Achtung with 12 languages: English, Simplified/Traditional Chinese, Dutch, French, German, Polish, Russian, Spanish, Latin American Spanish, Swedish and Turkish. Validate all player-visible keys, placeholders and actual settings layout. |
 | Persistence and platform | Core-only and DLC loadouts, older saves, multiple maps, map removal/respawn, large-colony soak, exact deployed bytes and Windows render-error reproduction or confirmation. |
@@ -113,280 +131,46 @@ Current source research includes Combat Extended, Vehicle Framework and Vanilla
 Expanded Framework. Source evidence is recorded separately from installed-version
 and runtime acceptance.
 
-- Installed Combat Extended 16.7.3.0 uses its own Vector3-source hit-check
-  overload. An optional adapter now applies the shared targeting policy to
-  successful results from that method and any declared overrides. Eight
-  original source-linked regressions pass. Four additional turret/non-pawn
-  cases now bring that adapter suite to twelve passing cases. The actual installed CE method passes native
-  hidden/revealed target, blocked-ballistics and enemy-fog setting checks with
-  a CE pistol shooter. Two CE fixture reloads pass 1,926 section regenerations
-  without failures or grid mutations. The current e24d50df... gameplay DLL also
-  passes an ordinary M1911 equip/ammunition/reload/attack sequence. Its active
-  CE reload and queued attack survive in-process and fresh-process loads, then
-  consume another seven rounds and deal further damage during 360 Normal ticks
-  in each replay. The later 6527f4d8... candidate fixes a native powered CE
-  mini-turret with zero sight that fired at unseen targets. Its shared engine
-  turret contract now supplies a 34-cell sight radius for the native 48-cell
-  weapon at the configured 0.7 modifier. Ordinary automatic firing/damage works
-  nearby; an enemy at 42 cells receives no shots while hidden, including after
-  reveal/hide and both in-process and fresh-process loads. Shared sight from a
-  real security bell permits native firing at that same distant target.
-  Native power loss removes the turret's coverage. The later c7205ee1...
-  candidate also fixes overhead weapons extending crew sight to their weapon
-  range: the same saved CE mortar scene drops from 455 cells to 39, rather than
-  treating its 700-cell indirect range as vision. CE's native turret validator
-  now filters automatic acquisition using the current observing faction;
-  deliberate indirect-fire orders retain their native path. A healthy enemy
-  60 cells away remains hidden and receives no automatic shots while the mortar
-  is manned and loaded. A real security bell permits acquisition and firing at
-  that same target. Hidden controls also pass in-process and fresh-process
-  loads, and ordinary CE turret reload jobs consume real shells and refill the
-  magazine. Nineteen source-linked CE cases and the eight native pawn hit-check
-  controls pass. The later 0d19b952... candidate also filters the engine's
-  manual-target candidate list: an actual hidden-pawn mortar click creates a
-  cell order and fires, a revealed click retains the Pawn target and fires,
-  and the native minimum-range rejection remains intact. Twelve Symbiant
-  rendering/interaction cases and all 54 manual body-cell checks pass on that
-  same candidate, including visible body targets with a hidden inspection core.
-  The temporary native list is filtered in place without changing the thing
-  grid, ordinary selection, cell fallback or simulation. The later beab8196...
-  candidate fixes a mortar acquiring a visible Pawn and firing after losing
-  sight during warmup. The matched native control now retains its shell while
-  hidden, fires when sight returns, and still permits deliberate blind cell
-  fire and native minimum-range rejection. A manned M240B remains idle while
-  its healthy target is hidden. After three visible rounds, native CE converts
-  the lost target to a last known cell and finishes its burst there; that
-  fallback remains intact, with no subsequent hidden acquisition. Its real
-  reload consumes exactly 30 rounds and both the magazine and remaining supply
-  survive in-process and fresh-process loads. Twenty-nine source-linked CE
-  cases pass. Other manned weapons, live suppressive Thing fallback,
-  other weapon/arc combinations, combat-heavy CE performance and combined overhaul
-  loadouts remain open. The same beab8196... gameplay bytes now also pass a
-  native enemy mini-turret against a healthy drafted player target 42 cells
-  away: enemy fog off permits ordinary firing, enabled 34-cell sight stops
-  acquisition, and a real enemy-faction security bell restores firing. The
-  player's visibility of its own Pawn does not grant enemy-faction sight.
-  Power loss still stops shots despite valid shared sight. The hidden controls
-  pass in-process and fresh-process loads; the restarted profile's unchanged
-  default enemy-fog setting is explicitly re-enabled for that test. This closes
-  the bounded automatic enemy mini-turret check, not every enemy weapon.
-  A matched 350x350/410-pawn CE stress save now passes three alternating
-  fresh-process pairs with the same beab8196... candidate: median 459.27 TPS
-  versus 406.85 TPS, 12.9% higher. All measured ticks retain native fourth-speed
-  multiplier 15, unforced and without UltraSpeedBoost. Absolute starting ticks,
-  effective CE/fog settings, camera and bytes match; logs are clean. Timing
-  varies and frame p95 is essentially unchanged. This closes that synthetic
-  colony/animal fixture's performance floor, not combat-heavy or combined-loadout performance;
-  a separate native M240B 90-degree arc control also passes. A visible target
-  outside the arc consumes no ammo; turning the arc toward it allows native
-  fire; removing shared sight stops fire even while geometry remains valid.
-  The saved outside-visible and inside-hidden controls pass after restart.
-  CE's arc option is restored to its original false value without disk writes.
-  The fixture sets valid native configuration fields and invokes CE's adjustment
-  callback; editor input remains unverified because the attempted mouse paths
-  left the stored angle/span unchanged. No gameplay fix is needed for this case;
-  this is not full CE acceptance. A later native M240B control proves CE's
-  ongoing burst switches from a lost primary Pawn to a visible nearby Pawn,
-  without a new turret acquisition. With both Pawns hidden, CE instead finishes
-  at the primary's last known cell and never selects either hidden Pawn. Native
-  projectile collisions remain intact. Loading the visible-alternate burst
-  exposed Total Fog publishing 39-cell sight before engine lighting was ready,
-  despite the ready pawn calculating 59 cells. The 2504105d... candidate runs
-  the engine's sky/glow updates once before initial sight publication. The same
-  fresh-process save immediately publishes 59 cells and completes its six
-  remaining shots at the visible alternate; the primary stays excluded.
-  The hidden-alternate save also prevents either hidden acquisition after
-  restart. Its native saved cell burst does not resume, so this is not proof
-  of cell-burst persistence. Seventeen receipt-backed controls pass under
-  `artifacts/ce-retarget-native`. Off-current-map, darkness and lamp-only load
-  controls and the new candidate's broader package/performance gates remain
-  open. Its completed six-process CE stress comparison is rejected at 481.43
-  versus 491.73 median TPS (2.1% lower); the earlier beab8196... pass cannot
-  close this candidate's floor. Raw failing reports and separate diagnostic
-  traces remain retained. No performance acceptance is inferred from those
-  instrumented traces. The 450329a0... candidate then avoids constructing a
-  footprint for single-cell visibility queries, without caches or changed
-  update deadlines. All 291 tests pass and its own complete six-process CE
-  stress comparison meets the median floor at 511.55 versus 489.75 TPS (4.45%
-  higher). One pair is slower; this is bounded fixture evidence, not a uniform
-  gain. This current candidate also repeats the saved visible-alternate burst
-  and hidden-target controls with eight receipt assertions. Its exact
-  450329a0... / 56daa1f2... pair passes the six-process Zombieland overlay floor
-  at 219.28 versus 203.98 TPS, 7.50% higher, with frame p95 worse at 81.27
-  versus 76.89 ms. The current broad paired rendering/behavior suite and
-  preliminary package guards pass. CE combat-heavy/combined-loadout and
-  Windows performance remain open. Native evidence is in
-  `artifacts/ce-turret-native`, `artifacts/ce-mortar-native`, `artifacts/ce-m240-native`,
-  `artifacts/ce-enemy-turret-native`, `artifacts/ce-arc-native`, `artifacts/ce-retarget-native` and
-  `artifacts/manual-target-symbiant`; current paired package evidence is in
-  `artifacts/zombieland-current-package-gates.json`. Earlier scenario evidence
-  retains its own exact gameplay DLL hashes.
-  A subsequent current-byte native short-bow check covers real no-magazine
-  stone-arrow inventory. CE's own attack order fires once at a visible steel
-  wall (20 to 19 arrows). Removing the real sight bell during the next native
-  warmup cancels before ammunition preparation; 240 Normal ticks retain all
-  19 arrows. A new hidden attack order also prepares/fires nothing. Revealing
-  the wall resumes a successful native shot (19 to 18). Ten receipt assertions
-  pass across 844 reported Normal playback ticks; the shooter remains still.
-  No ammunition-loss defect is reproduced in this ordinary short-bow path.
-  Other no-magazine verbs, mod-issued direct shots, live suppressive Thing
-  fallback and no-magazine save/load remain open. The wall is not damaged by
-  these two shots, so this is not damage acceptance. Cleanup restores the
-  original range, removes owned objects/probes, reloads the base and stops the
-  process; recognized logs are clean. See `artifacts/ce-ammo-native`.
-  Current gameplay also passes thirteen suppressive-fire receipt assertions.
-  An actual M240B burst begins with one visible shot, then completes nine native
-  blind-cell fallbacks after the sight bell is removed: CE converts the target
-  to its last known cell, both native/final results remain true, and magazine
-  179 drops to 170 without hidden-Pawn reacquisition. Four separate readonly
-  loaded-guard contracts reject hidden Thing success and preserve visible
-  success/native failure. These supplied inputs do not establish a naturally
-  executed still-Thing fallback. Ordinary automatic and manual forced-target
-  warmups cancel before a shot while hidden; the stock mortar has no suppressive
-  aim mode. Native mode toggle, bounded trace removal, owned cleanup, unchanged
-  base reload and clean logs pass. See `artifacts/ce-suppressive-native`.
-  The new isolated CE/Zombieland profile reproduces a cross-mod shot-line bug
-  on 450329a0...: CE/Zombieland choose a visible logical body cell, but Total Fog
-  rejects their successful result because the Pawn root is hidden. Candidate
-  2f15cad0... gates the selected native shoot-line destination, including Thing
-  fallbacks, with the same single sight query and no new API/cache/search.
-  Four regression cases cover matching and differing root/destination sight;
-  both disagreement cases fail before the fix and pass afterward. All 295 tests
-  pass. Five actual combined native
-  shot-line states pass, and Normal playback damages shared health 3995 to 3975
-  with the host's injury sum and sight bell unchanged. The raider later chooses
-  a native Steal job, so this is not sustained-combat/save-rejoin acceptance.
-  Combined saved M240B visible/hidden retarget controls and six actual blind-cell
-  fallbacks also pass. Exact pairs/receipts and clean log are in
-  `artifacts/ce-zombieland-native`. Zombieland deliberately rejects Symbiants
-  from automatic non-pawn target scans and permits logical hostile acquisition
-  only for its selected humanlike/mechanoid pawn attackers. A positive Symbiant
-  turret-acquisition expectation would change that policy, so do not add one.
-  A bounded combined native control on ddb5c8fe.../56daa1f2... now preserves
-  this exclusion: the powered, unheld CE mini-turret ignores a living, visible
-  four-cell hostless Symbiant for 238 Normal ticks and retains 100 rounds.
-  Replacing it with an ordinary zombie lets the same turret acquire it and
-  fire ten rounds over 241 Normal ticks. The fixture's nativeAcquirable field
-  is CE's basic validator result, not the full automatic target scan; it is
-  true for both targets. Default Symbiant simulation/render flags remain on.
-  This accepts that controlled exclusion and positive control, not all weapon
-  routes, linked hosts, active-electric/roped zombies, long fights, combat-heavy
-  performance or Windows. Earlier
-  candidate performance/package gates retain their own gameplay hashes. The
-  completed current-byte six-process standalone CE comparison misses the floor:
-  456.01 versus 460.41 median TPS (0.96% lower), tick elapsed 1.57487 versus
-  1.56362 ms and frame p95 70.27 versus 68.64 ms. Matching identity, actual
-  fourth-speed multiplier 15 and clean logs pass. This failed measurement is
-  retained; 2f15cad0... is not performance-accepted or a new feedback package.
-  Its subsequent instrumented CE tick captures identify ComputeMask and
-  ApplyDifference as measured fog costs, about 0.07073 and 0.02710 ms per tick
-  respectively. The CE guards resolve but produce no snapshot rows. These
-  forced/debug multiplier-150 captures are diagnostic, not player-speed or
-  before/after acceptance. DPA cleanup, stopped-process state, its removal from
-  the CE profile and unchanged installed DLL pair are verified. The performance
-  floor remains open until an evidence-backed change passes a matched native
-  comparison. See `artifacts/ce-dpa-logical-cell-*.json`.
-  A following row-boundary candidate passes 296 tests, including 18,432
-  exhaustive small masks against unchanged callback geometry. Its first
-  original/candidate native pair completes, but the next process crashes in
-  startup reference resolution. The incomplete comparison is retained in
-  `artifacts/ce-row-center-startup-failure`; no native performance acceptance
-  or new feedback ZIP follows from this source change.
-  A later fresh startup/load succeeds and a same-process native comparison
-  verifies 512 masks/4,096 queries plus each timed origin's full footprint.
-  Compared with exact pre-change source 846e7c4, paused casting cost drops
-  7.77% on the stress map's blockers/53 colonist positions and 8.80% on open
-  terrain. This establishes the casting improvement, not whole-game TPS or
-  native allocation behavior. DPA is absent, logs are clean, and temporary
-  comparison code is removed before further acceptance measurements.
-  The completed normal-view six-process comparison passes its median at
-  421.133 versus 398.386 TPS, but large sample variation prevents a stable
-  causal gain claim. A deliberately small wide-view sample then covers a CE
-  colony and Zombieland contamination in one original/candidate pair each.
-  Wide CE covers 71,050 cells and measures 402.053 versus 411.314 TPS, a 2.25%
-  decrease with a worse frame tail. It remains a failed spot check. The older
-  Zombieland fixture covers 50,750 cells but loses most zombies and spends
-  most ticks at native multiplier 1, so its 2.28% higher TPS cannot establish
-  sustained fourth-speed or equal-work acceptance. Paused wide overlay pixels
-  show the intended current-sight clipping. These two pairs do not close the
-  three-pair delivery gate, and there is no new feedback package. See the
-  small wide-view section in VALIDATION.md and the retained comparison reports.
-  One subsequent eight-second wide DPA capture locates rendering cost without
-  adding acceptance pairs: the fog culling postfix averages 0.06853 ms per DPA
-  entry, regeneration 0.52860 ms and layer drawing 0.21939 ms. It uses debug
-  multiplier 150 and nested instrumentation, so it does not resolve the TPS
-  difference or establish ordinary fourth-speed performance. Exact config,
-  camera and installed binaries are preserved; DPA cleanup, native logs and
-  process termination are verified in `artifacts/ce-wide-diagnostic`.
-  The unchanged ddb5c8fe... gameplay pair now also passes a bounded combined
-  player CE mini-turret/ordinary-zombie check: hidden targets receive no shots,
-  real bell sight enables acquisition, losing sight during the 52 remaining
-  native warmup ticks retains all 100 rounds and clears the target, and renewed
-  sight permits native firing. A separate nearby traced control records two
-  actual zombie impacts dealing seven damage each, alongside real cover impacts
-  and misses. It runs off camera, retains ordinary zombie movement, and removes
-  its trace/owned objects while restoring the temporary no-cleanup settings.
-  Exact bytes, native receipts and clean logs are in `artifacts/ce-zombie-turret`.
-  A subsequent active-fight save survives a full process restart: the same
-  zombie target, positions/job, ammunition type, 70-round magazine and sight
-  remain. Native loading advances one tick, reducing saved warmup from 18 to
-  17. Another 719 unforced Normal ticks consume 38 rounds and produce real
-  cover impacts/misses. The saved injury list is empty and the resumed trace
-  has no zombie hit, so this does not prove nonzero injury persistence or
-  additional zombie damage. Settings are restored before saving and after
-  playback; both logs, owned cleanup/base reload, unchanged bytes/save and
-  both process stops are verified in `artifacts/ce-zombie-save`.
-  This closes only the ordinary player mini-turret sight/firing and bounded
-  warmup/target/ammunition persistence slices. Special states, other weapons,
-  nonzero injury persistence and combined combat-heavy performance remain open.
-  The unchanged pair also preserves one native visible-electrifier transition:
-  the same powered, unheld CE mini-turret ignores the active zombie for 241
-  Normal ticks with all 100 rounds retained. Real EMP damage input 10 disables
-  its electric state for 600 ticks; another 241 Normal ticks acquire that same
-  zombie and consume ten rounds. This checks the native damage/targeting state
-  transition, not delivery by a CE EMP projectile, guaranteed hits, reactivation
-  or other weapon routes. A separate unconfused-zombie UI attempt correctly
-  offers no rope option and does not close roped/confused target coverage.
-  Owned cleanup, original settings, stopped process, clean native log and
-  unchanged byte guards are verified in `artifacts/ce-electric-targets`.
-- Vanilla Expanded Framework's extended biosculpter draws held occupants directly
-  through `PawnRenderer.RenderPawnAt`. Test the containing object and held-pawn
-  visibility together rather than assuming map drawable culling covers both.
-- Vehicle Framework supplies its own phased renderer; its native acceptance is
-  still open. Zombieland's ordinary pawn, eight special types and direct-drawing
-  spitter pass the native presentation transitions described below. A visible
-  healer's beam/glow originally disclosed a hidden target in explored fog; the
-  local paired Zombieland/Total Fog fix passes native draw-count and screenshot
-  checks, with positive effects in sight and no effects outside sight. The
-  original scene changed 58,049 pixels with the effect on; the fixed hidden-target
-  effect-on/off images are identical. Native playback also confirms the original
-  frame-aged records could fill the eight-record healing limit without expiring
-  when the caster was culled. The local Zombieland fix moves aging/expiry to its
-  existing simulation path. All nine controlled injury/healing opportunities pass
-  with the healer and target hidden and off-camera; 615 healer CustomTick calls
-  occur without healer draw calls. A scoped fixture-only prefix suppresses
-  unrelated zero-threat zombie cleanup and is removed afterward. Rendering stays
-  read-only, expired records do not draw, and paused ticks remain 3 to 3.
-  These fixes require the updated Zombieland source as well as Total Fog's optional
-  query; they do not establish compatibility for the currently published
-  Zombieland DLL. Other active effects, attacks, emerging rubble, invalid/removed
-  healing targets, reduced-tick combat, standalone Zombieland, broader integration
-  and Windows acceptance remain open. The GlobalControlsUtility.DoDate readout
-  now uses the optional query at the presentation boundary. The extended native
-  movement fixture first fails on the preceding Zombieland build: it displays
-  all 13 zombies and highlights all 13 even when none are visible. The fixed
-  build displays/highlights exactly the seven visible zombies in each partially
-  visible phase and none in the all-hidden phase. The simulation count remains
-  13 and ticks remain 3 to 3. Queued spawning is excluded from the sight readout;
-  the population count used for spawning is unchanged. The counter background
-  no longer exposes the map-wide ticking fraction under Total Fog.
-  A paused 1,000-zombie query-only benchmark measures a median 0.2101 ms for
-  the uncached sight count versus 0.0143 ms for the unchanged population query.
-  Whole-game performance is assessed separately. The spitter spawn letter has
-  a cell/map target and passes through the existing event-letter setting; its
-  camera siren has no positional target. The updated Zombieland queries the
-  actual event cell before camera playback; twelve native spitter/wave audio
-  controls pass. Hidden-spitter letter acceptance remains outstanding.
+### Named integration evidence
+
+Combat Extended 16.7.3.0 uses a Vector3-source hit-check overload. The optional
+adapter preserves native failed hits and filters successful results through the
+observing faction's sight, using the selected shoot-line destination for logical
+multi-cell targets. Native scenarios cover M1911 and short-bow shots, powered
+mini-turret sight/power changes, manned mortar acquisition and deliberate blind
+cell fire, M240B warmup/sight loss, last-known-cell bursts, visible retargeting,
+weapon arcs and ammunition/reload persistence. See the dated CE sections of
+[VALIDATION.md](VALIDATION.md#combat-extended-targeting) for exact candidates,
+counts and limits. Those results are bounded; a source guard alone is not a
+naturally executed CE fallback test.
+
+Combined CE/Zombieland controls cover a visible logical Symbiant body target
+with a hidden root, ordinary mini-turret/zombie sight loss and resumed firing,
+a saved active warmup and the native electrifier EMP-state target transition.
+Zombieland intentionally excludes Symbiants from automatic non-pawn turret
+scans; Total Fog preserves that rule. Remaining checks include other weapons,
+linked hosts, roped/confused special states, nonzero injury persistence, CE EMP
+projectile delivery/reactivation and combat-heavy combined performance.
+
+Earlier normal-view CE performance comparisons include both failures and later
+passes. They retain their own bytes; the latest Multiplayer gameplay has a new
+single-player Zombieland floor, not a new standalone CE or combined CE/MP floor.
+The small root-100 CE sample is unresolved. See
+[wide-view evidence](VALIDATION.md#small-wide-view-sample-2026-10-06).
+
+Vanilla Expanded Framework's extended biosculpter draws held occupants directly
+through `PawnRenderer.RenderPawnAt`; containing-object/held-pawn acceptance is
+still open. Vehicle Framework has its own phased renderer and remains unverified.
+Minimap and Interaction Bubbles have inspected optional contracts, with no live
+combined-loadout acceptance.
+
+Zombieland uses once-bound optional visibility, renderer, inspection-cell,
+targeting and audibility APIs. The updated local build fixes the healer endpoint
+and expiry, counter/hover disclosure, Symbiant clipping/interaction and the audio,
+warning and contamination paths listed below. Its standalone no-Total-Fog check
+passes; broader mechanics and Windows remain open. These findings do not establish
+compatibility of every published Zombieland version. See
+[ARCHITECTURE.md](ARCHITECTURE.md#other-mods) for the dependency boundary.
 
 ## Zombieland feature audit
 
@@ -494,218 +278,46 @@ concerns **CAI 5000** in context, not Multiplayer. The Multiplayer Discord was
 not in the accessible account's server list. Absence of a report in this bounded
 search is neither compatibility nor incompatibility evidence.
 
-### Outstanding acceptance checks
+### Our native checks and remaining acceptance
 
-The 2026-10-06 tooling check uses two independent Steam 1.6 processes and the
-optional RimBridgeServer Multiplayer companion. Native host/join, player status,
-client leave/rejoin and main-menu return are verified. A host's synchronized
-Normal command and a client's synchronized pause advance both clients from tick
-1215 to the same paused tick 3004, with neither reporting a desync. This short
-control check does not by itself close compatibility.
+Own checks use public Steam RimWorld 1.6.4871, all five DLCs, Multiplayer 0.11.5
+(4a3be27), MPAPI 0.6, Prepatcher, Harmony, Total Fog and bridge instrumentation.
+No CE or Zombieland is loaded in the Multiplayer controls. Compare complete fog
+and clocks only at matching **paused map ticks**, not after submitting a pause.
+The latest target-acquisition companion is
+`4965ea8f85efac04f167eb057530839ae1f8bc4f081e317d3933c735ed547c19`;
+probe command handlers are opt-in and excluded from player ZIPs.
 
-The subsequent fog check compares native coverage counts, discovery, blocker
-masks, observation flags and sight-source state at matching paused ticks.
-The unchanged gameplay DLL matches on join at tick 1218, after 602 simulated
-ticks at 1820, and after a client leaves/rejoins at 1821. The settings candidate
-then matches after a client changes BaseViewRange from 60 to 10 at tick 1593 and
-after the host restores 60 at tick 2629. Silent Raids also synchronizes from the
-client. This is 1,411 candidate ticks with shared-colony synchronous time;
-separate factions, independent map clocks and targeted combat remain outstanding.
-A subsequent cold-save check exposed lost session settings; the fixed candidate
-preserves range 10 despite local preferences defaulting to 60. Two fresh processes
-load the same native Multiplayer archive to tick 1560 with identical complete
-fog snapshots, including 375 sources and 1,206 visible cells. This verifies cold
-saved-state reconstruction, not the full combat/queue/transfer replay matrix.
-A fresh client also joins the resumed native saved session with identical state.
-One different-view control then advances 1,325 ticks with host root size 12 and
-client root size 100 at different positions; complete fog state still matches.
-It is a determinism control, not a performance benchmark.
-A bounded vanilla manual-melee control also preserves identical fog state; the
-native saved battle log confirms the ordered visible target's hit and death.
-Jobs/health/visibility match after saved-session rejoin. Ranged/AI/turret and
-combined CE Multiplayer targeting still require broader checks. The later
-88f41bed candidate passes one native bolt-action rifle order, attributed impact
-and death, with both clients matching complete fog and selected pawn state after
-1,994 Normal ticks. Its current hidden-target menu control has no attack option;
-a visible but unhittable target retains vanilla's disabled firing option. This
-does not close AI/turret, boundary loss during warmup or combined CE coverage.
-The same gameplay bytes also pass one real closed/open/closed door cycle through
-synchronized pawn movement over 5,388 Normal ticks. Both clients match complete
-fog and pawn state plus the door's native open/see-over and fog blocker flags.
-Discovery persists after closing. Transport/map removal and broader blocker
-changes still need their own checks.
-See exact hashes and limits in
-`docs/VALIDATION.md`.
+| Area | Native evidence already established | Remaining checks |
+|---|---|---|
+| Deterministic simulation | Shared colony and separate factions/maps; matching coverage, discovery, object observations, source schedules and serialized fog at paused boundaries; independent cameras and hearing-cue RNG/recipients agree | Longer sessions, cross-platform clients, controlled spikes and more lifecycle/AI events; no universal desync claim |
+| Synchronized settings/actions | Host/client primitive field changes, hearing range, Silent Raids, enemy fog and colony exemptions synchronize; host startup settings and cold saved-session values reconstruct; appearance saves leave coverage unchanged | Broader reset/setting combinations in supported combined loadouts; retain startup-only tree restriction |
+| Fog refresh | Native movement, closed/open/closed door, two asynchronous maps and observer-specific colony bypass pass | Build/destroy bursts, gravship lifecycle, held/flying pawns and map removal; preview policy tests are not a completed native MP flight |
+| Combat | Player melee/rifle, hidden context-menu filtering, enemy rifle hit pipeline and native enemy target finder with vanilla flags pass | Autonomous raid jobs, wider target candidates, turrets/no-LOS and combined CE Multiplayer combat; one staged candidate is not full raid AI |
+| Save/rejoin | Native cold saves/replay/late rejoin preserve shared settings, faction discovery/observations, queues and deadlines; notification payloads replay once for their recipient | Broader resync and active event/combat saves across unsupported-yet lifecycle cases |
+| Faction visibility / transfer | Shared colony, factions 16/18 and observer 17; private cues/notifications; synchronized native caravan exit, world pawn, entry into another map and return register once with map-clock deadlines | Allies, prisoners, animals, owner changes, held/flying transfer and map removal configurations |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+| Loading | Instrumented controls start/play/save/rejoin; dependency error reproduces with Prepatcher and bridge but without Total Fog/MP. Bounded resolver observer identifies old reflection-only Assembly-CSharp as requester | Exact native caller and bridge-free player-only map load remain unknown. These runs are not clean-log acceptance |
 
-An optional MPAPI binding registers the public primitive settings in stable name
-order and uses its buffered field watcher around the settings UI. Reflection
-runs only during binding, with delegates retained for UI work. No Multiplayer
-assembly is required by Total Fog. Appearance changes and configuration saves
-no longer force sight recalculation. Source ticks apply vision settings within
-the existing 30-tick refresh bound. Saving host settings at paused tick 1593
-leaves the complete fog snapshot unchanged. Tree blocking remains a startup
-setting initialized through the host configuration, with its existing in-game
-reload restriction. A game component stores the shared primitive settings and
-startup tree policy in native Multiplayer snapshots. It restores them during
-variable loading before maps initialize, without adding per-tick work or storing
-session settings in ordinary single-player saves. Setting registration uses
-ordinal name order and saved numbers use invariant culture.
+The optional integration watches settings in stable ordinal order and stores
+session values before map initialization. Player-faction grids, observations,
+hearing recipients and notification queues are separated from local presentation.
+Deadline creation from world/interface callbacks uses the owning map's clock.
+These fixes and exact byte-specific results are detailed in
+[VALIDATION.md](VALIDATION.md#native-multiplayer-bridge-controls-2026-10-06).
 
-Diagnostic stack capture is disabled after Multiplayer's native Arm64 tracer
-throws on the installed build, matching the already reported
-[Multiplayer Apple Silicon tracing issue #944](https://github.com/rwmt/Multiplayer/issues/944).
-A separate reflection-only
-`UnityEngine.InputLegacyModule` dependency exception still occurs during loading.
-It also occurs in a fresh native quick game with Total Fog and its companion
-removed. The same control starts without that exception when Multiplayer and
-Prepatcher are removed too, with Harmony, the bridge and all DLCs retained.
-This narrows the trigger to that interaction; it does not establish the exact
-responsible mod or function. The profile and companion removals were restored.
-These runs are not clean-log acceptance. Native
-receipts and evidence limits are recorded in `docs/VALIDATION.md`.
+Multiplayer's Apple Silicon stack tracer is disabled after its native failure,
+matching [upstream issue #944](https://github.com/rwmt/Multiplayer/issues/944).
+That diagnostic restriction does not establish normal gameplay failure.
+The loader error must not be described as a demonstrated Total Fog or Multiplayer
+bug: removing either mod is insufficient to remove it. No resolver workaround or
+new upstream issue has been justified. The player-only control reached the main
+menu but did not load a colony because bridge-free mouse input was unreliable.
 
-The local gravship landing preview now changes drawing only. Current thing/cell
-sight, object observation flags, queued notification eligibility and positional
-sound policy ignore the temporary preview. Four regression cases first failed
-and then passed against the source-linked engine boundary. This is a proven
-policy regression, not a completed two-client native gravship flight test.
-The public 1.6 right-click context builds its own temporary thing/pawn lists,
-separately from GenUI.TargetsAt. A native rifle control exposed a hidden target
-in that menu. The constructor now filters both lists through the existing
-current-sight policy, preserving the map grid and ordinary cell fallback.
-
-The next source checkpoint separates player-faction coverage keys, explored cells
-and object-observation ownership. The primary faction retains the direct arrays;
-extra discovery grids and observation lists are used only for other factions.
-Hauling, reservation, rifle sight, prisoner sight and surveillance use their own
-observer/owner instead of a local client's faction. Hearing cues retain the
-faction that generated them. Deferred notifications persist their recipient and
-bind Multiplayer's native push/pop context once to check and replay that recipient.
-Hidden non-historical command feedback is discarded in Multiplayer rather than
-entering a shared saved queue from only the issuing client. Tooltip registration
-stays engine-owned; the existing current-sight tooltip gate owns disclosure.
-Native checks now cover two colony factions on two maps, faction switching,
-12,312 shared synchronous ticks, independent map clocks and native save/cold
-rejoin. The 30362595 candidate agrees on per-faction discovery, observations,
-coverage, blockers and source schedules. When one colony advances 9,378 ticks,
-the paused colony's fog state remains unchanged. The f3ad33a1 candidate also
-passes cold rejoin and observer-specific colony exemption with synchronized
-settings while paused. See docs/VALIDATION.md for the exact evidence and loading
-errors. The f3ad33a1 candidate also preserves hidden message/letter payloads and
-recipients through a cold save/rejoin, replays only the revealed colony's alerts
-once, retains another faction's hidden alerts and releases them correctly when
-the synchronized delay option is disabled. Remaining combat/transfers and the
-latest-byte performance floor are still outstanding. Multiplayer compatibility
-remains unverified overall; these bounded checks do not close the full target.
-The same f3ad33a1 gameplay bytes now pass a separate-map rifle control at host
-zoom 60/client zoom 24: a hidden target leaves the rifle waiting, while the
-colony-exempt visible control produces three native shots, two misses and a
-gunshot death. Both clients agree on the result, normalized fog and all persisted
-Total Fog map/observation/settings data. This closes the bounded player-rifle
-case, not enemy AI, CE turret/no-LOS, transfers or performance acceptance.
-The same gameplay bytes also pass a native hearing sample on separate colony
-views. Both clients create the same three non-real-time cues and retain matching
-map RNG states; only the hearing faction sees those cues. The synchronized off
-setting leaves no cues after ordinary playback, and restoring it creates three
-matching cues again. The client-to-host 30-cell hearing-range change and host
-restore to 10 also synchronize while paused. Complete normalized fog state
-still matches. This closes the bounded native cue/RNG/recipient case, not every
-faction or transfer configuration.
-The current f3ad33a1 gameplay DLL also passes a fresh three-pair single-player
-Zombieland performance comparison: median 309.08 versus 286.79 TPS, +7.77%,
-with ordinary fourth-speed multiplier 15 throughout. This establishes the
-measured TPS floor on that 1,000-zombie fixture, not Multiplayer throughput.
-A one-pair root-100 wide-view check gains 3.81% TPS but has worse frame-time
-p95, 86.44 versus 77.49 ms. Wide frame pacing remains outstanding; the spot
-check does not close a three-pair performance gate.
-
-The subsequent 7fb181fe candidate fixes map-clock deadlines created by world
-commands or interface callbacks. A native synchronized caravan exits map 0,
-becomes a world pawn and enters map 1, then returns through the same engine
-lifecycle. Each client removes the old source and registers the destination
-source exactly once. Deadline creation now reads the destination map's clock;
-125/143 ordinary destination-map ticks advance the sight/hearing schedules and
-restore the stationary sight range from 6 to 24 on both clients. Complete
-normalized fog state agrees at every paused boundary, and native save P loads
-in fresh host/client processes without duplicate sources or lost per-faction
-discovery. This closes the bounded caravan/world-command lifecycle case.
-It does not establish gravship/map removal or enemy AI/CE Multiplayer combat.
-The same gameplay bytes also pass a world-context delayed-letter control: a
-120-map-tick deadline survives cold save/rejoin, stays pending before its
-deadline even after delay-by-visibility is disabled, then delivers exactly once
-only to faction 16. Both clients agree on fog and queue/archive state. This
-closes that bounded world-command deadline/recipient case. The map-clock fix has three focused
-regressions among 318 passing tests. The f3ad33a1 performance results above are
-historical. A fresh three-pair floor on 7fb181fe passes: median 309.67 versus
-288.10 TPS, +7.49%, on the same 1,000-zombie starting fixture at ordinary fourth
-speed. Frame-time p95 medians are 70.38/71.13 ms. This is single-player runtime
-performance evidence, not two-client Multiplayer throughput or a new wide-view
-measurement.
-
-The same 7fb181fe bytes now pass a bounded non-player enemy rifle pipeline with
-synchronized enemy fog off/on. Native range/LOS and availability allow the
-shot while the setting is off; enabling it blocks the hidden target on both
-clients. An AttackStatic job leaves the wall at 300 HP over 335 Normal ticks.
-Restoring sight changes the enemy's range from 18 to 24 and allows the shot;
-another 362 ticks damage the wall to 282 HP, identically on both clients.
-Normalized fog, actor state and cleanup/source counts agree without desync.
-This closes one non-player attack-pipeline case, not autonomous AI target
-selection or combined CE Multiplayer combat. The isolated fixture's original
-pirate prerequisite failed before spawning; the accepted case uses hostile
-ancients, with that prerequisite checked before submission.
-
-The same gameplay bytes also pass native enemy target acquisition on both
-clients. With vanilla's enemy-AI threat/LOS/reachability flags, the finder selects
-the single staged player pawn with enemy fog off, rejects it while hidden with
-enemy fog on, and selects it after restoring sight. Complete normalized fog
-matches before/after, including cleanup to 377/689 sources; neither client
-reports desync. This is the native target finder, not autonomous raid jobs.
-
-The loading dependency error is now reproduced with Prepatcher retained but
-both Multiplayer and Total Fog absent from the active/loaded mod list.
-Harmony, RimBridgeServer and all DLCs remain. Multiplayer is therefore not
-required for this reproduction. The exact responsible caller and whether a
-player-only loadout is affected remain unverified; do not add a loader workaround
-to Total Fog or describe this as a demonstrated Multiplayer defect.
-An opt-in resolver diagnostic now identifies the dependency requester as the
-old reflection-only Assembly-CSharp. Its managed stack contains only the
-runtime assembly resolver, with no Total Fog, Multiplayer or bridge frame.
-This narrows the mechanism but does not identify the native caller. The
-player-only main-menu control has not reached a colony; unreliable bridge-free
-mouse input prevents accepting it as a loading reproduction.
-
-A short native fourth-speed run activates both asynchronous maps in two Steam
-processes on the same Mac. All sampled client/map speed multipliers are 15;
-the 12.967-second measured interval advances about 420 TPS per map/client.
-The native paused endpoint has identical world/map clocks and normalized fog,
-without desync or new attention. This closes one two-map throughput spot check,
-not a many-mod/horde baseline, cross-platform or long-session performance gate.
-The same gameplay DLL's existing original-mod single-player floor is unchanged.
-
-Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
-load order and gameplay settings on two independently connected clients. Record
-those versions/hashes and desync diagnostics with each result. Single-player
-startup with Multiplayer enabled cannot close the target. The Multiplayer team's
-[determinism patches](https://github.com/rwmt/Multiplayer/blob/master/Source/Client/Patches/Determinism.cs)
-distinguish interface work from ticking/commands and normalize simulation drawing
-positions; apply that distinction when auditing our calls.
-
-| Area | Required checks and pass condition |
-|---|---|
-| Deterministic simulation | Replay identical commands/ticks on both clients while sources move, blockers change, pawns sleep/down/die and events fire. Compare per-faction coverage, discovery, observation flags and deferred queues at matching map ticks; require matching serialized gameplay state and no desync reports. Change camera, selection, hover, open windows and frame rate on one client only; these must not alter simulation, RNG or thing IDs. Audit hearing-cue spawning and native calls for indirect RNG/state changes even though Total Fog has no direct random-number calls. |
-| Synchronized settings/actions | Inventory gameplay-affecting ranges, source/faction rules, tree blocking, enemy targeting, discovery/reveal and notification queue policies. Verify initialization from the host and either synchronized in-game changes/reset at the same tick or an explicit supported restriction. Change each from host and client, including while paused; reject differing gameplay settings. Review display/audio settings separately before allowing local changes. Appearance/configuration writes must leave gameplay coverage unchanged; the old `applySettings` sight recast has been removed. |
-| Fog refresh on both clients | Move/teleport/transport sources, open/close/build/destroy blockers and overlap/remove observers. Check reveal and loss of sight on both clients, including a client watching another map at a different camera position and supported independent map speeds. No one-time initial fog, stale cells or visibility tied to the rendering client's activity. |
-| Combat targeting | Order player and AI attacks into hidden/revealed cells, move the boundary, change blockers and toggle enemy fog through the supported synchronized path. Both clients must reach the same hit/job/shot result; native failed hits stay failed. Repeat with the exact supported CE loadout, manned/unmanned turrets and no-LOS weapons. |
-| Save/rejoin | Save and reload the Multiplayer session, join late, disconnect/rejoin and exercise supported resync/replay. Coverage must reconstruct without duplicate sources; discovery/observation and original deferred notification payloads must survive and replay once. Repeat during movement/events and across map removal or transfers. |
-| Faction visibility | Test shared-colony clients plus any separate-faction mode supported by the chosen Multiplayer version. Exercise allies, prisoners, animals, faction changes, held/flying pawns and transfers. Audit assumptions around `Faction.OfPlayer` and faction keys so one client/faction cannot reveal another's hidden activity or diverge in targeting. |
-
-Current source review identifies the immediate audit points in
-`FogSettings.applySettings`, `MapVisibility` source/discovery updates,
-`CompSightSource` deadlines/hearing, `CompVisibility` observation state,
-`DeferredNotifications`, and the shared vanilla/CE targeting policy. These are
-review targets; the saved-settings and preview/menu defects above were found
-and fixed. Core-kernel tests and
-the upstream spreadsheet rating cannot substitute for this two-client acceptance.
+**Compatibility stays unverified** until our remaining supported-scope checks
+pass. Upstream's spreadsheet, source review, 318 independent tests and one short
+two-client success cannot substitute for that acceptance. Keep version/hash,
+loadout and diagnostics with each result; do not infer success from startup alone.
 
 Mortal supplied the original combat save and identified intermittent Fingerspike
 deaths as the trigger. Substituting Total Fog into that save on the installed Mac
@@ -717,7 +329,11 @@ its absence on this Mac does not establish that it is fixed. Alert examples will
 follow his testing of a working build.
 
 
-## Current private feedback
+## Private feedback history: 5–6 October 2026
+
+These are retained delivered-pair checkpoints and player reports. Dates and
+“current” candidate references in this history belong to those results. Use the
+status and delivery boundary above for today’s priorities.
 
 Mortal's planned Total Fog plus Zombieland session on Saturday 2026-10-31 is the
 next named integration priority, ahead of further CE acceptance. This combined
@@ -798,7 +414,7 @@ passes another six-process comparison on this same fixture. With 300 native
 warmup ticks, ordinary multiplier fifteen, no forced speed and no DPA/zombie
 work instrumentation, medians are 296.6253 original versus 315.0459 candidate
 TPS, 6.21% higher; mean tick elapsed is 6.45% lower and frame p95 is broadly
-unchanged. All six logs pass the native error guard. This is the current
+unchanged. All six logs pass the native error guard. This is that
 pair's bounded TPS floor, not universal performance. Its exact-pair gates now
 repeat all twelve native/pixel cases, 54 manual targets and forty dense/sparse
 render-cost rows with clean logs. See `artifacts/zombieland-current-package-gates.json`.

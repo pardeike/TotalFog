@@ -11,7 +11,8 @@ a wild boar or something much worse. To be safe, you have to look.
 
 > **Early version for RimWorld 1.6.** Testing is still going on. Feedback, bug
 > reports and saves that show problems are very welcome:
-> [issues](https://github.com/pardeike/TotalFog/issues).
+> [Brrainz Discord](https://discord.gg/G4r84eN7w6) or
+> [GitHub issues](https://github.com/pardeike/TotalFog/issues).
 
 ## What you get
 
@@ -20,6 +21,8 @@ a wild boar or something much worse. To be safe, you have to look.
   Trees can block it too, if you want.
 - Areas you explored stay on the map, but they are grey. You see the ground, not
   who walks on it right now.
+- Previously observed scenery uses the game's normal drawing. Trees and buildings
+  can change while unseen; Total Fog does not preserve a picture of their last appearance.
 - Allies, neutral visitors and even prisoners can share their view with you
   (each one is a setting).
 
@@ -32,7 +35,7 @@ a wild boar or something much worse. To be safe, you have to look.
 ### Sounds keep secrets, or give hints
 - Combat music is off by default, so the music cannot warn you about a raid.
 - Sounds from hidden things can be muted, or muffled by distance. Only living
-  colonists can hear, and a colonist with bad hearing hears less.
+  pawns in your faction provide hearing, according to their hearing capacity.
 - Small hearing indicators can show that *something* moves out there.
 
 ### News only when you see it
@@ -41,7 +44,7 @@ a wild boar or something much worse. To be safe, you have to look.
   good news, bad news).
 - Colony health and global events always arrive at once.
 - **Silent raids** (optional): no arrival letter for raids and manhunter packs.
-  You find out when they show up.
+  Arrival slowdown is suppressed too; spawning and normal combat slowdown stay intact.
 
 ### Fair enemies
 - Optional: humanlike enemies can only target what *their* faction can see.
@@ -64,8 +67,20 @@ too much.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a
   copy of your save first.
-- **Works with** [Zombieland](https://github.com/pardeike/Zombieland). Zombies,
-  their effects, sounds and warnings respect the fog.
+- **Zombieland:** the updated preliminary test copy includes fog support for its
+  effects, warnings and multi-cell Symbiant body. These fixes are not all in the
+  Workshop version yet. Total Fog also runs without Zombieland.
+- **Combat Extended:** weapons, powered turrets, mortars and some combined
+  Zombieland controls have passed native tests. Broader loadouts remain under review.
+- **Multiplayer:** shared settings, separate player factions, independent map
+  clocks, fog refresh, saved-session rejoin and bounded combat checks have passed
+  on two local clients. Overall compatibility is still unverified; combined CE,
+  cross-platform play and longer sessions need testing.
+
+See [coverage](docs/COVERAGE.md#current-status-7-october-2026) for the current
+evidence and remaining checks. No public player release or Workshop item exists yet.
+Build this source checkout or use the separately supplied preliminary ZIPs;
+tracked DLLs are older snapshots.
 
 ## For mod developers: support Total Fog in your mod
 
@@ -174,10 +189,12 @@ if (TotalFogSupport.AllowsTarget(shooter, targetCell) == false)
    any other game logic. A hidden zombie must still walk and bite.
 2. **Game thread only.** Call the methods from normal game code (ticks, drawing,
    UI), never from your own background threads.
-3. **"Visible" means "seen right now".** An explored but grey area is not visible.
+3. **"Visible" means "seen right now", subject to the player's bypass settings.** An explored but grey area is not visible.
    This is on purpose: the player must not see live activity there. A temporary
    gravship landing preview does not grant sight through these methods.
-   In Multiplayer, these queries follow the current faction context.
+   In Multiplayer, presentation queries follow the current faction context.
+   `AllowsTarget` uses the observing pawn's faction instead. Never use the local
+   viewer's sight to decide another faction's gameplay actions.
 
 ### Step 4: Test both ways
 
@@ -197,6 +214,8 @@ static class MyBigThingFog
 {
     static MyBigThingFog()
     {
+        if (!ModsConfig.IsActive("brrainz.totalfog"))
+            return;
         var type = AccessTools.TypeByName("TotalFog.Visibility");
         if (type == null)
             return; // Total Fog is not running
@@ -227,7 +246,10 @@ static class MyBigThingFog
 ```
 
 Keep the callbacks short and read-only. They run often. If a callback throws,
-Total Fog hides that thing until you fix it.
+Total Fog suppresses that registered rendering or inspection path until the
+callback is replaced. Registration is for the exact type, not its subclasses;
+pass a null callback to unregister. The renderer callback does not override
+native camera culling and does not make hidden body cells selectable.
 
 ### All public methods
 
@@ -237,6 +259,7 @@ Total Fog hides that thing until you fix it.
 | `Visibility.IsVisible(Map, IntVec3)` | Can the player see this cell now? | Overlays, beams, multi-cell drawing |
 | `Visibility.AllowsTarget(Thing, IntVec3)` | May this pawn's faction target this cell? | Enemy AI targeting |
 | `SoundAudibility.GetAudibilityFactor(TargetInfo)` | How loud may this source be (0 to 1)? | Custom sound and volume code |
+| `SoundAudibility.GetAudibilityFactor(TargetInfo, int)` | How loud is this source with an explicit hearing distance? | Source-specific mixers; this overload applies the policy even when called directly |
 | `Visibility.RegisterRenderer(Type, Func<Thing, bool>)` | Should this type be drawn? | Things drawn larger than their cells |
 | `Visibility.RegisterInspectionCell(Type, Func<Thing, IntVec3>)` | Which cell is used for selection? | Things with a special click spot |
 
@@ -260,7 +283,12 @@ want to hide and where your code draws it. Small, clear examples help the most.
 ## Building from source
 
 Total Fog builds with the .NET SDK version in [global.json](global.json). The
-solution is `Source/TotalFog.slnx`.
+solution is `Source/TotalFog.slnx`. The SDK is **10.0.301**; gameplay and companion
+DLLs target **.NET Framework 4.7.2**, while independent tests run on .NET 10.
+The workflow needs Python 3, Git and `uv` for the pinned Ruff formatter. Live
+setup, deployment and measurement commands currently use the macOS Steam install
+and local GABS/RimBridgeServer tools. Set `RIMWORLD_MOD_DIR` to use another
+installed game's `Mods` folder.
 
 | Command | What it does |
 |---|---|
@@ -270,12 +298,18 @@ solution is `Source/TotalFog.slnx`.
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
+| `./scripts/mod ce-setup` | Builds and deploys the mod and creates the separate Combat Extended test profile |
+| `./scripts/mod zombieland-setup` | Builds and deploys both mod/companion pairs into the Zombieland test profile |
 | `./scripts/mod ce-zombieland-setup` | Builds both mods and creates a separate test profile with Combat Extended, Zombieland and all DLCs |
+| `./scripts/mod mp-setup` | Configures separate Multiplayer host/client profiles without building or deploying |
+| `./scripts/mod mp-layout` | Places the running host on the left and client on the right of the main display |
 | `./scripts/mod dpa-setup [on\|off]` | Adds or removes Dubs Performance Analyzer in a stopped test profile; set `TOTALFOG_GAME_ID` to select another profile |
 | `./scripts/mod baseline` | Installs the original mod for comparison tests |
 | `./scripts/mod benchmark` | Runs the sight-engine speed comparison |
 | `./scripts/mod runtime-benchmark <label> <save> [speed]` | Measures three fresh game processes on the named save; results go to `artifacts/` |
 | `./scripts/mod runtime-compare <label> <save> [speed]` | Alternates three original/candidate pairs and checks the native performance floor |
+| `./scripts/mod feedback-verify <comparison label>` | Repeats the paired native feedback gates on the measured deployed bytes |
+| `./scripts/mod feedback-package` | Verifies the existing paired gates and creates separate preliminary Total Fog and Zombieland ZIPs |
 | `./scripts/mod source-publish` | Pushes committed source and verifies GitHub; does not publish a player ZIP or update Steam |
 
 For a short wide-zoom comparison, prefix `runtime-compare` with
@@ -290,6 +324,7 @@ version folders stay for history. More details:
 
 Build before installing this source checkout. Tracked assemblies are previous
 release snapshots; separately delivered test ZIPs contain their tested builds.
+Preliminary delivery instructions are in [PRELIMINARY.md](PRELIMINARY.md).
 
 ## Credits and license
 

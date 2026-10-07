@@ -20,7 +20,12 @@
     <li>CETeam.CombatExtended</li>
     <li>rwmt.Multiplayer</li>
   </loadAfter>
-  <description>Fog of war and shared field of view for RimWorld. Independently maintained by Andreas Pardeike, based on Real Fog of War by Luca De Petrillo and the NWN continuation maintained by Mlie. Licensed under Apache 2.0. Enable this instead of other Real Fog of War versions.</description>
+  <description>Fog of war for RimWorld 1.6. Explore with colonists, animals, cameras and watchtowers. Configure vision, delayed unseen-event notifications, combat music, hidden-source audio and optional Silent Raids in the mod settings. Early version: broader compatibility is still being tested. Enable Harmony and use this instead of other Real Fog of War versions.
+
+Feedback and support: https://discord.gg/G4r84eN7w6
+Source and current testing status: https://github.com/pardeike/TotalFog
+
+Independently maintained by Andreas Pardeike, based on Real Fog of War by Luca De Petrillo and the NWN continuation maintained by Mlie. Licensed under Apache 2.0; original credits are retained in NOTICE.md.</description>
   <modVersion IgnoreIfNoMatchingField="True">0.1.0</modVersion>
   <incompatibleWith>
     <li>Mlie.NWNRealFogOfWar</li>
