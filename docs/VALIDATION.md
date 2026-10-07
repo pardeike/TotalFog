@@ -5832,3 +5832,35 @@ performance measurement. The known reflection-only loading exception still
 prevents clean-log startup acceptance. The added probe is excluded from player
 packages and does not change gameplay DLL bytes. All 315 tests and the build
 formatter gate pass.
+
+### Current Multiplayer candidate performance floor, 2026-10-07
+
+The f3ad33a1 gameplay DLL is compared with inherited 9d011de0 on the unchanged
+TotalFog_Zombieland_UpstreamQuietGap1000 save. The existing canonical runner
+alternates three original/candidate pairs in fresh native processes, matches
+fixture/settings/camera/loadout/DLL identities and preserves each native log.
+These are single-player Zombieland checks of the current candidate; Multiplayer
+is not loaded and no Multiplayer throughput claim follows from them.
+
+All six samples retain ordinary selected Ultrafast and native rate multiplier
+15, with forced speed and the private speed boost disabled. Original median
+TPS is 286.78698; candidate median is 309.07648, +7.77%. Mean native tick CPU
+cost medians are 2.46459/2.27179 ms. Frame-time p95 medians are 69.8270/70.3427
+ms, slightly higher for the candidate. The canonical three-pair TPS floor passes.
+The complete report is artifacts/comparison-mp-current-f3-zombieland-1000.json.
+
+The bounded wide-view check uses one original/candidate pair, root size 100 and
+the session-only zoom extension. Both actual camera rectangles include 50,750
+map cells, 822 pawn root cells and 763 zombie root cells. Both samples retain
+all 1,000 zombies at the endpoints, ordinary multiplier 15 and matching input.
+TPS is 160.57622/166.69964, +3.81%. Median frame intervals are nearly equal at
+67.2611/67.3639 ms, but p95 is 77.4934/86.4442 ms and p99 is 84.2721/93.1093
+ms. That frame-pacing difference remains open; this single pair does not prove
+a broad FPS improvement or satisfy the three-pair feedback gate. The full
+report is artifacts/comparison-mp-current-f3-wide-zombieland-1000.json, with the
+native wide screenshots and per-sample reports retained by the runner.
+
+Both commands complete successfully and leave the measured candidate deployed.
+No new feedback package or mod release is produced. These results do not
+supersede the outstanding combined CE, Multiplayer transfer or wide-frame
+acceptance checks.

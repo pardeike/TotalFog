@@ -611,6 +611,13 @@ matching cues again. The client-to-host 30-cell hearing-range change and host
 restore to 10 also synchronize while paused. Complete normalized fog state
 still matches. This closes the bounded native cue/RNG/recipient case, not every
 faction or transfer configuration.
+The current f3ad33a1 gameplay DLL also passes a fresh three-pair single-player
+Zombieland performance comparison: median 309.08 versus 286.79 TPS, +7.77%,
+with ordinary fourth-speed multiplier 15 throughout. This establishes the
+measured TPS floor on that 1,000-zombie fixture, not Multiplayer throughput.
+A one-pair root-100 wide-view check gains 3.81% TPS but has worse frame-time
+p95, 86.44 versus 77.49 ms. Wide frame pacing remains outstanding; the spot
+check does not close a three-pair performance gate.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record

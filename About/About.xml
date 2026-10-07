@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <ModMetaData>
-  <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. Original attribution is retained in NOTICE.md. --><name>Total Fog</name>
+  <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. Original attribution is retained in NOTICE.md. -->
+  <name>Total Fog</name>
   <packageId>brrainz.totalfog</packageId>
   <author>Andreas Pardeike</author>
   <supportedVersions>
@@ -17,7 +18,11 @@
   <loadAfter>
     <li>brrainz.harmony</li>
     <li>CETeam.CombatExtended</li>
+    <li>rwmt.Multiplayer</li>
   </loadAfter>
   <description>Fog of war and shared field of view for RimWorld. Independently maintained by Andreas Pardeike, based on Real Fog of War by Luca De Petrillo and the NWN continuation maintained by Mlie. Licensed under Apache 2.0. Enable this instead of other Real Fog of War versions.</description>
   <modVersion IgnoreIfNoMatchingField="True">0.1.0</modVersion>
-<incompatibleWith><li>Mlie.NWNRealFogOfWar</li></incompatibleWith></ModMetaData>
+  <incompatibleWith>
+    <li>Mlie.NWNRealFogOfWar</li>
+  </incompatibleWith>
+</ModMetaData>
