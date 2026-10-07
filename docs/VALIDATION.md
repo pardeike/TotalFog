@@ -5764,3 +5764,37 @@ opt-in handler for replaying their probe commands. The companion is excluded
 from player packages. These checks accept the production queue's bounded
 recipient/persistence/replay behavior, not every native incident producer,
 destroyed target or map transfer. The known loading exception remains separate.
+
+### Current gameplay rifle control and serialized fog data, 2026-10-07
+
+Gameplay f3ad33a1 / companion 0de2047f cold-loads the post-alert save L. The
+read-only pawn probe now accepts an explicit map, so the client can inspect map
+0 while continuing to view faction 18's map 1. Host faction 16 uses normal
+maximum camera root 60 (113x123 view rectangle); the client uses root 24 on map
+1. The rifle's current sight radius is 24. At paused map tick 34303, its target
+Trispike18356 is at (65,144), about 28.3 cells from the rifle at (50,120), within
+weapon range but hidden. The native rifle targeting command leaves the pawn in
+Wait_Combat. With OnlyOutsideColony synchronized on, the same targeting path
+can issue the visible control. Ordinary Normal playback advances map 0 by 1,840
+ticks to 36143 while map 1 stays paused at 41211; world time reaches 47005.
+
+Native battle entries confirm three BoltActionRifle shots, two misses and then
+an impact followed by Transition_Died/Gunshot for Trispike18356. Both clients
+report the same remaining actor/job state and removed target, and native battle
+entries match across their separately saved world data. Complete normalized fog
+state and all source schedules match after the option-off change. No additional
+runtime attention/desync appears. This is a wide-camera determinism/player-rifle
+sample, not a TPS/FPS, enemy AI or combined CE acceptance.
+
+Both native saves N are CRC-verified. Whole save entries are not byte-identical:
+the viewing faction, current map, camera and native faction data differ, and the
+raw hashes/XML differences are retained without asserting whole-save equality.
+Total Fog's two saved components on each map, all saved observation fields
+(1,181 map-0 / 933 map-1 fields) and synchronized session settings match exactly.
+The seven native shot/impact/death entries also match. Evidence under
+artifacts/multiplayer-startup: `combat-current-build-pair.json`,
+`native-current-rifle-control.json`, `current-rifle-battle-log.xml`,
+`native-current-serialized-comparison.json`,
+`native-current-serialized-differences.json` and
+`native-current-totalfog-saved-comparison.json`. The known loading exception
+still prevents clean-log acceptance.

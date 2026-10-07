@@ -597,6 +597,12 @@ once, retains another faction's hidden alerts and releases them correctly when
 the synchronized delay option is disabled. Remaining combat/transfers and the
 latest-byte performance floor are still outstanding. Multiplayer compatibility
 remains unverified overall; these bounded checks do not close the full target.
+The same f3ad33a1 gameplay bytes now pass a separate-map rifle control at host
+zoom 60/client zoom 24: a hidden target leaves the rifle waiting, while the
+colony-exempt visible control produces three native shots, two misses and a
+gunshot death. Both clients agree on the result, normalized fog and all persisted
+Total Fog map/observation/settings data. This closes the bounded player-rifle
+case, not enemy AI, CE turret/no-LOS, transfers or performance acceptance.
 
 Use the exact public 1.6 game, Total Fog DLL, Multiplayer version, dependencies,
 load order and gameplay settings on two independently connected clients. Record

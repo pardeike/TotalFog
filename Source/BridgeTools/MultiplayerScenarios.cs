@@ -78,9 +78,9 @@ public sealed class MultiplayerScenarios
 
     [Tool(
         "totalfog/multiplayer_pawns",
-        Description = "Read selected native pawns or corpse inner pawns by comma-separated ThingIDs. Reports combat jobs, targets, health and current fog visibility without issuing orders or changing simulation. Compare only at matching paused native ticks."
+        Description = "Read native pawns or corpse inner pawns on the requested map by comma-separated ThingIDs. A negative mapId uses the current map. Reports combat jobs, targets, health and the local viewer's fog visibility without issuing orders or changing simulation. Compare only at matching paused native map clocks."
     )]
-    public static Task<object> Pawns(IRimBridgeContext context, string thingIds) =>
+    public static Task<object> Pawns(IRimBridgeContext context, string thingIds, int mapId = -1) =>
         context.MainThread.InvokeAsync<object>(() =>
         {
             var ids = thingIds
@@ -88,13 +88,14 @@ public sealed class MultiplayerScenarios
                 .Select(id => id.Trim())
                 .Where(id => id.Length > 0)
                 .ToArray();
-            if (ids.Length == 0 || ids.Length > 8 || Find.CurrentMap == null)
+            var map =
+                mapId < 0 ? Find.CurrentMap : Find.Maps.FirstOrDefault(m => m.uniqueID == mapId);
+            if (ids.Length == 0 || ids.Length > 8 || map == null)
                 return new
                 {
                     success = false,
                     message = "Use 1..8 comma-separated ThingIDs on a loaded map.",
                 };
-            var map = Find.CurrentMap;
             var pawns = map
                 .mapPawns.AllPawns.Concat(
                     map.listerThings.ThingsInGroup(ThingRequestGroup.Corpse)
@@ -107,6 +108,7 @@ public sealed class MultiplayerScenarios
             {
                 success = true,
                 ticks = Find.TickManager.TicksGame,
+                map = map.uniqueID,
                 pawns = ids.Select(id =>
                         pawns.TryGetValue(id, out var pawn)
                             ? ReadPawn(pawn)
