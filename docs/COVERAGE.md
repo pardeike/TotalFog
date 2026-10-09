@@ -6,12 +6,22 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
-## Current status: 7 October 2026
+## Current status: 10 October 2026
 
-The latest native-tested gameplay DLL is
-`7fb181fed468adc337e1dc1b7387c510d621fe9ce8f6c3a8894af401fbcf2391`.
-The latest build passes 318 independent tests. This is development evidence;
-tracked DLLs and the delivered 6 October test ZIPs are different snapshots.
+The stream-feedback candidate gameplay DLL is
+`ed78f3ae6233add9ac7126d12fdac3a32d89bba7e518c69e8bebd7b0db0ea424`,
+paired with Zombieland `a92ec372f7a9df5384659266005d4c004d7be30c6877f73c241e79a6daf0d108`.
+The latest build passes 322 independent tests. Changed native message filtering,
+blueprint/corpse/light presentation, door area orders, drafted Double Tap and
+native far-zoom silhouettes pass bounded controls. Three fresh alternating native fourth-speed pairs pass the original TPS floor:
+326.73 versus 294.64 median TPS, +10.89%. Frame p95 medians
+are 69.82 versus 70.12 ms. A one-pair wide spot check shows 50,750 map cells:
+169.70 versus 159.87 TPS, but frame p95 worsens to
+85.49 versus 75.66 ms. The full fresh paired native gate, packaging and remote archive checks pass. This is a single-player 1,000-zombie fixture with matching
+settings/camera and no debug speed boost, not a claim about all mod lists.
+This is development evidence;
+tracked DLLs remain last-release snapshots. The 10 October private test ZIPs
+contain this exact pair and supersede the 6 October delivery.
 No public player release or Workshop item exists yet.
 
 | Target | Established evidence | Still open |
@@ -20,10 +30,11 @@ No public player release or Workshop item exists yet.
 | Zombieland | Updated preliminary pair: ordinary/special pawn presentation, Symbiant cell clipping/interaction, healer/counter, contamination refresh, audio and warning controls; standalone fallback also passes | Windows, broader mechanics, full GPU fallback and long sessions. The published Workshop build does not yet include every paired fix |
 | Combat Extended | Native pawn weapons, powered turrets, mortar/manual blind fire, sight loss, ammunition/reload and some CE/Zombieland interactions pass their recorded scenarios | Combat-heavy/large combined loadouts, additional weapons and special states, naturally executed still-Thing suppressive fallback, Windows and wide-view performance |
 | Zetrith's Multiplayer | Two local Steam clients: shared settings, separate factions/maps/clocks, movement/doors, saved-session rejoin, recipient-private notifications/hearing, native caravans, player/enemy rifles and native target acquisition | **Overall unverified.** Autonomous raid AI, combined CE/turret/no-LOS combat, wider lifecycle/faction cases, cross-platform and long sessions; clean player-only loading is not established |
-| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; fresh stream-candidate single-player TPS floor passes; wide-view acceptance remains bounded | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 
-Latest-byte evidence is in the map-clock performance and Multiplayer sections of
+The previous performance and Multiplayer checkpoint is in
 [VALIDATION.md](VALIDATION.md#map-clock-fix-performance-floor-2026-10-07).
+The 10 October stream feedback checks are recorded separately in that document.
 Earlier CE/Zombieland results below keep their own candidate identities; they
 must not be relabeled as fresh tests of the latest DLL. Presentation-only bridge
 probes are excluded from player ZIPs.
@@ -42,7 +53,7 @@ probes are excluded from player ZIPs.
 | Audio | Actual danger-music getter toggles correctly; real Unity loops with cell and object sources mute, muffle, restore, and follow sight without ending or compounding volume | Physical listening and additional mod-defined sound classes |
 | Content | Late-created definition receives one component per instance; custom non-pawn drawable and 3x2 rare-ticking blocker exercised live | Named optional mod installations and custom drawers outside the tested contracts |
 | Persistence | Legacy exploration/observation import and payload round-trips; ordinary and MP cold-save/rejoin, two maps, per-faction knowledge and native caravan deadlines have bounded checks | Earlier preliminary-save variants, map removal/held-flying lifecycles, large colonies and long-session soak; no drawing archives are written |
-| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; fresh stream-candidate single-player TPS floor passes; wide-view acceptance remains bounded | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 
 Optional integrations are isolated from the core. Their contracts were inspected,
 but Minimap and Interaction Bubbles have not been accepted in a live loadout.
@@ -78,7 +89,7 @@ all block a preliminary tester build.
 
 ### Current delivery boundary
 
-The 6 October preliminary Zombieland pair has been delivered with its exact-byte
+The 10 October stream-feedback Zombieland pair has been delivered with its exact-byte
 native/pixel/performance/package gates. Contamination sight/refresh is among the
 accepted bounded controls, rather than an unimplemented delivery blocker.
 Follow up on concrete tester feedback; do not send Mortal CE or Multiplayer
@@ -89,12 +100,18 @@ paths, representative performance, startup/play/save-load and exact packaged
 bytes. Reuse unaffected evidence, repeat affected scenarios and explain rough
 edges. Do not send minor source-only updates. The C0..C5 contamination groups and
 other speculative mechanics remain follow-up coverage unless source or player
-evidence identifies a fog interaction. The current development priority is the
-remaining Multiplayer acceptance, with broader loadouts/soak guided by failures.
+evidence identifies a fog interaction. The current development priority is
+Mortal's concrete stream feedback in Total Fog and Zombieland. CE and Multiplayer
+work are parked until that candidate is tested and delivered. Hidden wall
+destruction remains a known limitation of live remembered scenery; the policy
+decision is pending. The reported new-game loop has not been reproduced end to
+end, although repeated page insertion is fixed.
 
 ### Current closeout priorities
 
-Continue the remaining Multiplayer checks below, starting with demonstrated
+The 10 October stream-feedback pair is delivered. Follow up on its reported
+regressions first, then continue the remaining
+Multiplayer checks below, starting with demonstrated
 failures and existing acceptance gaps. Core two-client queue, rifle, hearing,
 caravan and save/rejoin slices have passed; they are no longer general blockers.
 The reflection-only loading error also reproduces without Total Fog or
@@ -122,7 +139,7 @@ not supersede the already delivered preliminary pair.
 | Overhaul mods | Exact installed 1.6 versions of Combat Extended, Vehicle Framework, Zombieland and relevant Vanilla Expanded content. Inspect overrides and direct drawing paths, then test separate and combined supported loadouts. |
 | Zetrith's Multiplayer | **Unverified for Total Fog.** Establish deterministic simulation, synchronized gameplay settings/actions, fog refresh on both clients, combat targeting, save/rejoin and faction visibility. The reported upstream spreadsheet result does not close this target. See the evidence and acceptance checklist below. |
 | Fog of War parity | Compare original source/settings and gameplay responsibilities. Preserve useful exploration, vision sources, targeting, notification/audio options and integrations while correcting leaks. |
-| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; fresh stream-candidate single-player TPS floor passes; wide-view acceptance remains bounded | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 | Settings | Grouped, readable page, truthful descriptions, sensible defaults, reset, live setting changes and save persistence. Privacy options must explain intentional information cues. |
 | Translations | Use the language set of Andreas' most translated mod, as requested. The local inventory identifies Achtung with 12 languages: English, Simplified/Traditional Chinese, Dutch, French, German, Polish, Russian, Spanish, Latin American Spanish, Swedish and Turkish. Validate all player-visible keys, placeholders and actual settings layout. |
 | Persistence and platform | Core-only and DLC loadouts, older saves, multiple maps, map removal/respawn, large-colony soak, exact deployed bytes and Windows render-error reproduction or confirmation. |
@@ -296,7 +313,7 @@ probe command handlers are opt-in and excluded from player ZIPs.
 | Combat | Player melee/rifle, hidden context-menu filtering, enemy rifle hit pipeline and native enemy target finder with vanilla flags pass | Autonomous raid jobs, wider target candidates, turrets/no-LOS and combined CE Multiplayer combat; one staged candidate is not full raid AI |
 | Save/rejoin | Native cold saves/replay/late rejoin preserve shared settings, faction discovery/observations, queues and deadlines; notification payloads replay once for their recipient | Broader resync and active event/combat saves across unsupported-yet lifecycle cases |
 | Faction visibility / transfer | Shared colony, factions 16/18 and observer 17; private cues/notifications; synchronized native caravan exit, world pawn, entry into another map and return register once with map-clock deadlines | Allies, prisoners, animals, owner changes, held/flying transfer and map removal configurations |
-| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; matched latest-byte single-player TPS floor passes as summarized above | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
+| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; fresh stream-candidate single-player TPS floor passes; wide-view acceptance remains bounded | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
 | Loading | Instrumented controls start/play/save/rejoin; dependency error reproduces with Prepatcher and bridge but without Total Fog/MP. Bounded resolver observer identifies old reflection-only Assembly-CSharp as requester | Exact native caller and bridge-free player-only map load remain unknown. These runs are not clean-log acceptance |
 
 The optional integration watches settings in stable ordinal order and stores

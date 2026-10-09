@@ -132,6 +132,13 @@ def stage(destination, baseline=False):
             target.write_bytes(
                 subprocess.check_output(["git", "show", revision + ":" + name], cwd=ROOT)
             )
+        # The upstream bundle is platform-specific. Both measured variants use
+        # the same portable texture fallback; keep the original DLL/XML bindings.
+        load_folders = ET.parse(destination / "LoadFolders.xml")
+        active = load_folders.getroot().find("v1.6")
+        if not any(folder.text == "LegacyAssets" for folder in active):
+            ET.SubElement(active, "li").text = "LegacyAssets"
+        load_folders.write(destination / "LoadFolders.xml", encoding="utf-8", xml_declaration=True)
         shutil.copy2(
             ROOT / "artifacts/baseline/rimworld-mod-real-fow.dll", assemblies / "TotalFog.dll"
         )
@@ -343,7 +350,7 @@ try:
                         identity["camera"] = environment["camera"]
                         identity["wideView"] = environment["wideView"]
                         identity["contaminationOverlay"] = environment["contaminationOverlay"]
-                        identity["contaminationInput"] = environment["contaminationInput"]
+                        identity["contaminationInput"] = environment.get("contaminationInput")
                         identity["zombieland"] = evidence["zombielandIdentity"]
                         identity["combatExtended"] = evidence["combatExtendedIdentity"]
                         identity["warmupTicks"] = evidence["warmupTicks"]
@@ -908,7 +915,7 @@ try:
                 gates["silentArrivalControls"] == 4
                 and gates["incidentParameterLifetime"] == "passed"
                 and arrivals["operation"]["Success"]
-                and not arrivals["operation"]["Warnings"]
+                and not arrivals["operation"].get("Warnings")
                 and arrivals["passed"]
                 and len(arrivals["rows"]) == 4
                 and all(row["passed"] for row in arrivals["rows"])
@@ -924,7 +931,7 @@ try:
             )
             if not (
                 warnings["operation"]["Success"]
-                and not warnings["operation"]["Warnings"]
+                and not warnings["operation"].get("Warnings")
                 and warnings["passed"]
                 and len(warnings["rows"]) == 7
                 and all(
@@ -947,7 +954,7 @@ try:
                 )
                 if not (
                     scream["operation"]["Success"]
-                    and not scream["operation"]["Warnings"]
+                    and not scream["operation"].get("Warnings")
                     and scream["passed"]
                     and len(scream["rows"]) == 7
                     and all(row["passed"] for row in scream["rows"])
@@ -967,7 +974,7 @@ try:
             if not (
                 gates.get("explosionCameraControls") == 16
                 and explosions["operation"]["Success"]
-                and not explosions["operation"]["Warnings"]
+                and not explosions["operation"].get("Warnings")
                 and explosions["passed"]
                 and len(explosions["rows"]) == 16
                 and all(
@@ -982,7 +989,7 @@ try:
             if not (
                 gates["globalAmbientControls"] == 5
                 and ambient["operation"]["Success"]
-                and not ambient["operation"]["Warnings"]
+                and not ambient["operation"].get("Warnings")
                 and ambient["passed"]
                 and len(ambient["rows"]) == 5
                 and all(row["passed"] and row["dictionaryUnchanged"] for row in ambient["rows"])

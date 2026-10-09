@@ -8,7 +8,9 @@ custom AssetBundle or shader. The removed upstream bundle contained only
 Texture2D assets duplicated by those PNG paths.
 
 The public `upstream-baseline` tag preserves the original payload for comparison.
-Baseline staging restores its AssetBundle and original `LoadFolders.xml`; normal
+Baseline staging restores its AssetBundle and original load folders, then adds
+the same `LegacyAssets` portable texture fallback used by the candidate. The
+original DLL and definition bindings stay unchanged. Normal
 staging removes any stale `Assets/` folder. Historical version payloads remain
 frozen. Upstream scratch projects, failure experiments, duplicate translation
 templates/ZIP and superseded branding binaries were removed from `Originals/`

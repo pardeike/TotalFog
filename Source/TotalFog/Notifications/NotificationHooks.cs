@@ -17,8 +17,7 @@ internal static class NotificationHooks
         // client. It must not enter a shared, saved notification queue.
         if (hidden && !historical && MultiplayerIntegration.Active)
             return false;
-        bool suppress =
-            hidden && msg.def == MessageTypeDefOf.ThreatBig && FogSettings.HideThreatBig;
+        bool suppress = NotificationVisibility.Suppressed(msg.def);
         var decision = NotificationPolicy.Decide(
             hidden,
             suppress,

@@ -55,6 +55,7 @@ namespace Verse
     {
         public DrawerType drawerType = DrawerType.RealtimeOnly;
         public bool hasTooltip;
+        public bool IsBlueprint;
         public ThingCategory category;
         public IntVec2 size = new(1, 1);
     }
@@ -120,6 +121,8 @@ namespace Verse
 
     public class Building : ThingWithComps { }
 
+    public class Corpse : ThingWithComps { }
+
     public class RaceProperties
     {
         public bool Humanlike = true;
@@ -134,6 +137,8 @@ namespace Verse
     }
 
     public class LetterDef { }
+
+    public class MessageTypeDef { }
 
     public class LookTargets
     {
@@ -534,6 +539,17 @@ namespace RimWorld
             PositiveEvent = new(),
             ThreatBig = new(),
             ThreatSmall = new();
+    }
+
+    public static class MessageTypeDefOf
+    {
+        public static readonly Verse.MessageTypeDef NegativeEvent = new(),
+            NeutralEvent = new(),
+            PositiveEvent = new(),
+            ThreatBig = new(),
+            ThreatSmall = new(),
+            NegativeHealthEvent = new(),
+            RejectInput = new();
     }
 
     public class PawnFlyer : Verse.Thing

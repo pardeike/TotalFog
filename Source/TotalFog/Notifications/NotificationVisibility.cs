@@ -76,4 +76,11 @@ internal static class NotificationVisibility
         || def == LetterDefOf.PositiveEvent && FogSettings.HideEventPositive
         || def == LetterDefOf.ThreatBig && FogSettings.HideThreatBig
         || def == LetterDefOf.ThreatSmall && FogSettings.HideThreatSmall;
+
+    internal static bool Suppressed(MessageTypeDef def) =>
+        def == MessageTypeDefOf.NegativeEvent && FogSettings.HideEventNegative
+        || def == MessageTypeDefOf.NeutralEvent && FogSettings.HideEventNeutral
+        || def == MessageTypeDefOf.PositiveEvent && FogSettings.HideEventPositive
+        || def == MessageTypeDefOf.ThreatBig && FogSettings.HideThreatBig
+        || def == MessageTypeDefOf.ThreatSmall && FogSettings.HideThreatSmall;
 }

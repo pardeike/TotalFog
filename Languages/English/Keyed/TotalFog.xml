@@ -19,7 +19,7 @@
   <TotalFog_ResetDesc>Reset adjustable settings. Tree blocking remains unchanged while a game is loaded.</TotalFog_ResetDesc>
   <TotalFog_AdditionalObservers>Additional observers</TotalFog_AdditionalObservers>
   <TotalFog_TerrainAndMaps>Terrain and maps</TotalFog_TerrainAndMaps>
-  <TotalFog_DiscardEvents>Discard letter categories</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEvents>Discard unseen messages and letters</TotalFog_DiscardEvents>
   <TotalFog_DiscardEventsDesc>Discard the selected categories only while their targets are unseen. Colony health events, visible events and global events without targets remain immediate. Use delay to keep unseen notifications until their targets are observed.</TotalFog_DiscardEventsDesc>
   <TotalFog_InformationOptions>Other information</TotalFog_InformationOptions>
   <TotalFog_SilentRaids>Silent raids and manhunter packs</TotalFog_SilentRaids>

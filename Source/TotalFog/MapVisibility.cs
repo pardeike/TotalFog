@@ -536,7 +536,7 @@ public class MapVisibility : MapComponent
         {
             map.mapDrawer.MapMeshDirty(
                 new IntVec3(section % columns * SectionSize, 0, section / columns * SectionSize),
-                FogDefOf.RealFogOfWar
+                FogDefOf.RealFogOfWar | MapMeshFlagDefOf.GroundGlow
             );
         }
         dirtySections.Clear();

@@ -34,6 +34,11 @@ producers, with heat and completed blast-cell processing retained.
 It checks fourteen native contamination sight/refresh controls with paired
 pixels, including hidden mutations, reopening, zoom return and clearing.
 It also verifies that all five fog audio modes preserve global creepy ambience.
+Use `totalfog/stream_feedback` on a paused initialized paired map for the changed
+blueprint/corpse/lighting/door/highlight controls and portable camera/watchtower
+screenshots. It stages temporary native objects and reloads the unchanged save.
+Inspect each returned row and the actual pixels; this is not a natural incident
+or full corpse-resurrection test. The companion remains outside player ZIPs.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland
@@ -218,7 +223,9 @@ The active projects are in Source/TotalFog, Core, Tests, and BridgeTools;
 Source/TotalFog.slnx opens all four. Upstream source and comparison assets are
 preserved in the public upstream-baseline tag. The active payload uses portable
 LegacyAssets/Textures PNGs, with no inherited AssetBundle. Baseline staging restores
-the original bundle and LoadFolders.xml from that tag. The tests source-link
+the original bundle and LoadFolders.xml from that tag, adding the same portable
+LegacyAssets texture fallback used by the candidate on macOS. Original gameplay
+DLLs and XML type bindings remain unchanged. The tests source-link
 visibility/lifecycle code with a small engine boundary;
 live BridgeTools scenarios prove actual registration and render behavior.
 Use TotalFog namespaces and independently named runtime types. Preserve frozen historical payloads.

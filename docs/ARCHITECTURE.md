@@ -19,9 +19,10 @@ reference-counted grid rebuilt from faction observers. Object observation record
 which player factions have seen it, rather than storing an appearance. The
 primary faction retains the original `seenByPlayer` save value; extra factions
 have separate observation identities. A new object in an explored cell stays
-hidden until observed. Pawns, flyers, projectiles and
-ordinary motes require current sight. Player pawn observers retain their existing
-presentation exception.
+hidden until observed. Pawns, flyers, projectiles, corpses and
+ordinary motes require current sight. Player pawn observers and owned blueprints
+on explored cells retain presentation exceptions. Ownership never grants
+live information or visibility through native undiscovered fog.
 
 - `Source/Core` owns coverage, discovery, geometry, sight casting and information
   policies. It has no Verse, Unity, Harmony, DLC or optional-mod references.
@@ -36,6 +37,18 @@ presentation exception.
   sources, hearing filtering and hearing indicators.
 - Optional integrations own their feature detection and exceptions. They do not
   change the core visibility algorithm.
+
+Artificial glow is clipped in SectionLayer_LightingOverlay, using the current
+viewer's shown-cell array once per mesh generation. Fog section changes also dirty
+GroundGlow. Native GlowGrid illumination, glower propagation, heat and other
+simulation remain unchanged. The remembered native scenery policy can retain
+visual details baked into an object's ordinary drawing, including power warnings;
+it is not a snapshot of the last observed appearance.
+
+Previously observed player doors accept area Forbid/Allow orders on explored
+cells outside sight. This expresses player intent without enabling hidden
+selection, inspection or live target information. Other things retain the
+normal current-sight designator gates.
 
 ## Update and save rules
 

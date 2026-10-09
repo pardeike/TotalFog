@@ -8,6 +8,41 @@ namespace TotalFog.Tests;
 
 public sealed class ObservationTests
 {
+    [Fact]
+    public void OwnedBlueprintRendersOutsideSightWithoutRevealingLiveInformation()
+    {
+        var plan = Item();
+        plan.def.IsBlueprint = true;
+        plan.Faction = Faction.OfPlayer;
+        Assert.True(ThingVisibility.IsVisible(plan));
+        Assert.False(ThingVisibility.IsVisible(plan, allowMemory: false));
+        plan.Map.fogGrid.Fogged = true;
+        Assert.False(ThingVisibility.IsVisible(plan));
+    }
+
+    [Fact]
+    public void EnemyBlueprintDoesNotRenderOutsideSight()
+    {
+        var plan = Item();
+        plan.def.IsBlueprint = true;
+        plan.Faction = new Faction();
+        Assert.False(ThingVisibility.IsVisible(plan));
+    }
+
+    [Fact]
+    public void ObservedCorpseDisappearsOnSightLossBeforeAnyHiddenResurrection()
+    {
+        var corpse = new Corpse();
+        corpse.Map.Fog.Initialized = true;
+        corpse.Map.Fog.knownCells[0] = true;
+        corpse.Map.Fog.InSight[0] = true;
+        Assert.True(ThingVisibility.IsVisible(corpse, observed: true));
+        corpse.Map.Fog.InSight[0] = false;
+        Assert.False(ThingVisibility.IsVisible(corpse, observed: true));
+        corpse.Map.Fog.InSight[0] = true;
+        Assert.True(ThingVisibility.IsVisible(corpse, observed: true));
+    }
+
     private static ThingWithComps Item(bool initialized = true)
     {
         var item = new ThingWithComps();

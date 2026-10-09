@@ -28,7 +28,7 @@ if (root / "contamination-overlay-live.json").exists():
     report = json.loads((root / "contamination-overlay-live.json").read_text())
     require(
         report["operation"]["Success"]
-        and not report["operation"]["Warnings"]
+        and not report["operation"].get("Warnings")
         and report["passed"]
         and report["advancedTicks"] == 0,
         "Contamination scenario failed",
@@ -143,7 +143,7 @@ if (root / "contamination-overlay-live.json").exists():
 if (root / "symbiant-boundary-live.json").exists():
     report = json.loads((root / "symbiant-boundary-live.json").read_text())
     require(
-        report["operation"]["Success"] and not report["operation"]["Warnings"],
+        report["operation"]["Success"] and not report["operation"].get("Warnings"),
         "Symbiant scenario failed",
     )
     require(
@@ -178,7 +178,10 @@ if (root / "symbiant-boundary-live.json").exists():
             "Symbiant body submission or registration failed",
         )
         require(
-            all(part["hiddenCenters"] == part["invalidUvs"] == 0 for part in row["geometry"] or []),
+            all(
+                part["hiddenCenters"] == part["invalidUvs"] == 0
+                for part in row.get("geometry") or []
+            ),
             "Symbiant geometry disclosed hidden cells or damaged UVs",
         )
         interaction = row.get("interaction")
@@ -310,7 +313,7 @@ if (root / "loaded-combat-live.json").exists():
     )
     require(
         report["operation"]["Success"]
-        and not report["operation"]["Warnings"]
+        and not report["operation"].get("Warnings")
         and report["paused"]
         and report["step"]["Success"]
         and report["step"]["CompletedTicks"] == 900
@@ -367,7 +370,7 @@ if (root / "static-interface-live.json").exists():
         "structuredContent"
     ]
     require(
-        report["operation"]["Success"] and not report["operation"]["Warnings"],
+        report["operation"]["Success"] and not report["operation"].get("Warnings"),
         "Static drawing scenario failed",
     )
     observed, hidden, revealed = (report[key] for key in ("observed", "hidden", "revealed"))
@@ -446,7 +449,7 @@ if (root / "section-save-damaged-status.json").exists():
         and loaded["state"]["visualReady"]
         and loaded["state"]["paused"]
         and status["operation"]["Success"]
-        and not status["operation"]["Warnings"]
+        and not status["operation"].get("Warnings")
         and status["Initialized"]
         and status["paused"]
         and all(
@@ -514,7 +517,7 @@ else:
     kind, prefix = "resource", "texture-archive"
 report = json.loads((root / (prefix + "-live.json")).read_text())["result"]["structuredContent"]
 require(
-    report["operation"]["Success"] and not report["operation"]["Warnings"],
+    report["operation"]["Success"] and not report["operation"].get("Warnings"),
     "Scenario operation failed",
 )
 log = (root / (prefix + "-player.log")).read_text(errors="replace")
@@ -533,7 +536,7 @@ if kind in {"save", "save-picture"}:
         "structuredContent"
     ]
     require(
-        prepared["operation"]["Success"] and not prepared["operation"]["Warnings"],
+        prepared["operation"]["Success"] and not prepared["operation"].get("Warnings"),
         "Save preparation failed",
     )
     require(
@@ -1252,7 +1255,7 @@ else:
         ]
         require(
             reference["operation"]["Success"]
-            and not reference["operation"]["Warnings"]
+            and not reference["operation"].get("Warnings")
             and reference["referenceAfterSave"]
             and not report["referenceAfterSave"]
             and reference["simulationStayedPaused"],

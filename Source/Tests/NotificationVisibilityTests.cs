@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RimWorld;
 using TotalFog.Core;
 using TotalFog.Notifications;
 using Verse;
@@ -8,6 +9,36 @@ namespace TotalFog.Tests;
 
 public sealed class NotificationVisibilityTests
 {
+    [Fact]
+    public void DiscardCategoriesAlsoApplyToEventMessagesWithoutSuppressingHealthOrCommands()
+    {
+        FogSettings.HideEventNeutral =
+            FogSettings.HideEventNegative =
+            FogSettings.HideEventPositive =
+            FogSettings.HideThreatBig =
+            FogSettings.HideThreatSmall =
+                true;
+        try
+        {
+            Assert.True(NotificationVisibility.Suppressed(MessageTypeDefOf.NeutralEvent));
+            Assert.True(NotificationVisibility.Suppressed(MessageTypeDefOf.NegativeEvent));
+            Assert.True(NotificationVisibility.Suppressed(MessageTypeDefOf.PositiveEvent));
+            Assert.True(NotificationVisibility.Suppressed(MessageTypeDefOf.ThreatBig));
+            Assert.True(NotificationVisibility.Suppressed(MessageTypeDefOf.ThreatSmall));
+            Assert.False(NotificationVisibility.Suppressed(MessageTypeDefOf.NegativeHealthEvent));
+            Assert.False(NotificationVisibility.Suppressed(MessageTypeDefOf.RejectInput));
+        }
+        finally
+        {
+            FogSettings.HideEventNeutral =
+                FogSettings.HideEventNegative =
+                FogSettings.HideEventPositive =
+                FogSettings.HideThreatBig =
+                FogSettings.HideThreatSmall =
+                    false;
+        }
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]

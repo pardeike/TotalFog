@@ -63,6 +63,9 @@ public sealed class NotificationScenarios
                         enemyCount = counts[enemyIndex],
                         pending = manager.PendingCount;
                     bool hideNegative = FogSettings.HideEventNegative,
+                        hideNeutral = FogSettings.HideEventNeutral,
+                        hidePositive = FogSettings.HideEventPositive,
+                        hideSmall = FogSettings.HideThreatSmall,
                         hideBig = FogSettings.HideThreatBig,
                         delay = FogSettings.DelayAlertsUntilSeen,
                         outside = FogSettings.OnlyOutsideColony;
@@ -70,6 +73,9 @@ public sealed class NotificationScenarios
                     try
                     {
                         FogSettings.HideEventNegative =
+                            FogSettings.HideEventNeutral =
+                            FogSettings.HideEventPositive =
+                            FogSettings.HideThreatSmall =
                             FogSettings.HideThreatBig =
                             FogSettings.DelayAlertsUntilSeen =
                                 true;
@@ -88,8 +94,69 @@ public sealed class NotificationScenarios
                         Send("colony-health", LetterDefOf.NegativeEvent, new LookTargets(own));
                         Send("global-condition", LetterDefOf.NegativeEvent, new LookTargets());
                         Send("hidden-discarded", LetterDefOf.ThreatBig, new LookTargets(enemy));
+                        Send(
+                            "hidden-pod-letter",
+                            LetterDefOf.PositiveEvent,
+                            new LookTargets(new TargetInfo(enemy.Position, map))
+                        );
+                        var discardedMessages = new[]
+                        {
+                            new Message(
+                                token + "traveler",
+                                MessageTypeDefOf.NeutralEvent,
+                                new LookTargets(enemy)
+                            ),
+                            new Message(
+                                token + "harbinger",
+                                MessageTypeDefOf.NeutralEvent,
+                                new LookTargets(new TargetInfo(enemy.Position, map))
+                            ),
+                            new Message(
+                                token + "fleeing",
+                                MessageTypeDefOf.NeutralEvent,
+                                new LookTargets(enemy)
+                            ),
+                            new Message(
+                                token + "positive",
+                                MessageTypeDefOf.PositiveEvent,
+                                new LookTargets(enemy)
+                            ),
+                            new Message(
+                                token + "negative",
+                                MessageTypeDefOf.NegativeEvent,
+                                new LookTargets(enemy)
+                            ),
+                            new Message(
+                                token + "small-threat",
+                                MessageTypeDefOf.ThreatSmall,
+                                new LookTargets(enemy)
+                            ),
+                        };
+                        foreach (var message in discardedMessages)
+                            Messages.Message(message);
+                        bool hiddenMessagesDiscarded = discardedMessages.All(message =>
+                            !Messages.IsLive(message)
+                        );
+                        var healthMessage = new Message(
+                            token + "health-message",
+                            MessageTypeDefOf.NegativeHealthEvent,
+                            new LookTargets(own)
+                        );
+                        var globalMessage = new Message(
+                            token + "global-message",
+                            MessageTypeDefOf.NeutralEvent,
+                            new LookTargets()
+                        );
+                        Messages.Message(healthMessage);
+                        Messages.Message(globalMessage);
                         counts[enemyIndex] = 1;
                         Send("visible-threat", LetterDefOf.ThreatBig, new LookTargets(enemy));
+                        var visibleMessage = new Message(
+                            token + "visible-message",
+                            MessageTypeDefOf.NeutralEvent,
+                            new LookTargets(enemy)
+                        );
+                        Messages.Message(visibleMessage);
                         counts[enemyIndex] = 0;
                         FogSettings.HideThreatBig = false;
                         Send("hidden-deferred", LetterDefOf.ThreatBig, new LookTargets(enemy));
@@ -109,12 +176,22 @@ public sealed class NotificationScenarios
                                 && visible
                                 && !discarded
                                 && !deferred
+                                && !Archived("hidden-pod-letter")
+                                && hiddenMessagesDiscarded
+                                && Messages.IsLive(healthMessage)
+                                && Messages.IsLive(globalMessage)
+                                && Messages.IsLive(visibleMessage)
                                 && manager.PendingCount == pending + 1,
                             colonyHealthReported = health,
                             globalConditionReported = global,
                             visibleThreatReported = visible,
                             hiddenDiscardedReported = discarded,
                             hiddenDeferredReported = deferred,
+                            hiddenEventMessagesDiscarded = hiddenMessagesDiscarded,
+                            hiddenPodLetterDiscarded = !Archived("hidden-pod-letter"),
+                            colonyHealthMessageReported = Messages.IsLive(healthMessage),
+                            globalMessageReported = Messages.IsLive(globalMessage),
+                            visibleMessageReported = Messages.IsLive(visibleMessage),
                             queued = manager.PendingCount - pending,
                         };
                     }
@@ -123,6 +200,9 @@ public sealed class NotificationScenarios
                         counts[ownIndex] = ownCount;
                         counts[enemyIndex] = enemyCount;
                         FogSettings.HideEventNegative = hideNegative;
+                        FogSettings.HideEventNeutral = hideNeutral;
+                        FogSettings.HideEventPositive = hidePositive;
+                        FogSettings.HideThreatSmall = hideSmall;
                         FogSettings.HideThreatBig = hideBig;
                         FogSettings.DelayAlertsUntilSeen = delay;
                         FogSettings.OnlyOutsideColony = outside;

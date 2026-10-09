@@ -73,7 +73,8 @@ internal static class ThingVisibility
             || thing is PawnFlyer ownedFlyer && ownedFlyer.FlyingPawn?.Faction == observerFaction;
         // Ownership only grants the pawn presentation exception. Live UI and
         // events require current sight; vanilla fog precedes every exception.
-        if (allowMemory && ownObserver)
+        bool ownPlan = thing.def.IsBlueprint && thing.Faction == observerFaction;
+        if (allowMemory && (ownObserver || ownPlan))
             return true;
         var fog = registeredVisibility ?? map.GetVisibility();
         // Landing previews can draw hidden geometry, but must not grant current
@@ -91,6 +92,7 @@ internal static class ThingVisibility
         bool canRemember =
             allowMemory
             && !mobile
+            && thing is not Corpse
             && (observed ?? thing.TryGetComp<CompFog>()?.HideFromPlayer?.WasSeenBy(observerFaction))
                 == true;
         // The queried cell belongs to the footprint, including when rendering

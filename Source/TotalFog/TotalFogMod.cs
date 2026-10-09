@@ -100,6 +100,13 @@ public class TotalFogMod : Mod
     private static void injectDetours()
     {
         harmony.Patch(
+            AccessTools.Method(typeof(SectionLayer_LightingOverlay), "GenerateLightingOverlay"),
+            transpiler: new HarmonyMethod(
+                typeof(Presentation.LightingVisibility),
+                nameof(Presentation.LightingVisibility.Transpiler)
+            )
+        );
+        harmony.Patch(
             AccessTools.Method(typeof(ThingWithComps), nameof(ThingWithComps.InitializeComps)),
             prefix: new HarmonyMethod(typeof(TotalFogMod), nameof(InitializeCompsPrefix))
         );
@@ -440,6 +447,9 @@ public class TotalFogMod : Mod
             typeof(DesignatorPlace),
             nameof(Designator_Install.CanDesignateCell)
         );
+
+        foreach (var type in new[] { typeof(Designator_Forbid), typeof(Designator_Unforbid) })
+            patchMethod(type, typeof(DoorOrders), nameof(Designator_Forbid.CanDesignateThing));
 
         //Specific designation
         patchMethod(

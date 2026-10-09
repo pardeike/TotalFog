@@ -1,161 +1,117 @@
-# Total Fog preliminary feedback build
+# Total Fog and Zombieland preliminary test pair
 
-Private work-in-progress build, version 0.1.0, 6 October 2026, for RimWorld 1.6.
-The overhaul is ongoing. Windows confirmation, broader mod compatibility and
-long-session performance testing remain open. This is not a finished release.
+Private feedback build, 10 October 2026, for RimWorld 1.6. Total Fog remains
+version 0.1.0. This pair replaces the 6 October test archives. It is not a public
+release. Broader mod lists, Windows and long sessions still need testing.
 
-This guide describes the separately delivered **6 October Zombieland test pair**,
-not every later source commit. Its test counts and measurements belong to that
-pair. For current development status, see [README](https://github.com/pardeike/TotalFog#readme) and
-[coverage](https://github.com/pardeike/TotalFog/blob/main/docs/COVERAGE.md). A source update is not a new feedback ZIP.
-Feedback and support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
+Support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
+Source and current coverage: [Total Fog](https://github.com/pardeike/TotalFog)
+and [coverage](https://github.com/pardeike/TotalFog/blob/main/docs/COVERAGE.md).
+Later source commits are not automatically included in these archives.
 
 ## Installation
 
-Discord delivery uses `TotalFog-preliminary.zip` and
-`ZombieLand-preliminary.zip`, each with this guide as `TESTING.md`.
-Both ZIPs are complete, including Zombieland's music. Close RimWorld and replace
-previous local mod folders with the folders from these ZIPs. No Workshop-file
-copy is required. This complete Zombieland ZIP supersedes the earlier small
-`ZombieLand-preliminary-update.zip`.
-The resulting mod paths must be `Mods/TotalFog/About/About.xml` and likewise
-for ZombieLand. Disable the Workshop
-copy of Zombieland while using this local test copy, so only one Zombieland is
-enabled. The included Zombieland has fog integration fixes; the Workshop version
-does not yet contain all of them. Use Harmony, Core, your DLCs, Zombieland and
-Total Fog for the first combined test, then try your usual mod list. Restart
-RimWorld after switching builds and test a copy of your save. Disable NWN Real
-Fog of War and any other fog-of-war mod. A save made with NWN Real Fog of War will warn that its mod
-list differs; Total Fog replaces that package. The original player's combat
-save loaded and ran in the local Mac test, but general save compatibility is
-still being checked.
+Close RimWorld and replace the previous local TotalFog and ZombieLand folders
+with those from the two complete ZIPs. Zombieland's music is included. The paths
+must end in `Mods/TotalFog/About/About.xml` and
+`Mods/ZombieLand/About/About.xml`. Disable the Workshop copy of Zombieland so
+only one copy is enabled. Disable NWN Real Fog of War and other fog mods.
 
-## Included changes
+Start with Harmony, Core, your DLCs, Zombieland and Total Fog, then try your
+usual mod list. Restart after changing builds and use a copy of your save.
+Saves from NWN Real Fog of War report a different mod list. Total Fog imports
+its exploration and observed-object data, but general save compatibility is
+still under test. The included Zombieland has integration fixes that are not
+yet all in its Workshop release. Neither mod needs the other to be loaded.
 
-- Initial sight uses ready daylight and lamp lighting after loading a map.
-- Common single-cell visibility checks avoid repeated footprint construction.
-- Zombieland healer beams/glows and the zombie counter/hover highlights respect current sight.
-- Hidden healers continue their gameplay work when their drawing is suppressed.
-- Danger-area warnings follow sight at the reported location, including when a Symbiant's core and root have different visibility. Colonist warnings keep working.
-- Albinos keep an active scream or hack when a hit makes RimWorld reconsider their job.
-- Hidden explosions no longer shake the camera. Visible blasts retain their native shake, damage and heat.
-- Contamination markers follow current sight at both zoom levels, including after hidden changes, zooming and reopening the overlay.
-- Fog section changes also appear while the game is paused.
-- Wall-climbing facing advances with game ticks, so drawing or moving the camera does not change it.
-- Symbiant body parts and its rotating core clip to the fog boundary, even when the root is hidden.
-- Symbiant selection, manual targeting, labels and core hover follow their actual visible cells.
-- Right-click feeding choices require a visible Symbiant core and visible corpses, including when its root lies outside sight.
-- Large Symbiant bodies avoid repeated overlapping hidden-cell scans and per-frame logical-state normalization.
-- Electric/tank ambient loops and spitter/rising-wave sirens follow the selected hidden-source and hearing options.
-- Electric combat sounds play at the actual event; hidden or rapid hits no longer build a backlog of flashes and repeated sounds.
-- Spitter impacts no longer reveal hidden explosion flashes. Existing smoke respects sight changes while continuing to move, age and expire normally.
-- Independent Total Fog runtime namespace and component types.
-- Import of existing original-mod map discovery and deferred-notification data.
-- Fleshbeast flight visibility and landing registration fixes.
-- Fix for the flying-pawn power-grid error during save loading.
-- Colony health, global and visible-event notifications remain immediate.
-- Discard-event settings apply only to unseen events.
-- Enemy fog targeting is optional; disabling it skips enemy sight calculations.
-- Humanlike enemy fog targeting checks each Symbiant body cell against the attacker's own faction sight.
-- Optional Silent Raids removes enemy raid and manhunter arrival letters and arrival slowdown, preserving native spawning and ordinary combat slowdown.
-- Walking pawns checked at their actual drawn position when crossing sight.
-- Native rendering for explored scenery and observed static objects.
-- Removed GPU drawing capture and visual-memory archives to reduce overhead.
-- Separate combat-music, hidden-source audio and hearing settings.
-- Reworked settings page with more space beside the scrollbar.
+## Changes since the previous test pair
 
-Open Options, Mod settings, Total Fog, then Audio. "Suppress combat music" is
-enabled by default for new settings. Existing settings may override defaults.
-The renamed mod entry point uses its own settings file. Earlier preliminary
-Total Fog settings may need to be selected again.
-Other audio and hearing options can intentionally provide clues, so review
-them for the kind of fog-of-war play you want.
+- Discard settings also catch unseen white event messages, including neutral
+  and positive messages. Health, global and currently visible notifications
+  still appear. Each category has its own setting.
+- Artificial light is clipped outside current sight. Fire and torch gameplay,
+  including heat and illumination, keep running. A source may still cast light
+  onto visible ground, which you can actually see.
+- Your blueprints remain visible on explored cells outside current sight.
+  Ownership does not expose live object information or undiscovered cells.
+- Corpses disappear from the display when sight is lost. They remain in the
+  simulation, avoiding the clue of a remembered corpse disappearing only when
+  it becomes a zombie.
+- Previously observed player doors can be forbidden or allowed through the
+  area Forbid/Allow tools outside current sight. This does not open the hidden
+  door's live inspector.
+- Zombie infection labels are green.
+- Ordinary zombies use RimWorld's native silhouette highlights at far zoom.
+  Camera+ is optional. Select the desired native highlight mode in game options.
+- Drafted colonists can be ordered to Double Tap with Hunting unassigned.
+  Incapable colonists still cannot perform the job. Automatic work is unchanged.
+- Zombieland's settings page is inserted once into the new-game page chain.
+  Reusing a page list does not add duplicate settings pages.
 
-In Information, "Silent raids and manhunter packs" is off by default. Enable it
-to remove those arrival warnings entirely, including for visible arrivals. No
-delayed arrival warning is kept. Combat music is controlled separately in Audio.
+The earlier paired fixes remain: Symbiant bodies retain their connected native
+rendering while clipping at the fog boundary, visible cores can be inspected
+and targeted independently of a hidden root, and healer effects, zombie
+counters, contamination overlays, local sound cues and danger warnings follow
+sight. Wall-climbing facing advances by game ticks. Hidden explosions no longer
+shake the camera. Optional enemy fog targeting and Silent Raids are separate
+settings. No appearance archive or drawing capture is saved to disk.
+
+## Settings and remaining limits
+
+Open Options, Mod settings, Total Fog. In Audio, combat music suppression is
+on by default for fresh settings. Existing settings can override that default.
+Review hidden-source audio and hearing choices for the amount of information
+you want. In Information, Silent Raids is off by default. Enabling it removes
+raid and manhunter arrival warnings even when visible; normal combat slowdown
+and spawning remain native. Discard unseen messages and letters applies only
+to hidden events. It is not a blanket mute for every event of that category.
+
+Explored scenery uses the game's current drawing. Remembered walls can change
+or disappear when damaged or destroyed outside sight. Exact last-observed
+appearance was removed to prioritize performance. This limitation is still
+open in this pair.
+
+The normal new-game entry reaches Zombieland settings, world generation and
+site selection once each in the local check. The complete reported setup loop
+has not been reproduced. Please identify the transition that repeats if it
+still occurs. Hidden transport-pod and harbinger notification filtering was
+checked through the native message/letter pipeline; their entire natural
+incident sequences were not reproduced for this check.
+
+## Checks on this pair
+
+The independent suite passes 322 tests. Native Mac controls cover the changed
+message categories and health/global/visible exceptions, real fire and torch
+lighting, own blueprints, corpses, hidden door area orders, native far-zoom
+zombie silhouettes and an actual drafted Double Tap job with Hunting set to
+zero. Normal page-chain reuse and unrelated-page controls pass. Close and
+far-zoom screenshots check sight loss and reveal. These are bounded controls,
+not proof of every gameplay situation or Windows behavior.
+
+The full fresh paired gate also passes 12 Symbiant pixel/interaction cases,
+54 targeting checks, 40 dense/sparse rendering-cost rows, four Silent Raids
+arrival controls, seven danger-warning controls, 21 Albino controls,
+16 explosion-camera controls and 14 contamination refresh controls.
+Recognized native logs are clean. The paired native evidence identifies these
+exact gameplay DLLs; bridge instrumentation is excluded from both archives.
+
+Six fresh matched Mac samples at native fourth speed on the 1,000-zombie
+fixture measure median 326.73 TPS for Total Fog versus 294.64 for
+the original, +10.89%. Frame p95 medians are 69.82 versus
+70.12 ms. Actual ticks use multiplier 15 with debug speed boost
+off. Save, camera, settings and Zombieland bytes match. Each mod retains its
+own visibility policy. This does not establish performance for all maps,
+combat-heavy mod lists, Windows or long sessions. Current paired acceptance
+and its exact hashes are in the source coverage documentation. One wide-view
+spot check showing 50,750 map cells measures 169.70 versus 159.87
+TPS, while frame p95 is worse at 85.49 versus
+75.66 ms. This is not a general FPS improvement. The old
+archives' figures are not measurements of these DLLs.
 
 ## Feedback wanted
 
-For Zombieland, please focus on ordinary/special zombie visibility, block bubbles,
-wall climbing and landing, healer effects, the counter, danger-area warnings, and Symbiant body/core
-visibility and interaction. Watch for hidden activity leaking through alerts,
-audio or effects, and for visible things disappearing. Try saving/reloading and
-a busy horde at your usual speed. Please include Player.log and, for a visual or
-gameplay problem, a save or short clip plus the enabled mod list.
-
-Mac checks cover twelve Symbiant visibility/resource/interaction cases and pixel
-comparisons, plus paused dense/sparse stress samples at 400 and 4,000 cells.
-The independent test suite passes 291 tests. These checks do not establish
-Windows behavior or long-session performance. Native audio checks cover 24
-tank/electric/tar/toxic action controls, 12 spawn-siren controls and 16 electric/
-tank loop controls. Six 128-hit electric bursts preserve absorption and keep
-cosmetic queues bounded. Five real spitter impacts also preserve zombie spawning
-and positional impact audio while suppressing hidden flash submissions. Static
-flash and moving-smoke controls cover sight loss/reveal, hidden movement and
-normal expiry; particle pixels and broader explosion effects remain open.
-Actual tar production and native zombie/human ranged target restrictions also
-pass. Seven normal-playback melee controls record 21 attacks and 16 parries,
-with correct bubble visibility, positional sound and natural expiry. Six staged
-crowd controls complete normal wall crossings at the default threshold; wall
-sounds and delayed warnings also pass their separate settings checks. Three
-real right-click feeding jobs complete for human, fresh animal and rotten animal
-corpses, adding exactly the advertised cells. Four additional current-sight menu
-controls reject hidden cores and hidden corpses while retaining visible choices;
-one visible human feed then carries and completes over 212 normal ticks. A
-separate human-feed check also survives saving during hauling and a fresh game
-restart. Broader special-zombie combat, gas spread/explosions, electrical effects,
-unassisted horde formation, other feeding sight ranges and moving-core phases,
-full severance surgery and full GPU fallback remain under review.
-
-Seven native area-warning checks cover sight loss, mixed colonist/zombie areas,
-and differing Symbiant root/core sight. Natural area classification and actual
-warning hover/click behavior still need playtesting.
-
-Twenty-one native Albino checks cover its own AI starting a scream, sight
-changes for its meshes and bubble, sound settings, victim effects, damage-job
-continuation and natural expiry. The two victims are held passive for this
-focused check. Broader combat, equipment/door hacks and interrupted save/load
-remain for testing.
-
-Sixteen staged native explosion checks cover ordinary bombs and Zombieland's
-suicide-bomb, toxic-splatter and electrical-shock producers. Hidden blasts do
-not shake the camera; visible and colony-bypass controls do. Blast-cell work,
-damage and heat retain their native behavior. Attack AI and particle pixels
-are separate checks.
-
-Native silent-arrival tests cover raids and manhunter packs with the option off
-and on, ordinary slowdown outside incidents, and parameter restoration after a
-failed or throwing worker. All four arrivals preserve the same spawned pawn
-kinds and counts. The new Symbiant enemy-fog acquisition matrix passes five
-ranged and five melee sight states. Native melee and ranged fights also deal
-shared damage while the player sees one body cell and the root stays hidden;
-the active fights survive both in-process reloads and separate full game restarts,
-then continue dealing damage without injuring the host. Broader weapons and
-additional sight ranges remain open. This does not establish
-every modded incident or every combat situation.
-
-Six fresh matched Mac samples at native fourth speed on a 1,000-zombie fixture
-with the contamination overlay open and 4,000 staged sparse ground cells
-measure median 219.28 TPS for Total Fog versus 203.98 for the original, about
-7.50% higher on this current pair. The debug speed boost is off; every measured
-tick uses the native fourth-speed multiplier. Frame p95 is 81.27 ms versus
-76.89 ms, so this is a TPS improvement with a worse frame tail on this fixture.
-The input, camera, settings and Zombieland bytes match; each fog mod keeps its
-ordinary visibility policy. This does not compare identical rendered geometry
-or prove performance for all maps, mod lists or long sessions. Please try your
-usual busy save and report its behavior.
-
-Please try FleshbeastAttack.rws, press Play and watch the Fingerspike deaths.
-The replacement completed 900 ticks including a Fingerspike death with no render errors
-in the Mac test. The exact Windows "Node is null" error has not reproduced
-locally, so its disappearance on Windows still needs confirmation.
-
-Please report alerts that reveal unseen events or fail to appear when they
-should, pawns or effects visible through fog, unexpected audio clues, and
-noticeable slowdowns. A save, Player.log, short clip and enabled mod list help
-reproduce a problem. Explored scenery can change while unseen, as it uses the game's current drawing.
-Exact last-observed visual snapshots have been removed to prioritize performance.
-This replacement still needs Windows testing. The original mod is the minimum
-performance baseline; broader compatibility and performance claims require
-matching runtime measurements.
+First try the issues you reported, then your normal save and busy horde at your
+usual speed. Include a distant zoom view as well as ordinary play. Report hidden
+activity leaking through notifications, effects, highlights or sound, visible
+things disappearing, setup loops and noticeable slowdowns. A Player.log, save,
+short clip and enabled mod list make these much easier to reproduce.

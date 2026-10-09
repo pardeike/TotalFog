@@ -23,6 +23,10 @@ a wild boar or something much worse. To be safe, you have to look.
   who walks on it right now.
 - Previously observed scenery uses the game's normal drawing. Trees and buildings
   can change while unseen; Total Fog does not preserve a picture of their last appearance.
+- Your construction blueprints remain drawn outside current sight. Corpses and
+  artificial light require current sight.
+- Use the area Forbid/Allow tools for previously seen player doors outside sight.
+  Their live inspector stays closed until someone can see them again.
 - Allies, neutral visitors and even prisoners can share their view with you
   (each one is a setting).
 
@@ -77,7 +81,7 @@ too much.
   on two local clients. Overall compatibility is still unverified; combined CE,
   cross-platform play and longer sessions need testing.
 
-See [coverage](docs/COVERAGE.md#current-status-7-october-2026) for the current
+See [coverage](docs/COVERAGE.md#current-status-10-october-2026) for the current
 evidence and remaining checks. No public player release or Workshop item exists yet.
 Build this source checkout or use the separately supplied preliminary ZIPs;
 tracked DLLs are older snapshots.

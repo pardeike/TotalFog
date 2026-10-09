@@ -6111,3 +6111,152 @@ native candidate check should include visible camera/watchtower textures. No
 live game deployment, new feedback delivery or player release follows from this
 cleanup. Local review details are in artifacts/documentation-review.json and
 artifacts/logs/documentation-review.log; package output is in artifacts/logs/package.log.
+
+
+## Stream feedback candidate, 2026-10-10
+
+Mortal's 9 October report is addressed in both mods. Total Fog gameplay hashes
+`ed78f3ae6233add9ac7126d12fdac3a32d89bba7e518c69e8bebd7b0db0ea424`;
+Zombieland hashes
+`a92ec372f7a9df5384659266005d4c004d7be30c6877f73c241e79a6daf0d108`.
+The independent suite passes 322 tests. Gameplay and companion DLLs target
+net472 and build with the pinned .NET 10 SDK. CE and Multiplayer work is retained
+but is not the active acceptance scope.
+
+Native Mac controls use Steam RimWorld 1.6.4871 with all five DLCs, Harmony,
+RimBridgeServer, Zombieland and Total Fog. Camera+, CE and Multiplayer are absent.
+Native white neutral/positive messages now obey the matching discard category
+when unseen. Hidden fleeing, passerby, harbinger and pod-shaped targets are
+submitted through the real message/letter pipeline; health/global and visible
+controls remain immediate. This does not establish each natural incident
+producer end to end.
+
+Paused sight transitions hide a real corpse, fire drawing and artificial ground
+glow, preserve own wall/door/floor blueprints on explored cells, and permit
+Forbid/Allow area orders on an observed player door while rejecting its live
+selection. The corpse stays spawned and undestroyed. Gameplay glow retains its
+original color while the visual helper returns zero outside sight. No simulation
+lighting or physical object is removed. Close screenshots show the same
+objects before loss of sight, while hidden, and after reveal. Wide native
+HighlightAll/Silhouettes controls show the red ordinary-zombie silhouette only
+while visible, with no Camera+ dependency. These checks do not exercise a
+natural hidden corpse resurrection sequence or every light source/shader.
+
+Zombieland's native drafted Double Tap option is enabled with Hunting priority
+zero; the undrafted control stays disabled. Invoking the actual option starts
+the real job and removes the corpse's brain, preventing conversion. PageUtility
+stitching leaves its input list untouched across two calls and yields one
+settings page before world parameters. Unrelated pages are unchanged. Normal
+UI entry reaches Scenario, Storyteller, Zombieland settings, World Generation
+and Site Selection once each. The full reported setup loop remains unverified;
+Mortal was asked which transition repeats. Infection label color is green.
+
+The native records and screenshots are under ignored
+`artifacts/stream-candidate-20261010/`. Explored wall drawing is unchanged pending
+a visual-policy decision. Exact wall snapshots are not restored.
+
+### Comparison setup repairs
+
+Three incomplete attempts are retained in that evidence directory. The first
+original-baseline stage could not load upstream textures after the active-tree
+asset cleanup. Its restored original LoadFolders now includes the same portable
+LegacyAssets PNG fallback as the candidate; the original DLL/XML bindings and
+original bundle are retained. Subsequent attempts rejected optional null CE
+identity and contamination input because the bridge omits null JSON fields.
+The harness now accepts absent CE only when the native loadout has no CE, and
+absent contamination input only in the non-overlay mode already checked by the
+native runner. Matching identity and active-overlay input checks remain. These
+failed attempts establish neither a candidate performance failure nor a pass.
+
+### Current paired performance floor
+
+`comparison-stream-candidate-20261010.json` completes three alternating
+original/candidate pairs in fresh processes on the unchanged
+TotalFog_Zombieland_UpstreamQuietGap1000 save. Every native tick uses the actual
+Ultrafast multiplier 15, with private speed boost and work profiling off. Save,
+camera, settings, engine and Zombieland identities match; native error summaries
+are empty. Candidate median TPS is 326.73071 versus 294.63990 original,
++10.89%. Median mean tick CPU is 2.15396 versus
+2.40241 ms; frame p95 medians are 69.8230 versus
+70.1181 ms. This passes the declared three-pair TPS floor. It is
+a bounded single-player Mac comparison, not identical rendered geometry,
+Multiplayer performance, a busy-combat soak or proof for all mod lists.
+
+The bounded wide-view check, `comparison-stream-candidate-wide-20261010.json`,
+uses one original/candidate pair at root size 100, showing 50,750 native map
+cells and 763 zombie root cells at the matched camera. TPS is 169.70297
+versus 159.87089, +6.15%, but frame p95 is 85.4912
+versus 75.6649 ms, worse for Total Fog. Every tick retains native
+multiplier 15 and the error summaries are empty. This is a spot check, not
+the three-pair gate or a broad FPS improvement.
+
+### Fresh changed-feature and portable-asset controls
+
+`stream-current-assets.json` repeats all six sight/presentation/highlight rows
+on the frozen gameplay pair and the final Total Fog companion
+`2e0ad899a84b81cdb3621b6a03d8374f3be3ff1a4fae4052815617b5a4865d09`.
+All rows pass. Observed/hidden/revealed screenshots were inspected directly;
+WatchTower, ground surveillance camera and CameraConsole use their correct
+portable PNGs. The hidden fire, corpse and zombie disappear, the blueprints
+remain, artificial ground glow is clipped, and the native distant zombie
+silhouette follows current sight. Remembered scenery still uses live native
+graphics, including their drawn power warnings. This check does not promise
+immutable remembered scenery.
+
+`stream-current-notifications.json` repeats the real message/letter pipeline on
+these same bytes: hidden event messages and the pod letter are discarded,
+health/global/visible messages remain, and the non-discarded hidden threat
+enters the deferred queue exactly once. All returned controls pass. The native
+log and four paired DLL hashes are preserved in that ignored evidence folder.
+The two prior generic asset attempts used invalid fixtures: an unstuffy building
+and a wall-attached camera without a wall. Their warnings/errors were not
+claimed as production defects; the corrected probe uses WoodLog where required
+and the valid ground camera.
+
+The first full feedback gate stops after all four arrival controls pass because
+the runner assumed an empty optional operation Warnings field would be emitted.
+The current bridge omits that null field. Feedback verification, pixel validation
+and packaging now treat absent/null warnings as empty while still requiring
+operation success and every scenario invariant. The failed attempt is retained
+in `feedback-verification-stream-candidate-20261010-tjn0ineh`; it is not a
+completed acceptance gate.
+
+The next attempt passes arrivals, area warnings, all 21 Albino controls and
+16 explosion-camera controls, then stops in pixel validation on another omitted
+null field: all-hidden Symbiant rows have no geometry submission. The validator
+already accepted null geometry; it now accepts its omission too. Submission,
+registration, pixel, UV and manual-target assertions stay required. Preserved
+evidence is `feedback-verification-stream-candidate-20261010-_t9mlxoq`.
+
+### Completed paired acceptance
+
+The canonical `feedback-verify stream-candidate-20261010` succeeds. Its complete
+record is `artifacts/zombieland-current-package-gates.json`, referencing
+`feedback-verification-stream-candidate-20261010-jm7o_0sz`. Fresh evidence covers
+12 Symbiant pixel/resource/interaction cases, 54 manual-target checks, all
+40 rows in the four 400/4,000-cell dense/sparse rendering-cost matrices, four
+silent arrivals and parameter lifetime, seven area-warning controls, 21 Albino
+controls, 16 explosion-camera controls and 14 contamination refresh/pixel
+controls. Recognized native logs are clean. Built/deployed gameplay and
+companion pairs match the four hashes above. The input save remains unchanged
+and native game termination is verified. Broader gameplay, Windows and long
+sessions remain open. No bridge instrumentation is intended for the player ZIPs.
+
+### Private package and delivery
+
+The canonical `feedback-package` succeeds with 322 tests and refreshed exact-byte
+native gates. The complete Total Fog archive is 1,161,907 bytes, SHA-256
+`f861fb9ac8737c2949e96f96aa3d973e68599a8c5c9881206d1bd6f1fcfd5688`.
+The complete Zombieland archive is 193,884,686 bytes, SHA-256
+`b97deb82995ea31fbf4602fa993fd0736dccb62f1ba0e6c04da68e535a68d263`.
+Both include the current TESTING.md, contain the tested gameplay DLLs, and
+exclude companions and source. Zombieland includes all 54 music files.
+
+Mortal receives the two separate archives in the verified existing private DM.
+Both remote downloads match their local archive hashes. Only then is the
+superseded own 6 October delivery post removed, as requested. Its original
+archives were downloaded and verified first and remain in the ignored
+`stream-candidate-20261010/previous-delivery` folder. The new delivery receipt
+is likewise ignored. The message reports the wall-memory and unreproduced
+setup-loop limits and asks for Windows/busy-save feedback. Its robot marker
+is at the end. No public mod release or Steam upload is performed.

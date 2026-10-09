@@ -177,7 +177,7 @@ try:
     save_log(attempt / "silent-raid-arrivals.log")
     if not (
         arrivals["operation"]["Success"]
-        and not arrivals["operation"]["Warnings"]
+        and not arrivals["operation"].get("Warnings")
         and arrivals["passed"]
         and len(arrivals["rows"]) == 4
         and all(row["passed"] for row in arrivals["rows"])
@@ -192,7 +192,7 @@ try:
     save_log(attempt / "zombieland-area-warnings.log")
     if not (
         warnings["operation"]["Success"]
-        and not warnings["operation"]["Warnings"]
+        and not warnings["operation"].get("Warnings")
         and warnings["passed"]
         and len(warnings["rows"]) == 7
         and all(
@@ -215,7 +215,7 @@ try:
         save_log(attempt / ("zombieland-albino-scream-" + mode + ".log"))
         if not (
             scream["operation"]["Success"]
-            and not scream["operation"]["Warnings"]
+            and not scream["operation"].get("Warnings")
             and scream["passed"]
             and len(scream["rows"]) == 7
             and all(row["passed"] for row in scream["rows"])
@@ -235,7 +235,7 @@ try:
     save_log(attempt / "explosion-camera.log")
     if not (
         explosions["operation"]["Success"]
-        and not explosions["operation"]["Warnings"]
+        and not explosions["operation"].get("Warnings")
         and explosions["passed"]
         and len(explosions["rows"]) == 16
         and all(
@@ -287,7 +287,7 @@ try:
             save_log(attempt / (filename.removesuffix(".json") + ".log"))
             if (
                 not cost["operation"]["Success"]
-                or cost["operation"]["Warnings"]
+                or cost["operation"].get("Warnings")
                 or len(cost["rows"]) != 10
                 or any(
                     not row["measurement"]["success"]
@@ -307,7 +307,7 @@ try:
     save_log(attempt / "zombieland-global-ambient.log")
     if not (
         ambient["operation"]["Success"]
-        and not ambient["operation"]["Warnings"]
+        and not ambient["operation"].get("Warnings")
         and ambient["passed"]
         and len(ambient["rows"]) == 5
         and all(row["passed"] and row["dictionaryUnchanged"] for row in ambient["rows"])

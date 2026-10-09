@@ -336,9 +336,9 @@ try:
         if report.get("zombielandIdentity", zombie_identity) != zombie_identity:
             raise RuntimeError("Zombieland bytes or settings changed between samples")
         report["zombielandIdentity"] = zombie_identity
-        if "combatExtendedAssembly" not in environment:
-            raise RuntimeError("Install the current companion to record Combat Extended identity")
-        ce = environment["combatExtendedAssembly"]
+        # The bridge omits null fields. A missing optional assembly is valid
+        # only when the native loadout confirms that CE is inactive.
+        ce = environment.get("combatExtendedAssembly")
         if ("ceteam.combatextended" in instrumentation["activePackageIds"]) != (ce is not None):
             raise RuntimeError("Combat Extended loadout and loaded assembly disagree")
         ce_identity = (

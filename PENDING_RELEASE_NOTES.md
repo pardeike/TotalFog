@@ -20,7 +20,7 @@
 - Require current sight for live labels, tooltips, overlays and selection, including selection proxies.
 - Close an object's live inspection when sight is lost.
 - Hide live mouseover and environment details outside current sight, and limit beauty sampling to visible cells.
-- Keep unobserved owned objects and projectiles behind fog.
+- Keep unobserved owned buildings and projectiles behind fog.
 - Stop walls and other buildings without active vision from revealing their own footprint.
 - Organize settings into Appearance, Vision, Information and Audio tabs with a fixed footer and a wider gap between controls and the scrollbar.
 - Clarify which notification, wildlife, hearing and gravship options can reveal unseen activity.
@@ -60,3 +60,8 @@
 - With the updated Zombieland, play electric combat sounds at the event and prevent hidden or rapid hits from accumulating flashes and repeated sounds.
 - With the updated Zombieland, enemy fog targeting checks each Symbiant body cell against the humanlike attacker's faction sight.
 - Let Combat Extended fire at visible logical body cells while their pawn position is hidden, and stop tracking when the selected cell leaves sight.
+- Apply unseen-event discard categories to ordinary white messages as well as letters, preserving health, global and visible notifications.
+- Keep artificial ground light outside current sight from revealing hidden fires and lamps.
+- Keep your blueprints visible on explored cells outside current sight.
+- Hide corpses when sight is lost so unseen zombie conversion does not reveal itself through a disappearing remembered corpse.
+- Allow Forbid/Allow area orders on previously observed player doors outside current sight without opening their live inspector.
