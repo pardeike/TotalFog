@@ -102,7 +102,8 @@ edges. Do not send minor source-only updates. The C0..C5 contamination groups an
 other speculative mechanics remain follow-up coverage unless source or player
 evidence identifies a fog interaction. The current development priority is
 Mortal's concrete stream feedback in Total Fog and Zombieland. CE and Multiplayer
-work are parked until that candidate is tested and delivered. Hidden wall
+can resume while tester feedback is pending; demonstrated stream regressions
+retain priority. Their earlier evidence keeps its own gameplay identities. Hidden wall
 destruction remains a known limitation of live remembered scenery; the policy
 decision is pending. The reported new-game loop has not been reproduced end to
 end, although repeated page insertion is fixed.
