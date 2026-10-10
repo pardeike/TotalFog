@@ -6394,3 +6394,17 @@ failure unconfirmed; visible arrivals are intentionally preserved. The private
 feedback checker now runs every 60 seconds during this testing window, retaining
 its existing expiry. The shortened schedule has already delivered new replies
 into this session. No new gameplay build is sent for the uncertain report.
+
+### Evening gameplay report, 10 October, 20:39 UTC
+
+The tester reports that the game went very well and was fun. He attributes the
+colony loss to accepting two rescue-with-raid quests consecutively; the rescued
+children survived. Fog and Silent Raids already make the game much harder, so
+he uses substantially easier Zombieland settings than before. This is balance
+feedback, not a request to change defaults or simulation behavior.
+
+No new technical defect is reported in these messages. Treat this as positive
+player gameplay feedback, not an exact-binary, performance, platform or exhaustive
+compatibility proof. Earlier native gates and remaining coverage retain their
+own scope. No new code or archive is needed. The private message references are
+retained only in the ignored local feedback record.

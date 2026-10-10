@@ -34,6 +34,12 @@ The first 10 October private test ZIPs contained that exact pair and superseded
 the 6 October delivery.
 No public player release or Workshop item exists yet.
 
+The tester's evening gameplay report is positive: the combination was fun and
+went well, with the loss attributed to consecutive rescue/raid quests. He uses
+much easier Zombieland settings with fog and Silent Raids. These messages report
+no new defect; they do not establish exact loaded bytes, platform, performance
+or every compatibility case.
+
 | Target | Established evidence | Still open |
 |---|---|---|
 | Base game / all DLCs | Native rendering/registration, fleshbeast flight/deaths, live UI gates, notification persistence, audio controls, doors and save/reload have bounded checks | Windows confirmation, broader DLC mechanics/custom renderers, rectangular-map live acceptance and long-session soak |
