@@ -8,20 +8,30 @@ and a result applies only to its recorded gameplay bytes and loadout.
 
 ## Current status: 10 October 2026
 
-The stream-feedback candidate gameplay DLL is
-`ed78f3ae6233add9ac7126d12fdac3a32d89bba7e518c69e8bebd7b0db0ea424`,
-paired with Zombieland `a92ec372f7a9df5384659266005d4c004d7be30c6877f73c241e79a6daf0d108`.
-The latest build passes 322 independent tests. Changed native message filtering,
+The latest preliminary Total Fog gameplay DLL is
+`10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`.
+It fixes startup when another mod bundles an uninitialized Multiplayer API.
+All 323 independent tests pass. Native failing-before/fixed-after startup and
+the existing 1,000-zombie save load pass; a correctly configured Multiplayer
+startup control also passes. No fresh two-client session was run for this change.
+The new private Total Fog ZIP replaces the earlier Total Fog download and keeps
+Zombieland `a92ec372f7a9df5384659266005d4c004d7be30c6877f73c241e79a6daf0d108` unchanged.
+
+The earlier paired rendering/performance gates identify Total Fog
+`ed78f3ae6233add9ac7126d12fdac3a32d89bba7e518c69e8bebd7b0db0ea424`.
+That pair passed 322 independent tests. Changed native message filtering,
 blueprint/corpse/light presentation, door area orders, drafted Double Tap and
-native far-zoom silhouettes pass bounded controls. Three fresh alternating native fourth-speed pairs pass the original TPS floor:
-326.73 versus 294.64 median TPS, +10.89%. Frame p95 medians
-are 69.82 versus 70.12 ms. A one-pair wide spot check shows 50,750 map cells:
-169.70 versus 159.87 TPS, but frame p95 worsens to
-85.49 versus 75.66 ms. The full fresh paired native gate, packaging and remote archive checks pass. This is a single-player 1,000-zombie fixture with matching
-settings/camera and no debug speed boost, not a claim about all mod lists.
-This is development evidence;
-tracked DLLs remain last-release snapshots. The 10 October private test ZIPs
-contain this exact pair and supersede the 6 October delivery.
+native far-zoom silhouettes passed bounded controls. Three alternating native
+fourth-speed pairs passed the original TPS floor: 326.73 versus 294.64 median
+TPS, +10.89%. Frame p95 medians were 69.82 versus 70.12 ms. A one-pair wide spot
+check showed 50,750 map cells: 169.70 versus 159.87 TPS, but frame p95 worsened
+to 85.49 versus 75.66 ms. The full paired native gate, packaging and remote
+archive checks passed. These rendering and performance gates were not rerun
+for the startup-only change. This is a single-player 1,000-zombie fixture with
+matching settings/camera and no debug speed boost, not a claim about all mod lists.
+This is development evidence; tracked DLLs remain last-release snapshots.
+The first 10 October private test ZIPs contained that exact pair and superseded
+the 6 October delivery.
 No public player release or Workshop item exists yet.
 
 | Target | Established evidence | Still open |
@@ -108,9 +118,13 @@ destruction remains a known limitation of live remembered scenery; the policy
 decision is pending. Mortal's Custom-difficulty follow-up identified a separate
 No Pause Challenge setup exception. The original DLL reproduces it during the
 transition to Zombieland settings; a preliminary No Pause fix passes Custom and
-preset page transitions and loaded-game dialog controls. Full world generation
-and his complete mod list still await tester confirmation. The earlier repeated
-page-insertion fix remains independently checked.
+preset page transitions and loaded-game dialog controls. Later native controls
+complete world generation, site/character selection and a playable colony with
+one Zombieland settings screen, including Custom difficulty with No Pause enabled.
+Mortal still reports a second screen after site selection; his exact DLL and
+minimal-versus-full-loadout confirmation are pending. His complete mod list is
+not reproduced locally. The earlier repeated page-insertion fix remains
+independently checked.
 
 ### Current closeout priorities
 

@@ -49,7 +49,7 @@ internal static class MultiplayerIntegration
     internal static void Install()
     {
         var api = AccessTools.TypeByName("Multiplayer.API.MP");
-        if (api == null)
+        if (api == null || api.GetField("enabled")?.GetValue(null) is not true)
             return;
         var register = api.GetMethod("RegisterSyncField", new[] { typeof(FieldInfo) });
         if (register == null)

@@ -65,3 +65,4 @@
 - Keep your blueprints visible on explored cells outside current sight.
 - Hide corpses when sight is lost so unseen zombie conversion does not reveal itself through a disappearing remembered corpse.
 - Allow Forbid/Allow area orders on previously observed player doors outside current sight without opening their live inspector.
+- Avoid a startup error when another mod bundles the Multiplayer API but Multiplayer itself is not loaded.

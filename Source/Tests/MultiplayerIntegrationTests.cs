@@ -12,6 +12,27 @@ namespace TotalFog.Tests;
 
 public class MultiplayerIntegrationTests
 {
+    [Fact]
+    public void Bundled_api_without_multiplayer_does_not_register_settings()
+    {
+        AccessTools.Types.Add("Multiplayer.API.MP", typeof(FakeApi));
+        FakeApi.Fields.Clear();
+        FakeApi.enabled = false;
+        try
+        {
+            MultiplayerIntegration.Install();
+            Assert.Empty(FakeApi.Fields);
+            Assert.False(MultiplayerIntegration.Active);
+            Assert.False(MultiplayerIntegration.BeginSettingsWatch());
+        }
+        finally
+        {
+            FakeApi.enabled = true;
+            FakeApi.Fields.Clear();
+            AccessTools.Types.Remove("Multiplayer.API.MP");
+        }
+    }
+
     [Theory]
     [InlineData(100)]
     [InlineData(41215)]
@@ -222,6 +243,7 @@ public class MultiplayerIntegrationTests
 
     public static class FakeApi
     {
+        public static bool enabled = true;
         public static bool IsInMultiplayer { get; set; }
         public static int Begins,
             Ends;

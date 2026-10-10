@@ -6297,3 +6297,58 @@ isolated load-order file is restored byte for byte and the test game is stopped.
 Proof and logs are ignored under
 `../NoPauseChallenge/artifacts/custom-difficulty-20261010/`.
 The paired Total Fog/Zombieland delivery remains unchanged.
+
+### Optional Multiplayer API startup and later wizard stages, 10 October
+
+Mortal's next report links
+[this HugsLib record](https://gist.github.com/HugsLibRecordKeeper/d61714221f2d8f7bcf4ca525ac6f769b).
+Total Fog calls `RegisterSyncField` on Multiplayer's dummy implementation and
+gets `Multiplayer.API.UninitializedAPI`. His loadout includes More Planning
+(Continued), which bundles Multiplayer API 0.6, but not Multiplayer itself.
+Bundling the optional API is valid; Total Fog must check its `enabled` field
+before registering. That field indicates an initialized implementation, not
+whether a multiplayer session is currently running. Registration still occurs
+at the main menu when Multiplayer is enabled.
+
+A new regression test fails before the guard and passes afterward. All 323
+independent tests pass; gameplay and companion builds have no warnings/errors.
+Native Steam 1.6.4871 reproduces the exact startup exception with Achtung's
+byte-identical API 0.6, MVID `c74c9bf7f68c4e12ac6ee2a0c2bd9227`.
+The fixed Total Fog starts and loads the unchanged 1,000-zombie fixture with no
+errors recognized by Zombieland's full Player.log summarizer. Its fog snapshot
+has 9,122 known cells and 8,813 player-covered cells. The bridge log journal
+alone misses the original early startup exception; the native Player.log is
+the baseline error evidence.
+
+An initial Multiplayer startup control has a missing Prepatcher dependency and
+two ordering issues, so it is retained as incomplete. The existing MP host
+profile provides the valid control with Prepatcher, Harmony, RimBridgeServer,
+all DLCs, Multiplayer and Total Fog. It has zero configuration/dependency/order
+issues, loaded mods match the active configuration, the native Multiplayer
+status is available, and the full Player.log has no recognized errors. It is
+a main-menu startup control, not a new two-client compatibility test.
+
+Two native new-colony controls reach a playable map with one Zombieland settings
+screen. The first uses the original paired profile with Custom difficulty; the
+second enables the fixed No Pause Challenge and adds Achtung. Both complete
+world generation, site selection, ideology and characters. The second retains
+the known pre-fix API startup exception, but no later setup-page exception.
+Mortal still reports another Zombieland screen after site selection. His exact
+`ZombieLand.dll` and whether this occurs with the minimal or full mod list have
+been requested. The local controls do not reproduce his full 39-mod loadout.
+
+The new gameplay SHA-256 is
+`10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`.
+The canonical package rebuild matches those native-tested bytes. The separate
+Total Fog preliminary ZIP is 1,159,009 bytes, SHA-256
+`89fc0427258ca2101c5092ae7d0d3a100d86f8d7ef32b4e75ed283ae62bff8b1`.
+It excludes companions and private Harmony. The remote Discord download matches
+the local ZIP. Only afterward is the obsolete Total Fog attachment removed from
+the earlier paired post; its unchanged Zombieland attachment is retained.
+The earlier pair's broader native rendering and performance gates identify
+its older Total Fog DLL and were not rerun for this startup-only change.
+
+Proof and full native logs are ignored under
+`artifacts/startup-feedback-20261010/`. Both games are stopped. The primary
+isolated load-order file is restored byte for byte; the existing MP host profile
+is unchanged. No public player release or Steam upload is performed.

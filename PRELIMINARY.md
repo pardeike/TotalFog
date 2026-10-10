@@ -1,8 +1,10 @@
-# Total Fog and Zombieland preliminary test pair
+# Total Fog preliminary startup fix
 
-Private feedback build, 10 October 2026, for RimWorld 1.6. Total Fog remains
-version 0.1.0. This pair replaces the 6 October test archives. It is not a public
-release. Broader mod lists, Windows and long sessions still need testing.
+Private feedback update, 10 October 2026, for RimWorld 1.6. Total Fog remains
+version 0.1.0. This Total Fog ZIP replaces its earlier 10 October archive.
+Keep the Zombieland test build from that pair and the separate No Pause Challenge
+setup fix. It is not a public release. Broader mod lists, Windows and long
+sessions still need testing.
 
 Support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
 Source and current coverage: [Total Fog](https://github.com/pardeike/TotalFog)
@@ -11,8 +13,8 @@ Later source commits are not automatically included in these archives.
 
 ## Installation
 
-Close RimWorld and replace the previous local TotalFog and ZombieLand folders
-with those from the two complete ZIPs. Zombieland's music is included. The paths
+Close RimWorld and replace the previous local TotalFog folder with the one in
+this ZIP. Keep your existing ZombieLand folder from the paired test ZIP. The paths
 must end in `Mods/TotalFog/About/About.xml` and
 `Mods/ZombieLand/About/About.xml`. Disable the Workshop copy of Zombieland so
 only one copy is enabled. Disable NWN Real Fog of War and other fog mods.
@@ -25,6 +27,11 @@ still under test. The included Zombieland has integration fixes that are not
 yet all in its Workshop release. Neither mod needs the other to be loaded.
 
 ## Changes since the previous test pair
+
+- Avoid a startup error when another mod bundles the Multiplayer API but
+  Multiplayer itself is not loaded. This is a single-player startup fix too.
+
+The other changes below were already included in the earlier 10 October pair.
 
 - Discard settings also catch unseen white event messages, including neutral
   and positive messages. Health, global and currently visible notifications
@@ -71,16 +78,27 @@ or disappear when damaged or destroyed outside sight. Exact last-observed
 appearance was removed to prioritize performance. This limitation is still
 open in this pair.
 
-The normal new-game entry reaches Zombieland settings, world generation and
-site selection once each in the local check. The complete reported setup loop
-has not been reproduced. Please identify the transition that repeats if it
-still occurs. Hidden transport-pod and harbinger notification filtering was
+The local new-game controls now reach a playable colony, including site and
+character selection, with one Zombieland settings screen. The current Zombieland
+DLL and the fixed No Pause Challenge DLL were used. Mortal still reports a
+second Zombieland screen after site selection in his setup; that remains
+unreproduced and his exact DLL/loadout confirmation is pending.
+Hidden transport-pod and harbinger notification filtering was
 checked through the native message/letter pipeline; their entire natural
 incident sequences were not reproduced for this check.
 
-## Checks on this pair
+## Checks on this update
 
-The independent suite passes 322 tests. Native Mac controls cover the changed
+All 323 independent tests pass, including a failing-before/fixed-after test for
+an uninitialized bundled Multiplayer API. Native Mac startup reproduces the
+original error using the same API build, and the fixed Total Fog starts and
+loads the existing 1,000-zombie fixture without recognized errors. A separate
+native startup control with Multiplayer and its Prepatcher dependency also has
+no recognized errors. This does not establish fresh two-client compatibility.
+
+## Earlier paired checks
+
+The earlier pair passed 322 tests. Its native Mac controls cover the changed
 message categories and health/global/visible exceptions, real fire and torch
 lighting, own blueprints, corpses, hidden door area orders, native far-zoom
 zombie silhouettes and an actual drafted Double Tap job with Hunting set to
@@ -88,12 +106,13 @@ zero. Normal page-chain reuse and unrelated-page controls pass. Close and
 far-zoom screenshots check sight loss and reveal. These are bounded controls,
 not proof of every gameplay situation or Windows behavior.
 
-The full fresh paired gate also passes 12 Symbiant pixel/interaction cases,
+That pair's full gate also passed 12 Symbiant pixel/interaction cases,
 54 targeting checks, 40 dense/sparse rendering-cost rows, four Silent Raids
 arrival controls, seven danger-warning controls, 21 Albino controls,
 16 explosion-camera controls and 14 contamination refresh controls.
-Recognized native logs are clean. The paired native evidence identifies these
-exact gameplay DLLs; bridge instrumentation is excluded from both archives.
+Recognized native logs were clean. Those rendering and performance records
+identify the earlier gameplay DLLs; they were not rerun for this startup-only
+change. Bridge instrumentation is excluded from player archives.
 
 Six fresh matched Mac samples at native fourth speed on the 1,000-zombie
 fixture measure median 326.73 TPS for Total Fog versus 294.64 for
