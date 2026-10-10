@@ -164,6 +164,13 @@ Its `setup-ai` and `acquire` actions stage a drafted unarmed player pawn and run
 the native enemy target finder with ordinary flags and only that owned candidate.
 Compare fog off, hidden fog on, then restored sight on both clients. This is
 target-acquisition coverage, not autonomous raid-job coverage.
+Its `block`/`unblock` actions spawn/destroy eleven native steel walls across the
+owned firing lane through the same synchronized command. Neither forces a fog
+refresh. Use ordinary native playback, then compare paused clocks, blocker state,
+target visibility and complete fog snapshots on both clients. The fixture uses
+finite stationary combat-wait jobs with automatic shooting disabled; explicit
+`attack` still issues the native attack job. Clean up before saving. This proves
+native blocker lifecycle, not construction jobs or explosion destruction.
 Use `totalfog/multiplayer_cell` for a read-only native building/door and fog
 blocker/sight comparison at a matching paused boundary. It never creates grids.
 Native coverage now includes shared-colony time, separate colony factions and

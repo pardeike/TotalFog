@@ -6408,3 +6408,60 @@ player gameplay feedback, not an exact-binary, performance, platform or exhausti
 compatibility proof. Earlier native gates and remaining coverage retain their
 own scope. No new code or archive is needed. The private message references are
 retained only in the ignored local feedback record.
+
+### Multiplayer native blocker bursts, 10 October
+
+Two fresh local Steam clients run public RimWorld 1.6.4871 rev597, all five DLCs,
+Prepatcher, Harmony 2.4.3, Multiplayer 0.11.5 (4a3be27), RimBridgeServer and
+Total Fog. Both loaded-mod configurations match their saved active lists with
+zero dependency/configuration/order issues. Gameplay remains byte-identical to
+the delivered startup-fix candidate
+`10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`.
+The extended companion is
+`976d822f217e9197b530abaea85fa51f0f16a1cab90c7272cd5e4ed53ce6c48b`;
+it is excluded from player archives. The canonical deploy passes 323 independent
+tests and builds with zero warnings/errors. No gameplay source changes.
+
+Both main menus append the existing four probe handlers as IDs 761..764 without
+renumbering native commands. The host resumes saved session U; the client joins
+and switches to faction 18. The host retains faction 16 with independent map clocks. The
+enemy fixture uses its native synchronized world command to create an eleven-wall
+steel barrier across an empty firing lane, then destroys only those owned walls.
+These actions never call the probe's explicit `UpdateFoV`: ordinary native
+spawn/despawn invalidation and map ticks must refresh sight themselves.
+
+Three build/remove cycles play at ordinary Normal speed. Each phase advances
+134..142 native map ticks, 838 in total. Map 0 stays paused at 45949; map 1 goes
+from 51562 to 52400. Every comparison occurs after both clients report identical
+paused world/map clocks. All eleven walls register native and fog blocking on
+both clients. The stationary enemy loses sight and cannot hit the target behind
+the barrier, then regains sight and native hit eligibility after removal. The
+target remains healthy and the finite stationary jobs remain active. Complete
+nonempty coverage grids, per-faction discovery/observations, blockers, source
+order, every source schedule and pending refresh IDs agree at all seven
+boundaries. Local viewer observations are excluded; absent and all-zero faction
+grids are equivalent. This normalization retains all nonzero simulation state.
+
+Cleanup removes both temporary pawns and all walls. Both clients return to
+377/689 sources, with empty refresh queues and matching normalized fog. Neither
+reports desync or new blocking attention. The original saved session is unchanged.
+Both native processes are stopped and termination is verified. Full native logs
+retain the known reflection-only InputLegacyModule loading exception and no other
+exception or fixture-wait error. This remains bounded feature evidence, not
+clean-log startup acceptance.
+
+The first attempt is retained as rejected evidence: the older fixture assigned
+an indefinite `Wait_Combat` to its undrafted enemy, which native
+`JobDriver_Wait.MakeNewToils` rejects. The enemy left its firing position, so that
+attempt supplies no blocker-refresh acceptance. Inspection against public engine
+MVID `967ddb80559449f0a776dafa26a855d1` confirms the exact guard. The companion
+now gives both fixture pawns finite 6000-tick combat-wait jobs with automatic
+ranged attacks disabled; explicit attack controls still issue the native attack
+job. No gameplay workaround or simulation patch is added.
+
+Evidence: `artifacts/multiplayer-startup/native-blocker-bursts.json`,
+`blocker-burst-build-pair.json`, both `blocker-burst-*-Player.log` files, and
+`blocker-burst-rejected.json` with its separate logs. This small Mac control
+does not establish construction work jobs, explosion destruction, large bursts
+or load spikes, active-blocker save/rejoin, autonomous raids, cross-platform
+behavior or overall Multiplayer compatibility.

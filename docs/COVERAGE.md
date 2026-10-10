@@ -336,15 +336,17 @@ Own checks use public Steam RimWorld 1.6.4871, all five DLCs, Multiplayer 0.11.5
 (4a3be27), MPAPI 0.6, Prepatcher, Harmony, Total Fog and bridge instrumentation.
 No CE or Zombieland is loaded in the Multiplayer controls. Compare complete fog
 and clocks only at matching **paused map ticks**, not after submitting a pause.
-The latest target-acquisition companion is
-`4965ea8f85efac04f167eb057530839ae1f8bc4f081e317d3933c735ed547c19`;
-probe command handlers are opt-in and excluded from player ZIPs.
+The 10 October blocker-burst control uses the delivered gameplay
+`10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`
+and companion `976d822f217e9197b530abaea85fa51f0f16a1cab90c7272cd5e4ed53ce6c48b`.
+Earlier target-acquisition evidence retains its own recorded bytes.
+Probe command handlers are opt-in and excluded from player ZIPs.
 
 | Area | Native evidence already established | Remaining checks |
 |---|---|---|
 | Deterministic simulation | Shared colony and separate factions/maps; matching coverage, discovery, object observations, source schedules and serialized fog at paused boundaries; independent cameras and hearing-cue RNG/recipients agree | Longer sessions, cross-platform clients, controlled spikes and more lifecycle/AI events; no universal desync claim |
 | Synchronized settings/actions | Host/client primitive field changes, hearing range, Silent Raids, enemy fog and colony exemptions synchronize; host startup settings and cold saved-session values reconstruct; appearance saves leave coverage unchanged | Broader reset/setting combinations in supported combined loadouts; retain startup-only tree restriction |
-| Fog refresh | Native movement, closed/open/closed door, two asynchronous maps and observer-specific colony bypass pass | Build/destroy bursts, gravship lifecycle, held/flying pawns and map removal; preview policy tests are not a completed native MP flight |
+| Fog refresh | Native movement, closed/open/closed door, two asynchronous maps and observer-specific colony bypass pass. Three synchronized eleven-wall spawn/destroy cycles on the delivered gameplay pass across 838 ordinary native ticks, with matching fog/schedules and restored source counts after cleanup | Construction jobs, explosion destruction and larger bursts/spikes; gravship lifecycle, held/flying pawns and map removal. Preview policy tests are not a completed native MP flight |
 | Combat | Player melee/rifle, hidden context-menu filtering, enemy rifle hit pipeline and native enemy target finder with vanilla flags pass | Autonomous raid jobs, wider target candidates, turrets/no-LOS and combined CE Multiplayer combat; one staged candidate is not full raid AI |
 | Save/rejoin | Native cold saves/replay/late rejoin preserve shared settings, faction discovery/observations, queues and deadlines; notification payloads replay once for their recipient | Broader resync and active event/combat saves across unsupported-yet lifecycle cases |
 | Faction visibility / transfer | Shared colony, factions 16/18 and observer 17; private cues/notifications; synchronized native caravan exit, world pawn, entry into another map and return register once with map-clock deadlines | Allies, prisoners, animals, owner changes, held/flying transfer and map removal configurations |

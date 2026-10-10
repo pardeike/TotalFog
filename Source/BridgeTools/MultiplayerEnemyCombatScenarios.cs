@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,10 +20,11 @@ public sealed class MultiplayerEnemyCombatScenarios
     private static Thing target;
     private static Hediff missingEye;
     private static string acquiredTarget;
+    private static readonly List<Building> blockers = new();
 
     [Tool(
         "totalfog/multiplayer_enemy_combat",
-        Description = "Register FOURTH after notifications, caravan, register-world on BOTH main menus. Setup stages a hostile non-player bolt-action shooter with one missing eye and a player steel wall on an empty 20-cell firing lane; setup-ai uses a drafted unarmed player pawn instead. Actions setup/setup-ai/acquire/reveal/attack/cleanup use native synchronized world commands; status is readonly. Acquire runs the native enemy target finder with its ordinary threat/LOS/reachability flags and the owned target as the only candidate. Tests target acquisition and the enemy attack pipeline, not autonomous raid jobs. No single-client mutation or tick stepping. Fixture does not survive save/load; cleanup before saving. Excluded from player ZIPs."
+        Description = "Register FOURTH after notifications, caravan, register-world on BOTH main menus. Setup stages a hostile non-player bolt-action shooter with one missing eye and a player steel wall on an empty 20-cell firing lane; setup-ai uses a drafted unarmed player pawn instead. Actions setup/setup-ai/acquire/reveal/attack/block/unblock/cleanup use native synchronized world commands; status is readonly. Block spawns eleven sight-blocking walls across the lane; unblock destroys only those walls. Neither forces a fog refresh: play normally to exercise native blocker invalidation and its scheduled refresh. Acquire runs the native enemy target finder with its ordinary threat/LOS/reachability flags and the owned target as the only candidate. Tests target acquisition, sight-blocker lifecycle and the enemy attack pipeline, not autonomous raid jobs. No single-client mutation or tick stepping. Fixture does not survive save/load; cleanup before saving. Excluded from player ZIPs."
     )]
     public static Task<object> Fixture(
         IRimBridgeContext context,
@@ -67,7 +69,16 @@ public sealed class MultiplayerEnemyCombatScenarios
                 || AccessTools.Field(session.GetType(), "desynced").GetValue(session) is not false
                 || AccessTools.Property(api, "IsReplay").GetValue(null) is not false
                 || action
-                    is not ("setup" or "setup-ai" or "acquire" or "reveal" or "attack" or "cleanup")
+                    is not (
+                        "setup"
+                        or "setup-ai"
+                        or "acquire"
+                        or "reveal"
+                        or "attack"
+                        or "block"
+                        or "unblock"
+                        or "cleanup"
+                    )
             )
                 throw new InvalidOperationException("Use a registered live non-desynced session.");
             return new
@@ -82,12 +93,42 @@ public sealed class MultiplayerEnemyCombatScenarios
     {
         if (action == "cleanup")
         {
+            RemoveBlockers();
             shooter?.Destroy();
             target?.Destroy();
             shooter = null;
             target = null;
             missingEye = null;
             acquiredTarget = null;
+            return;
+        }
+        if (action is "block" or "unblock")
+        {
+            if (shooter?.Spawned != true || target?.Spawned != true)
+                throw new InvalidOperationException("Set up a live fixture first.");
+            if (action == "unblock")
+                RemoveBlockers();
+            else
+            {
+                if (blockers.Count != 0)
+                    throw new InvalidOperationException("Remove the previous blockers first.");
+                var map = shooter.Map;
+                var cells = Enumerable
+                    .Range(-5, 11)
+                    .Select(offset => shooter.Position + new IntVec3(10, 0, offset))
+                    .ToArray();
+                if (cells.Any(cell => !EmptyLaneCell(cell, map)))
+                    throw new InvalidOperationException("The blocker lane is no longer empty.");
+                foreach (var cell in cells)
+                {
+                    var wall = (Building)ThingMaker.MakeThing(ThingDefOf.Wall, ThingDefOf.Steel);
+                    wall.SetFaction(target.Faction);
+                    blockers.Add(wall);
+                    GenSpawn.Spawn(wall, cell, map);
+                }
+            }
+            // Native spawn/despawn must invalidate sight without this probe's
+            // explicit UpdateFoV used by its independent combat controls.
             return;
         }
         if (action is "setup" or "setup-ai")
@@ -102,14 +143,10 @@ public sealed class MultiplayerEnemyCombatScenarios
             for (int z = 35; z < map.Size.z - 35 && !origin.IsValid; z += 10)
             for (int x = 35; x < map.Size.x - 55 && !origin.IsValid; x += 10)
             {
-                var lane = new CellRect(x, z - 1, 21, 3);
+                var lane = new CellRect(x, z - 5, 21, 11);
                 if (
-                    lane.Cells.All(cell =>
-                        cell.Standable(map)
-                        && cell.GetEdifice(map) == null
-                        && cell.GetFirstPawn(map) == null
-                        && !cell.GetThingList(map).Any(thing => thing.def.blockLight)
-                    ) && !map.GetVisibility().IsShown(enemy, new IntVec3(x + 20, 0, z))
+                    lane.Cells.All(cell => EmptyLaneCell(cell, map))
+                    && !map.GetVisibility().IsShown(enemy, new IntVec3(x + 20, 0, z))
                 )
                     origin = new IntVec3(x, 0, z);
             }
@@ -139,15 +176,9 @@ public sealed class MultiplayerEnemyCombatScenarios
             if (target is Pawn heldVictim)
             {
                 heldVictim.drafter.Drafted = true;
-                heldVictim.jobs.StartJob(
-                    JobMaker.MakeJob(JobDefOf.Wait_Combat),
-                    JobCondition.InterruptForced
-                );
+                HoldPosition(heldVictim);
             }
-            shooter.jobs.StartJob(
-                JobMaker.MakeJob(JobDefOf.Wait_Combat),
-                JobCondition.InterruptForced
-            );
+            HoldPosition(shooter);
         }
         else if (action == "reveal")
         {
@@ -184,6 +215,31 @@ public sealed class MultiplayerEnemyCombatScenarios
         shooter.TryGetComp<CompFog>().FieldOfViewWatcher.UpdateFoV(true);
     }
 
+    private static bool EmptyLaneCell(IntVec3 cell, Map map) =>
+        cell.InBounds(map)
+        && cell.Standable(map)
+        && cell.GetEdifice(map) == null
+        && cell.GetFirstPawn(map) == null
+        && !cell.GetThingList(map).Any(thing => thing.def.blockLight);
+
+    private static void HoldPosition(Pawn pawn)
+    {
+        var wait = JobMaker.MakeJob(JobDefOf.Wait_Combat);
+        // Native Wait_Combat rejects an indefinite job on an undrafted enemy.
+        // Keep a finite control window and require explicit attack commands.
+        wait.expiryInterval = 6000;
+        wait.canUseRangedWeapon = false;
+        pawn.jobs.StartJob(wait, JobCondition.InterruptForced);
+    }
+
+    private static void RemoveBlockers()
+    {
+        foreach (var blocker in blockers)
+            if (!blocker.Destroyed)
+                blocker.Destroy();
+        blockers.Clear();
+    }
+
     private static object Status()
     {
         if (shooter == null || target == null)
@@ -196,6 +252,19 @@ public sealed class MultiplayerEnemyCombatScenarios
             FogSettings.AISmart,
             acquiredTarget,
             map = shooter.Map?.uniqueID,
+            blockers = blockers
+                .Select(blocker => new
+                {
+                    id = blocker.ThingID,
+                    position = blocker.Position.ToString(),
+                    blocker.Spawned,
+                    blocker.Destroyed,
+                    nativeBlocked = !blocker.CanBeSeenOver(),
+                    fogBlocked = shooter.Map.GetVisibility().viewBlockerCells[
+                        shooter.Map.cellIndices.CellToIndex(blocker.Position)
+                    ],
+                })
+                .ToArray(),
             shooter = new
             {
                 id = shooter.ThingID,
