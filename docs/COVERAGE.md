@@ -135,7 +135,8 @@ discard controls cover broad event categories. Public 1.6 source identifies
 cargo-pod letters as positive, refugee-pod letters as neutral, and ordinary
 quest delivery letters as positive unless overridden. A per-pod option is not
 implemented; do not claim the earlier synthetic-target check proves every
-natural pod producer.
+natural pod producer. The tester has all discard categories enabled but may
+have had sight of the reported landing; an unseen-arrival failure is unconfirmed.
 
 The 10 October stream-feedback pair is delivered. Follow up on its reported
 regressions first, then continue the remaining

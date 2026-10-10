@@ -6387,3 +6387,10 @@ producers for a later focused native check. It is not a natural-incident runtime
 pass or proof of modded pod producers. The earlier synthetic notification test
 keeps its narrower claim. No gameplay code, settings or archives change pending
 clarification. Private message IDs are kept only in ignored local feedback records.
+
+The tester's follow-up says all discard categories are enabled, then notes that
+he may have had sight of the landing when it arrived. This leaves an unseen-pod
+failure unconfirmed; visible arrivals are intentionally preserved. The private
+feedback checker now runs every 60 seconds during this testing window, retaining
+its existing expiry. The shortened schedule has already delivered new replies
+into this session. No new gameplay build is sent for the uncertain report.
