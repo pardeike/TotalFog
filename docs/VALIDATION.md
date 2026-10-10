@@ -6360,6 +6360,30 @@ the issue. If it returns, he will provide more precise reproduction steps and
 the mod list. The private feedback reference is retained in the ignored local
 delivery records. This does not establish the exact cause of the second
 Zombieland settings screen or validate every combination in his full loadout.
-The duplicate-screen
-investigation is parked unless it recurs. No new code or archive is needed for
+The duplicate-screen investigation is parked unless it recurs. No new code or archive is needed for
 this feedback; he keeps the existing Total Fog, Zombieland and No Pause builds.
+
+### Transport-pod notification preference, 10 October
+
+The tester prefers silent transport-pod messages or finer controls, rather
+than relying on broad categories. Clarification is requested for unseen-only
+versus all arrivals, and hiding the notification versus muting its sound.
+The current Information settings discard unseen positive/neutral/negative
+events and threats. They preserve visible notifications and global events
+without targets; there is no dedicated transport-pod or notification-sound switch.
+
+DecompilerServer inspection of public Steam 1.6, engine MVID
+`967ddb80559449f0a776dafa26a855d1`, finds:
+
+- `IncidentWorker_ResourcePodCrash` sends a positive letter with a map-cell target.
+- `QuestNode_Root_RefugeePodCrash.SendLetter_NewTemp` sends a neutral letter with
+  a pawn target.
+- `QuestPart_DropPods.Notify_QuestSignalReceived` sends a letter with a map-cell
+  target and `customLetterDef ?? PositiveEvent`; custom quest delivery categories
+  can therefore differ.
+
+This source audit explains the existing broad settings and identifies actual
+producers for a later focused native check. It is not a natural-incident runtime
+pass or proof of modded pod producers. The earlier synthetic notification test
+keeps its narrower claim. No gameplay code, settings or archives change pending
+clarification. Private message IDs are kept only in ignored local feedback records.
