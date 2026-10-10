@@ -6352,3 +6352,14 @@ Proof and full native logs are ignored under
 `artifacts/startup-feedback-20261010/`. Both games are stopped. The primary
 isolated load-order file is restored byte for byte; the existing MP host profile
 is unchanged. No public player release or Steam upload is performed.
+
+### Tester retry, 10 October, 10:54 UTC
+
+Mortal reports that he retried with all updated mods and could not reproduce
+the issue. If it returns, he will provide more precise reproduction steps and
+the mod list. The private feedback reference is retained in the ignored local
+delivery records. This does not establish the exact cause of the second
+Zombieland settings screen or validate every combination in his full loadout.
+The duplicate-screen
+investigation is parked unless it recurs. No new code or archive is needed for
+this feedback; he keeps the existing Total Fog, Zombieland and No Pause builds.

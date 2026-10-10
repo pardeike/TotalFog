@@ -80,9 +80,10 @@ open in this pair.
 
 The local new-game controls now reach a playable colony, including site and
 character selection, with one Zombieland settings screen. The current Zombieland
-DLL and the fixed No Pause Challenge DLL were used. Mortal still reports a
-second Zombieland screen after site selection in his setup; that remains
-unreproduced and his exact DLL/loadout confirmation is pending.
+DLL and the fixed No Pause Challenge DLL were used. Mortal's later retry with
+all updated mods could not reproduce the issue. Its precise cause is unconfirmed;
+the duplicate-screen investigation is parked unless it returns with exact
+steps/mods. This feedback arrived after the startup-fix ZIP was sent.
 Hidden transport-pod and harbinger notification filtering was
 checked through the native message/letter pipeline; their entire natural
 incident sequences were not reproduced for this check.

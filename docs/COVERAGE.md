@@ -121,10 +121,11 @@ transition to Zombieland settings; a preliminary No Pause fix passes Custom and
 preset page transitions and loaded-game dialog controls. Later native controls
 complete world generation, site/character selection and a playable colony with
 one Zombieland settings screen, including Custom difficulty with No Pause enabled.
-Mortal still reports a second screen after site selection; his exact DLL and
-minimal-versus-full-loadout confirmation are pending. His complete mod list is
-not reproduced locally. The earlier repeated page-insertion fix remains
-independently checked.
+Mortal's 10:54 UTC follow-up says he cannot reproduce the issue with all updated
+mods and will provide exact steps/mods if it returns. Park the duplicate-screen
+investigation unless it recurs; this is tester feedback, not a demonstrated
+cause or an exhaustive full-loadout pass. His complete mod list is not reproduced
+locally. The earlier repeated page-insertion fix remains independently checked.
 
 ### Current closeout priorities
 
