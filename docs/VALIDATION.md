@@ -6260,3 +6260,40 @@ archives were downloaded and verified first and remain in the ignored
 is likewise ignored. The message reports the wall-memory and unreproduced
 setup-loop limits and asks for Windows/busy-save feedback. Its robot marker
 is at the end. No public mod release or Steam upload is performed.
+
+### No Pause Challenge setup follow-up, 10 October
+
+Mortal's Custom-difficulty follow-up links a HugsLib report with a
+`WindowStack.Add` exception in `NoPauseChallenge.WindowStack_Add_Patch`:
+https://gist.github.com/HugsLibRecordKeeper/f7d7b6142490760a52194ca9cbf1b3fe.
+This is a separate mod defect, not a new Total Fog or Zombieland gameplay change.
+
+The delivered Total Fog/Zombieland pair, all five DLCs and the original No Pause
+Challenge 3.7.2 gameplay DLL reproduce the exception in native Steam 1.6.4871.
+Custom difficulty with No Pause enabled opens Zombieland settings, but leaves
+the storyteller page open. `Page.DoNext` adds the next window before closing
+the current one. The No Pause dialog hook sets time speed while the world is
+still uninitialized; the native speed setter then dereferences the missing
+Gravship controller. The baseline gameplay SHA-256 is
+`8368187ecd7584816434935807926a4ddad481086b62a34c6793064457e5b331`.
+
+No Pause now limits this dialog-speed adjustment to `ProgramState.Playing`.
+The fixed native Custom transition closes the storyteller page, then closes
+Zombieland settings when advancing to world parameters. Back navigation and a
+Peaceful preset transition also pass without duplicate pages or captured errors.
+The setup checkbox is verified checked; the companion enables it through the
+production state transition. In an existing save, a real mod-settings dialog
+still switches Superfast to Normal and advances ticks with No Pause enabled.
+With it disabled, the dialog retains Superfast and pauses as usual. No errors
+are captured in the fixed process. These checks do not generate a complete new
+world or validate Mortal's entire mod list. His end-to-end confirmation remains
+outstanding.
+
+The fixed gameplay DLL SHA-256 is
+`688524b93b6f5c1391823eadcf4e031dc56620ed1d0bae0b5b226307da06c2f8`.
+The separate preliminary No Pause ZIP contains exactly those tested gameplay
+bytes and excludes companions, private Harmony and debug/Finder files. The
+isolated load-order file is restored byte for byte and the test game is stopped.
+Proof and logs are ignored under
+`../NoPauseChallenge/artifacts/custom-difficulty-20261010/`.
+The paired Total Fog/Zombieland delivery remains unchanged.

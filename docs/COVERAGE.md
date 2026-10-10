@@ -105,8 +105,12 @@ Mortal's concrete stream feedback in Total Fog and Zombieland. CE and Multiplaye
 can resume while tester feedback is pending; demonstrated stream regressions
 retain priority. Their earlier evidence keeps its own gameplay identities. Hidden wall
 destruction remains a known limitation of live remembered scenery; the policy
-decision is pending. The reported new-game loop has not been reproduced end to
-end, although repeated page insertion is fixed.
+decision is pending. Mortal's Custom-difficulty follow-up identified a separate
+No Pause Challenge setup exception. The original DLL reproduces it during the
+transition to Zombieland settings; a preliminary No Pause fix passes Custom and
+preset page transitions and loaded-game dialog controls. Full world generation
+and his complete mod list still await tester confirmation. The earlier repeated
+page-insertion fix remains independently checked.
 
 ### Current closeout priorities
 
