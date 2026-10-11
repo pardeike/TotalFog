@@ -39,6 +39,12 @@ blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
+Use `totalfog/watchtower_visuals` for the first new 3x3 tower artwork review.
+It stages six test-only wood/granite native buildings and four native colonists,
+captures tight cell rectangles for empty/occupied and straight/corner walls,
+checks all four ladder orientations, advances no ticks and reloads the unchanged
+named fixture. The drawing code and definitions stay in the companion. It proves
+visual geometry only, not climbing, placement, breaching, sight or combat.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland

@@ -4,9 +4,46 @@ This is the retained evidence ledger. Read dated checkpoints with their exact
 gameplay hashes, loadouts and stated limits: older test counts, “current” builds
 and outstanding lists refer to their checkpoint, not today. Rejected candidates
 remain recorded. For the current acceptance summary and remaining work, use
-[COVERAGE.md](COVERAGE.md#current-status-7-october-2026); for implementation rules,
+[COVERAGE.md](COVERAGE.md#current-status-10-october-2026); for implementation rules,
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
+
+## New watchtower artwork prototype, 2026-10-11
+
+The non-shipping `totalfog/watchtower_visuals` companion stages six native 3x3
+test-only buildings in wood and granite, four actual player colonists and native
+wall segments. It builds two colored meshes per tower on spawn, uses the engine's
+vertex-color material and projects the test occupants through a scoped read-only
+DrawPos postfix. It does not alter the gameplay DLL or add player build options.
+
+All 347 independent tests, formatting and the quiet paired deploy pass. Built
+and deployed hashes match:
+
+- Gameplay: `2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`.
+- Companion: `9624306e424ab311e07dde3c05bf1577360dae543aa66f6521156bb85cbc2b37`.
+
+Native public Steam 1.6.4871, all five DLCs, Harmony and Total Fog load the
+unchanged TotalFogRegression fixture. Six tight RimBridgeServer cell captures
+were inspected: wood/granite empty and occupied, wood in a straight wall,
+granite at a wall corner, and the remaining north/west ladder orientations.
+The native wall-link flags remove adjacent end caps; the drawing meets the
+3x3 wall edges and the corner ladder faces the clear east approach.
+The initial clipped crop and visible wall gap were corrected before the four
+primary views were delivered to Andreas's phone.
+
+All six capture receipts, native spawned-occupant checks and the unchanged
+tick boundary at 1202 pass. Cleanup removes owned objects and the projection
+patch, restores the scoped preferences and reloads the unchanged save without
+writing it. Captured errors are empty. The fixture's existing Funeral precept
+warning and bridge startup timing notices remain. The game was stopped.
+Evidence: `artifacts/watchtower-visual-prototype-20261011.json` and
+`artifacts/UserData/Screenshots/tower-prototype-20261011-*__cell_rect.png`.
+
+This is a geometry/artwork review, not final art or gameplay acceptance. The
+rear ladder still needs correct platform occlusion before animation. Climbing
+and its progress bar, real entry/exit/rescue, breaching, elevated sight, incoming/
+outgoing fire, destruction, lightning and compatibility are not implemented by
+this prototype. No native tower performance claim or new player ZIP is made.
 
 ## Retired inspector animals, bells and beacon, 2026-10-11
 

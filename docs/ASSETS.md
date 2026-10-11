@@ -1,5 +1,14 @@
 # Total Fog artwork
 
+The new 3x3 watchtower's first geometry sketch lives in the non-shipping
+`Source/BridgeTools/WatchtowerVisualPrototype.cs`. It builds two colored meshes
+once per spawn, uses RimWorld's native vertex-color material and stuff colors,
+and draws native pawns with a scoped test-only projection. It adds no PNG,
+shader or AssetBundle to the player payload. Wood/granite and native straight/
+corner wall junctions were inspected in public 1.6 on 11 October 2026.
+This is an artwork prototype, not the new tower's gameplay implementation;
+see [WATCHTOWER.md](WATCHTOWER.md).
+
 Original Real Fog of War gameplay textures and assets retain their upstream
 Apache 2.0 attribution in NOTICE.md. The portable texture folder is loaded for
 the current supported game version as well as the historical versions.

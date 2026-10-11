@@ -1,6 +1,8 @@
 # Watchtower design draft
 
-Status: proposal for review, not implemented. This replaces the retired watchtower
+Status: accepted direction with a first test-only rendering prototype inspected
+in public 1.6 on 11 October 2026. This is an artwork review checkpoint.
+Gameplay is not implemented. This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types will belong to Total Fog.
 
@@ -10,7 +12,9 @@ The new definition and runtime types will belong to Total Fog.
   ordinary material-based health, construction, repair and flammability.
 - The lookout stands in the center. The perimeter supplies the railing, supports
   and slanted-wall artwork. One outer middle cell supplies the ladder.
-- Climbing up and down takes game time and is visibly gradual.
+- Climbing up and down takes game time and has the normal native progress bar.
+  The pawn moves gradually from the cell adjacent to the ladder all the way to
+  the center, facing the direction of travel. Descent reverses that movement.
 - Only an occupant who has finished climbing gains substantially increased,
   configurable sight. Low walls do not block that sight; mountains and other
   watchtowers do. Normal ground-level sight remains unchanged.
@@ -53,10 +57,43 @@ maintained building objects or a broad replacement of native pathfinding.
 An occupied tower uses an elevated sight policy. Ground observers retain the
 existing wall-blocking policy. Its own structure must not block its occupant's
 elevated cast; other towers remain opaque. Do not temporarily mutate shared
-blocker grids to achieve this exemption. Elevated sight must still hide interiors under
-opaque roofs and respect natural rock, mountain roofs and other towers. Seeing
-over a wall must not reveal a pawn or item through its building's roof.
+blocker grids to achieve this exemption. Roofed rooms both hide their interiors
+and block elevated sight beyond them. They are opaque obstacles, not merely
+cells omitted from the visible result. Natural rock, mountain roofs and other
+towers also remain opaque. Seeing over a freestanding wall must not reveal a
+pawn or item through its building's roof.
 Tree handling should initially retain the configured tree-blocking policy.
+
+A narrow blind strip immediately behind low walls is a tentative option, only
+if it can reuse the cast without expensive extra passes. A blind area near the
+tower is also tentative. Neither is part of the first prototype. If adopted,
+these rules affect this elevated observer only; another observer who sees the
+same cells still reveals them. Do not hide nearby cells globally.
+
+## Artwork and adjacent walls
+
+Start with empty and occupied wood/granite towers. Show the 3x3 footprint, a
+raised center platform, perimeter railings, supports or slanted masonry walls,
+and the rotated ladder. The pawn remains a real native pawn. The drawing must
+put the foreground railing in front of it without hiding the whole pawn.
+
+Wall placement is a normal use case. Include a straight perimeter wall meeting
+opposite tower edges and a corner meeting two adjacent edges in the first
+visual review. Walls meet the outer footprint; they do not share tower cells.
+The platform stays visibly above wall height. Use native wall linking rather
+than custom copies of adjacent walls. The ladder and its approach cell must
+remain clear, including at corners. Final construction/pathfinding checks must
+reject blocked access without inventing automatic openings in player walls.
+
+The initial visual prototype belongs to the non-shipping BridgeTools companion.
+It uses colored meshes built once when spawned and RimWorld's native material;
+it needs no new AssetBundle. It renders a paused fixture only, then removes its
+temporary drawing patch and objects and reloads the unchanged save. It does not
+establish placement, climbing, elevated sight, targeting or combat behavior.
+The first native review covers wood/granite empty and occupied, a straight wall,
+a corner and four ladder rotations. The rear ladder's overlap with the platform
+still needs refinement before animation. These are geometry sketches, not final
+artwork. See [VALIDATION.md](VALIDATION.md) for the exact tested pair.
 
 An empty tower provides no sight. Sleeping or downed occupants provide no elevated
 sight. Tower range scales with the lookout's ordinary sight capacities and
