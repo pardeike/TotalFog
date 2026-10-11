@@ -5,7 +5,7 @@ using Verse;
 
 namespace TotalFog.BridgeTools;
 
-/// <summary>Cached, test-only fragments of the actual neighbouring walls.</summary>
+/// <summary>Cached, test-only fragments of native wall Print geometry.</summary>
 internal sealed class WatchtowerWallJoins
 {
     private const float SideInnerAtCenter = 1.34f;
@@ -14,6 +14,8 @@ internal sealed class WatchtowerWallJoins
     private readonly CaptureLayer layer;
     internal readonly List<IntVec3> Directions = new();
     internal int DrawCalls => layer.subMeshes.Count;
+    internal bool HasGeometry => VertexCount() > 0;
+    internal float MappingError { get; private set; }
 
     internal WatchtowerWallJoins(WatchtowerVisualPrototype tower)
     {
@@ -63,29 +65,7 @@ internal sealed class WatchtowerWallJoins
                             polygon = Clip(Clip(polygon, outer), inner);
                             if (polygon.Count < 3)
                                 continue;
-                            var target = layer.GetSubMesh(source.material);
-                            target.renderLayer = source.renderLayer;
-                            int start = target.verts.Count;
-                            foreach (var vertex in polygon)
-                            {
-                                target.verts.Add(
-                                    new Vector3(
-                                        vertex.position.x + center.x,
-                                        vertex.position.y,
-                                        vertex.position.z + center.z
-                                    )
-                                );
-                                target.uvs.Add(vertex.uv);
-                                target.uvsChannelTwo.Add(vertex.uvTwo);
-                                target.colors.Add(vertex.color);
-                                target.normals.Add(vertex.normal);
-                            }
-                            for (int corner = 1; corner < polygon.Count - 1; corner++)
-                            {
-                                target.tris.Add(start);
-                                target.tris.Add(start + corner);
-                                target.tris.Add(start + corner + 1);
-                            }
+                            Append(source, polygon, center);
                         }
                     if (VertexCount() > before)
                         Directions.Add(direction);
@@ -101,6 +81,129 @@ internal sealed class WatchtowerWallJoins
             layer.Dispose();
             throw;
         }
+    }
+
+    // Separate artwork experiment. The source is a real straight native wall.
+    // Copy its front band at native map scale, using translation and clipping
+    // only. The accepted tower remains the default and its deck is unchanged.
+    internal WatchtowerWallJoins(WatchtowerVisualPrototype tower, Thing wall, Vector3[] face)
+    {
+        var section = tower.Map.mapDrawer.SectionAt(tower.Position);
+        layer = new CaptureLayer(section);
+        var capture = new CaptureLayer(section);
+        var wallCenter = wall.TrueCenter();
+        var center = tower.TrueCenter();
+        const float bandBottom = -.46f;
+        const float bandTop = -.23f;
+        const float bandHeight = bandTop - bandBottom;
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
+        foreach (var point in face)
+        {
+            minX = Mathf.Min(minX, point.x);
+            maxX = Mathf.Max(maxX, point.x);
+            minZ = Mathf.Min(minZ, point.z);
+            maxZ = Mathf.Max(maxZ, point.z);
+        }
+        try
+        {
+            wall.Print(capture);
+            foreach (var source in capture.subMeshes)
+                for (int triangle = 0; triangle < source.tris.Count; triangle += 3)
+                {
+                    var basis = new Vertex[3];
+                    for (int corner = 0; corner < 3; corner++)
+                    {
+                        int index = source.tris[triangle + corner];
+                        basis[corner] = new Vertex(source, index, source.verts[index] - wallCenter);
+                    }
+                    var band = Clip(
+                        Clip(new List<Vertex>(basis), new ClipPlane(Vector3.forward, -bandBottom)),
+                        new ClipPlane(Vector3.back, bandTop)
+                    );
+                    if (band.Count < 3)
+                        continue;
+                    for (float z = minZ; z < maxZ; z += bandHeight)
+                    for (float x = Mathf.Floor(minX + .5f); x - .5f < maxX; x += 1f)
+                    {
+                        var shift = new Vector3(x, 0, z - bandBottom);
+                        var polygon = new List<Vertex>(band.Count);
+                        foreach (var vertex in band)
+                            polygon.Add(vertex.Move(shift));
+                        for (int edge = 0; edge < face.Length; edge++)
+                        {
+                            var a = face[edge];
+                            var b = face[(edge + 1) % face.Length];
+                            var normal = new Vector3(b.z - a.z, 0, a.x - b.x);
+                            var plane = new ClipPlane(normal, -Vector3.Dot(normal, a));
+                            var middle = new Vector3((minX + maxX) / 2, 0, (minZ + maxZ) / 2);
+                            if (plane.Distance(middle) < 0)
+                                plane = new ClipPlane(-normal, Vector3.Dot(normal, a));
+                            polygon = Clip(polygon, plane);
+                        }
+                        if (polygon.Count < 3)
+                            continue;
+                        foreach (var vertex in polygon)
+                            MappingError = Mathf.Max(MappingError, UvError(basis, vertex, shift));
+                        Append(source, polygon, center);
+                    }
+                }
+        }
+        catch
+        {
+            layer.Dispose();
+            throw;
+        }
+        finally
+        {
+            capture.Dispose();
+        }
+    }
+
+    private void Append(LayerSubMesh source, List<Vertex> polygon, Vector3 center)
+    {
+        var target = layer.GetSubMesh(source.material);
+        target.renderLayer = source.renderLayer;
+        int start = target.verts.Count;
+        foreach (var vertex in polygon)
+        {
+            target.verts.Add(
+                new Vector3(
+                    vertex.position.x + center.x,
+                    vertex.position.y,
+                    vertex.position.z + center.z
+                )
+            );
+            target.uvs.Add(vertex.uv);
+            target.uvsChannelTwo.Add(vertex.uvTwo);
+            target.colors.Add(vertex.color);
+            target.normals.Add(vertex.normal);
+        }
+        for (int corner = 1; corner < polygon.Count - 1; corner++)
+        {
+            target.tris.Add(start);
+            target.tris.Add(start + corner);
+            target.tris.Add(start + corner + 1);
+        }
+    }
+
+    // Independently reconstruct the source triangle's UV at each copied point.
+    // A scaled or sheared position with unchanged UVs fails this map-space check.
+    private static float UvError(Vertex[] source, Vertex copy, Vector3 shift)
+    {
+        var a = source[1].position - source[0].position;
+        var b = source[2].position - source[0].position;
+        var p = copy.position - shift - source[0].position;
+        float determinant = a.x * b.z - a.z * b.x;
+        if (Mathf.Abs(determinant) < .000001f)
+            return float.PositiveInfinity;
+        float u = (p.x * b.z - p.z * b.x) / determinant;
+        float v = (a.x * p.z - a.z * p.x) / determinant;
+        var expected =
+            source[0].uv + (source[1].uv - source[0].uv) * u + (source[2].uv - source[0].uv) * v;
+        return Vector3.Distance(expected, copy.uv);
     }
 
     internal void Complete(float altitude)
@@ -219,6 +322,8 @@ internal sealed class WatchtowerWallJoins
                 Color32.Lerp(a.color, b.color, t),
                 Vector3.LerpUnclamped(a.normal, b.normal, t)
             );
+
+        internal Vertex Move(Vector3 shift) => new(position + shift, uv, uvTwo, color, normal);
     }
 
     private sealed class CaptureLayer : SectionLayer

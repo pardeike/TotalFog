@@ -19,13 +19,14 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall-front experiments with two unchanged controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string saveName,
-        string evidenceLabel
+        string evidenceLabel,
+        bool nativeFrontPieces = false
     )
     {
         if (
@@ -122,7 +123,20 @@ public sealed class WatchtowerVisualScenarios
                         Rand.PopState();
                     }
                     foreach (var tower in drawings)
+                    {
+                        // Keep the empty wood/granite examples as the accepted
+                        // design so one overview compares it with the experiment.
+                        if (nativeFrontPieces && drawings.IndexOf(tower) is not (0 or 2))
+                            tower.NativeFrontSource = owned.First(w =>
+                                w.def == ThingDefOf.Wall
+                                && w.Stuff == tower.Stuff
+                                && (w.Position + IntVec3.West).GetEdifice(map)?.def
+                                    == ThingDefOf.Wall
+                                && (w.Position + IntVec3.East).GetEdifice(map)?.def
+                                    == ThingDefOf.Wall
+                            );
                         tower.RebuildWallJoins();
+                    }
                     foreach (var thing in owned)
                         thing.TryGetComp<CompFog>()?.HideFromPlayer?.UpdateVisibility(true);
                     manifest.environment.gameVersion = VersionControl.CurrentVersionString;
@@ -138,6 +152,7 @@ public sealed class WatchtowerVisualScenarios
                             area.Height,
                         },
                         prototypeOnly = true,
+                        nativeFrontPieces,
                         nativePawns = projectedOccupants
                             .Keys.Select(p => new
                             {
@@ -155,7 +170,8 @@ public sealed class WatchtowerVisualScenarios
                                 cell = t.Position.ToString(),
                                 rotation = t.Rotation.ToString(),
                                 wallJoins = t.WallJoinCount,
-                                wallPattern = t.WallPattern,
+                                nativeFront = t.HasNativeFront,
+                                nativeFrontMappingError = t.NativeFrontMappingError,
                                 cachedDrawCalls = t.CachedDrawCalls,
                             })
                             .ToArray(),
@@ -184,16 +200,22 @@ public sealed class WatchtowerVisualScenarios
                             )
                         )
                     );
-                    manifest.assertions.Add(
-                        RimBridgeEvidence.IsTrue(
-                            "tower patterns match native walls of the same stuff",
-                            drawings.All(t =>
-                                t.UsesWallPattern(
-                                    owned.First(w => w.def == ThingDefOf.Wall && w.Stuff == t.Stuff)
-                                )
+                    if (nativeFrontPieces)
+                    {
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.AreEqual(
+                                "two accepted designs retained beside six front-piece experiments",
+                                6,
+                                drawings.Count(t => t.HasNativeFront)
                             )
-                        )
-                    );
+                        );
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "native front-piece UV mapping keeps source map scale",
+                                drawings.All(t => t.NativeFrontMappingError < .0001f)
+                            )
+                        );
+                    }
                     manifest.assertions.Add(
                         RimBridgeEvidence.AreEqual(
                             "four cached native wall overlaps",

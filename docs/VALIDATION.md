@@ -10,7 +10,39 @@ snapshot from later source commits.
 
 ## New watchtower native prototypes, 2026-10-11
 
-### Native wall patterns on the tower
+### Accepted design restored; optional native-scale wall fronts
+
+Andreas rejected the stretched wall-strip appearance below. The previous artwork
+from 11aab21 is restored as the default; that experiment remains recoverable at
+1e1dc54 and in its original captures. An optional `nativeFrontPieces` fixture now
+copies a real straight wall's printed front band and repeats it by translation
+at native map scale. The pieces are clipped against the tapered front outline;
+their UVs, material and vertex data are retained. Decks and side faces keep the
+accepted style, and two old wood/granite designs remain beside six experiments
+in one combined screenshot. This proves feasibility, not artwork acceptance.
+
+Formatting, all 347 independent tests and quiet deploy pass with zero warnings
+or errors. Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact built/deployed companion is
+`541df15512f460ca07f9efa0f308590a2514122bcda0bf581295a62fc1d496c2`.
+Public Steam 1.6.4871 with all five DLCs passes 15 experimental assertions and
+13 default-design assertions. Every copied front vertex's UV is independently
+reconstructed from the original native triangle at its translated map position;
+maximum error is 8.03e-8, below the 1e-4 limit. Wood comparison, granite corner,
+experimental overview and restored default overview pixels were inspected.
+Both runs advance no ticks and reload the unchanged fixture. The native error
+journal is empty; the game was stopped. One combined comparison was sent to
+Andreas's phone. The default again has two plain-tower draw calls; experimental
+fronts add one cached material pass. This is not a performance benchmark.
+
+The crop assumes native wall-front geometry; custom wall shapes/shaders, style
+selection and metallic pixels remain unverified. The companion is not shipped.
+Evidence: `artifacts/watchtower-native-front-pieces-20261011.json`,
+`artifacts/watchtower-accepted-design-restored-20261011.json`, and corresponding
+`artifacts/UserData/Screenshots/tower-*-20261011-*__cell_rect.png` captures.
+
+### Native wall texture stretch experiment, later rejected
 
 At Andreas's request, the slanted faces and compact deck now borrow the native
 wall texture, shader and stuff tint. The straight-wall face strip is cropped
@@ -33,8 +65,9 @@ Wood straight-wall, granite corner and combined overview pixels were inspected.
 The native error journal is empty; the game was stopped after cleanup.
 One combined image was submitted to Andreas's phone.
 
+Andreas later rejected this corrected appearance; it is no longer the default.
 The first attempt passed material identity assertions but pixels showed repeated
-pieces of the full atlas. It is rejected and retained separately. The accepted
+pieces of the full atlas. It is rejected and retained separately. The corrected
 mapping bakes the selected native link rectangle and face crop into mesh UVs.
 Arbitrary third-party shaders/atlas layouts, styled-wall selection and metallic
 material pixels remain unverified. This is still a non-shipping artwork prototype;

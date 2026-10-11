@@ -18,15 +18,19 @@ captures remain preserved in the validation ledger.
 actual neighbouring walls' native Print calls. Their existing materials and
 texture coordinates are retained; there is no new wall texture or masking shader.
 The native straight wood/corner granite examples add one/two batched draw calls.
-The slanted faces and deck now sample the same native wall texture, shader and
-stuff tint as ordinary walls. The cached UVs repeat a cropped straight-wall face
-strip, excluding the flat wall top and borders. Native wood uses Wall_Atlas_Planks
-and granite uses Wall_Atlas_Bricks. Existing timber braces and thick outlines stay.
-This adds one texture pass to the body mesh: three cached draw calls for a plain
-tower, four for the straight-wall example and five for the granite corner.
-No wall bitmap is copied, generated or modified, and no geometry or texture
-lookup occurs in DrawAt. The crop follows the native linked-wall atlas layout;
-other atlas layouts, custom shaders and styled-wall selection remain unverified.
+Andreas rejected the stretched wall-strip design; it remains recoverable at
+commit 1e1dc54 and in the validation ledger. The previous colored-mesh artwork
+is restored as the default, including its deck and broad surface divisions.
+The separate `nativeFrontPieces` fixture option copies a real straight wall's
+printed front band, translates/repeats it at native map scale and clips it to
+the tower's front outline. Its original materials, UVs and vertex data remain;
+there is no scaling, shearing or texture modification. Side faces and decks keep
+the previous artwork. The combined experiment retains two unchanged controls.
+The default needs two body/foreground draw calls plus cached wall joins; the
+optional front adds one cached material pass in the native wood/granite examples.
+Geometry is built before capture, with no texture lookup or rebuilding in DrawAt.
+The crop still assumes the native wall-front band geometry. Different custom
+wall shapes/shaders, styled-wall selection and metallic pixels remain unverified.
 No third-party wall renderer or general performance acceptance is claimed.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).

@@ -1,7 +1,10 @@
 # Watchtower design draft
 
 Status: compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
-shape, outlines, native wall joins and fitted occupant position. A separate
+shape, outlines, native wall joins and fitted occupant position. The later
+stretched texture experiment was rejected; the previous design is again the
+default. Native-scale wall-front pieces remain a separate optional experiment.
+A separate
 non-shipping native access prototype now proves the solid footprint and ladder
 route; production gameplay is not implemented. This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
@@ -105,11 +108,13 @@ reject blocked access without inventing automatic openings in player walls.
 
 The initial visual prototype belongs to the non-shipping BridgeTools companion.
 It uses colored meshes built once when spawned and RimWorld's native material;
-the slanted faces and deck additionally borrow the native wall texture/material
-for the tower's stuff. A cropped straight-wall face supplies the plank or brick
-pattern, with texture coordinates baked into the cached mesh. No image is copied
-or generated. This adds one cached body pass; third-party atlas layouts/shaders
-and styled-wall selection are not yet established. It needs no new AssetBundle.
+the accepted default retains its broad hand-drawn surface divisions. The separate
+`nativeFrontPieces` fixture option copies the front band of an actual printed
+straight wall using only translation/repetition and clipping. Native texture
+scale is preserved on the front; the deck and side faces stay unchanged. No image
+is copied or generated. This adds one cached pass only to the experimental towers.
+Custom wall shapes/shaders and styled-wall selection remain unverified.
+It needs no new AssetBundle.
 It renders a paused fixture only, then removes its
 temporary drawing patch and objects and reloads the unchanged save. It does not
 establish placement, climbing, elevated sight, targeting or combat behavior.
@@ -139,8 +144,9 @@ progress. Four tapered faces join the wider base to the small deck. The ladder
 leans inward from the outer approach.
 
 At Andreas's request, the artwork uses fewer ladder rungs and thicker dark
-outlines. The later texture follow-up replaces the hand-drawn surface divisions
-with the actual native wall plank/brick pattern, retaining timber braces. Real native
+outlines. The stretched texture follow-up was rejected and the hand-drawn surface
+divisions restored. A separate native-scale front-only comparison keeps timber
+braces, with the old wood/granite designs beside it as controls. Real native
 colonists remain legible on the compact platform. The 1.4-cell proportions are
 a reviewable draft, not a final art commitment. The older wide-deck screenshot
 remains preserved for comparison.
