@@ -19,7 +19,7 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares clipped native-scale wall fronts; silhouetteOutlines uses broad shaded faces, soft bevels and outer contours. retainControls defaults true to keep two unchanged designs beside six studies; false applies the study to all eight and captures a larger overview. Also capture tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render test-only 3x3 tower artwork using native stuff, buildings and walls. Default stages eight wood/granite occupancy/rotation sketches. silhouetteOutlines uses broad shaded faces, soft bevels and joined contours; retainControls keeps two older controls, or false captures a larger current-only overview. materialComparison instead captures ten labelled wood/stone/metal towers, each with matching native walls to west/east. nativeFrontPieces optionally copies clipped wall-front pieces at native scale. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no ticks and reloads that unchanged save. Definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
@@ -28,7 +28,8 @@ public sealed class WatchtowerVisualScenarios
         string evidenceLabel,
         bool nativeFrontPieces = false,
         bool silhouetteOutlines = false,
-        bool retainControls = true
+        bool retainControls = true,
+        bool materialComparison = false
     )
     {
         if (
@@ -37,6 +38,8 @@ public sealed class WatchtowerVisualScenarios
             || evidenceLabel.Any(c => !char.IsLetterOrDigit(c) && c != '-')
         )
             throw new ArgumentException("Supply a save name and a plain evidence label.");
+        if (materialComparison && nativeFrontPieces)
+            throw new ArgumentException("Use the separate native front-piece comparison.");
         await gate.WaitAsync(cancellationToken);
         var manifest = RimBridgeEvidence.CreateManifest(
             "totalfog/watchtower_visuals",
@@ -52,7 +55,11 @@ public sealed class WatchtowerVisualScenarios
         int tick = 0;
         bool staged = false;
         bool oldFade = SectionLayerFog.PrefEnableFade;
+        bool oldLightingOverlay = DebugViewSettings.drawLightingOverlay;
         var oldHighlight = Prefs.DotHighlightDisplayMode;
+        int areaWidth = materialComparison ? 27 : 19;
+        int areaHeight = materialComparison ? 28 : 21;
+        int expectedTowers = materialComparison ? 10 : 8;
         try
         {
             await ctx.MainThread.InvokeAsync(
@@ -64,22 +71,23 @@ public sealed class WatchtowerVisualScenarios
                     fog = map.GetVisibility();
                     if (!Find.TickManager.Paused || !fog.Initialized)
                         throw new InvalidOperationException("Use a paused initialized test map.");
-                    var origin = GenRadial
-                        .RadialCellsAround(
+                    var candidates = materialComparison
+                        ? map.AllCells
+                        : GenRadial.RadialCellsAround(
                             new IntVec3(map.Size.x - 40, 0, map.Size.z / 3),
                             65,
                             true
-                        )
-                        .First(c =>
-                            new CellRect(c.x, c.z, 19, 21).All(p =>
-                                p.InBounds(map)
-                                && p.Standable(map)
-                                && !map.fogGrid.IsFogged(p)
-                                && !p.Roofed(map)
-                                && p.GetThingList(map).All(t => t is Plant or Filth)
-                            )
                         );
-                    area = new CellRect(origin.x, origin.z, 19, 21);
+                    var origin = candidates.First(c =>
+                        new CellRect(c.x, c.z, areaWidth, areaHeight).All(p =>
+                            p.InBounds(map)
+                            && p.Standable(map)
+                            && !map.fogGrid.IsFogged(p)
+                            && !p.Roofed(map)
+                            && p.GetThingList(map).All(t => t is Plant or Filth)
+                        )
+                    );
+                    area = new CellRect(origin.x, origin.z, areaWidth, areaHeight);
                     tick = Find.TickManager.TicksGame;
                     EnsureDefinition();
                     harmony.Patch(
@@ -90,6 +98,8 @@ public sealed class WatchtowerVisualScenarios
                         )
                     );
                     SectionLayerFog.PrefEnableFade = false;
+                    if (materialComparison)
+                        DebugViewSettings.drawLightingOverlay = false;
                     Prefs.DotHighlightDisplayMode = DotHighlightDisplayMode.None;
                     Find.Selector.ClearSelection();
                     foreach (var cell in area)
@@ -102,23 +112,53 @@ public sealed class WatchtowerVisualScenarios
                     Rand.PushState(763119);
                     try
                     {
-                        AddTower(3, 3, ThingDefOf.WoodLog, Rot4.South, false);
-                        AddTower(9, 3, ThingDefOf.WoodLog, Rot4.South, true);
-                        var granite = DefDatabase<ThingDef>.GetNamed("BlocksGranite");
-                        AddTower(3, 9, granite, Rot4.East, false);
-                        AddTower(9, 9, granite, Rot4.East, true);
-                        AddTower(4, 16, ThingDefOf.WoodLog, Rot4.South, true);
-                        AddTower(13, 16, granite, Rot4.East, true);
-                        AddTower(15, 3, granite, Rot4.North, false);
-                        AddTower(15, 9, granite, Rot4.West, false);
-                        // A straight perimeter wall meets both sides of the timber tower.
-                        foreach (int dx in new[] { 0, 1, 2, 6, 7, 8 })
-                            AddWall(dx, 16, ThingDefOf.WoodLog);
-                        // A corner meets the stone tower's west and north faces.
-                        foreach (int dx in new[] { 9, 10, 11 })
-                            AddWall(dx, 16, granite);
-                        foreach (int dz in new[] { 18, 19, 20 })
-                            AddWall(13, dz, granite);
+                        if (materialComparison)
+                        {
+                            var materials = new[]
+                            {
+                                "WoodLog",
+                                "Steel",
+                                "Plasteel",
+                                "BlocksSandstone",
+                                "BlocksGranite",
+                                "BlocksLimestone",
+                                "BlocksSlate",
+                                "BlocksMarble",
+                                "Uranium",
+                                "Bioferrite",
+                            };
+                            for (int i = 0; i < materials.Length; i++)
+                            {
+                                int dx = i == 9 ? 13 : 4 + i % 3 * 9;
+                                int dz = 24 - i / 3 * 7;
+                                var stuff = DefDatabase<ThingDef>.GetNamed(materials[i]);
+                                AddTower(dx, dz, stuff, Rot4.South, false);
+                                drawings.Last().MaterialLabel =
+                                    stuff.LabelAsStuff.CapitalizeFirst();
+                                foreach (int offset in new[] { -3, -2, 2, 3 })
+                                    AddWall(dx + offset, dz, stuff);
+                            }
+                        }
+                        else
+                        {
+                            AddTower(3, 3, ThingDefOf.WoodLog, Rot4.South, false);
+                            AddTower(9, 3, ThingDefOf.WoodLog, Rot4.South, true);
+                            var granite = DefDatabase<ThingDef>.GetNamed("BlocksGranite");
+                            AddTower(3, 9, granite, Rot4.East, false);
+                            AddTower(9, 9, granite, Rot4.East, true);
+                            AddTower(4, 16, ThingDefOf.WoodLog, Rot4.South, true);
+                            AddTower(13, 16, granite, Rot4.East, true);
+                            AddTower(15, 3, granite, Rot4.North, false);
+                            AddTower(15, 9, granite, Rot4.West, false);
+                            // A straight perimeter wall meets both sides of the timber tower.
+                            foreach (int dx in new[] { 0, 1, 2, 6, 7, 8 })
+                                AddWall(dx, 16, ThingDefOf.WoodLog);
+                            // A corner meets the stone tower's west and north faces.
+                            foreach (int dx in new[] { 9, 10, 11 })
+                                AddWall(dx, 16, granite);
+                            foreach (int dz in new[] { 18, 19, 20 })
+                                AddWall(13, dz, granite);
+                        }
                     }
                     finally
                     {
@@ -126,8 +166,12 @@ public sealed class WatchtowerVisualScenarios
                     }
                     foreach (var tower in drawings)
                     {
-                        bool study = !retainControls || drawings.IndexOf(tower) is not (0 or 2);
-                        tower.SilhouetteOutlines = silhouetteOutlines && study;
+                        bool study =
+                            materialComparison
+                            || !retainControls
+                            || drawings.IndexOf(tower) is not (0 or 2);
+                        tower.SilhouetteOutlines =
+                            materialComparison || silhouetteOutlines && study;
                         // Keep the empty wood/granite examples as the accepted
                         // design so one overview compares it with the experiment.
                         if (nativeFrontPieces && study)
@@ -159,7 +203,9 @@ public sealed class WatchtowerVisualScenarios
                         nativeFrontPieces,
                         silhouetteOutlines,
                         retainControls,
-                        outlineStudy = silhouetteOutlines
+                        materialComparison,
+                        neutralMaterialLighting = materialComparison,
+                        outlineStudy = silhouetteOutlines || materialComparison
                             ? "broad shaded faces and soft beam bevels from Andreas's three building references"
                             : null,
                         nativePawns = projectedOccupants
@@ -176,6 +222,14 @@ public sealed class WatchtowerVisualScenarios
                             {
                                 t.ThingID,
                                 stuff = t.Stuff.defName,
+                                appearance = t.Stuff.stuffProps.appearance?.defName,
+                                color = new
+                                {
+                                    t.DrawColor.r,
+                                    t.DrawColor.g,
+                                    t.DrawColor.b,
+                                    t.DrawColor.a,
+                                },
                                 cell = t.Position.ToString(),
                                 rotation = t.Rotation.ToString(),
                                 wallJoins = t.WallJoinCount,
@@ -186,35 +240,59 @@ public sealed class WatchtowerVisualScenarios
                             })
                             .ToArray(),
                         nativeWallJoins = drawings.Sum(t => t.WallJoinCount),
+                        nativeWalls = owned
+                            .Where(t => t.def == ThingDefOf.Wall)
+                            .Select(w => new
+                            {
+                                stuff = w.Stuff.defName,
+                                color = new
+                                {
+                                    w.DrawColor.r,
+                                    w.DrawColor.g,
+                                    w.DrawColor.b,
+                                    w.DrawColor.a,
+                                },
+                                graphic = w.Graphic.GetType().Name,
+                                texture = w.Graphic.MatSingleFor(w).mainTexture.name,
+                            })
+                            .ToArray(),
                         geometryBuiltBeforeCapture = true,
                     };
                 },
                 cancellationToken
             );
 
-            await Capture("overview", 0, 0, 19, 21, retainControls ? 14 : 12);
-            await Capture("wood-empty-occupied", 1, 1, 11, 6);
-            await Capture("granite-empty-occupied", 1, 7, 11, 6);
-            await Capture("wood-straight-wall", 0, 13, 9, 7);
-            await Capture("granite-corner", 9, 13, 8, 8);
-            await Capture("granite-north-ladder", 13, 1, 5, 6);
-            await Capture("granite-west-ladder", 13, 7, 5, 6);
+            if (materialComparison)
+                await Capture("materials", 0, 0, areaWidth, areaHeight, 17);
+            else
+            {
+                await Capture("overview", 0, 0, 19, 21, retainControls ? 14 : 12);
+                await Capture("wood-empty-occupied", 1, 1, 11, 6);
+                await Capture("granite-empty-occupied", 1, 7, 11, 6);
+                await Capture("wood-straight-wall", 0, 13, 9, 7);
+                await Capture("granite-corner", 9, 13, 8, 8);
+                await Capture("granite-north-ladder", 13, 1, 5, 6);
+                await Capture("granite-west-ladder", 13, 7, 5, 6);
+            }
             await ctx.MainThread.InvokeAsync(
                 () =>
                 {
-                    manifest.assertions.Add(
-                        RimBridgeEvidence.IsTrue(
-                            "occupants stay in tower center cells",
-                            projectedOccupants.Keys.All(p =>
-                                drawings.Any(t => t.Position == p.Position && t.Map == p.Map)
+                    if (!materialComparison)
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "occupants stay in tower center cells",
+                                projectedOccupants.Keys.All(p =>
+                                    drawings.Any(t => t.Position == p.Position && t.Map == p.Map)
+                                )
                             )
-                        )
-                    );
-                    if (silhouetteOutlines)
+                        );
+                    if (silhouetteOutlines || materialComparison)
                         manifest.assertions.Add(
                             RimBridgeEvidence.AreEqual(
                                 "requested outline-study count",
-                                retainControls ? 6 : 8,
+                                materialComparison ? 10
+                                    : retainControls ? 6
+                                    : 8,
                                 drawings.Count(t => t.SilhouetteOutlines)
                             )
                         );
@@ -223,7 +301,9 @@ public sealed class WatchtowerVisualScenarios
                         manifest.assertions.Add(
                             RimBridgeEvidence.AreEqual(
                                 "requested native-front study count",
-                                retainControls ? 6 : 8,
+                                materialComparison ? 10
+                                    : retainControls ? 6
+                                    : 8,
                                 drawings.Count(t => t.HasNativeFront)
                             )
                         );
@@ -236,8 +316,8 @@ public sealed class WatchtowerVisualScenarios
                     }
                     manifest.assertions.Add(
                         RimBridgeEvidence.AreEqual(
-                            "four cached native wall overlaps",
-                            4,
+                            "requested cached native wall overlaps",
+                            materialComparison ? 20 : 4,
                             drawings.Sum(t => t.WallJoinCount)
                         )
                     );
@@ -248,21 +328,49 @@ public sealed class WatchtowerVisualScenarios
                             Find.TickManager.TicksGame
                         )
                     );
-                    manifest.assertions.Add(
-                        RimBridgeEvidence.IsTrue(
-                            "occupants remain native spawned pawns",
-                            projectedOccupants.Keys.All(p =>
-                                p.Spawned && p.Map == map && !p.Dead && !p.Downed
+                    if (!materialComparison)
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "occupants remain native spawned pawns",
+                                projectedOccupants.Keys.All(p =>
+                                    p.Spawned && p.Map == map && !p.Dead && !p.Downed
+                                )
                             )
-                        )
-                    );
+                        );
                     manifest.assertions.Add(
                         RimBridgeEvidence.AreEqual(
-                            "eight native 3x3 towers",
-                            8,
+                            "requested native 3x3 towers",
+                            expectedTowers,
                             drawings.Count(t => t.Spawned && t.def.size == new IntVec2(3, 3))
                         )
                     );
+                    if (materialComparison)
+                    {
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "ten distinct materials with native labels and matching wall colours",
+                                drawings.Select(t => t.Stuff).Distinct().Count() == 10
+                                    && drawings.All(t =>
+                                        t.MaterialLabel != null
+                                        && owned.Any(w =>
+                                            w.def == ThingDefOf.Wall
+                                            && w.Stuff == t.Stuff
+                                            && w.DrawColor == t.DrawColor
+                                        )
+                                    )
+                            )
+                        );
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "each material has matching west and east wall sections",
+                                drawings.All(t =>
+                                    new[] { IntVec3.West, IntVec3.East }.All(d =>
+                                        (t.Position + d * 2).GetEdifice(map)?.Stuff == t.Stuff
+                                    )
+                                )
+                            )
+                        );
+                    }
                 },
                 cancellationToken
             );
@@ -371,6 +479,7 @@ public sealed class WatchtowerVisualScenarios
                                     map.cellIndices.CellToIndex(cell)
                                 );
                         SectionLayerFog.PrefEnableFade = oldFade;
+                        DebugViewSettings.drawLightingOverlay = oldLightingOverlay;
                         Prefs.DotHighlightDisplayMode = oldHighlight;
                     },
                     CancellationToken.None
@@ -428,6 +537,7 @@ public sealed class WatchtowerVisualScenarios
             thingClass = type,
             category = ThingCategory.Building,
             drawerType = DrawerType.RealtimeOnly,
+            drawGUIOverlay = true,
             tickerType = TickerType.Never,
             size = new IntVec2(3, 3),
             rotatable = true,

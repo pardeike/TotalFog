@@ -171,6 +171,17 @@ lower-contrast internal edges replace the earlier jagged hairlines. It adds no
 material passes. Native straight wood and corner granite joins were inspected;
 do not treat the study as approved production artwork.
 
+Andreas accepted the refined direction for now and requested a useful-material
+board with native walls on both sides. The `materialComparison` companion mode
+stages wood, all five stone types, steel, plasteel, uranium and bioferrite. Gold
+and jade are excluded; this comparison does not define production material
+restrictions. It uses native `DrawColor` values and actual neighbouring wall
+graphics, with timber braces, masonry courses or smooth metal faces as appropriate.
+The ladder stays wooden. Rounded cached joins connect outer contour and beam
+ends without extra material passes. The native lighting overlay is temporarily
+disabled for a neutral colour comparison and restored afterwards. This board
+contains no occupants; use the existing occupied/rotation fixture for those.
+
 ### Cached native wall overlap prototype
 
 The companion now prints the actual adjacent wall into a temporary native

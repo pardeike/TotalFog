@@ -24,6 +24,7 @@ public class WatchtowerVisualPrototype : Building
     private WatchtowerWallJoins nativeFront;
     internal Thing NativeFrontSource { get; set; }
     internal bool SilhouetteOutlines { get; set; }
+    internal string MaterialLabel { get; set; }
 
     internal int WallJoinCount => wallJoins?.Directions.Count ?? 0;
     internal int CachedDrawCalls => 2 + (wallJoins?.DrawCalls ?? 0) + (nativeFront?.DrawCalls ?? 0);
@@ -36,8 +37,9 @@ public class WatchtowerVisualPrototype : Building
         material = SolidColorMaterials.SimpleSolidColorMaterial(Color.white, true);
         var drawing = new Drawing(
             Rotation,
-            Stuff.stuffProps.color,
+            DrawColor,
             Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+            Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Woody),
             Array.Empty<IntVec3>()
         );
         (body, foreground) = drawing.Build();
@@ -55,8 +57,9 @@ public class WatchtowerVisualPrototype : Building
         {
             var drawing = new Drawing(
                 Rotation,
-                Stuff.stuffProps.color,
+                DrawColor,
                 Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+                Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Woody),
                 next.Directions,
                 NativeFrontSource != null,
                 SilhouetteOutlines
@@ -111,6 +114,17 @@ public class WatchtowerVisualPrototype : Building
         nativeFront = null;
     }
 
+    public override void DrawGUIOverlay()
+    {
+        base.DrawGUIOverlay();
+        if (MaterialLabel != null)
+            GenMapUI.DrawThingLabel(
+                GenMapUI.LabelDrawPosFor(this, -2.05f),
+                MaterialLabel,
+                Color.white
+            );
+    }
+
     private sealed class Drawing
     {
         private const float BaseHalfExtent = 1.50f;
@@ -120,6 +134,7 @@ public class WatchtowerVisualPrototype : Building
         private readonly Rot4 rotation;
         private readonly Color stuff;
         private readonly bool stone;
+        private readonly bool timber;
         private readonly IReadOnlyList<IntVec3> wallDirections;
         private readonly bool nativeFront;
         private readonly bool silhouetteOutlines;
@@ -135,6 +150,7 @@ public class WatchtowerVisualPrototype : Building
             Rot4 rotation,
             Color stuff,
             bool stone,
+            bool timber,
             IReadOnlyList<IntVec3> wallDirections,
             bool nativeFront = false,
             bool silhouetteOutlines = false
@@ -143,6 +159,7 @@ public class WatchtowerVisualPrototype : Building
             this.rotation = rotation;
             this.stuff = stuff;
             this.stone = stone;
+            this.timber = timber;
             this.wallDirections = wallDirections;
             this.nativeFront = nativeFront;
             this.silhouetteOutlines = silhouetteOutlines;
@@ -290,7 +307,7 @@ public class WatchtowerVisualPrototype : Building
                         );
                     }
                 }
-                else if (!stone)
+                else if (timber)
                 {
                     Beam(
                         body,
@@ -330,7 +347,10 @@ public class WatchtowerVisualPrototype : Building
                     new Vector3(-BaseHalfExtent, 0, BaseHalfExtent),
                 };
                 for (int edge = 0; edge < contour.Length; edge++)
+                {
                     Boundary(contour[edge], contour[(edge + 1) % contour.Length]);
+                    body.RoundJoin(contour[edge], .07f, outline);
+                }
             }
         }
 
@@ -438,7 +458,7 @@ public class WatchtowerVisualPrototype : Building
                     Shade(.80f)
                 );
             }
-            else
+            else if (timber)
             {
                 foreach (float x in new[] { -.21f, .21f })
                 {
@@ -519,7 +539,7 @@ public class WatchtowerVisualPrototype : Building
             // in the foreground mesh; the ladder belongs below the native pawn.
             var target = body;
             // Ladders remain timber even on a masonry tower in this first sketch.
-            var color = stone ? new Color(.48f, .35f, .22f) : Shade(.86f);
+            var color = timber ? Shade(.86f) : new Color(.48f, .35f, .22f);
             foreach (float x in new[] { -.27f, .27f })
                 Beam(
                     target,
@@ -552,15 +572,20 @@ public class WatchtowerVisualPrototype : Building
             bool silhouette = false
         )
         {
-            geometry.Line(
-                a,
-                b,
-                width + (silhouetteOutlines && !silhouette ? .035f : .085f),
-                silhouetteOutlines && !silhouette ? Color.Lerp(outline, color, .55f) : outline
-            );
+            float outerWidth = width + (silhouetteOutlines && !silhouette ? .035f : .085f);
+            var edgeColor =
+                silhouetteOutlines && !silhouette ? Color.Lerp(outline, color, .55f) : outline;
+            geometry.Line(a, b, outerWidth, edgeColor);
+            if (silhouetteOutlines)
+            {
+                geometry.RoundJoin(a, outerWidth, edgeColor);
+                geometry.RoundJoin(b, outerWidth, edgeColor);
+            }
             geometry.Line(a, b, width, color);
             if (silhouetteOutlines)
             {
+                geometry.RoundJoin(a, width, color);
+                geometry.RoundJoin(b, width, color);
                 var delta = b - a;
                 var lightEdge = new Vector3(-delta.z, 0, delta.x).normalized;
                 if (lightEdge.z < 0 || (Mathf.Abs(lightEdge.z) < .0001f && lightEdge.x > 0))
@@ -627,6 +652,18 @@ public class WatchtowerVisualPrototype : Building
             Polygon(lower, a, b, c, d);
             colors[colors.Count - 2] = upper;
             colors[colors.Count - 1] = upper;
+        }
+
+        internal void RoundJoin(Vector3 point, float width, Color color)
+        {
+            const int sides = 8;
+            var points = new Vector3[sides];
+            for (int i = 0; i < sides; i++)
+            {
+                float angle = i * Mathf.PI * 2 / sides;
+                points[i] = point + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * width / 2;
+            }
+            Polygon(color, points);
         }
 
         internal Mesh Build(string name)

@@ -69,6 +69,14 @@ artwork as the default until Andreas accepts a change. This option adds no
 material passes; inspect the actual pixels rather than accepting mesh assertions.
 Set `retainControls=false` for a larger overview with the study on all eight
 towers; the default keeps two unchanged designs for comparisons.
+Set `materialComparison=true` for one labelled board of ten useful materials,
+each with matching native walls on both sides. This mode uses the current
+outline study throughout, joins contour/beam ends with rounded cached geometry,
+and distinguishes timber braces, masonry courses and smooth metallic faces.
+It temporarily disables the native lighting overlay for colour comparison,
+restores that setting and reloads the unchanged fixture. It cannot be combined
+with `nativeFrontPieces`. Inspect actual pixels and keep reference screenshots
+in ignored artifacts; this board does not test occupants or gameplay.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland

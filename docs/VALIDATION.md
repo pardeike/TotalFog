@@ -10,6 +10,50 @@ snapshot from later source commits.
 
 ## New watchtower native prototypes, 2026-10-11
 
+### Material board and joined outline ends
+
+Andreas supplied `all walls.png` as a visual reference, requested useful materials
+with matching walls on both sides, and identified disconnected outer stroke
+ends. The current study joins those ends with rounded cached geometry. Timber
+keeps braces/planked decking, stone keeps soft masonry courses, and metal has
+smooth faces/decks. All ten variants keep the wooden ladder. The material mode
+uses `Thing.DrawColor` and actual native wall Print graphics; it temporarily
+disables the native lighting overlay to remove dawn tint, then restores it.
+No bitmap recolouring or material colour guessed from the reference is used.
+
+Formatting, quiet deploy and all 347 independent tests pass with zero build
+warnings/errors. Built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+built/deployed companion is
+`f5bd24ba3b051753e19dca346506f8b05b67a76d099be93056140fe8ff8ade1f`.
+Public Steam 1.6.4871 with all five DLCs passes all eight material-board
+assertions: ten native towers with distinct labelled stuff, matching native
+wall colours and west/east wall sections, twenty cached overlaps, a successful
+capture, unchanged tick 1202 and reload of the unchanged fixture. The 2102 by
+2181 native image was inspected for all materials, wall joins, joined contour
+ends and readable labels; it contains no old designs or HUD text. A separate
+debug-state read verifies the lighting overlay restored to on. Error journal
+and Player.log contain no exception/error/fatal match. Fixture hidden funeral
+precept warnings remain. Game termination is verified.
+
+Materials are wood, steel, plasteel, sandstone, granite, limestone, slate,
+marble, uranium and bioferrite. Gold/jade are excluded at Andreas's request;
+silver is omitted from this practical sample. These are artwork examples, not
+production material restrictions. Each tower has three cached material draws,
+including its two wall overlaps. Rounded joins add vertices to existing meshes,
+not passes or per-frame rebuilds. No performance benchmark, occupant, climb,
+sight, combat or third-party wall compatibility claim is made by this board.
+
+The first larger layout failed to find clear ground within the old fixture's
+nearby search; no objects were staged. The material mode now searches the map's
+clear unroofed ground. Earlier dawn-tinted and HUD-edge framing captures remain
+in ignored artifacts; the final image uses a root size of 17 and neutral
+lighting. The supplied reference and native screenshots are not in the player
+payload or committed public source.
+Evidence: `artifacts/watchtower-materials-final-20261011.json`,
+`artifacts/logs/watchtower-materials-final-20261011.log`, and
+`artifacts/UserData/Screenshots/tower-materials-final-rounded-20261011-materials__cell_rect.png`.
+
 ### Building-reference shading refinement
 
 Andreas supplied three original building screenshots, `buildings1.png` through

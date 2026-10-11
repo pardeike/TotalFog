@@ -30,7 +30,8 @@ The default needs two body/foreground draw calls plus cached wall joins; the
 optional front adds one cached material pass in the native wood/granite examples.
 Geometry is built before capture, with no texture lookup or rebuilding in DrawAt.
 The crop still assumes the native wall-front band geometry. Different custom
-wall shapes/shaders, styled-wall selection and metallic pixels remain unverified.
+wall shapes/shaders, styled-wall selection and native front-piece copying on
+metallic towers remain unverified.
 No third-party wall renderer or general performance acceptance is claimed.
 The separate `silhouetteOutlines` fixture option retains two accepted controls
 beside six outline studies. Outer support contours stay heavy; face boundaries,
@@ -42,7 +43,23 @@ building references then informed broad face shading, narrow light edges on
 beams/rails, softer internal shadows and quieter masonry lines. The earlier
 hairline study remains in the validation ledger; the refined edges are wider
 and lower contrast. Native overview, straight wood join and granite corner
-pixels were inspected. It is a comparison, not accepted replacement artwork.
+pixels were inspected. Andreas accepted the refined direction for further work;
+it remains a non-shipping artwork prototype.
+The later `materialComparison` option uses this current draft for ten labelled
+towers: wood, steel, plasteel, sandstone, granite, limestone, slate, marble,
+uranium and bioferrite. Each has real matching native walls on its left/right.
+Gold/jade are excluded at Andreas's request; silver is omitted from this
+practical comparison, not prohibited by a shipping definition. Tower mesh colours
+now use `Thing.DrawColor`, matching the native wall's stuff colour handling.
+Only timber has cross-braces/planked decks; masonry retains soft courses, and
+metal has smooth faces/decks. All variants keep the wooden ladder.
+Rounded joins fill the ends of heavy contours and beam strips in the current
+study. These are cached vertices in the existing meshes, not new draw passes.
+The comparison temporarily disables RimWorld's lighting overlay to show material
+colours without dawn tint, then restores the setting. Native wall-front texture
+copying remains the separate option; the tower's shaded faces are drawn geometry.
+The supplied `all walls.png` remains an ignored visual reference. The old design
+and earlier studies remain recoverable in Git and the validation ledger.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
 The access companion reuses the accepted meshes for a native ladder-job
