@@ -32,6 +32,14 @@ Geometry is built before capture, with no texture lookup or rebuilding in DrawAt
 The crop still assumes the native wall-front band geometry. Different custom
 wall shapes/shaders, styled-wall selection and metallic pixels remain unverified.
 No third-party wall renderer or general performance acceptance is claimed.
+The separate `silhouetteOutlines` fixture option retains two accepted controls
+beside six outline studies. Outer support contours stay heavy; face boundaries,
+braces and masonry details are lighter. Connected sections of the support contour
+become thin seams while the actual native wall fragments remain above them.
+Ladder uprights retain strong edges around their open spaces. This changes only
+cached mesh geometry, with no extra material passes. Native overview, straight
+wood join and granite corner pixels were inspected; some very thin details look
+jagged at close zoom. It is a comparison, not accepted replacement artwork.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
 The access companion reuses the accepted meshes for a native ladder-job

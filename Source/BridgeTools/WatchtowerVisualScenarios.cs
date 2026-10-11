@@ -19,14 +19,15 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall-front experiments with two unchanged controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall fronts with two unchanged controls. Optional silhouetteOutlines compares six outer-contour/thin-detail studies with those controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string saveName,
         string evidenceLabel,
-        bool nativeFrontPieces = false
+        bool nativeFrontPieces = false,
+        bool silhouetteOutlines = false
     )
     {
         if (
@@ -124,6 +125,8 @@ public sealed class WatchtowerVisualScenarios
                     }
                     foreach (var tower in drawings)
                     {
+                        tower.SilhouetteOutlines =
+                            silhouetteOutlines && drawings.IndexOf(tower) is not (0 or 2);
                         // Keep the empty wood/granite examples as the accepted
                         // design so one overview compares it with the experiment.
                         if (nativeFrontPieces && drawings.IndexOf(tower) is not (0 or 2))
@@ -153,6 +156,7 @@ public sealed class WatchtowerVisualScenarios
                         },
                         prototypeOnly = true,
                         nativeFrontPieces,
+                        silhouetteOutlines,
                         nativePawns = projectedOccupants
                             .Keys.Select(p => new
                             {
@@ -171,6 +175,7 @@ public sealed class WatchtowerVisualScenarios
                                 rotation = t.Rotation.ToString(),
                                 wallJoins = t.WallJoinCount,
                                 nativeFront = t.HasNativeFront,
+                                silhouetteOutlines = t.SilhouetteOutlines,
                                 nativeFrontMappingError = t.NativeFrontMappingError,
                                 cachedDrawCalls = t.CachedDrawCalls,
                             })
@@ -200,6 +205,14 @@ public sealed class WatchtowerVisualScenarios
                             )
                         )
                     );
+                    if (silhouetteOutlines)
+                        manifest.assertions.Add(
+                            RimBridgeEvidence.AreEqual(
+                                "two accepted designs retained beside six silhouette-outline studies",
+                                6,
+                                drawings.Count(t => t.SilhouetteOutlines)
+                            )
+                        );
                     if (nativeFrontPieces)
                     {
                         manifest.assertions.Add(

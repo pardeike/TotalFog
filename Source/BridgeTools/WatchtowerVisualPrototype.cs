@@ -23,6 +23,7 @@ public class WatchtowerVisualPrototype : Building
     private WatchtowerWallJoins wallJoins;
     private WatchtowerWallJoins nativeFront;
     internal Thing NativeFrontSource { get; set; }
+    internal bool SilhouetteOutlines { get; set; }
 
     internal int WallJoinCount => wallJoins?.Directions.Count ?? 0;
     internal int CachedDrawCalls => 2 + (wallJoins?.DrawCalls ?? 0) + (nativeFront?.DrawCalls ?? 0);
@@ -57,7 +58,8 @@ public class WatchtowerVisualPrototype : Building
                 Stuff.stuffProps.color,
                 Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
                 next.Directions,
-                NativeFrontSource != null
+                NativeFrontSource != null,
+                SilhouetteOutlines
             );
             (nextBody, nextForeground) = drawing.Build();
             if (NativeFrontSource != null)
@@ -120,6 +122,7 @@ public class WatchtowerVisualPrototype : Building
         private readonly bool stone;
         private readonly IReadOnlyList<IntVec3> wallDirections;
         private readonly bool nativeFront;
+        private readonly bool silhouetteOutlines;
         private readonly Geometry body = new();
         private readonly Geometry front = new();
         private readonly Color outline = new(.10f, .095f, .085f);
@@ -133,7 +136,8 @@ public class WatchtowerVisualPrototype : Building
             Color stuff,
             bool stone,
             IReadOnlyList<IntVec3> wallDirections,
-            bool nativeFront = false
+            bool nativeFront = false,
+            bool silhouetteOutlines = false
         )
         {
             this.rotation = rotation;
@@ -141,6 +145,7 @@ public class WatchtowerVisualPrototype : Building
             this.stone = stone;
             this.wallDirections = wallDirections;
             this.nativeFront = nativeFront;
+            this.silhouetteOutlines = silhouetteOutlines;
         }
 
         internal (Mesh, Mesh) Build()
@@ -155,7 +160,12 @@ public class WatchtowerVisualPrototype : Building
                 foreach (var direction in wallDirections)
                 {
                     WatchtowerWallJoins.GetCutEdge(direction, out var a, out var b);
-                    body.Line(a, b, .06f, outline);
+                    body.Line(
+                        a,
+                        b,
+                        silhouetteOutlines ? .018f : .06f,
+                        silhouetteOutlines ? Shade(.50f) : outline
+                    );
                 }
             }
             Floor();
@@ -201,20 +211,28 @@ public class WatchtowerVisualPrototype : Building
                     : 1;
                 if (facePass != pass)
                     continue;
-                body.Polygon(
-                    outline,
+                var faceColor = Shade(stone ? (depth < 0 ? .72f : .86f) : .69f);
+                var face = new[]
+                {
                     SidePoint(side, -1, 0),
                     SidePoint(side, 1, 0),
                     SidePoint(side, 1, 1),
-                    SidePoint(side, -1, 1)
-                );
-                body.Polygon(
-                    Shade(stone ? (depth < 0 ? .72f : .86f) : .69f),
-                    SidePoint(side, -.94f, .05f),
-                    SidePoint(side, .94f, .05f),
-                    SidePoint(side, .91f, .95f),
-                    SidePoint(side, -.91f, .95f)
-                );
+                    SidePoint(side, -1, 1),
+                };
+                body.Polygon(silhouetteOutlines ? faceColor : outline, face);
+                if (silhouetteOutlines)
+                {
+                    for (int edge = 0; edge < face.Length; edge++)
+                        body.Line(face[edge], face[(edge + 1) % face.Length], .018f, Shade(.50f));
+                }
+                else
+                    body.Polygon(
+                        faceColor,
+                        SidePoint(side, -.94f, .05f),
+                        SidePoint(side, .94f, .05f),
+                        SidePoint(side, .91f, .95f),
+                        SidePoint(side, -.91f, .95f)
+                    );
                 bool nativeFace = nativeFront && depth < 0;
                 if (nativeFace)
                 {
@@ -276,6 +294,56 @@ public class WatchtowerVisualPrototype : Building
                         );
                 }
             }
+            if (silhouetteOutlines)
+            {
+                // Union of the four projected support faces. Internal face
+                // boundaries stay thin; the heavy contour follows the outside.
+                var contour = new[]
+                {
+                    new Vector3(-BaseHalfExtent, 0, -BaseHalfExtent),
+                    new Vector3(BaseHalfExtent, 0, -BaseHalfExtent),
+                    new Vector3(BaseHalfExtent, 0, BaseHalfExtent),
+                    new Vector3(DeckHalfExtent, 0, DeckHalfExtent + PlatformProjection),
+                    new Vector3(-DeckHalfExtent, 0, DeckHalfExtent + PlatformProjection),
+                    new Vector3(-BaseHalfExtent, 0, BaseHalfExtent),
+                };
+                for (int edge = 0; edge < contour.Length; edge++)
+                    Boundary(contour[edge], contour[(edge + 1) % contour.Length]);
+            }
+        }
+
+        private void Boundary(Vector3 a, Vector3 b)
+        {
+            foreach (var direction in wallDirections)
+            {
+                bool side = direction.x != 0;
+                if (
+                    side
+                        ? direction.x * a.x <= 0 || direction.x * b.x <= 0
+                        : direction.z * a.z <= 0 || direction.z * b.z <= 0
+                )
+                    continue;
+                float start = side ? a.z : a.x;
+                float end = side ? b.z : b.x;
+                float span = end - start;
+                if (Mathf.Abs(span) < .0001f)
+                    continue;
+                float t0 = (-.5f - start) / span;
+                float t1 = (.5f - start) / span;
+                float from = Mathf.Max(0, Mathf.Min(t0, t1));
+                float to = Mathf.Min(1, Mathf.Max(t0, t1));
+                if (from >= to)
+                    continue;
+                var joinA = Vector3.Lerp(a, b, from);
+                var joinB = Vector3.Lerp(a, b, to);
+                if (from > 0)
+                    body.Line(a, joinA, .07f, outline);
+                body.Line(joinA, joinB, .018f, Shade(.50f));
+                if (to < 1)
+                    body.Line(joinB, b, .07f, outline);
+                return;
+            }
+            body.Line(a, b, .07f, outline);
         }
 
         private Vector3 SidePoint(int side, float along, float height)
@@ -308,13 +376,13 @@ public class WatchtowerVisualPrototype : Building
         {
             const float edge = DeckHalfExtent;
             body.Polygon(
-                outline,
+                silhouetteOutlines ? Shade(.55f) : outline,
                 LowerDeck(Point(-edge, -edge, 1)),
                 LowerDeck(Point(-edge, edge, 1)),
                 LowerDeck(Point(edge, edge, 1)),
                 LowerDeck(Point(edge, -edge, 1))
             );
-            const float inside = DeckHalfExtent - .07f;
+            float inside = DeckHalfExtent - (silhouetteOutlines ? .018f : .07f);
             body.Polygon(
                 Shade(1.12f),
                 LowerDeck(Point(-inside, -inside, 1)),
@@ -383,7 +451,8 @@ public class WatchtowerVisualPrototype : Building
                 RailPoint(side, from, 1.28f),
                 RailPoint(side, to, 1.28f),
                 stone ? .13f : .10f,
-                railColor
+                railColor,
+                silhouette: SidePoint(side, 0, 0).z > 0
             );
             if (stone)
                 Beam(
@@ -424,7 +493,8 @@ public class WatchtowerVisualPrototype : Building
                     Point(x, -1.65f, 0),
                     LowerDeck(Point(x, -RailHalfExtent, 1.04f)),
                     .09f,
-                    color
+                    color,
+                    silhouette: true
                 );
             for (int rung = 0; rung < 6; rung++)
             {
@@ -440,9 +510,21 @@ public class WatchtowerVisualPrototype : Building
             }
         }
 
-        private void Beam(Geometry geometry, Vector3 a, Vector3 b, float width, Color color)
+        private void Beam(
+            Geometry geometry,
+            Vector3 a,
+            Vector3 b,
+            float width,
+            Color color,
+            bool silhouette = false
+        )
         {
-            geometry.Line(a, b, width + .085f, outline);
+            geometry.Line(
+                a,
+                b,
+                width + (silhouetteOutlines && !silhouette ? .018f : .085f),
+                outline
+            );
             geometry.Line(a, b, width, color);
         }
     }

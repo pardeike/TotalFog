@@ -62,6 +62,10 @@ copies real native wall-front pieces using translation/clipping only, with two
 unchanged designs beside six experiments. It checks source UVs against map-space
 positions to reject scaling/shearing. Inspect the pixels as well. Side faces/deck
 remain unchanged; custom wall shapes/shaders and styled-wall selection are unverified.
+Optional `silhouetteOutlines` compares six studies with two unchanged controls:
+heavy outer contours, thinner surface details and lighter seams at native wall
+joins. Keep the accepted artwork as the default until Andreas accepts a change.
+This option adds no material passes; inspect fine-line aliasing in native pixels.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland

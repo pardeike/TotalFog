@@ -10,6 +10,39 @@ snapshot from later source commits.
 
 ## New watchtower native prototypes, 2026-10-11
 
+### Optional silhouette-outline study
+
+Feedback on RimWorld artwork called for heavier outer contours and lighter
+internal details. The separate `silhouetteOutlines` fixture option compares six
+studies with two accepted wood/granite controls. The support contour becomes a
+thin seam where an actual native wall enters; existing cached wall fragments
+still retain their own materials, geometry and connection state. Braces and
+surface divisions are lighter, while ladder uprights retain strong edges around
+open space. The accepted drawing remains the default. This is an optional
+artwork comparison, not final visual acceptance or a shipped building.
+
+Formatting, all 347 independent tests and quiet deploy pass with zero build
+warnings/errors. Built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the built/deployed companion is
+`cf6bc16e006110daff5de2e1a00355f885e6318a4b59c3bb4418301217691104`.
+Public Steam 1.6.4871 with all five DLCs passes 14 native assertions, including
+the two retained controls, four wall overlaps, native occupants and unchanged
+tick 1202. Overview, straight wood wall and granite corner pixels were inspected.
+Very thin internal lines show some jagged edges at close zoom and need further
+artwork review. Draw counts remain two for plain towers, three with a straight
+wall and four at the corner; this is counted work, not a performance benchmark.
+The fixture was reloaded unchanged, the native error journal was empty, and
+game termination was verified. One combined image was submitted to Andreas's
+phone. Custom wall renderers and other pawn body renderers remain unverified.
+
+The first launch exited after Steam shut down with a native fatal stalled-pipe
+assert. Its Player.log is retained separately. Restarting Steam allowed the
+subsequent complete visual run; no tower exception was observed in that run.
+Evidence: `artifacts/watchtower-silhouette-outlines-20261011.json`,
+`artifacts/logs/watchtower-outline-steam-launch-failed-20261011.log`, and
+`artifacts/UserData/Screenshots/tower-silhouette-outlines-20261011-*__cell_rect.png`.
+
 ### Accepted design restored; optional native-scale wall fronts
 
 Andreas rejected the stretched wall-strip appearance below. The previous artwork

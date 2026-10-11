@@ -151,6 +151,22 @@ colonists remain legible on the compact platform. The 1.4-cell proportions are
 a reviewable draft, not a final art commitment. The older wide-deck screenshot
 remains preserved for comparison.
 
+### Outline weight and connected walls
+
+Outline weight should describe the visible shape rather than enclose every
+surface detail equally. A heavy contour separates the tower from the ground;
+lighter lines describe braces, masonry courses and folds between its faces.
+Openings in the ladder and railing can still need strong edges. When a wall
+joins, its end cap disappears into the tower and the outside contour follows
+the combined shape. A lighter junction seam preserves the tower's extra height.
+This is an artwork direction, not a universal rule for every RimWorld graphic.
+
+The optional `silhouetteOutlines` companion study compares six versions of this
+treatment with two accepted controls, without changing proportions, occupant
+fit or the default artwork. It adds no material passes. Native straight wood
+and corner granite joins have been inspected; fine-line aliasing remains a
+visible limitation. Do not treat the study as approved production artwork.
+
 ### Cached native wall overlap prototype
 
 The companion now prints the actual adjacent wall into a temporary native
