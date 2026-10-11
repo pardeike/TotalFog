@@ -6731,3 +6731,15 @@ Full native counts, operation IDs and profiling limits are owned by Zombieland's
 `artifacts/heart-response-alert-diagnostics-20261011.json`. DPA is removed from
 both isolated profiles, and test games are stopped. This is a Zombieland fix;
 the previously delivered Total Fog gameplay bytes remain unchanged.
+
+The complete `ZombieLand-5.6.3-heart-preliminary.zip` is delivered privately
+as the replacement Zombieland build, retaining the prior Flee option and full
+music/assets. Size 193,884,535 bytes; ZIP SHA-256
+`b96f3acb71cf98b5cfe3fcb35bfc456a9a51e01a3ef29fd52f3199c162f3e155`.
+The downloaded Discord attachment matches those bytes before the superseded
+Zombieland tester post is removed. The current Total Fog tester post remains.
+Source fix `6fb44e33` is pushed to Zombieland's public branch; both repositories
+are clean after restoring incidental tracked build output. Build and formatting
+checks pass. The full private read-back receipt is
+`artifacts/mortal-heart-delivery-20261011.json`. No full new performance
+acceptance or public Workshop release is claimed.

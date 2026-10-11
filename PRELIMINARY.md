@@ -37,6 +37,12 @@ the passenger spawns, delayed Anomaly codex discovery, Anomaly music suppression
 and hauling known vanilla chunks after sight is lost. Combat music suppression
 also suppresses Anomaly music. General ambient phenomena remain unchanged.
 
+The later Zombieland Heart feedback ZIP also prevents zombie-triggered Heart
+response alerts from pausing or forcing normal speed after the alert is hidden.
+It retains the earlier Flee option. The fleshbeasts and normal player-triggered
+alerts still happen. Keep the current Total Fog ZIP when applying this
+Zombieland-only update.
+
 ## What was checked
 
 All 347 independent Total Fog tests pass. Fresh native Mac RimWorld 1.6 checks
