@@ -6666,3 +6666,30 @@ synchronization reuse the existing shared-settings mechanism. This run does not
 establish a new two-client check for this slider. Runtime comparisons now record
 the multiplier, treating the inherited mod's fixed mech range as 1, so a changed
 candidate range cannot silently pass as a matching benchmark configuration.
+
+### Mature Heart active-ambience diagnostic, 11 October 2026
+
+The geometry-only fixture's native exploration fog can prevent Fleshmass loops
+from starting. A second diagnostic clears only that native exploration fog,
+then plays 215 Normal ticks before an eight-second hearing-filtered sample.
+This is an intentional fixture change, not a replay of the reported colony.
+The same public 1.6 engine and delivered gameplay pair are used: Total Fog
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443` and
+Zombieland `58c55633360662c3784998e3674531b5ea69ba40586c2afe15053b0aa65801b1`.
+
+The native aggregator now executes 435 registrations during the traced sample,
+with 6,046 Fleshmass rare ticks. There are 7,089 sustained-volume filter calls
+and 7,110 audibility calls. DPA attributes about 0.08395 ms per update entry
+to the volume postfix and 0.08379 ms to audibility. Those rows are nested and
+must not be added. This demonstrates active native Fleshmass ambience and the
+hearing code path, but the call counts include other native sounds too.
+
+The sample advances 482 Normal ticks, with frame mean 19.84 ms and p95 27.07 ms,
+at 3508x2218 with 20,114 camera cells and 201 pawns. There are no zombies.
+These instrumented figures are neither ordinary fourth-speed acceptance nor a
+comparison with the inherited mod. This small local audio cost does not explain
+the reported severe slowdown; no speculative listener cache was added.
+The full mod list and natural Heart history remain untested. There are no
+captured errors; existing import-time faction/precept repair warnings remain.
+Audio settings are restored, DPA is unpatched and the unchanged base reloaded.
+The complete local receipt is `heart-hearing-active-audio-20261011.json`.
