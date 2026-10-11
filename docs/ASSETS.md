@@ -6,6 +6,10 @@ once per spawn, uses RimWorld's native vertex-color material and stuff colors,
 and draws native pawns with a scoped test-only projection. It adds no PNG,
 shader or AssetBundle to the player payload. Wood/granite and native straight/
 corner wall junctions were inspected in public 1.6 on 11 October 2026.
+The current draft keeps that 3x3 base and tapers to a 1.4-cell deck, with broad
+surface divisions and thicker dark outlines. One combined native screenshot
+contains all eight material/occupancy/wall/rotation sketches. Earlier wide-deck
+captures remain preserved in the validation ledger.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
 

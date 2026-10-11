@@ -1,7 +1,7 @@
 # Watchtower design draft
 
-Status: accepted direction with a first test-only rendering prototype inspected
-in public 1.6 on 11 October 2026. This is an artwork review checkpoint.
+Status: accepted direction with wide and compact-deck rendering prototypes
+inspected in public 1.6 on 11 October 2026. This is an artwork review checkpoint.
 Gameplay is not implemented. This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types will belong to Total Fog.
@@ -10,8 +10,9 @@ The new definition and runtime types will belong to Total Fog.
 
 - One rotatable 3x3 structure made from Woody, Stony or Metallic stuff, with
   ordinary material-based health, construction, repair and flammability.
-- The lookout stands in the center. The perimeter supplies the railing, supports
-  and slanted-wall artwork. One outer middle cell supplies the ladder.
+- The lookout stands in the center on a compact upper deck, currently drawn
+  1.4 cells wide. Railings sit close to that standing point; the outer footprint
+  supplies supports and slanted walls. One outer middle cell supplies the ladder.
 - Climbing up and down takes game time and has the normal native progress bar.
   The pawn moves gradually from the cell adjacent to the ladder all the way to
   the center, facing the direction of travel. Descent reverses that movement.
@@ -73,7 +74,7 @@ same cells still reveals them. Do not hide nearby cells globally.
 ## Artwork and adjacent walls
 
 Start with empty and occupied wood/granite towers. Show the 3x3 footprint, a
-raised center platform, perimeter railings, supports or slanted masonry walls,
+raised compact center platform, close railings, supports or slanted masonry walls,
 and the rotated ladder. The pawn remains a real native pawn. The drawing must
 put the foreground railing in front of it without hiding the whole pawn.
 
@@ -90,19 +91,29 @@ It uses colored meshes built once when spawned and RimWorld's native material;
 it needs no new AssetBundle. It renders a paused fixture only, then removes its
 temporary drawing patch and objects and reloads the unchanged save. It does not
 establish placement, climbing, elevated sight, targeting or combat behavior.
-The first native review covers wood/granite empty and occupied, a straight wall,
-a corner and four ladder rotations. The rear ladder's overlap with the platform
-still needs refinement before animation. These are geometry sketches, not final
-artwork. See [VALIDATION.md](VALIDATION.md) for the exact tested pair.
+The native review covers wood/granite empty and occupied, a straight wall,
+a corner and four ladder rotations in one combined screenshot. In the compact
+draft, the rear ladder is drawn before the floor so the deck hides the section
+behind it; its railing opening remains visible. The front railing covers only
+the lower part of an occupied pawn. These are geometry sketches, not final
+artwork or animation. See [VALIDATION.md](VALIDATION.md) for the exact tested pair.
 
-### Proposed smaller deck and native wall overlaps
+### Compact upper deck
 
-The 11 October design discussion proposes keeping the ground footprint and
-wall joins at 3x3, while narrowing the upper deck to roughly 1.2-1.4 cells.
-The railing would sit about 0.6-0.7 cells from the center, leaving room around
-the one-cell standing point. Slanted faces or timber supports join the wider
-base to that smaller deck. Exact proportions remain an artwork question;
-the combined eight-tower screenshot still shows the original wide-deck sketch.
+The 11 October follow-up implements Andreas's smaller-deck direction in the
+test-only drawing. The base and wall joins remain 3x3; the upper deck is 1.4x1.4
+cells and the railing sits 0.65 cells from the center. The visual height projects
+1.2 cells toward map north in every rotation. This is a drawing offset, not
+physical pawn elevation or implemented climb progress. Four tapered faces join
+the wider base to the small deck. The ladder leans inward from the outer approach.
+
+At Andreas's request, the artwork now uses broad plank/masonry divisions, no
+wood-grain marks, fewer ladder rungs and thicker dark outlines. Real native
+colonists remain legible on the compact platform. The 1.4-cell proportions are
+a reviewable draft, not a final art commitment. The older wide-deck screenshot
+remains preserved for comparison.
+
+### Proposed cached native wall overlaps
 
 For wall appearance, prototype a short overlap generated from the actual adjacent
 wall's graphic, retaining its materials, texture coordinates, stuff tint and

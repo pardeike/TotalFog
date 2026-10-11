@@ -12,7 +12,7 @@ namespace TotalFog.BridgeTools;
 /// </summary>
 public sealed class WatchtowerVisualPrototype : Building
 {
-    internal const float PlatformProjection = .85f;
+    internal const float PlatformProjection = 1.20f;
     private Mesh body;
     private Mesh foreground;
     private Material material;
@@ -47,12 +47,15 @@ public sealed class WatchtowerVisualPrototype : Building
 
     private sealed class Drawing
     {
+        private const float BaseHalfExtent = 1.50f;
+        private const float DeckHalfExtent = .70f;
+        private const float RailHalfExtent = .65f;
         private readonly Rot4 rotation;
         private readonly Color stuff;
         private readonly bool stone;
         private readonly Geometry body = new();
         private readonly Geometry front = new();
-        private readonly Color outline = new(.16f, .14f, .12f);
+        private readonly Color outline = new(.10f, .095f, .085f);
 
         internal Drawing(Rot4 rotation, Color stuff, bool stone)
         {
@@ -64,9 +67,13 @@ public sealed class WatchtowerVisualPrototype : Building
         internal (Mesh, Mesh) Build()
         {
             Supports();
+            bool rearLadder = Point(0, -1, 0).z > 0;
+            if (rearLadder)
+                Ladder();
             Floor();
             Railings();
-            Ladder();
+            if (!rearLadder)
+                Ladder();
             return (body.Build("Total Fog tower body"), front.Build("Total Fog tower foreground"));
         }
 
@@ -94,116 +101,104 @@ public sealed class WatchtowerVisualPrototype : Building
 
         private void Supports()
         {
-            // Closed timber faces also read as part of a perimeter barrier.
-            // The footprint/pathfinding decision remains a separate prototype.
-            if (!stone)
+            // Back faces first. The small deck covers the upper ends of all
+            // four tapered faces; the 3x3 base still meets perimeter walls.
+            for (int pass = 0; pass < 3; pass++)
+            for (int side = 0; side < 4; side++)
             {
-                for (int side = 0; side < 4; side++)
+                float depth = SidePoint(side, 0, 0).z;
+                int facePass =
+                    depth > 0 ? 0
+                    : depth < 0 ? 2
+                    : 1;
+                if (facePass != pass)
+                    continue;
+                body.Polygon(
+                    outline,
+                    SidePoint(side, -1, 0),
+                    SidePoint(side, 1, 0),
+                    SidePoint(side, 1, 1),
+                    SidePoint(side, -1, 1)
+                );
+                body.Polygon(
+                    Shade(stone ? (depth < 0 ? .72f : .86f) : .69f),
+                    SidePoint(side, -.94f, .05f),
+                    SidePoint(side, .94f, .05f),
+                    SidePoint(side, .91f, .95f),
+                    SidePoint(side, -.91f, .95f)
+                );
+                if (stone)
                 {
-                    if (SidePoint(side, 0, 0).z > 0)
-                        continue;
-                    body.Polygon(
-                        outline,
-                        SidePoint(side, -1.50f, 0),
-                        SidePoint(side, 1.50f, 0),
-                        SidePoint(side, 1.30f, 1),
-                        SidePoint(side, -1.30f, 1)
-                    );
-                    body.Polygon(
-                        Shade(.69f),
-                        SidePoint(side, -1.44f, .05f),
-                        SidePoint(side, 1.44f, .05f),
-                        SidePoint(side, 1.25f, .95f),
-                        SidePoint(side, -1.25f, .95f)
-                    );
-                    for (int plank = -4; plank <= 4; plank++)
+                    for (int row = 1; row <= 2; row++)
                     {
-                        float t = plank / 5f;
+                        float h = row / 3f;
                         body.Line(
-                            SidePoint(side, 1.44f * t, .05f),
-                            SidePoint(side, 1.25f * t, .95f),
-                            .026f,
-                            Shade(.47f)
-                        );
-                    }
-                }
-            }
-            if (stone)
-            {
-                for (int side = 0; side < 4; side++)
-                {
-                    var a = SidePoint(side, -1.50f, 0);
-                    var b = SidePoint(side, 1.50f, 0);
-                    var c = SidePoint(side, 1.30f, 1);
-                    var d = SidePoint(side, -1.30f, 1);
-                    if ((a.z + b.z) / 2 > 0)
-                        continue;
-                    body.Polygon(outline, a, b, c, d);
-                    body.Polygon(
-                        Shade(side % 2 == 0 ? .72f : .86f),
-                        a + new Vector3(.035f, 0, .04f),
-                        b + new Vector3(-.035f, 0, .04f),
-                        c + new Vector3(-.035f, 0, -.04f),
-                        d + new Vector3(.035f, 0, -.04f)
-                    );
-                    for (int row = 1; row <= 3; row++)
-                    {
-                        float h = row / 4f;
-                        body.Line(
-                            SidePoint(side, -1.22f, h),
-                            SidePoint(side, 1.22f, h),
+                            SidePoint(side, -.95f, h),
+                            SidePoint(side, .95f, h),
                             .035f,
                             Shade(.56f)
                         );
-                        for (int joint = -2; joint <= 2; joint++)
-                        {
-                            float x = joint * .52f + (row % 2 == 0 ? .26f : 0);
-                            body.Line(
-                                SidePoint(side, x, h - .24f),
-                                SidePoint(side, x, h),
-                                .025f,
-                                Shade(.56f)
-                            );
-                        }
+                    }
+                    for (int row = 0; row < 3; row++)
+                    {
+                        float x = row % 2 == 0 ? -.22f : .22f;
+                        body.Line(
+                            SidePoint(side, x, row / 3f + .05f),
+                            SidePoint(side, x, (row + 1) / 3f - .05f),
+                            .035f,
+                            Shade(.56f)
+                        );
                     }
                 }
-            }
-            else
-            {
-                // Rear posts first, then front braces. The floor covers their tops.
-                foreach (float z in new[] { 1.40f, -1.40f })
-                foreach (float x in new[] { -1.40f, 1.40f })
-                    Beam(body, Point(x, z, 0), Point(x, z, 1), .20f, Shade(.70f));
-                for (int side = 0; side < 4; side++)
+                else
                 {
-                    var a = SidePoint(side, -1.12f, .08f);
-                    var b = SidePoint(side, 1.12f, .88f);
-                    if (SidePoint(side, 0, 0).z > 0)
-                        continue;
-                    Beam(body, a, b, .12f, Shade(.78f));
                     Beam(
                         body,
-                        SidePoint(side, 1.12f, .08f),
-                        SidePoint(side, -1.12f, .88f),
+                        SidePoint(side, -.86f, .08f),
+                        SidePoint(side, .86f, .90f),
+                        .12f,
+                        Shade(.78f)
+                    );
+                    Beam(
+                        body,
+                        SidePoint(side, .86f, .08f),
+                        SidePoint(side, -.86f, .90f),
                         .12f,
                         Shade(.82f)
                     );
+                    foreach (float corner in new[] { -1f, 1f })
+                        Beam(
+                            body,
+                            SidePoint(side, corner, 0),
+                            SidePoint(side, corner, 1),
+                            .14f,
+                            Shade(.78f)
+                        );
                 }
             }
         }
 
-        private Vector3 SidePoint(int side, float along, float height) =>
+        private Vector3 SidePoint(int side, float along, float height)
+        {
+            float extent = Mathf.Lerp(BaseHalfExtent, DeckHalfExtent, Mathf.Clamp01(height));
+            return EdgePoint(side, along * extent, extent, height);
+        }
+
+        private Vector3 EdgePoint(int side, float along, float extent, float height) =>
             side switch
             {
-                0 => Point(along, -1.45f, height),
-                1 => Point(1.45f, along, height),
-                2 => Point(along, 1.45f, height),
-                _ => Point(-1.45f, along, height),
+                0 => Point(along, -extent, height),
+                1 => Point(extent, along, height),
+                2 => Point(along, extent, height),
+                _ => Point(-extent, along, height),
             };
+
+        private Vector3 RailPoint(int side, float along, float height) =>
+            EdgePoint(side, along * RailHalfExtent, RailHalfExtent, height);
 
         private void Floor()
         {
-            const float edge = 1.50f;
+            const float edge = DeckHalfExtent;
             body.Polygon(
                 outline,
                 Point(-edge, -edge, 1),
@@ -211,7 +206,7 @@ public sealed class WatchtowerVisualPrototype : Building
                 Point(edge, edge, 1),
                 Point(edge, -edge, 1)
             );
-            const float inside = 1.42f;
+            const float inside = DeckHalfExtent - .07f;
             body.Polygon(
                 Shade(1.12f),
                 Point(-inside, -inside, 1),
@@ -221,39 +216,18 @@ public sealed class WatchtowerVisualPrototype : Building
             );
             if (stone)
             {
-                for (int row = -2; row <= 2; row++)
-                {
-                    float z = row * .44f;
-                    body.Line(Point(-inside, z, 1), Point(inside, z, 1), .025f, Shade(.84f));
-                    for (int col = -2; col <= 2; col++)
-                    {
-                        float x = col * .55f + (row % 2 == 0 ? .25f : 0);
-                        body.Line(Point(x, z, 1), Point(x, z + .44f, 1), .023f, Shade(.84f));
-                    }
-                }
+                body.Line(Point(-inside, 0, 1), Point(inside, 0, 1), .035f, Shade(.80f));
+                body.Line(Point(0, -inside, 1), Point(0, inside, 1), .035f, Shade(.80f));
             }
             else
             {
-                for (int plank = -4; plank <= 4; plank++)
+                foreach (float x in new[] { -.21f, .21f })
                 {
-                    float x = plank * .245f;
-                    body.Line(Point(x, -inside, 1), Point(x, inside, 1), .023f, Shade(.75f));
-                    body.Line(
-                        Point(x + .09f, -.84f + plank * .11f, 1),
-                        Point(x + .09f, .26f + plank * .11f, 1),
-                        .012f,
-                        Shade(.96f)
-                    );
+                    body.Line(Point(x, -inside, 1), Point(x, inside, 1), .035f, Shade(.70f));
                 }
             }
             for (int side = 0; side < 4; side++)
-                Beam(
-                    body,
-                    SidePoint(side, -1.49f, 1),
-                    SidePoint(side, 1.49f, 1),
-                    .13f,
-                    Shade(.87f)
-                );
+                Beam(body, SidePoint(side, -.98f, 1), SidePoint(side, .98f, 1), .11f, Shade(.87f));
         }
 
         private void Railings()
@@ -263,11 +237,11 @@ public sealed class WatchtowerVisualPrototype : Building
                 // The ladder is centered on local south. Leave a real gap.
                 if (side == 0)
                 {
-                    Rail(side, -1.47f, -.37f);
-                    Rail(side, .37f, 1.47f);
+                    Rail(side, -.97f, -.48f);
+                    Rail(side, .48f, .97f);
                 }
                 else
-                    Rail(side, -1.47f, 1.47f);
+                    Rail(side, -.97f, .97f);
             }
         }
 
@@ -277,53 +251,53 @@ public sealed class WatchtowerVisualPrototype : Building
             var railColor = Shade(stone ? 1.04f : .98f);
             Beam(
                 target,
-                SidePoint(side, from, 1.46f),
-                SidePoint(side, to, 1.46f),
-                stone ? .16f : .11f,
+                RailPoint(side, from, 1.28f),
+                RailPoint(side, to, 1.28f),
+                stone ? .13f : .10f,
                 railColor
             );
             if (stone)
                 Beam(
                     target,
-                    SidePoint(side, from, 1.19f),
-                    SidePoint(side, to, 1.19f),
-                    .17f,
+                    RailPoint(side, from, 1.12f),
+                    RailPoint(side, to, 1.12f),
+                    .11f,
                     Shade(.88f)
                 );
             else
                 Beam(
                     target,
-                    SidePoint(side, from, 1.20f),
-                    SidePoint(side, to, 1.20f),
-                    .07f,
+                    RailPoint(side, from, 1.12f),
+                    RailPoint(side, to, 1.12f),
+                    .065f,
                     Shade(.88f)
                 );
-            foreach (float x in new[] { from, (from + to) / 2, to })
+            foreach (float x in new[] { from, to })
                 Beam(
                     target,
-                    SidePoint(side, x, 1),
-                    SidePoint(side, x, 1.49f),
-                    stone ? .17f : .12f,
+                    RailPoint(side, x, 1),
+                    RailPoint(side, x, 1.31f),
+                    stone ? .13f : .10f,
                     Shade(1.06f)
                 );
         }
 
         private void Ladder()
         {
-            var target = Point(0, -1.45f, 0).z < 0 ? front : body;
+            var target = Point(0, -1.65f, 0).z < 0 ? front : body;
             // Ladders remain timber even on a masonry tower in this first sketch.
             var color = stone ? new Color(.48f, .35f, .22f) : Shade(.86f);
             foreach (float x in new[] { -.27f, .27f })
-                Beam(target, Point(x, -1.65f, 0), Point(x, -1.45f, 1.12f), .08f, color);
-            for (int rung = 0; rung < 8; rung++)
+                Beam(target, Point(x, -1.65f, 0), Point(x, -RailHalfExtent, 1.04f), .09f, color);
+            for (int rung = 0; rung < 6; rung++)
             {
-                float t = (rung + .5f) / 8;
-                float z = Mathf.Lerp(-1.65f, -1.45f, t);
+                float t = (rung + .5f) / 6;
+                float z = Mathf.Lerp(-1.65f, -RailHalfExtent, t);
                 Beam(
                     target,
-                    Point(-.28f, z, t * 1.12f),
-                    Point(.28f, z, t * 1.12f),
-                    .065f,
+                    Point(-.28f, z, t * 1.04f),
+                    Point(.28f, z, t * 1.04f),
+                    .08f,
                     color * 1.12f
                 );
             }
@@ -331,7 +305,7 @@ public sealed class WatchtowerVisualPrototype : Building
 
         private void Beam(Geometry geometry, Vector3 a, Vector3 b, float width, Color color)
         {
-            geometry.Line(a, b, width + .065f, outline);
+            geometry.Line(a, b, width + .085f, outline);
             geometry.Line(a, b, width, color);
         }
     }

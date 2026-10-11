@@ -10,6 +10,36 @@ snapshot from later source commits.
 
 ## New watchtower artwork prototype, 2026-10-11
 
+### Compact deck and simpler outlines
+
+The test-only drawing now tapers from the native 3x3 base to a 1.4x1.4-cell
+deck, with railing 0.65 cells from the center and a fixed 1.2-cell northward
+height projection. Timber braces and masonry faces taper with the platform;
+the ladder leans inward. Rear ladders are drawn before the deck instead of
+over its floor. The design uses broad surface divisions, no grain marks,
+fewer rungs and thicker dark outlines in response to Andreas's artwork feedback.
+
+Formatting, all 347 tests and the quiet deploy pass with zero build warnings
+or errors. Built and deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact new built/deployed companion is
+`eb8325c6c8174285de78f33ce83125e2725f6a933187aa3625182ef93b250897`.
+Public Steam 1.6.4871 and all five DLCs pass seven native capture receipts,
+eight 3x3 building checks, native spawned-occupant checks, unchanged tick 1202
+and cleanup/reload of the unchanged fixture. Captured errors are empty.
+The combined overview and occupied wood close-up were visually inspected:
+occupant heads/upper bodies remain readable, the front railing overlays the
+lower body, the north ladder no longer crosses the platform floor, and the
+wide bases meet the native straight/corner walls. Every crop is fully in view.
+One combined image was sent to Andreas's phone. The game was stopped.
+
+Evidence: `artifacts/watchtower-small-deck-20261011.json` and
+`artifacts/UserData/Screenshots/tower-small-deck-20261011-*__cell_rect.png`.
+This still proves artwork only. The revised drawing adds no player feature,
+new shader or AssetBundle; it retains two meshes built per spawn and two draw
+calls per tower. No performance measurement, native wall-overlap cache,
+modded-wall acceptance, occupation, climbing or elevated sight is claimed.
+
 ### Combined comparison follow-up
 
 At Andreas's request, the companion now stages two extra empty granite towers
