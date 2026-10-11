@@ -105,7 +105,12 @@ reject blocked access without inventing automatic openings in player walls.
 
 The initial visual prototype belongs to the non-shipping BridgeTools companion.
 It uses colored meshes built once when spawned and RimWorld's native material;
-it needs no new AssetBundle. It renders a paused fixture only, then removes its
+the slanted faces and deck additionally borrow the native wall texture/material
+for the tower's stuff. A cropped straight-wall face supplies the plank or brick
+pattern, with texture coordinates baked into the cached mesh. No image is copied
+or generated. This adds one cached body pass; third-party atlas layouts/shaders
+and styled-wall selection are not yet established. It needs no new AssetBundle.
+It renders a paused fixture only, then removes its
 temporary drawing patch and objects and reloads the unchanged save. It does not
 establish placement, climbing, elevated sight, targeting or combat behavior.
 The native review covers wood/granite empty and occupied, a straight wall,
@@ -133,8 +138,9 @@ These are drawing offsets, not physical pawn elevation or implemented climb
 progress. Four tapered faces join the wider base to the small deck. The ladder
 leans inward from the outer approach.
 
-At Andreas's request, the artwork now uses broad plank/masonry divisions, no
-wood-grain marks, fewer ladder rungs and thicker dark outlines. Real native
+At Andreas's request, the artwork uses fewer ladder rungs and thicker dark
+outlines. The later texture follow-up replaces the hand-drawn surface divisions
+with the actual native wall plank/brick pattern, retaining timber braces. Real native
 colonists remain legible on the compact platform. The 1.4-cell proportions are
 a reviewable draft, not a final art commitment. The older wide-deck screenshot
 remains preserved for comparison.

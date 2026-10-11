@@ -10,6 +10,40 @@ snapshot from later source commits.
 
 ## New watchtower native prototypes, 2026-10-11
 
+### Native wall patterns on the tower
+
+At Andreas's request, the slanted faces and compact deck now borrow the native
+wall texture, shader and stuff tint. The straight-wall face strip is cropped
+and repeated using cached UVs, retaining the accepted shape, outlines, timber
+braces, ladder and occupant fit. No native texture or shared material is modified.
+The prototype adds one texture draw pass: three draws per plain tower, four
+for the wood straight-wall example and five for the granite corner. This is
+counted rendering work, not a performance benchmark.
+
+Formatting, all 347 independent tests and quiet deploy pass with zero build
+warnings/errors. Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact built/deployed companion is
+`bee0c0b1760c1c556b7ec524b76854e2784da4d0027e87ec6a6b9f03b63926e3`.
+Public Steam 1.6.4871 with all five DLCs passes all 14 native artwork assertions:
+seven fully visible capture receipts, matching texture/shader/tint against actual
+native walls of the same stuff, four cached overlaps, native occupants and 3x3
+buildings, center-cell positions, unchanged tick 1202 and unchanged-fixture reload.
+Wood straight-wall, granite corner and combined overview pixels were inspected.
+The native error journal is empty; the game was stopped after cleanup.
+One combined image was submitted to Andreas's phone.
+
+The first attempt passed material identity assertions but pixels showed repeated
+pieces of the full atlas. It is rejected and retained separately. The accepted
+mapping bakes the selected native link rectangle and face crop into mesh UVs.
+Arbitrary third-party shaders/atlas layouts, styled-wall selection and metallic
+material pixels remain unverified. This is still a non-shipping artwork prototype;
+the earlier access proof is retained at its own companion hash.
+
+Evidence: `artifacts/watchtower-wall-face-textures-20261011.json` and
+`artifacts/UserData/Screenshots/tower-wall-face-textures-20261011-*__cell_rect.png`.
+Rejected evidence: `artifacts/watchtower-wall-textures-rejected-20261011.json`.
+
 ### Solid footprint and native ladder access
 
 Andreas accepted the compact-deck design and fitted occupant position. The

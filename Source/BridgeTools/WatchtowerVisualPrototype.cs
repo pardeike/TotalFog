@@ -20,19 +20,50 @@ public class WatchtowerVisualPrototype : Building
     private Mesh body;
     private Mesh foreground;
     private Material material;
+    private Material wallMaterial;
+    private Rect wallTextureRect;
     private WatchtowerWallJoins wallJoins;
 
     internal int WallJoinCount => wallJoins?.Directions.Count ?? 0;
-    internal int CachedDrawCalls => 2 + (wallJoins?.DrawCalls ?? 0);
+    internal int CachedDrawCalls => 3 + (wallJoins?.DrawCalls ?? 0);
+    internal string WallPattern => wallMaterial.mainTexture.name;
+
+    internal bool UsesWallPattern(Thing wall)
+    {
+        var native = wall.Graphic.MatSingleFor(wall);
+        return wallMaterial.mainTexture == native.mainTexture
+            && wallMaterial.shader == native.shader
+            && wallMaterial.color == native.color;
+    }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
         base.SpawnSetup(map, respawningAfterLoad);
         material = SolidColorMaterials.SimpleSolidColorMaterial(Color.white, true);
+        var wallGraphic = ThingDefOf.Wall.graphicData.GraphicColoredFor(this);
+        wallMaterial = wallGraphic is Graphic_Linked linked
+            ? linked.SubGraphic.MatSingleFor(this)
+            : wallGraphic.MatSingleFor(this);
+        var tile =
+            wallGraphic is Graphic_Linked
+                ? MaterialAtlasPool.SubMaterialFromAtlas(
+                    wallMaterial,
+                    LinkDirections.Left | LinkDirections.Right
+                )
+                : wallMaterial;
+        // Use the visible face of a straight wall, excluding its flat top and
+        // outline. Bake the native link rectangle into UVs on our cached mesh.
+        var face =
+            wallGraphic is Graphic_Linked ? new Rect(.08f, .04f, .84f, .23f) : new Rect(0, 0, 1, 1);
+        wallTextureRect = new Rect(
+            tile.mainTextureOffset + Vector2.Scale(face.position, tile.mainTextureScale),
+            Vector2.Scale(face.size, tile.mainTextureScale)
+        );
         var drawing = new Drawing(
             Rotation,
             Stuff.stuffProps.color,
             Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+            wallTextureRect,
             Array.Empty<IntVec3>()
         );
         (body, foreground) = drawing.Build();
@@ -51,6 +82,7 @@ public class WatchtowerVisualPrototype : Building
                 Rotation,
                 Stuff.stuffProps.color,
                 Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+                wallTextureRect,
                 next.Directions
             );
             (nextBody, nextForeground) = drawing.Build();
@@ -75,6 +107,7 @@ public class WatchtowerVisualPrototype : Building
     {
         drawLoc.y = AltitudeLayer.BuildingOnTop.AltitudeFor();
         Graphics.DrawMesh(body, drawLoc, Quaternion.identity, material, 0);
+        Graphics.DrawMesh(body, drawLoc, Quaternion.identity, wallMaterial, 0, null, 1);
         wallJoins?.Draw();
         drawLoc.y = AltitudeLayer.PawnState.AltitudeFor();
         Graphics.DrawMesh(foreground, drawLoc, Quaternion.identity, material, 0);
@@ -99,6 +132,7 @@ public class WatchtowerVisualPrototype : Building
         private readonly Rot4 rotation;
         private readonly Color stuff;
         private readonly bool stone;
+        private readonly Rect wallTextureRect;
         private readonly IReadOnlyList<IntVec3> wallDirections;
         private readonly Geometry body = new();
         private readonly Geometry front = new();
@@ -110,12 +144,14 @@ public class WatchtowerVisualPrototype : Building
             Rot4 rotation,
             Color stuff,
             bool stone,
+            Rect wallTextureRect,
             IReadOnlyList<IntVec3> wallDirections
         )
         {
             this.rotation = rotation;
             this.stuff = stuff;
             this.stone = stone;
+            this.wallTextureRect = wallTextureRect;
             this.wallDirections = wallDirections;
         }
 
@@ -138,7 +174,10 @@ public class WatchtowerVisualPrototype : Building
             Railings();
             if (!rearLadder)
                 Ladder();
-            return (body.Build("Total Fog tower body"), front.Build("Total Fog tower foreground"));
+            return (
+                body.Build("Total Fog tower body", wallTextureRect),
+                front.Build("Total Fog tower foreground", wallTextureRect)
+            );
         }
 
         // Elevation projects towards map north in every rotation. Rotating the
@@ -184,37 +223,16 @@ public class WatchtowerVisualPrototype : Building
                     SidePoint(side, 1, 1),
                     SidePoint(side, -1, 1)
                 );
-                body.Polygon(
-                    Shade(stone ? (depth < 0 ? .72f : .86f) : .69f),
+                body.WallPattern(
+                    stone ? (depth < 0 ? .72f : .86f) : .69f,
+                    3,
+                    2,
                     SidePoint(side, -.94f, .05f),
                     SidePoint(side, .94f, .05f),
                     SidePoint(side, .91f, .95f),
                     SidePoint(side, -.91f, .95f)
                 );
-                if (stone)
-                {
-                    for (int row = 1; row <= 2; row++)
-                    {
-                        float h = row / 3f;
-                        body.Line(
-                            SidePoint(side, -.95f, h),
-                            SidePoint(side, .95f, h),
-                            .035f,
-                            Shade(.56f)
-                        );
-                    }
-                    for (int row = 0; row < 3; row++)
-                    {
-                        float x = row % 2 == 0 ? -.22f : .22f;
-                        body.Line(
-                            SidePoint(side, x, row / 3f + .05f),
-                            SidePoint(side, x, (row + 1) / 3f - .05f),
-                            .035f,
-                            Shade(.56f)
-                        );
-                    }
-                }
-                else
+                if (!stone)
                 {
                     Beam(
                         body,
@@ -279,40 +297,15 @@ public class WatchtowerVisualPrototype : Building
                 LowerDeck(Point(edge, -edge, 1))
             );
             const float inside = DeckHalfExtent - .07f;
-            body.Polygon(
-                Shade(1.12f),
+            body.WallPattern(
+                1.12f,
+                2,
+                2,
                 LowerDeck(Point(-inside, -inside, 1)),
                 LowerDeck(Point(-inside, inside, 1)),
                 LowerDeck(Point(inside, inside, 1)),
                 LowerDeck(Point(inside, -inside, 1))
             );
-            if (stone)
-            {
-                body.Line(
-                    LowerDeck(Point(-inside, 0, 1)),
-                    LowerDeck(Point(inside, 0, 1)),
-                    .035f,
-                    Shade(.80f)
-                );
-                body.Line(
-                    LowerDeck(Point(0, -inside, 1)),
-                    LowerDeck(Point(0, inside, 1)),
-                    .035f,
-                    Shade(.80f)
-                );
-            }
-            else
-            {
-                foreach (float x in new[] { -.21f, .21f })
-                {
-                    body.Line(
-                        LowerDeck(Point(x, -inside, 1)),
-                        LowerDeck(Point(x, inside, 1)),
-                        .035f,
-                        Shade(.70f)
-                    );
-                }
-            }
             for (int side = 0; side < 4; side++)
                 Beam(
                     body,
@@ -415,7 +408,9 @@ public class WatchtowerVisualPrototype : Building
     {
         private readonly List<Vector3> vertices = new();
         private readonly List<Color> colors = new();
+        private readonly List<Vector2> uvs = new();
         private readonly List<int> triangles = new();
+        private readonly List<int> wallTriangles = new();
         private float depth;
 
         internal float ReserveDepth()
@@ -425,21 +420,53 @@ public class WatchtowerVisualPrototype : Building
             return reserved;
         }
 
-        internal void Polygon(Color color, params Vector3[] points)
+        internal void Polygon(Color color, params Vector3[] points) =>
+            Polygon(color, false, points);
+
+        // Repeat the wall face within its atlas rectangle. UVs greater
+        // than one would spill into neighbouring link tiles instead of repeating.
+        internal void WallPattern(float shade, int columns, int rows, params Vector3[] points)
+        {
+            var color = new Color(shade, shade, shade);
+            for (int row = 0; row < rows; row++)
+            for (int column = 0; column < columns; column++)
+            {
+                Polygon(
+                    color,
+                    true,
+                    Sample(column / (float)columns, row / (float)rows),
+                    Sample((column + 1f) / columns, row / (float)rows),
+                    Sample((column + 1f) / columns, (row + 1f) / rows),
+                    Sample(column / (float)columns, (row + 1f) / rows)
+                );
+            }
+
+            Vector3 Sample(float x, float y) =>
+                Vector3.Lerp(
+                    Vector3.Lerp(points[0], points[1], x),
+                    Vector3.Lerp(points[3], points[2], x),
+                    y
+                );
+        }
+
+        private void Polygon(Color color, bool wallPattern, params Vector3[] points)
         {
             int start = vertices.Count;
             depth += .000015f;
-            foreach (var point in points)
+            for (int i = 0; i < points.Length; i++)
             {
+                var point = points[i];
                 vertices.Add(new Vector3(point.x, depth, point.z));
                 colors.Add(color);
+                uvs.Add(new Vector2(i is 1 or 2 ? 1 : 0, i >= 2 ? 1 : 0));
             }
+            var target = wallPattern ? wallTriangles : triangles;
             bool reverse = Vector3.Cross(points[1] - points[0], points[2] - points[0]).y < 0;
             for (int i = 1; i < points.Length - 1; i++)
             {
-                triangles.Add(start);
-                triangles.Add(start + (reverse ? i + 1 : i));
-                triangles.Add(start + (reverse ? i : i + 1));
+                target.Add(start);
+                target.Add(start + (reverse ? i + 1 : i));
+                target.Add(start + (reverse ? i : i + 1));
             }
         }
 
@@ -450,12 +477,19 @@ public class WatchtowerVisualPrototype : Building
             Polygon(color, a - normal, a + normal, b + normal, b - normal);
         }
 
-        internal Mesh Build(string name)
+        internal Mesh Build(string name, Rect wallTextureRect)
         {
             var mesh = new Mesh { name = name };
             mesh.SetVertices(vertices);
             mesh.SetColors(colors);
+            foreach (int index in new HashSet<int>(wallTriangles))
+                uvs[index] =
+                    wallTextureRect.position + Vector2.Scale(uvs[index], wallTextureRect.size);
+            mesh.SetUVs(0, uvs);
+            mesh.subMeshCount = wallTriangles.Count > 0 ? 2 : 1;
             mesh.SetTriangles(triangles, 0);
+            if (wallTriangles.Count > 0)
+                mesh.SetTriangles(wallTriangles, 1);
             mesh.RecalculateBounds();
             return mesh;
         }

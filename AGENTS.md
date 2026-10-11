@@ -57,6 +57,10 @@ that every occupant's logical position remains the tower center cell. Wall
 fragments preserve native Print materials/vertex data and are cached before
 capture; their extra draw calls are reported per tower. This does not establish
 modded-wall rendering or automatic neighbour invalidation.
+Tower faces/deck also sample a cached native wall-face strip. The fixture compares
+texture/shader/tint against actual walls of the same stuff. Inspect the pixels:
+material identity alone cannot prove correct atlas UVs. The native crop does not
+establish arbitrary replacement atlas layouts, styled-wall selection or shaders.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland

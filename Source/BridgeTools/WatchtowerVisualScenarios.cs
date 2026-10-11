@@ -155,6 +155,7 @@ public sealed class WatchtowerVisualScenarios
                                 cell = t.Position.ToString(),
                                 rotation = t.Rotation.ToString(),
                                 wallJoins = t.WallJoinCount,
+                                wallPattern = t.WallPattern,
                                 cachedDrawCalls = t.CachedDrawCalls,
                             })
                             .ToArray(),
@@ -180,6 +181,16 @@ public sealed class WatchtowerVisualScenarios
                             "occupants stay in tower center cells",
                             projectedOccupants.Keys.All(p =>
                                 drawings.Any(t => t.Position == p.Position && t.Map == p.Map)
+                            )
+                        )
+                    );
+                    manifest.assertions.Add(
+                        RimBridgeEvidence.IsTrue(
+                            "tower patterns match native walls of the same stuff",
+                            drawings.All(t =>
+                                t.UsesWallPattern(
+                                    owned.First(w => w.def == ThingDefOf.Wall && w.Stuff == t.Stuff)
+                                )
                             )
                         )
                     );

@@ -18,6 +18,15 @@ captures remain preserved in the validation ledger.
 actual neighbouring walls' native Print calls. Their existing materials and
 texture coordinates are retained; there is no new wall texture or masking shader.
 The native straight wood/corner granite examples add one/two batched draw calls.
+The slanted faces and deck now sample the same native wall texture, shader and
+stuff tint as ordinary walls. The cached UVs repeat a cropped straight-wall face
+strip, excluding the flat wall top and borders. Native wood uses Wall_Atlas_Planks
+and granite uses Wall_Atlas_Bricks. Existing timber braces and thick outlines stay.
+This adds one texture pass to the body mesh: three cached draw calls for a plain
+tower, four for the straight-wall example and five for the granite corner.
+No wall bitmap is copied, generated or modified, and no geometry or texture
+lookup occurs in DrawAt. The crop follows the native linked-wall atlas layout;
+other atlas layouts, custom shaders and styled-wall selection remain unverified.
 No third-party wall renderer or general performance acceptance is claimed.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
