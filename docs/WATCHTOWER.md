@@ -101,8 +101,8 @@ establish placement, climbing, elevated sight, targeting or combat behavior.
 The native review covers wood/granite empty and occupied, a straight wall,
 a corner and four ladder rotations in one combined screenshot. In the compact
 draft, the rear ladder is drawn before the floor so the deck hides the section
-behind it; its railing opening remains visible. The front railing covers only
-the lower part of an occupied pawn. These are geometry sketches, not final
+behind it; its railing opening remains visible. The foreground railing uses
+a layer above the pawn without obscuring the occupant. These are geometry sketches, not final
 artwork or animation. See [VALIDATION.md](VALIDATION.md) for the exact tested pair.
 
 ### Compact upper deck
@@ -114,6 +114,11 @@ cells and the railing sits 0.65 cells from the center. The visual height project
 are then shifted 0.18 cells toward the viewer, independently of the pawn, to
 improve their alignment and leave the rear support edge slightly above the deck.
 The ladder's upper attachment follows that shift while its foot remains fixed.
+The occupant's drawing projection is 1.65 cells northward: an additional 0.45
+cells compensates for the body base sitting below the native sprite origin.
+That correction was fitted against the staged native adult colonists, placing
+their body base near the deck center, including with the ladder at the front.
+It is an artwork fit, not an engine constant or proof for other body renderers.
 These are drawing offsets, not physical pawn elevation or implemented climb
 progress. Four tapered faces join the wider base to the small deck. The ladder
 leans inward from the outer approach.

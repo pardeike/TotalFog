@@ -13,6 +13,10 @@ namespace TotalFog.BridgeTools;
 public sealed class WatchtowerVisualPrototype : Building
 {
     internal const float PlatformProjection = 1.20f;
+
+    // The native pawn draw origin is inside its body sprite, not at its feet.
+    // This artwork fit puts the body base over the lowered deck's standing point.
+    internal const float OccupantDrawProjection = PlatformProjection + .45f;
     private Mesh body;
     private Mesh foreground;
     private Material material;

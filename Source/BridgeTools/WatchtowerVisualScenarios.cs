@@ -232,7 +232,7 @@ public sealed class WatchtowerVisualScenarios
                 pawn.Rotation = rotation.Opposite;
                 projectedOccupants.Add(
                     pawn,
-                    new Vector3(0, 0, WatchtowerVisualPrototype.PlatformProjection)
+                    new Vector3(0, 0, WatchtowerVisualPrototype.OccupantDrawProjection)
                 );
             }
 

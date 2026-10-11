@@ -10,6 +10,33 @@ snapshot from later source commits.
 
 ## New watchtower artwork prototype, 2026-10-11
 
+### Occupant standing point correction
+
+Andreas found that the platform-only shift still left the colonist too close
+to the front ladder. Public 1.6 PawnRenderer.GetBodyPos returns drawLoc for a
+standing pawn; the body render node has no default positional offset in the
+native Humanlike render tree. The draw origin does not describe the bottom
+of the visible body sprite. The fixture therefore adds an artwork-fit 0.45
+cells to the occupant's drawing projection (now 1.65 cells northward), keeping
+the lowered deck, ladder, wall clipping and logical center-cell position intact.
+The native front-ladder wood and side-facing granite pixels were inspected:
+the body base now sits near the deck center rather than by the ladder opening.
+The 0.45-cell fit is not an engine constant or general modded-body acceptance.
+
+Formatting, all 347 tests and quiet deploy pass with zero warnings/errors.
+Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact built/deployed companion is
+`9acd3662865cef021500a20db55e28eb715ea27586461ad9e79d6292905bacee`.
+Public Steam 1.6.4871 with all five DLCs passes all seven fully visible capture
+receipts, four cached overlaps, native occupant/building assertions, center-cell
+positions, unchanged tick 1202 and unchanged-fixture reload. Captured errors
+are empty. The game was stopped after cleanup. One combined image was submitted
+to Andreas's phone. This remains a non-shipping artwork checkpoint.
+
+Evidence: `artifacts/watchtower-standing-point-20261011.json` and
+`artifacts/UserData/Screenshots/tower-standing-point-20261011-*__cell_rect.png`.
+
 ### Platform alignment follow-up
 
 The test-only floor and railing move 0.18 cells toward the viewer while the
