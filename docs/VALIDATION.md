@@ -6563,3 +6563,46 @@ Evidence: `artifacts/heart-dpa-tick-20261011.json` and
 `artifacts/heart-dpa-update-20261011.json`. Full incident emergence, a mature mass,
 Mortal's complete loadout and his reported slowdown remain open. A save from the
 slowdown and whether it affects FPS, ticks or both have been requested privately.
+
+
+### Pre-spawn refugee pod letters, 11 October
+
+The new report specifically concerns unseen arrivals. DecompilerServer confirms
+that `QuestNode_Root_WandererJoin.RunInt` builds the drop-pod quest part, then
+calls `QuestNode_Root_RefugeePodCrash.SendLetter_NewTemp` before the passenger is
+held by a spawned pod. The old thing query treats mapless things as outside fog
+control. The native before-control archives this letter immediately with no
+queued notification; subsequent landing checks in that first probe were invalid
+because its healthy passenger had already left. Keep that limitation separate
+from the demonstrated pre-spawn leak.
+
+The fix scopes the native supplied destination map to the refugee-letter call,
+restoring it with a Harmony finalizer. It neither rewrites native text nor changes
+quest acceptance or pod simulation. The existing map queue now waits for current
+sight while a local passenger has no map. Ordinary world/mapless letters remain
+immediate outside that scoped arrival. No new polling loop or saved data is added.
+
+Public Steam 1.6 native candidate control, gameplay SHA-256
+`9a519382495d9360febb228dd369da83aff54b9041aba594586230a6f00bb02c`:
+
+| State | Archived matching letters | Queued | Native state |
+| --- | ---: | ---: | --- |
+| Before map assignment, tick 1588 | 0 | 1 | Passenger unspawned, no held map |
+| Native pod transit, tick 1588 | 0 | 1 | Passenger held on map, unseen |
+| Hidden after landing, tick 2170 | 0 | 1 | Passenger spawned and downed, unseen |
+| First sight, tick 2230 | 1 | 0 | Actual player ghoul sight |
+| New pre-spawn passenger, neutral discard enabled | 0 | 0 | No deferred notification |
+
+The final ordinary mapless control is archived. The existing native observability
+fixture also preserves colony health, globals and visible threats while discarding
+hidden category events and queuing the remaining hidden threat. No native errors
+are captured. All 347 independent tests pass with no build warnings/errors.
+Six new cases cover pending arrivals, their actual destination after map assignment,
+world/colony exceptions, disabled/uninitialized fog and scope restoration.
+
+The fixture uses the real refugee letter producer and native pod lifecycle, with
+a downed hostile-faction passenger held in the test area. It does not execute the
+complete quest-generation/acceptance flow, prove natural cargo/quest deliveries,
+validate modded pod producers or establish new Multiplayer/performance acceptance.
+Native evidence is kept locally in `pod-native-before-20261011.json` and
+`pod-native-after-20261011.json`; companion instrumentation is excluded from ZIPs.

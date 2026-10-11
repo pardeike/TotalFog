@@ -43,7 +43,10 @@ internal static class NotificationHooks
         if (let == null || DeferredNotifications.IsReplayingLetter)
             return true;
         var decision = NotificationPolicy.Decide(
-            !NotificationVisibility.HasVisibleTarget(let.lookTargets),
+            !NotificationVisibility.HasVisibleTarget(
+                let.lookTargets,
+                RefugeePodNotifications.ArrivalMap
+            ),
             NotificationVisibility.Suppressed(let.def),
             FogSettings.DelayAlertsUntilSeen,
             false
@@ -53,7 +56,7 @@ internal static class NotificationHooks
         if (decision == NotificationDecision.Defer)
         {
             var manager = NotificationVisibility
-                .MapFor(let.lookTargets)
+                .MapFor(let.lookTargets, RefugeePodNotifications.ArrivalMap)
                 ?.GetDeferredNotifications();
             if (manager == null)
                 return true;

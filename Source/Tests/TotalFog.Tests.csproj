@@ -19,6 +19,7 @@
     <Compile Include="../TotalFog/Presentation/ThingVisibility.cs" Link="Production/ThingVisibility.cs" />
     <Compile Include="../TotalFog/Visibility.cs" Link="Production/Visibility.cs" />
     <Compile Include="../TotalFog/Notifications/NotificationVisibility.cs" Link="Production/NotificationVisibility.cs" />
+    <Compile Include="../TotalFog/Notifications/RefugeePodNotifications.cs" Link="Production/RefugeePodNotifications.cs" />
     <Compile Include="../TotalFog/Notifications/SilentRaidPolicy.cs" Link="Production/SilentRaidPolicy.cs" />
     <Compile Include="../TotalFog/Notifications/EntityDiscovery.cs" Link="Production/EntityDiscovery.cs" />
     <Compile Include="../TotalFog/Audio/MusicVisibility.cs" Link="Production/MusicVisibility.cs" />

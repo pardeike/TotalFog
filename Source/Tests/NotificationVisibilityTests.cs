@@ -130,6 +130,91 @@ public sealed class NotificationVisibilityTests
         Assert.False(NotificationVisibility.HasVisibleTarget(For(pawn)));
     }
 
+    [Fact]
+    public void LocalPassengerWithoutAMapWaitsForSightButWorldTargetsRemainImmediate()
+    {
+        var map = new Map();
+        map.Fog.Initialized = true;
+        var passenger = new Pawn
+        {
+            Map = null,
+            Spawned = false,
+            Faction = new Faction(),
+        };
+        var targets = For(passenger);
+        Assert.True(NotificationVisibility.HasVisibleTarget(targets));
+        Assert.False(NotificationVisibility.HasVisibleTarget(targets, map));
+        Assert.Same(map, NotificationVisibility.MapFor(targets, map));
+        Assert.True(NotificationVisibility.HasLiveTarget(targets));
+        passenger.Map = map;
+        Assert.False(NotificationVisibility.HasVisibleTarget(targets, map));
+        map.Fog.InSight[0] = true;
+        Assert.True(NotificationVisibility.HasVisibleTarget(targets, map));
+    }
+
+    [Fact]
+    public void SpawnedPassengerUsesItsActualMapRatherThanTheArrivalHint()
+    {
+        var hint = new Map();
+        hint.Fog.Initialized = true;
+        hint.Fog.InSight[0] = true;
+        var passenger = new Pawn { Faction = new Faction() };
+        passenger.Map.Fog.Initialized = true;
+        var targets = For(passenger);
+        Assert.False(NotificationVisibility.HasVisibleTarget(targets, hint));
+        Assert.Same(passenger.Map, NotificationVisibility.MapFor(targets, hint));
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ArrivalContextPreservesUnrestrictedAndUninitializedMaps(bool initialized)
+    {
+        var map = new Map { IsPlayerHome = true };
+        map.Fog.Initialized = initialized;
+        FogSettings.OnlyOutsideColony = initialized;
+        try
+        {
+            Assert.True(NotificationVisibility.HasVisibleTarget(For(new Pawn { Map = null }), map));
+        }
+        finally
+        {
+            FogSettings.OnlyOutsideColony = false;
+        }
+    }
+
+    [Fact]
+    public void ArrivalHintPreservesColonyHealthAndUntargetedGlobalEvents()
+    {
+        var map = new Map();
+        map.Fog.Initialized = true;
+        Assert.True(
+            NotificationVisibility.HasVisibleTarget(
+                For(new Pawn { Map = null, Faction = Faction.OfPlayer }),
+                map
+            )
+        );
+        Assert.True(NotificationVisibility.HasVisibleTarget(new LookTargets(), map));
+    }
+
+    [Fact]
+    public void NestedArrivalScopesRestoreTheirDestination()
+    {
+        var outer = new Map();
+        RefugeePodNotifications.Prefix(outer, out var initial);
+        try
+        {
+            RefugeePodNotifications.Prefix(new Map(), out var previous);
+            RefugeePodNotifications.Finalizer(previous);
+            Assert.Same(outer, RefugeePodNotifications.ArrivalMap);
+        }
+        finally
+        {
+            RefugeePodNotifications.Finalizer(initial);
+        }
+        Assert.Null(RefugeePodNotifications.ArrivalMap);
+    }
+
     private static LookTargets For(Thing thing) =>
         new()
         {

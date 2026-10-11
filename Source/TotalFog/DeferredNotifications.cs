@@ -70,7 +70,7 @@ public class DeferredNotifications : MapComponent
         var pushed = MultiplayerIntegration.BeginFactionContext(map, notification.faction);
         try
         {
-            return NotificationVisibility.HasVisibleTarget(notification.Targets);
+            return NotificationVisibility.HasVisibleTarget(notification.Targets, map);
         }
         finally
         {

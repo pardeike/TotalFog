@@ -6,7 +6,7 @@ namespace TotalFog.Notifications;
 
 internal static class NotificationVisibility
 {
-    internal static bool HasVisibleTarget(LookTargets targets)
+    internal static bool HasVisibleTarget(LookTargets targets, Map pendingArrivalMap = null)
     {
         if (targets?.targets == null || targets.targets.Count == 0)
             return true;
@@ -27,6 +27,15 @@ internal static class NotificationVisibility
                     )
                 )
                     return true;
+                // A pending local arrival is not a world event. Until its
+                // passenger has a map, there is no current sight to establish.
+                if (
+                    target.Thing.MapHeld == null
+                    && pendingArrivalMap != null
+                    && pendingArrivalMap.GetVisibility().Initialized
+                    && !ThingVisibility.Unrestricted(pendingArrivalMap)
+                )
+                    continue;
                 if (
                     !target.Thing.Destroyed
                     && ThingVisibility.IsVisible(target.Thing, allowMemory: false)
@@ -60,14 +69,14 @@ internal static class NotificationVisibility
         return false;
     }
 
-    internal static Map MapFor(LookTargets targets)
+    internal static Map MapFor(LookTargets targets, Map pendingArrivalMap = null)
     {
         if (targets?.targets == null)
             return null;
         foreach (var target in targets.targets)
             if ((target.HasThing ? target.Thing.MapHeld : target.Map) is { } map)
                 return map;
-        return null;
+        return pendingArrivalMap;
     }
 
     internal static bool Suppressed(LetterDef def) =>

@@ -491,6 +491,21 @@ public class TotalFogMod : Mod
         LogMessage("Prefixed method LetterStack_ReceiveLetter.");
 
         harmony.Patch(
+            AccessTools.Method(
+                typeof(RimWorld.QuestGen.QuestNode_Root_RefugeePodCrash),
+                "SendLetter_NewTemp"
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Notifications.RefugeePodNotifications),
+                nameof(Notifications.RefugeePodNotifications.Prefix)
+            ),
+            finalizer: new HarmonyMethod(
+                typeof(Notifications.RefugeePodNotifications),
+                nameof(Notifications.RefugeePodNotifications.Finalizer)
+            )
+        );
+
+        harmony.Patch(
             typeof(OverlayDrawer).GetMethod(
                 nameof(OverlayDrawer.DrawOverlay),
                 [typeof(Thing), typeof(OverlayTypes)]

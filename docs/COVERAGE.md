@@ -135,14 +135,17 @@ locally. The earlier repeated page-insertion fix remains independently checked.
 
 ### Current closeout priorities
 
-The transport-pod notification preference awaits clarification: unseen-only or
-all arrivals, and notification suppression or sound-only muting. Existing
-discard controls cover broad event categories. Public 1.6 source identifies
-cargo-pod letters as positive, refugee-pod letters as neutral, and ordinary
-quest delivery letters as positive unless overridden. A per-pod option is not
-implemented; do not claim the earlier synthetic-target check proves every
-natural pod producer. The tester has all discard categories enabled but may
-have had sight of the reported landing; an unseen-arrival failure is unconfirmed.
+The 11 October report explicitly concerns unseen pod letters. A native refugee
+producer sends its pawn-target letter before the pawn has a map; this bypassed
+the old visibility check. The focused fix retains the producer's supplied
+arrival map during that call and uses the existing deferred queue. Native
+pre-spawn, actual transit/landing, hidden waiting, first sight and discard-mode
+controls pass, with ordinary mapless/global and colony-health letters retained.
+Cargo/quest pod producers already use cell targets, but their natural incidents
+and modded producers remain unverified. Do not claim all transport-pod paths
+are covered. A dedicated all-arrivals or sound-only pod setting is not added.
+The new native result is scoped to the candidate recorded in VALIDATION.md;
+it is not a new performance-floor or Multiplayer acceptance pass.
 
 The 10 October stream-feedback pair is delivered. Follow up on its reported
 regressions first, then continue the remaining
