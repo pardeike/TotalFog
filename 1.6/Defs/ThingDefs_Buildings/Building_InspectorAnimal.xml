@@ -46,8 +46,11 @@
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorChicken</defName>
+    <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <specialDisplayRadius>0</specialDisplayRadius>
     <label>inspector Chicken</label>
-    <description>It's a Chicken that monitors your surroundings and tells you what's going on. It consumes rice.</description>
+    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorChicken</texPath>
     </graphicData>
@@ -55,18 +58,7 @@
     <costList>
       <WoodLog>50</WoodLog>
     </costList>
-    <comps>
-      <li Class="CompProperties_Refuelable">
-        <fuelConsumptionRate>10</fuelConsumptionRate>
-        <fuelCapacity>60.0</fuelCapacity>
-        <fuelFilter>
-          <thingDefs>
-            <li>RawRice</li>
-          </thingDefs>
-        </fuelFilter>
-        <initialFuelPercent>1</initialFuelPercent>
-      </li>
-    </comps>
+    <comps Inherit="False" />
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorHare</defName>

@@ -92,7 +92,6 @@ public sealed class StreamFeedbackScenarios
                     );
                     door = (Building_Door)Spawn(ThingDefOf.Door, 0, 0, true);
                     lamp = Spawn(DefDatabase<ThingDef>.GetNamed("TorchLamp"), 6, 2, true);
-                    Spawn(DefDatabase<ThingDef>.GetNamed("WatchTower"), 0, 4, true);
                     Spawn(DefDatabase<ThingDef>.GetNamed("SurveillanceCamera_Ground"), 2, 5, true);
                     Spawn(DefDatabase<ThingDef>.GetNamed("CameraConsole"), 5, 4, true);
                     var fire = (Fire)Spawn(DefDatabase<ThingDef>.GetNamed("Fire"), 6, 0);

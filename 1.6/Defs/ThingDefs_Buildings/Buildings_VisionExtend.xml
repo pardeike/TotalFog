@@ -3,8 +3,10 @@
   <!-- Watch Tower -->
   <ThingDef ParentName="BaseVisionStuff">
     <defName>WatchTower</defName>
+    <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>watch tower</label>
-    <description>Watch Tower that increase vision when colonists stand on it.</description>
+    <description>A retired watchtower retained for existing saves. It no longer extends vision.</description>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -40,11 +42,7 @@
       <Flammability>1.0</Flammability>
       <Beauty>-10</Beauty>
     </statBases>
-    <comps>
-      <li Class="TotalFog.CompProperties_SightModifier">
-        <fovMultiplier>1.5</fovMultiplier>
-      </li>
-    </comps>
+    <comps Inherit="False" />
   </ThingDef>
   <!--	<ThingDef ParentName="BaseVisionStuff">
 		<defName>WatchTowerWithBeacon</defName>
@@ -101,8 +99,10 @@
 	</ThingDef>-->
   <ThingDef ParentName="BaseVisionStuff">
     <defName>WatchTowerRoofed</defName>
+    <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>roofed watch tower</label>
-    <description>A Watch tower that increase vision when colonists stand on it. Colonist vision range will not be affected by weather as it has roof</description>
+    <description>A retired roofed watchtower retained for existing saves. It no longer extends vision or removes the weather penalty.</description>
     <altitudeLayer>Skyfaller</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -141,12 +141,7 @@
       <Flammability>0.8</Flammability>
       <Beauty>-10</Beauty>
     </statBases>
-    <comps>
-      <li Class="TotalFog.CompProperties_SightModifier">
-        <fovMultiplier>1.5</fovMultiplier>
-        <denyWeather>true</denyWeather>
-      </li>
-    </comps>
+    <comps Inherit="False" />
   </ThingDef>
   <ThingDef ParentName="BaseVisionStuff">
     <defName>TowerLightBeacon</defName>

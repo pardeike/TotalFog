@@ -1,5 +1,28 @@
 # Local validation
 
+## Retired chicken and watchtowers, 2026-10-11
+
+The active 1.6 definitions retire InspectorChicken, WatchTower and WatchTowerRoofed
+using native `canGenerateDefaultDesignator=false`. Their sight components are
+removed; the chicken also loses its refueling component and preview radius.
+Definitions, costs and graphics remain so the engine can retain existing objects
+and generate their saved blueprint/frame definitions. Frozen versions are unchanged.
+The public 1.6 engine audit confirms blueprint/frame generation depends on
+designationCategory, independently of default-designator generation.
+
+All 347 independent tests and the quiet paired build/deploy pass. The installed
+gameplay DLL matches the build at SHA-256
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the installed companion also matches. Native TotalFogRegression loading passes.
+The complete Security designator list, including hidden entries, contains none of
+the three retired buildings. All four other inspector animals, both security
+bells, seven cameras, the console, beacon and telescope remain present.
+No error logs occur. Warnings comprise bridge startup timing diagnostics and the
+fixture's native missing Funeral precept repair. No existing fixture contains the
+retired buildings; their actual saved-object round trip was not exercised.
+The unchanged save is not written, and the game is stopped after this check.
+This is a source-development check, not a new feedback package or performance gate.
+
 This is the retained evidence ledger. Read dated checkpoints with their exact
 gameplay hashes, loadouts and stated limits: older test counts, “current” builds
 and outstanding lists refer to their checkpoint, not today. Rejected candidates

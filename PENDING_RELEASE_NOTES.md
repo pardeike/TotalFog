@@ -2,7 +2,8 @@
 - Check walking pawns at their drawn position so crossing a sight boundary does not reveal a pawn still outside view.
 - Correct hidden-pawn visibility after landing, transport, or respawning.
 - Keep visibility updates working when game ticks advance in larger intervals.
-- Restore camera and watchtower textures on macOS and load their portable PNG files directly.
+- Restore camera textures on macOS and load their portable PNG files directly.
+- Retire Chicken on a Stick and both watchtowers from construction and remove their sight bonuses, while retaining existing saved objects.
 - Keep renderer registration under the game's ownership, including held and flying pawns.
 - Preserve deferred letters and messages across saves, including their original sounds and targets.
 - Apply unseen-event settings to refugee pod letters sent before their passenger enters the map.
