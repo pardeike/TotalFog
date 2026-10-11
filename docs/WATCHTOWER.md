@@ -110,9 +110,13 @@ artwork or animation. See [VALIDATION.md](VALIDATION.md) for the exact tested pa
 The 11 October follow-up implements Andreas's smaller-deck direction in the
 test-only drawing. The base and wall joins remain 3x3; the upper deck is 1.4x1.4
 cells and the railing sits 0.65 cells from the center. The visual height projects
-1.2 cells toward map north in every rotation. This is a drawing offset, not
-physical pawn elevation or implemented climb progress. Four tapered faces join
-the wider base to the small deck. The ladder leans inward from the outer approach.
+1.2 cells toward map north in every rotation. The platform floor and railings
+are then shifted 0.18 cells toward the viewer, independently of the pawn, to
+improve their alignment and leave the rear support edge slightly above the deck.
+The ladder's upper attachment follows that shift while its foot remains fixed.
+These are drawing offsets, not physical pawn elevation or implemented climb
+progress. Four tapered faces join the wider base to the small deck. The ladder
+leans inward from the outer approach.
 
 At Andreas's request, the artwork now uses broad plank/masonry divisions, no
 wood-grain marks, fewer ladder rungs and thicker dark outlines. Real native

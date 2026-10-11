@@ -91,6 +91,7 @@ public sealed class WatchtowerVisualPrototype : Building
         private const float BaseHalfExtent = 1.50f;
         private const float DeckHalfExtent = .70f;
         private const float RailHalfExtent = .65f;
+        private const float DeckShiftTowardViewer = .18f;
         private readonly Rot4 rotation;
         private readonly Color stuff;
         private readonly bool stone;
@@ -160,8 +161,8 @@ public sealed class WatchtowerVisualPrototype : Building
 
         private void Supports()
         {
-            // Back faces first. The small deck covers the upper ends of all
-            // four tapered faces; the 3x3 base still meets perimeter walls.
+            // Back faces first. The lowered deck leaves a thin rear face
+            // visible; the 3x3 base still meets perimeter walls.
             for (int pass = 0; pass < 3; pass++)
             for (int side = 0; side < 4; side++)
             {
@@ -253,40 +254,69 @@ public sealed class WatchtowerVisualPrototype : Building
             };
 
         private Vector3 RailPoint(int side, float along, float height) =>
-            EdgePoint(side, along * RailHalfExtent, RailHalfExtent, height);
+            LowerDeck(EdgePoint(side, along * RailHalfExtent, RailHalfExtent, height));
+
+        // Move only the upper artwork towards the viewer, in map space for
+        // every rotation. The pawn projection and wall connections stay fixed.
+        private static Vector3 LowerDeck(Vector3 point, float progress = 1)
+        {
+            point.z -= DeckShiftTowardViewer * progress;
+            return point;
+        }
 
         private void Floor()
         {
             const float edge = DeckHalfExtent;
             body.Polygon(
                 outline,
-                Point(-edge, -edge, 1),
-                Point(-edge, edge, 1),
-                Point(edge, edge, 1),
-                Point(edge, -edge, 1)
+                LowerDeck(Point(-edge, -edge, 1)),
+                LowerDeck(Point(-edge, edge, 1)),
+                LowerDeck(Point(edge, edge, 1)),
+                LowerDeck(Point(edge, -edge, 1))
             );
             const float inside = DeckHalfExtent - .07f;
             body.Polygon(
                 Shade(1.12f),
-                Point(-inside, -inside, 1),
-                Point(-inside, inside, 1),
-                Point(inside, inside, 1),
-                Point(inside, -inside, 1)
+                LowerDeck(Point(-inside, -inside, 1)),
+                LowerDeck(Point(-inside, inside, 1)),
+                LowerDeck(Point(inside, inside, 1)),
+                LowerDeck(Point(inside, -inside, 1))
             );
             if (stone)
             {
-                body.Line(Point(-inside, 0, 1), Point(inside, 0, 1), .035f, Shade(.80f));
-                body.Line(Point(0, -inside, 1), Point(0, inside, 1), .035f, Shade(.80f));
+                body.Line(
+                    LowerDeck(Point(-inside, 0, 1)),
+                    LowerDeck(Point(inside, 0, 1)),
+                    .035f,
+                    Shade(.80f)
+                );
+                body.Line(
+                    LowerDeck(Point(0, -inside, 1)),
+                    LowerDeck(Point(0, inside, 1)),
+                    .035f,
+                    Shade(.80f)
+                );
             }
             else
             {
                 foreach (float x in new[] { -.21f, .21f })
                 {
-                    body.Line(Point(x, -inside, 1), Point(x, inside, 1), .035f, Shade(.70f));
+                    body.Line(
+                        LowerDeck(Point(x, -inside, 1)),
+                        LowerDeck(Point(x, inside, 1)),
+                        .035f,
+                        Shade(.70f)
+                    );
                 }
             }
             for (int side = 0; side < 4; side++)
-                Beam(body, SidePoint(side, -.98f, 1), SidePoint(side, .98f, 1), .11f, Shade(.87f));
+                Beam(
+                    body,
+                    LowerDeck(SidePoint(side, -.98f, 1)),
+                    LowerDeck(SidePoint(side, .98f, 1)),
+                    .11f,
+                    Shade(.87f)
+                );
         }
 
         private void Railings()
@@ -347,15 +377,21 @@ public sealed class WatchtowerVisualPrototype : Building
             // Ladders remain timber even on a masonry tower in this first sketch.
             var color = stone ? new Color(.48f, .35f, .22f) : Shade(.86f);
             foreach (float x in new[] { -.27f, .27f })
-                Beam(target, Point(x, -1.65f, 0), Point(x, -RailHalfExtent, 1.04f), .09f, color);
+                Beam(
+                    target,
+                    Point(x, -1.65f, 0),
+                    LowerDeck(Point(x, -RailHalfExtent, 1.04f)),
+                    .09f,
+                    color
+                );
             for (int rung = 0; rung < 6; rung++)
             {
                 float t = (rung + .5f) / 6;
                 float z = Mathf.Lerp(-1.65f, -RailHalfExtent, t);
                 Beam(
                     target,
-                    Point(-.28f, z, t * 1.04f),
-                    Point(.28f, z, t * 1.04f),
+                    LowerDeck(Point(-.28f, z, t * 1.04f), t),
+                    LowerDeck(Point(.28f, z, t * 1.04f), t),
                     .08f,
                     color * 1.12f
                 );

@@ -10,6 +10,31 @@ snapshot from later source commits.
 
 ## New watchtower artwork prototype, 2026-10-11
 
+### Platform alignment follow-up
+
+The test-only floor and railing move 0.18 cells toward the viewer while the
+occupant's 1.2-cell northward drawing projection stays fixed. This improves
+the pawn/deck alignment and leaves the rear support edge slightly above the
+platform. The ladder's upper attachment follows the deck, with its foot fixed.
+The approved slanted native wall fragments and their clipping seams are unchanged.
+This is cached geometry built before capture, with no new per-frame work.
+
+Formatting, all 347 tests and quiet deploy pass with zero build warnings/errors.
+Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact built/deployed companion is
+`f6f4e517224fa0325f7252328f3365eb74446352a53852333dde4221f48a9e75`.
+Public Steam 1.6.4871 with all five DLCs passes all seven fully visible capture
+receipts, four cached wall overlaps, native 3x3 building/occupant checks, the
+logical center-cell assertion, unchanged tick 1202 and unchanged-fixture reload.
+The combined overview, occupied wood and granite corner pixels were inspected.
+Captured errors are empty. The game was stopped after cleanup. One combined
+image was submitted to Andreas's phone, with APNs acceptance confirmed.
+
+Evidence: `artifacts/watchtower-platform-offset-20261011.json` and
+`artifacts/UserData/Screenshots/tower-platform-offset-20261011-*__cell_rect.png`.
+This remains an artwork checkpoint; tower gameplay is not implemented.
+
 ### Native wall overlap and logical occupant position
 
 The companion now calls the actual adjacent wall's Print into a temporary native
