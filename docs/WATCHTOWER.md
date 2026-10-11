@@ -163,9 +163,13 @@ This is an artwork direction, not a universal rule for every RimWorld graphic.
 
 The optional `silhouetteOutlines` companion study compares six versions of this
 treatment with two accepted controls, without changing proportions, occupant
-fit or the default artwork. It adds no material passes. Native straight wood
-and corner granite joins have been inspected; fine-line aliasing remains a
-visible limitation. Do not treat the study as approved production artwork.
+fit or the default artwork. Andreas's three original building screenshots show
+broad light/dark faces, soft raised edges and much quieter internal seams. The
+study applies these with vertex-color shading and narrow beam highlights. Deck
+and beam lighting stay fixed in map space when the ladder rotates. Wider,
+lower-contrast internal edges replace the earlier jagged hairlines. It adds no
+material passes. Native straight wood and corner granite joins were inspected;
+do not treat the study as approved production artwork.
 
 ### Cached native wall overlap prototype
 

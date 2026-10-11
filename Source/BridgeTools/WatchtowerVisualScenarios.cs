@@ -19,7 +19,7 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall fronts with two unchanged controls. Optional silhouetteOutlines compares six outer-contour/thin-detail studies with those controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall fronts with two unchanged controls. Optional silhouetteOutlines compares six reference-informed studies with broad shaded faces, soft bevels and outer contours beside those controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
@@ -157,6 +157,9 @@ public sealed class WatchtowerVisualScenarios
                         prototypeOnly = true,
                         nativeFrontPieces,
                         silhouetteOutlines,
+                        outlineStudy = silhouetteOutlines
+                            ? "broad shaded faces and soft beam bevels from Andreas's three building references"
+                            : null,
                         nativePawns = projectedOccupants
                             .Keys.Select(p => new
                             {

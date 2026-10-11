@@ -10,6 +10,40 @@ snapshot from later source commits.
 
 ## New watchtower native prototypes, 2026-10-11
 
+### Building-reference shading refinement
+
+Andreas supplied three original building screenshots, `buildings1.png` through
+`buildings3.png`. Their broad light/dark faces, soft raised edges and quieter
+internal seams inform the next `silhouetteOutlines` study. The slanted faces and
+deck now use vertex-color shading; beams and rails have narrow light edges with
+softer shadow borders. Masonry lines are less prominent. Proportions, occupant
+fit, ladder layout, default artwork and cached native wall joins remain unchanged.
+Two older drawings remain beside six refined studies. The earlier outline study
+below is retained at its own exact companion hash.
+
+Formatting, all 347 independent tests and quiet deploy pass with zero build
+warnings/errors. Built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the built/deployed companion is
+`a9fddbb26d7b780e4e976e7caa8dfd35dc04e7b69ac8ee84ad68ca811afb9b3f`.
+Public Steam 1.6.4871 with all five DLCs passes all 14 native artwork assertions.
+Overview, straight wood wall and granite corner pixels were inspected: broad
+shading reads more clearly and the harsh internal hairlines are reduced. This
+is visual assessment, not final artwork acceptance. The unchanged fixture is
+reloaded at tick 1202, and game termination is verified. Player.log contains no
+exception/error/fatal match; the captured warnings are bridge startup timing
+and the fixture's missing hidden funeral precept being restored on load.
+One combined image was submitted to Andreas's phone.
+
+Geometry is still cached before capture; plain/straight/corner draw counts
+remain two/three/four. Highlights add vertices to those existing meshes, with
+no new textures, materials or frame-time rebuilding. No performance benchmark
+or custom wall/pawn renderer compatibility is claimed. Reference screenshots
+are retained in ignored local artifacts, not the public source or player mod.
+Evidence: `artifacts/watchtower-reference-shading-20261011.json`,
+`artifacts/logs/watchtower-reference-shading-20261011.log`, and
+`artifacts/UserData/Screenshots/tower-reference-shading-20261011-*__cell_rect.png`.
+
 ### Optional silhouette-outline study
 
 Feedback on RimWorld artwork called for heavier outer contours and lighter

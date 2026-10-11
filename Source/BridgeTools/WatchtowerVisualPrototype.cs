@@ -163,8 +163,8 @@ public class WatchtowerVisualPrototype : Building
                     body.Line(
                         a,
                         b,
-                        silhouetteOutlines ? .018f : .06f,
-                        silhouetteOutlines ? Shade(.50f) : outline
+                        silhouetteOutlines ? .035f : .06f,
+                        silhouetteOutlines ? Shade(.58f) : outline
                     );
                 }
             }
@@ -212,6 +212,13 @@ public class WatchtowerVisualPrototype : Building
                 if (facePass != pass)
                     continue;
                 var faceColor = Shade(stone ? (depth < 0 ? .72f : .86f) : .69f);
+                // The reference buildings use broad shaded faces and soft
+                // bevels, with the darkest stroke reserved for the silhouette.
+                float faceBrightness =
+                    depth < 0 ? 1.03f
+                    : depth > 0 ? .77f
+                    : SidePoint(side, 0, 0).x < 0 ? .92f
+                    : .84f;
                 var face = new[]
                 {
                     SidePoint(side, -1, 0),
@@ -219,13 +226,27 @@ public class WatchtowerVisualPrototype : Building
                     SidePoint(side, 1, 1),
                     SidePoint(side, -1, 1),
                 };
-                body.Polygon(silhouetteOutlines ? faceColor : outline, face);
                 if (silhouetteOutlines)
                 {
+                    body.GradientQuad(
+                        Shade(faceBrightness * .83f),
+                        Shade(faceBrightness),
+                        face[0],
+                        face[1],
+                        face[2],
+                        face[3]
+                    );
                     for (int edge = 0; edge < face.Length; edge++)
-                        body.Line(face[edge], face[(edge + 1) % face.Length], .018f, Shade(.50f));
+                        body.Line(
+                            face[edge],
+                            face[(edge + 1) % face.Length],
+                            .035f,
+                            Shade(faceBrightness * .76f)
+                        );
                 }
                 else
+                {
+                    body.Polygon(outline, face);
                     body.Polygon(
                         faceColor,
                         SidePoint(side, -.94f, .05f),
@@ -233,6 +254,7 @@ public class WatchtowerVisualPrototype : Building
                         SidePoint(side, .91f, .95f),
                         SidePoint(side, -.91f, .95f)
                     );
+                }
                 bool nativeFace = nativeFront && depth < 0;
                 if (nativeFace)
                 {
@@ -253,8 +275,8 @@ public class WatchtowerVisualPrototype : Building
                         body.Line(
                             SidePoint(side, -.95f, h),
                             SidePoint(side, .95f, h),
-                            .035f,
-                            Shade(.56f)
+                            silhouetteOutlines ? .028f : .035f,
+                            Shade(silhouetteOutlines ? faceBrightness * .81f : .56f)
                         );
                     }
                     for (int row = 0; row < 3; row++)
@@ -263,8 +285,8 @@ public class WatchtowerVisualPrototype : Building
                         body.Line(
                             SidePoint(side, x, row / 3f + .05f),
                             SidePoint(side, x, (row + 1) / 3f - .05f),
-                            .035f,
-                            Shade(.56f)
+                            silhouetteOutlines ? .028f : .035f,
+                            Shade(silhouetteOutlines ? faceBrightness * .81f : .56f)
                         );
                     }
                 }
@@ -338,7 +360,7 @@ public class WatchtowerVisualPrototype : Building
                 var joinB = Vector3.Lerp(a, b, to);
                 if (from > 0)
                     body.Line(a, joinA, .07f, outline);
-                body.Line(joinA, joinB, .018f, Shade(.50f));
+                body.Line(joinA, joinB, .035f, Shade(.58f));
                 if (to < 1)
                     body.Line(joinB, b, .07f, outline);
                 return;
@@ -376,20 +398,31 @@ public class WatchtowerVisualPrototype : Building
         {
             const float edge = DeckHalfExtent;
             body.Polygon(
-                silhouetteOutlines ? Shade(.55f) : outline,
+                silhouetteOutlines ? Shade(.76f) : outline,
                 LowerDeck(Point(-edge, -edge, 1)),
                 LowerDeck(Point(-edge, edge, 1)),
                 LowerDeck(Point(edge, edge, 1)),
                 LowerDeck(Point(edge, -edge, 1))
             );
-            float inside = DeckHalfExtent - (silhouetteOutlines ? .018f : .07f);
-            body.Polygon(
-                Shade(1.12f),
-                LowerDeck(Point(-inside, -inside, 1)),
-                LowerDeck(Point(-inside, inside, 1)),
-                LowerDeck(Point(inside, inside, 1)),
-                LowerDeck(Point(inside, -inside, 1))
-            );
+            float inside = DeckHalfExtent - (silhouetteOutlines ? .035f : .07f);
+            if (silhouetteOutlines)
+                // Lighting stays fixed in map space when the ladder rotates.
+                body.GradientQuad(
+                    Shade(1.03f),
+                    Shade(1.15f),
+                    LowerDeck(new Vector3(-inside, 0, PlatformProjection - inside)),
+                    LowerDeck(new Vector3(inside, 0, PlatformProjection - inside)),
+                    LowerDeck(new Vector3(inside, 0, PlatformProjection + inside)),
+                    LowerDeck(new Vector3(-inside, 0, PlatformProjection + inside))
+                );
+            else
+                body.Polygon(
+                    Shade(1.12f),
+                    LowerDeck(Point(-inside, -inside, 1)),
+                    LowerDeck(Point(-inside, inside, 1)),
+                    LowerDeck(Point(inside, inside, 1)),
+                    LowerDeck(Point(inside, -inside, 1))
+                );
             if (stone)
             {
                 body.Line(
@@ -522,10 +555,24 @@ public class WatchtowerVisualPrototype : Building
             geometry.Line(
                 a,
                 b,
-                width + (silhouetteOutlines && !silhouette ? .018f : .085f),
-                outline
+                width + (silhouetteOutlines && !silhouette ? .035f : .085f),
+                silhouetteOutlines && !silhouette ? Color.Lerp(outline, color, .55f) : outline
             );
             geometry.Line(a, b, width, color);
+            if (silhouetteOutlines)
+            {
+                var delta = b - a;
+                var lightEdge = new Vector3(-delta.z, 0, delta.x).normalized;
+                if (lightEdge.z < 0 || (Mathf.Abs(lightEdge.z) < .0001f && lightEdge.x > 0))
+                    lightEdge = -lightEdge;
+                var shift = lightEdge * width * .28f;
+                geometry.Line(
+                    a + shift,
+                    b + shift,
+                    width * .20f,
+                    Color.Lerp(color, Color.white, .14f)
+                );
+            }
         }
     }
 
@@ -566,6 +613,20 @@ public class WatchtowerVisualPrototype : Building
             var delta = b - a;
             var normal = new Vector3(-delta.z, 0, delta.x).normalized * width / 2;
             Polygon(color, a - normal, a + normal, b + normal, b - normal);
+        }
+
+        internal void GradientQuad(
+            Color lower,
+            Color upper,
+            Vector3 a,
+            Vector3 b,
+            Vector3 c,
+            Vector3 d
+        )
+        {
+            Polygon(lower, a, b, c, d);
+            colors[colors.Count - 2] = upper;
+            colors[colors.Count - 1] = upper;
         }
 
         internal Mesh Build(string name)

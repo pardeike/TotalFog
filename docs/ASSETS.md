@@ -37,9 +37,12 @@ beside six outline studies. Outer support contours stay heavy; face boundaries,
 braces and masonry details are lighter. Connected sections of the support contour
 become thin seams while the actual native wall fragments remain above them.
 Ladder uprights retain strong edges around their open spaces. This changes only
-cached mesh geometry, with no extra material passes. Native overview, straight
-wood join and granite corner pixels were inspected; some very thin details look
-jagged at close zoom. It is a comparison, not accepted replacement artwork.
+cached mesh geometry, with no extra material passes. Andreas's three original
+building references then informed broad face shading, narrow light edges on
+beams/rails, softer internal shadows and quieter masonry lines. The earlier
+hairline study remains in the validation ledger; the refined edges are wider
+and lower contrast. Native overview, straight wood join and granite corner
+pixels were inspected. It is a comparison, not accepted replacement artwork.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
 The access companion reuses the accepted meshes for a native ladder-job
