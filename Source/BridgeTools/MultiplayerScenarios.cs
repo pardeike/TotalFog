@@ -237,7 +237,7 @@ public sealed class MultiplayerScenarios
 
     [Tool(
         "totalfog/multiplayer_settings",
-        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
+        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), ColonyMechVisionModifier (0.2..2), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
     )]
     public static Task<object> Settings(
         IRimBridgeContext context,
@@ -274,6 +274,7 @@ public sealed class MultiplayerScenarios
             if (
                 name != "BaseViewRange"
                 && name != "BaseHearingRange"
+                && name != "ColonyMechVisionModifier"
                 && (
                     field == null
                     || field.FieldType != typeof(bool)
@@ -284,7 +285,7 @@ public sealed class MultiplayerScenarios
                 return new
                 {
                     success = false,
-                    message = "Use BaseViewRange, BaseHearingRange or a public boolean FogSettings field from multiplayer_snapshot.",
+                    message = "Use BaseViewRange, BaseHearingRange, ColonyMechVisionModifier or a public boolean FogSettings field from multiplayer_snapshot.",
                 };
             object parsed;
             if (name == "BaseViewRange")
@@ -293,7 +294,7 @@ public sealed class MultiplayerScenarios
                     return new { success = false, message = "BaseViewRange must be 10..100." };
                 parsed = range;
             }
-            else if (name == "BaseHearingRange")
+            else if (name is "BaseHearingRange" or "ColonyMechVisionModifier")
             {
                 if (
                     !float.TryParse(
@@ -303,10 +304,16 @@ public sealed class MultiplayerScenarios
                         out var range
                     )
                     || float.IsNaN(range)
-                    || range < 0
-                    || range > 30
+                    || range < (name == "BaseHearingRange" ? 0 : .2f)
+                    || range > (name == "BaseHearingRange" ? 30 : 2)
                 )
-                    return new { success = false, message = "BaseHearingRange must be 0..30." };
+                    return new
+                    {
+                        success = false,
+                        message = name == "BaseHearingRange"
+                            ? "BaseHearingRange must be 0..30."
+                            : "ColonyMechVisionModifier must be 0.2..2.",
+                    };
                 parsed = range;
             }
             else

@@ -342,7 +342,8 @@ public class CompSightSource : FogSubcomponent
         if (!ignoreWeather && !parent.Map.roofGrid.Roofed(cell))
             modifier *= Mathf.Lerp(.5f, 1, parent.Map.weatherManager.CurWeatherAccuracyMultiplier);
         range *= modifier;
-        return range < 1 ? hearing : range;
+        range = range < 1 ? hearing : range;
+        return pawn.IsColonyMech ? range * FogSettings.ColonyMechVisionModifier : range;
     }
 
     private void EmitHearingCues()

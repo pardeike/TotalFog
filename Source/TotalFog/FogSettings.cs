@@ -21,6 +21,8 @@ public partial class FogSettings : ModSettings
 
     public static float AnimalVisionModifier = 0.5f;
 
+    public static float ColonyMechVisionModifier = 1f;
+
     public static int AudioSourceRange = 30; // Max tiles you can "hear"
     private static string audioSourceRangeBuffer;
     public static float VolumeMufflingModifier = 0.5f; // 0 = no dropoff, 1 = full dropoff.
@@ -78,6 +80,7 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref BuildingVisionModifier, "buildingVisionMod", 1);
         Scribe_Values.Look(ref AnimalVisionModifier, "animalVisionMod", 0.5f);
         Scribe_Values.Look(ref TurretVisionModifier, "turretVisionMod", 0.7f);
+        Scribe_Values.Look(ref ColonyMechVisionModifier, "totalFogColonyMechVisionMod", 1f);
         Scribe_Values.Look(ref BaseHearingRange, "baseHearingRange", 10);
         Scribe_Values.Look(ref ShowHearingCues, "totalFogShowHearingCues", true);
         Scribe_Values.Look(ref WildLifeTabVisible, "wildLifeTabVisible", true);

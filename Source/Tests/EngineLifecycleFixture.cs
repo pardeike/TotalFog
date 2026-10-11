@@ -738,6 +738,7 @@ namespace TotalFog
         public static bool SuppressCombatMusic = true;
         public static int BaseViewRange = 60;
         public static float BuildingVisionModifier = 1;
+        public static float ColonyMechVisionModifier = 1;
         private static bool treesBlockSightValue = false;
         public static bool TreesBlockSight => treesBlockSightValue;
         public static bool DoAudioCheck = true;

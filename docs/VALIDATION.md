@@ -6640,3 +6640,29 @@ Native evidence remains in the ignored `heart-mature-dpa-20261011.json` and
 sustained hidden audio and natural growth are not yet established by these runs.
 The companion can select temporary audio policies for a traced interval and
 restores both audio flags in its cleanup path.
+
+### Colony mech vision slider, 11 October 2026
+
+The new Vision-page multiplier applies only to the engine's colony-mech
+classification. It defaults to 1 and ranges from 0.2 to 2. Native public 1.6
+checks use a real player Lifter, a human colonist and a hostile Lifter, with
+Zombieland loaded. After each change, 35 native ticks apply the setting without
+forcing a sight update: the colony mech's rounded radius is 70, 14, 35, 140 and
+70 for multipliers 1, 0.2, 0.5, 2 and 1. The targeting sight calculation follows
+the same modifier; weapon range is unchanged.
+
+Human and hostile-mech calculations are identical with the setting changed and
+reset under the same native conditions. Dawn changes the human's rounded radius
+from 54 to 55 during playback. The fixture allows one cell of ordinary refresh
+delay and floating-point rounding, rather than treating that light change as a
+regression. Earlier failed fixture assertions remain in local evidence. The
+final fixture restores both settings and reloads its unchanged base save; no
+native errors are captured. The slider and default value are also visible in
+the native Vision page, with the existing scrollbar margin retained.
+
+All 347 independent tests pass, including exact float settings round-trip and
+buffered Multiplayer registration of the new field. Session persistence and
+synchronization reuse the existing shared-settings mechanism. This run does not
+establish a new two-client check for this slider. Runtime comparisons now record
+the multiplier, treating the inherited mod's fixed mech range as 1, so a changed
+candidate range cannot silently pass as a matching benchmark configuration.

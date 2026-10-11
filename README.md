@@ -17,7 +17,7 @@ a wild boar or something much worse. To be safe, you have to look.
 ## What you get
 
 ### See only what your people see
-- Colonists, trained animals and turrets each see a circle around them. Walls block their view.
+- Colonists, colony mechs, trained animals and turrets each see a circle around them. Walls block their view.
   Trees can block it too, if you want.
 - Areas you explored stay on the map, but they are grey. You see the ground, not
   who walks on it right now.
@@ -59,7 +59,8 @@ a wild boar or something much worse. To be safe, you have to look.
 Four settings pages (Appearance, Vision, Information, Audio) let you choose how dark
 the fog is, how fast it fades, how far everyone sees and what may give away
 hidden activity. You can play it as a hard survival challenge or as a light
-atmosphere change.
+atmosphere change. Colony mechs have their own vision multiplier, from 0.2 to 2.
+Its default of 1 keeps their normal sight range.
 
 ### Made for big colonies
 The sight engine is new and written for speed. Performance comes before extra

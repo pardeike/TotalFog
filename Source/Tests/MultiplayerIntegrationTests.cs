@@ -154,6 +154,7 @@ public class MultiplayerIntegrationTests
             CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
             FogSettings.BaseViewRange = 10;
             FogSettings.BuildingVisionModifier = 1.23456789f;
+            FogSettings.ColonyMechVisionModifier = .23456789f;
             FogSettings.SilentRaids = true;
             trees.SetValue(null, true);
             var saved = MultiplayerIntegration.CaptureSettings();
@@ -161,11 +162,13 @@ public class MultiplayerIntegrationTests
             saved.Add("UnknownFutureSetting", "42");
             FogSettings.BaseViewRange = 60;
             FogSettings.BuildingVisionModifier = 1;
+            FogSettings.ColonyMechVisionModifier = 2;
             FogSettings.SilentRaids = false;
             trees.SetValue(null, false);
             MultiplayerIntegration.RestoreSettings(saved);
             Assert.Equal(10, FogSettings.BaseViewRange);
             Assert.Equal(1.23456789f, FogSettings.BuildingVisionModifier);
+            Assert.Equal(.23456789f, FogSettings.ColonyMechVisionModifier);
             Assert.True(FogSettings.SilentRaids);
             Assert.True(FogSettings.TreesBlockSight);
         }
@@ -202,6 +205,7 @@ public class MultiplayerIntegrationTests
                 .OrderBy(name => name, StringComparer.Ordinal)
                 .ToArray();
             Assert.Equal(expected, FakeApi.Fields.Select(field => field.Name));
+            Assert.Contains(FakeApi.Fields, field => field.Name == "ColonyMechVisionModifier");
             Assert.All(FakeApi.Fields, field => Assert.True(field.Buffered));
             FakeApi.IsInMultiplayer = true;
             var originalFaction = Faction.OfPlayer;

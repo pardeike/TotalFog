@@ -27,6 +27,8 @@
   <TotalFog_HearingIndicators>Hearing indicators</TotalFog_HearingIndicators>
   <TotalFog_TurretVisionDesc>Scale the sight range of powered, fueled automatic turrets.</TotalFog_TurretVisionDesc>
   <TotalFog_AnimalVisionDesc>Scale vision from trained animals that provide sight.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Colony mech vision multiplier</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Scale the sight range of colony mechs. 1 keeps their normal range. Does not change weapon range or hearing indicators.</TotalFog_ColonyMechVisionDesc>
   <TotalFog_AllyVisionDesc>Allied and neutral pawns provide vision at half their normal range.</TotalFog_AllyVisionDesc>
   <TotalFog_PrisonerVisionDesc>Colony prisoners provide vision at one fifth of their normal range.</TotalFog_PrisonerVisionDesc>
   <TotalFog_MapRevealDesc>Mark terrain as explored when a map initializes. This does not provide current sight.</TotalFog_MapRevealDesc>

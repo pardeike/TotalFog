@@ -859,6 +859,19 @@ public sealed class PerformanceScenarios
                             )
                         );
                     }
+                    // The inherited mod has no separate colony mech multiplier.
+                    // Its fixed range is equivalent to our default of one.
+                    effectiveSettings.Add(
+                        "ColonyMechVisionModifier",
+                        Convert.ToString(
+                            root == "TotalFog"
+                                ? AccessTools
+                                    .Field(settings, "ColonyMechVisionModifier")
+                                    .GetValue(null)
+                                : 1f,
+                            System.Globalization.CultureInfo.InvariantCulture
+                        )
+                    );
                     // The exact inherited CompTick always runs hearing checks when
                     // its common range/capacity gates permit them; it has no toggle.
                     // Include that fixed policy so comparisons reject a candidate

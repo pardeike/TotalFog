@@ -175,6 +175,14 @@ public partial class FogSettings
             2f,
             "TotalFog_AnimalVisionDesc"
         );
+        Range(
+            row,
+            "TotalFog_ColonyMechVision",
+            ref ColonyMechVisionModifier,
+            .2f,
+            2f,
+            "TotalFog_ColonyMechVisionDesc"
+        );
         Section(row, "TotalFog_AdditionalObservers");
         Check(row, "allyGiveVision", ref AllyGiveVision, "TotalFog_AllyVisionDesc");
         Check(row, "prisonerGiveVision", ref PrisonerGiveVision, "TotalFog_PrisonerVisionDesc");
@@ -393,6 +401,7 @@ public partial class FogSettings
         BuildingVisionModifier = 1;
         TurretVisionModifier = .7f;
         AnimalVisionModifier = .5f;
+        ColonyMechVisionModifier = 1f;
         HideSpeakBubble = false;
         AISmart = false;
         NeedWatcher = true;

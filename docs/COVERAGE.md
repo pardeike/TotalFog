@@ -589,3 +589,9 @@ geometry/GPU cost or universally better frame pacing. See
 Raw stat helper values are diagnostic only, not evidence of reachable hidden
 inspection. Stat/icon/mouseover caller contexts, legitimate owned inventory,
 decontamination quests and actual data conservation/save-load remain open.
+
+The colony mech vision multiplier added on 11 October uses the existing shared
+Multiplayer settings binding and saved-session dictionary. Independent tests
+check its registration and exact float restoration; the single-player native
+fixture checks its sight refresh with Zombieland present. A native two-client
+change/save/rejoin check for this newly added setting remains outstanding.
