@@ -93,8 +93,18 @@ internal static class ThingVisibility
             allowMemory
             && !mobile
             && thing is not Corpse
-            && (observed ?? thing.TryGetComp<CompFog>()?.HideFromPlayer?.WasSeenBy(observerFaction))
-                == true;
+            && (
+                (
+                    observed
+                    ?? thing.TryGetComp<CompFog>()?.HideFromPlayer?.WasSeenBy(observerFaction)
+                ) == true
+                // Plain vanilla chunks cannot save an observation component.
+                // An existing haul order retains the player's explicit intent;
+                // the faction's known terrain still gates it below.
+                || thing is not ThingWithComps
+                    && thing.def.designateHaulable
+                    && map.designationManager.DesignationOn(thing, DesignationDefOf.Haul) != null
+            );
         // The queried cell belongs to the footprint, including when rendering
         // offsets it. Most queries are single-cell pawns/items; avoid building
         // their occupied rectangle, and finish remembered anchor hits here.

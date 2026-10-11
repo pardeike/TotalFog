@@ -8,6 +8,7 @@
 - Add settings to suppress combat music and mute hidden sound sources.
 - Include Anomaly music in combat music suppression, with normal music retained.
 - Delay Anomaly codex discovery and its notice until a player first sees the entity.
+- Keep existing haul orders for known vanilla chunks working after sight is lost.
 - Add an optional Silent Raids setting for enemy raid and manhunter arrival letters and slowdown, while preserving their spawning and normal combat slowdown.
 - Apply audio settings to already-running loops and restore their volume when filtering is disabled.
 - Calculate nearby audio from living listeners rather than previously explored terrain.

@@ -6505,3 +6505,38 @@ erased. Research and later progression retain the engine's behavior once
 discovery is allowed; this does not attempt to conceal every indirect gameplay
 or history-graph clue. Natural Heart performance, other entity lifecycles and
 native Multiplayer discovery remain outstanding.
+
+## Ordered vanilla chunks, 2026-10-11
+
+The same public engine version/MVID is used. Gameplay candidate SHA-256
+`ff09193cca1f19804a0c2750ab6503ca5684c21e1f99a57c8a33901edf960745`.
+All 341 independent tests pass with zero build warnings/errors.
+
+Vanilla stone chunks are plain `Verse.Thing` objects and cannot retain the
+observation component used by remembered objects. Before the fix, a staged
+native marble chunk accepts reservations and `HaulToCell` while seen. Moving
+the colonist beyond its actual sight range leaves the chunk known and its
+haul designation intact, but rejects both reservation checks and the haul job.
+Mortal's research-room save contains seven such chunk haul designations.
+The full save has not been validly reproduced locally because its additional
+mod dependencies are unavailable; the mismatched-load attempt was rejected.
+
+The common remembered-object policy now recognizes an existing haul order on
+a plain haulable thing, still requiring terrain known to the querying faction.
+It adds no saved state or polling. Native designation lookup uses the engine's
+per-thing dictionary and small designation list. Component-bearing objects still
+require their own observation, and current-sight queries do not use this exception.
+
+The same native staged scenario now accepts both reservation checks and the
+haul job while live visibility remains false. Removing the order blocks them;
+restoring it permits them. Starting the native job and advancing 1,000 ticks
+moves the chunk from `(5,0,5)` into the critical-priority stockpile at `(9,0,5)`
+and removes the completed designation. Native error logs remain empty.
+Unit controls also cover unknown terrain, absent orders, component-bearing
+items, separate faction knowledge and vanilla fog. No broad hidden-item fallback
+is introduced. Wider storage mods, automatic undesignated hauling and native
+Multiplayer hauling remain unverified.
+
+Evidence: `artifacts/hauling-native-before-20261011.json` and
+`artifacts/hauling-native-after-20261011.json`. These bounded functional controls
+do not establish a new whole-game performance acceptance.

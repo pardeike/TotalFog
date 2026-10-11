@@ -57,6 +57,7 @@ namespace Verse
         public DrawerType drawerType = DrawerType.RealtimeOnly;
         public bool hasTooltip;
         public bool IsBlueprint;
+        public bool designateHaulable;
         public ThingCategory category;
         public IntVec2 size = new(1, 1);
     }
@@ -119,6 +120,24 @@ namespace Verse
     }
 
     public class ThingWithComps : Thing { }
+
+    public class DesignationDef { }
+
+    public class Designation { }
+
+    public class DesignationManager
+    {
+        public readonly HashSet<Thing> HaulOrders = new();
+        public int Queries;
+
+        public Designation DesignationOn(Thing thing, DesignationDef def)
+        {
+            Queries++;
+            return def == RimWorld.DesignationDefOf.Haul && HaulOrders.Contains(thing)
+                ? new Designation()
+                : null;
+        }
+    }
 
     public class Building : ThingWithComps { }
 
@@ -203,6 +222,7 @@ namespace Verse
         }
 
         public FogGrid fogGrid = new();
+        public DesignationManager designationManager = new();
         public CellIndices cellIndices = new();
         public DynamicDrawManager dynamicDrawManager = new();
         public Tooltips tooltipGiverList = new();
@@ -508,6 +528,11 @@ namespace Unity.Collections
 
 namespace RimWorld
 {
+    public static class DesignationDefOf
+    {
+        public static readonly Verse.DesignationDef Haul = new();
+    }
+
     public static class GravshipUtility
     {
         public static bool PlayerHasGravEngine(Verse.Map map) => map.HasGravEngine;
