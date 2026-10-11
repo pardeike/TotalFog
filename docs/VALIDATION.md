@@ -6743,3 +6743,30 @@ are clean after restoring incidental tracked build output. Build and formatting
 checks pass. The full private read-back receipt is
 `artifacts/mortal-heart-delivery-20261011.json`. No full new performance
 acceptance or public Workshop release is claimed.
+
+### Corpse-work facing and Spitter feedback update, 11 October 2026
+
+Zombieland source `68bd325e` is pushed and fixes work-target facing for extract,
+Double Tap, chainsaw repair, shocker activation and roping. Its Spitter renderer
+stops wobbling while dead/downed, and stale incapacitated jobs cannot path,
+depart or spit. Total Fog gameplay is unchanged. Native Steam 1.6 with all DLCs
+and the pair gives 500 extraction, 555 Double Tap and 997 repair facing samples
+with zero failures, and successful completion. Shocker activation has 87 correct
+facing samples; its broader paralysis assertion stays unproved because another
+colonist kills the target first. The rope job completes. Active, forced-down,
+recovered and real-corpse Spitter controls pass, including 60 native ticks in
+each incapacitated state. Post-startup warnings/errors are empty, the unchanged
+base is reloaded, and the game is stopped. Full details and limits are owned by
+Zombieland's `TEST_SCENARIOS.md` and the ignored
+`artifacts/work-facing-native-20261011.json` receipt.
+
+`ZombieLand-5.6.3-work-preliminary.zip` is delivered privately as a complete,
+cumulative replacement including the prior Heart and Flee fixes and all active
+music/assets. Size 193,884,612 bytes; ZIP SHA-256
+`697ea95282d442724654f84a9f1e12cb4cd0ffb8a9e936e87af51c279dc7e328`.
+Gameplay SHA-256 is
+`16b8249481712bfaba87ba2cf5ed36cb581860ed2abcb4a6ec37e2df74ac098e`.
+The downloaded Discord attachment matches before the superseded Zombieland
+post is removed. The current Total Fog post remains. The read-back receipt is
+`artifacts/mortal-work-delivery-20261011.json`. Build, formatting and source
+checks pass; no fresh full performance gate or public Workshop release is claimed.

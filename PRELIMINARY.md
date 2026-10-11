@@ -43,6 +43,12 @@ It retains the earlier Flee option. The fleshbeasts and normal player-triggered
 alerts still happen. Keep the current Total Fog ZIP when applying this
 Zombieland-only update.
 
+The subsequent Zombieland work feedback ZIP retains those fixes and corrects
+facing during corpse work, chainsaw repair, shocker activation and roping.
+Dead or downed Spitters stop animating and their custom jobs cannot move or
+spit. Its bounded native checks and fixture limits are in the ZIP's own
+preliminary notes. Keep the same Total Fog ZIP for this update as well.
+
 ## What was checked
 
 All 347 independent Total Fog tests pass. Fresh native Mac RimWorld 1.6 checks
