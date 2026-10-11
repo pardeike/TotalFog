@@ -8,7 +8,56 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
-## New watchtower artwork prototype, 2026-10-11
+## New watchtower native prototypes, 2026-10-11
+
+### Solid footprint and native ladder access
+
+Andreas accepted the compact-deck design and fitted occupant position. The
+non-shipping companion now uses that artwork for an impassable 3x3 edifice with
+one native building/health value. Ordinary navigation cannot enter its center;
+only the explicit ladder job crosses the footprint. No pathfinding patches are
+installed. Each climb/descent takes 120 native game ticks, uses the native progress
+bar and interpolates the drawing toward the center/approach while facing travel.
+Rungs draw behind the pawn. Native walking tween state is reset at ladder entry.
+
+Formatting, all 347 independent tests and quiet deploy pass with zero build
+warnings/errors. Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the exact built/deployed companion is
+`9e9e8f2721eeb3218f2d5c1723f39c4994e56711d371504d37ab8020370f4a32`.
+Public Steam 1.6.4871, all five DLCs and TotalFogRegression pass 20 native checks
+from tick 1202 to 2762 (1,560 ticks), including:
+
+- All four solid footprints, exterior approaches and blocked ordinary center paths.
+- Blocked ladder rejection and native single-watcher reservations.
+- Timed ascent, center occupation, descent and return to accessible ground in
+  all four rotations; the intermediate ascent projection is checked against
+  its actual cell and job progress, with a 0.03-cell tolerance.
+- Interrupted ascent releases reservations and leaves the pawn at the approach.
+- A downed occupant remains spawned at the center; a rescuer climbs, picks it
+  up with the native carry tracker, descends and returns it to accessible ground.
+- The subsequent native Rescue job delivers the same pawn to the medical bed.
+- Native BlocksBreaching/ShouldBreachBuilding predicates accept the solid towers.
+- Both screenshot receipts are fully visible, and cleanup reloads the unchanged
+  named fixture without saving.
+
+Climbing and occupied pixels were inspected after the final rung-layer change.
+The captured error journal is empty. The native parent holder while standing is
+Verse.Map, with the pawn still registered in both the map pawn list and its cell;
+only ordinary rescue carrying uses Pawn_CarryTracker. The game was stopped.
+This is not a performance benchmark or a player-ready job. Immediate emergency
+interruption cleanup, blocked exits, automatic rescue discovery, save/load,
+climber occlusion, natural breacher raids, collapse, elevated sight and combat
+remain outstanding. The fixture explicitly orders the retrieval/bed handoff.
+
+The first rejected attempt assumed a spawned pawn's ParentHolder was null;
+native evidence shows Verse.Map. The second passed its semantic assertions but
+pixels revealed a stale walking tween, and its hand-created Rescue order emitted
+an invalid-count error. Both were corrected before accepting the final run.
+Their diagnostic manifests remain under `artifacts/watchtower-access-rejected*`.
+
+Evidence: `artifacts/watchtower-access-final-20261011.json` and
+`artifacts/UserData/Screenshots/tower-access-final-20261011-*__cell_rect.png`.
 
 ### Occupant standing point correction
 

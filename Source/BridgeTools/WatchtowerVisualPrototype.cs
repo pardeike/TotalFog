@@ -10,7 +10,7 @@ namespace TotalFog.BridgeTools;
 /// Test-only artwork. Native building and pawn objects stay on the map; no
 /// occupation, pathfinding, sight or combat rule is inferred from this drawing.
 /// </summary>
-public sealed class WatchtowerVisualPrototype : Building
+public class WatchtowerVisualPrototype : Building
 {
     internal const float PlatformProjection = 1.20f;
 
@@ -377,7 +377,9 @@ public sealed class WatchtowerVisualPrototype : Building
 
         private void Ladder()
         {
-            var target = Point(0, -1.65f, 0).z < 0 ? front : body;
+            // A climber is in front of the rungs. The platform railing remains
+            // in the foreground mesh; the ladder belongs below the native pawn.
+            var target = body;
             // Ladders remain timber even on a masonry tower in this first sketch.
             var color = stone ? new Color(.48f, .35f, .22f) : Shade(.86f);
             foreach (float x in new[] { -.27f, .27f })

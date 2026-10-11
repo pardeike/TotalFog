@@ -1,8 +1,9 @@
 # Watchtower design draft
 
-Status: accepted direction with wide and compact-deck rendering prototypes
-inspected in public 1.6 on 11 October 2026. This is an artwork review checkpoint.
-Gameplay is not implemented. This replaces the retired watchtower
+Status: compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
+shape, outlines, native wall joins and fitted occupant position. A separate
+non-shipping native access prototype now proves the solid footprint and ladder
+route; production gameplay is not implemented. This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types will belong to Total Fog.
 
@@ -52,12 +53,21 @@ Automatic staffing and schedules remain proposed, not requirements for the first
 implementation. Enemies and faction ownership must use the same occupation rules.
 Towers must not support roofs or become portable minified structures.
 
-The physical footprint is the first prototype question. A single native 3x3
-building normally applies its passability throughout its footprint, so an
-accessible center/ladder cannot be assumed from the artwork. Prove real entry,
-exit, pathfinding, rescue and breacher behavior before choosing the representation.
-Prefer one authoritative structural health value; avoid nine independently
-maintained building objects or a broad replacement of native pathfinding.
+The first footprint prototype uses one native impassable 3x3 edifice, with one
+authoritative structural health value. Ordinary navigation cannot enter its
+center. A ladder job paths to the exterior approach cell and animates ascent;
+the pawn's native logical position moves to the center at completed ascent,
+and back to the approach at completed descent. No native pathfinding is patched.
+The fixture proves that route in all four rotations, native reservations,
+blocked-entry rejection, retrieval and subsequent native rescue-to-bed.
+Native breaching predicates recognize it, but a natural breacher attack remains
+unverified. Avoid nine independently maintained building objects.
+
+The prototype is not the player job. It uses immediate emergency cleanup on
+interruption, not the required timed descent, and does not define what to do
+when an exit becomes blocked. These, automatic rescue discovery, persistence,
+death/destruction, drawing occlusion during climbing and final combat geometry
+must be addressed before moving it into gameplay.
 
 ## Sight and combat
 
@@ -244,3 +254,26 @@ projectile controls. Do not infer compatibility from successful vanilla sight.
 
 Do not begin full gameplay implementation until the footprint and combat choices
 have a reviewable, workable design. Optional balance extras can wait.
+
+### Native ladder access checkpoint
+
+The companion's `totalfog/watchtower_access` stages four solid towers, four
+native colonists and a rescuer/medical bed. Climbing and descent each take 120
+native game ticks (a prototype duration, not the final balance), with the native
+progress bar and direction of travel. Rendering reads job progress. A movement
+tween is reset at the start of the ladder phase, so prior walking does not offset
+the animation. The ladder's rungs draw behind the climbing pawn; the accepted
+shape and the platform's foreground railing remain unchanged.
+
+At the top, pawns remain spawned in native map/thing-grid registrations. They
+are not stored in a tower container. A downed occupant remains at the center;
+a rescuer uses the same ladder job, temporarily shares the center for pickup,
+then carries the victim down using RimWorld's ordinary carry tracker. After
+returning to accessible ground, the fixture orders native rescue to a medical
+bed and verifies completion. Production must combine that handoff into a single
+player order and support the native automatic rescue workflow.
+
+Twenty native checks pass over 1,560 game ticks in public 1.6.4871. This settles
+the basic access representation; it does not establish interrupted descents,
+blocked exits, save/load, collapse, elevated sight or combat. Exact proof and
+earlier rejected attempts are recorded in [VALIDATION.md](VALIDATION.md).

@@ -39,6 +39,13 @@ blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
+Use `totalfog/watchtower_access` for the separate non-shipping footprint/ladder
+prototype. It checks four solid 3x3 edifices, exterior approach pathfinding,
+120-tick native climbs/descents, reservations, blocked entry, interrupted-ascent
+cleanup and downed retrieval followed by native bed rescue. It reloads the
+unchanged named fixture after advancing native ticks. Its immediate interruption
+cleanup is not the required production descent policy. Automatic rescue, blocked
+exits, save/load, collapse, sight and combat remain unverified; see WATCHTOWER.md.
 Use `totalfog/watchtower_visuals` for the first new 3x3 tower artwork review.
 It stages eight test-only wood/granite native buildings and four native colonists,
 captures a combined overview and tight empty/occupied and straight/corner views,

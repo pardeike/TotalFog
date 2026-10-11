@@ -349,9 +349,10 @@ public sealed class PresentationScenarios
         }
     }
 
-    internal static void AssignHash(ThingDef def)
+    internal static void AssignHash<T>(T def)
+        where T : Def
     {
-        var used = new HashSet<ushort>(DefDatabase<ThingDef>.AllDefs.Select(d => d.shortHash));
+        var used = new HashSet<ushort>(DefDatabase<T>.AllDefs.Select(d => d.shortHash));
         for (int value = ushort.MaxValue; value > 0; value--)
             if (!used.Contains((ushort)value))
             {

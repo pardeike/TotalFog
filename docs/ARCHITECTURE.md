@@ -6,7 +6,8 @@ saves, settings, camera views and hardware. Kernel timings alone cannot establis
 whole-game performance. Do not add a feature that makes representative gameplay
 slower than the original mod.
 
-The replacement watchtower remains a [design draft](WATCHTOWER.md), not an
+The replacement watchtower has accepted artwork and a non-shipping native
+[ladder access prototype](WATCHTOWER.md). It is not yet a player building or an
 implemented source of elevated vision or combat behavior.
 
 ## Ownership

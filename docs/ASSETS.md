@@ -21,6 +21,10 @@ The native straight wood/corner granite examples add one/two batched draw calls.
 No third-party wall renderer or general performance acceptance is claimed.
 This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
+The access companion reuses the accepted meshes for a native ladder-job
+experiment. Rungs sit below the pawn's drawing layer so a front-facing ladder
+does not cross its body. Timed movement reads native job progress; climb-specific
+occlusion still needs review before the tower becomes a player building.
 
 Original Real Fog of War gameplay textures and assets retain their upstream
 Apache 2.0 attribution in NOTICE.md. The portable texture folder is loaded for

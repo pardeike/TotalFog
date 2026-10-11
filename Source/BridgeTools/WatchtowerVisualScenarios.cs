@@ -360,12 +360,21 @@ public sealed class WatchtowerVisualScenarios
     {
         if (prototypeDef != null)
             return;
-        prototypeDef = new ThingDef
+        prototypeDef = CreateDefinition(
+            "TotalFog_WatchtowerVisualPrototype",
+            typeof(WatchtowerVisualPrototype),
+            Traversability.Standable
+        );
+    }
+
+    internal static ThingDef CreateDefinition(string name, Type type, Traversability passability)
+    {
+        var definition = new ThingDef
         {
-            defName = "TotalFog_WatchtowerVisualPrototype",
-            label = "watchtower visual prototype",
-            description = "Test-only tower artwork. No sight or gameplay behavior.",
-            thingClass = typeof(WatchtowerVisualPrototype),
+            defName = name,
+            label = "watchtower prototype",
+            description = "Test-only tower. Not a player building or elevated sight source.",
+            thingClass = type,
             category = ThingCategory.Building,
             drawerType = DrawerType.RealtimeOnly,
             tickerType = TickerType.Never,
@@ -373,7 +382,7 @@ public sealed class WatchtowerVisualScenarios
             rotatable = true,
             selectable = true,
             useHitPoints = true,
-            passability = Traversability.Standable,
+            passability = passability,
             building = new BuildingProperties { isEdifice = true },
             stuffCategories = new List<StuffCategoryDef>
             {
@@ -396,8 +405,9 @@ public sealed class WatchtowerVisualScenarios
             },
             modContentPack = LoadedModManager.GetMod<TotalFogMod>().Content,
         };
-        PresentationScenarios.AssignHash(prototypeDef);
-        DefGenerator.AddImpliedDef(prototypeDef);
-        prototypeDef.ResolveReferences();
+        PresentationScenarios.AssignHash(definition);
+        DefGenerator.AddImpliedDef(definition);
+        definition.ResolveReferences();
+        return definition;
     }
 }
