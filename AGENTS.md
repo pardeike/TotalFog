@@ -40,8 +40,8 @@ screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
 Use `totalfog/watchtower_visuals` for the first new 3x3 tower artwork review.
-It stages six test-only wood/granite native buildings and four native colonists,
-captures tight cell rectangles for empty/occupied and straight/corner walls,
+It stages eight test-only wood/granite native buildings and four native colonists,
+captures a combined overview and tight empty/occupied and straight/corner views,
 checks all four ladder orientations, advances no ticks and reloads the unchanged
 named fixture. The drawing code and definitions stay in the companion. It proves
 visual geometry only, not climbing, placement, breaching, sight or combat.

@@ -19,7 +19,7 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render a test-only 3x3 tower sketch using native stuff, buildings, walls and colonists. Capture wood and granite empty/occupied pairs, a straight-wall tower and a corner tower through tight cell rectangles, plus the fourth ladder rotation. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
@@ -106,6 +106,8 @@ public sealed class WatchtowerVisualScenarios
                         AddTower(9, 9, granite, Rot4.East, true);
                         AddTower(4, 16, ThingDefOf.WoodLog, Rot4.South, true);
                         AddTower(13, 16, granite, Rot4.East, true);
+                        AddTower(15, 3, granite, Rot4.North, false);
+                        AddTower(15, 9, granite, Rot4.West, false);
                         // A straight perimeter wall meets both sides of the timber tower.
                         foreach (int dx in new[] { 0, 1, 2, 6, 7, 8 })
                             AddWall(dx, 16, ThingDefOf.WoodLog);
@@ -157,32 +159,13 @@ public sealed class WatchtowerVisualScenarios
                 cancellationToken
             );
 
+            await Capture("overview", 0, 0, 19, 21, 14);
             await Capture("wood-empty-occupied", 1, 1, 11, 6);
             await Capture("granite-empty-occupied", 1, 7, 11, 6);
             await Capture("wood-straight-wall", 0, 13, 9, 7);
             await Capture("granite-corner", 9, 13, 8, 8);
-            // North and west are not represented in the primary views.
-            await ctx.MainThread.InvokeAsync(
-                () =>
-                {
-                    var empty = drawings[2];
-                    empty.DeSpawn();
-                    GenSpawn.Spawn(empty, empty.Position, map, Rot4.North);
-                },
-                cancellationToken
-            );
-            await Capture("granite-north-ladder", 1, 7, 5, 6);
-            await ctx.MainThread.InvokeAsync(
-                () =>
-                {
-                    var empty = drawings[2];
-                    var cell = empty.Position;
-                    empty.DeSpawn();
-                    GenSpawn.Spawn(empty, cell, map, Rot4.West);
-                },
-                cancellationToken
-            );
-            await Capture("granite-west-ladder", 1, 7, 5, 6);
+            await Capture("granite-north-ladder", 13, 1, 5, 6);
+            await Capture("granite-west-ladder", 13, 7, 5, 6);
             await ctx.MainThread.InvokeAsync(
                 () =>
                 {
@@ -203,8 +186,8 @@ public sealed class WatchtowerVisualScenarios
                     );
                     manifest.assertions.Add(
                         RimBridgeEvidence.AreEqual(
-                            "six native 3x3 towers",
-                            6,
+                            "eight native 3x3 towers",
+                            8,
                             drawings.Count(t => t.Spawned && t.def.size == new IntVec2(3, 3))
                         )
                     );
@@ -240,7 +223,14 @@ public sealed class WatchtowerVisualScenarios
                 GenSpawn.Spawn(wall, new IntVec3(area.minX + dx, 0, area.minZ + dz), map);
             }
 
-            async Task Capture(string label, int dx, int dz, int width, int height)
+            async Task Capture(
+                string label,
+                int dx,
+                int dz,
+                int width,
+                int height,
+                float rootSize = 11
+            )
             {
                 var frame = await ctx.Tools.CallAsync(
                     "rimworld/frame_cell_rect",
@@ -251,7 +241,7 @@ public sealed class WatchtowerVisualScenarios
                         width,
                         height,
                         paddingCells = 1,
-                        rootSize = 11,
+                        rootSize,
                     },
                     cancellationToken: cancellationToken
                 );
@@ -267,7 +257,7 @@ public sealed class WatchtowerVisualScenarios
                         width,
                         height,
                         paddingCells = 0,
-                        rootSize = 11,
+                        rootSize,
                         fileName = evidenceLabel + "-" + label,
                         includeTargets = false,
                     },

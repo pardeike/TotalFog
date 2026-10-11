@@ -10,6 +10,31 @@ snapshot from later source commits.
 
 ## New watchtower artwork prototype, 2026-10-11
 
+### Combined comparison follow-up
+
+At Andreas's request, the companion now stages two extra empty granite towers
+for the north/west orientations instead of respawning the earlier east-facing
+tower. All eight sketches appear together in one native 19x21-cell screenshot
+at camera root size 14. The original six close-up views remain available.
+The overview was visually inspected; every tower and its ladder is in view,
+with straight/corner wall connections and four real native occupants.
+
+Formatting, all 347 tests and the quiet deploy pass with zero build warnings
+or errors. Built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the new built/deployed companion is
+`17414d97c3c8961abc852fed1bba27bfe9ed8ff0bed1540fcb1968ce964e6791`.
+Public Steam 1.6.4871 with all five DLCs passes seven capture receipts, eight
+native 3x3 building and native occupant checks, no tick advancement at 1202,
+cleanup and unchanged-fixture reload. Captured errors are empty. The game was
+stopped. One combined image was sent to Andreas's phone.
+
+Evidence: `artifacts/watchtower-overview-20261011.json` and
+`artifacts/UserData/Screenshots/tower-overview-20261011-overview__cell_rect.png`.
+No drawing proportions or tower gameplay changed. The smaller upper deck,
+native wall overlap and launch-cache ideas are proposals in WATCHTOWER.md;
+they are not established by this screenshot. The original checkpoint follows.
+
 The non-shipping `totalfog/watchtower_visuals` companion stages six native 3x3
 test-only buildings in wood and granite, four actual player colonists and native
 wall segments. It builds two colored meshes per tower on spawn, uses the engine's

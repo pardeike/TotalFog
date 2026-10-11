@@ -95,6 +95,41 @@ a corner and four ladder rotations. The rear ladder's overlap with the platform
 still needs refinement before animation. These are geometry sketches, not final
 artwork. See [VALIDATION.md](VALIDATION.md) for the exact tested pair.
 
+### Proposed smaller deck and native wall overlaps
+
+The 11 October design discussion proposes keeping the ground footprint and
+wall joins at 3x3, while narrowing the upper deck to roughly 1.2-1.4 cells.
+The railing would sit about 0.6-0.7 cells from the center, leaving room around
+the one-cell standing point. Slanted faces or timber supports join the wider
+base to that smaller deck. Exact proportions remain an artwork question;
+the combined eight-tower screenshot still shows the original wide-deck sketch.
+
+For wall appearance, prototype a short overlap generated from the actual adjacent
+wall's graphic, retaining its materials, texture coordinates, stuff tint and
+connection state. Prefer letting the opaque tower body hide the inner portion
+through draw order. If that does not fit the geometry, clip the cached vertices
+and interpolate their texture coordinates once when rebuilding the join. Do
+not replace the wall shader with a generic masking shader or create additional
+wall objects in the simulation.
+
+Public 1.6 source inspection confirms that Graphic_Linked.MatSingleFor resolves
+the connected material from the actual wall and its neighbours. A material-only
+copy does not include all geometry: Graphic_LinkedCornerFiller.Print adds extra
+corner planes. Graphic.Print and SectionLayer/MapDrawLayer provide a possible
+route for retaining the actual printed geometry and materials. This is a design
+proposal, not a native-tested join implementation or a compatibility guarantee.
+Mods with dynamic DrawAt rendering, animated shaders or external drawing patches
+need explicit checks before claiming support.
+
+Resolve reusable graphics after mod loading on the game thread. Build only the
+small set needed by the prototype or encountered tower/material combinations;
+do not eagerly generate every modded wall/stuff permutation. The exact join
+depends on neighbouring placed walls, so build it on tower spawn/load and
+invalidate it on relevant local wall or appearance changes. Rendering reads
+cached meshes and materials without rebuilding, scanning neighbours or allocating
+each frame. The current sketch already builds its two meshes once per spawn;
+it does not yet implement wall-overlap caching or a launch warmup.
+
 An empty tower provides no sight. Sleeping or downed occupants provide no elevated
 sight. Tower range scales with the lookout's ordinary sight capacities and
 weather/lighting rules. Proposed starting balance is about twice normal sight,
