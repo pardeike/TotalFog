@@ -19,7 +19,7 @@ public sealed class WatchtowerVisualScenarios
 
     [Tool(
         "totalfog/watchtower_visuals",
-        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares six clipped native-scale wall fronts with two unchanged controls. Optional silhouetteOutlines compares six reference-informed studies with broad shaded faces, soft bevels and outer contours beside those controls. Capture one combined overview plus tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
+        Description = "Render eight test-only 3x3 tower sketches using native stuff, buildings, walls and colonists. Default keeps the accepted design. Optional nativeFrontPieces compares clipped native-scale wall fronts; silhouetteOutlines uses broad shaded faces, soft bevels and outer contours. retainControls defaults true to keep two unchanged designs beside six studies; false applies the study to all eight and captures a larger overview. Also capture tight wood/granite empty/occupied, straight-wall, corner and four ladder rotation views. No climb, sight, combat or placement claim. Requires a paused named fixture, advances no game ticks and reloads that unchanged save. Test definitions and drawing code are excluded from player ZIPs."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
@@ -27,7 +27,8 @@ public sealed class WatchtowerVisualScenarios
         string saveName,
         string evidenceLabel,
         bool nativeFrontPieces = false,
-        bool silhouetteOutlines = false
+        bool silhouetteOutlines = false,
+        bool retainControls = true
     )
     {
         if (
@@ -125,11 +126,11 @@ public sealed class WatchtowerVisualScenarios
                     }
                     foreach (var tower in drawings)
                     {
-                        tower.SilhouetteOutlines =
-                            silhouetteOutlines && drawings.IndexOf(tower) is not (0 or 2);
+                        bool study = !retainControls || drawings.IndexOf(tower) is not (0 or 2);
+                        tower.SilhouetteOutlines = silhouetteOutlines && study;
                         // Keep the empty wood/granite examples as the accepted
                         // design so one overview compares it with the experiment.
-                        if (nativeFrontPieces && drawings.IndexOf(tower) is not (0 or 2))
+                        if (nativeFrontPieces && study)
                             tower.NativeFrontSource = owned.First(w =>
                                 w.def == ThingDefOf.Wall
                                 && w.Stuff == tower.Stuff
@@ -157,6 +158,7 @@ public sealed class WatchtowerVisualScenarios
                         prototypeOnly = true,
                         nativeFrontPieces,
                         silhouetteOutlines,
+                        retainControls,
                         outlineStudy = silhouetteOutlines
                             ? "broad shaded faces and soft beam bevels from Andreas's three building references"
                             : null,
@@ -190,7 +192,7 @@ public sealed class WatchtowerVisualScenarios
                 cancellationToken
             );
 
-            await Capture("overview", 0, 0, 19, 21, 14);
+            await Capture("overview", 0, 0, 19, 21, retainControls ? 14 : 12);
             await Capture("wood-empty-occupied", 1, 1, 11, 6);
             await Capture("granite-empty-occupied", 1, 7, 11, 6);
             await Capture("wood-straight-wall", 0, 13, 9, 7);
@@ -211,8 +213,8 @@ public sealed class WatchtowerVisualScenarios
                     if (silhouetteOutlines)
                         manifest.assertions.Add(
                             RimBridgeEvidence.AreEqual(
-                                "two accepted designs retained beside six silhouette-outline studies",
-                                6,
+                                "requested outline-study count",
+                                retainControls ? 6 : 8,
                                 drawings.Count(t => t.SilhouetteOutlines)
                             )
                         );
@@ -220,8 +222,8 @@ public sealed class WatchtowerVisualScenarios
                     {
                         manifest.assertions.Add(
                             RimBridgeEvidence.AreEqual(
-                                "two accepted designs retained beside six front-piece experiments",
-                                6,
+                                "requested native-front study count",
+                                retainControls ? 6 : 8,
                                 drawings.Count(t => t.HasNativeFront)
                             )
                         );

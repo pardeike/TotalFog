@@ -67,6 +67,8 @@ heavy outer contours, broad shaded faces, soft beam bevels and lighter native
 wall seams, informed by Andreas's three building references. Keep the accepted
 artwork as the default until Andreas accepts a change. This option adds no
 material passes; inspect the actual pixels rather than accepting mesh assertions.
+Set `retainControls=false` for a larger overview with the study on all eight
+towers; the default keeps two unchanged designs for comparisons.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland
