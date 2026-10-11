@@ -796,6 +796,7 @@ try:
                 "total-fog-16": "UserData",
                 "total-fog-ce-16": "CEUserData",
                 "total-fog-zombieland-16": "ZombielandUserData",
+                "total-fog-zombieland-fallback-16": "ZombielandFallbackUserData",
                 "total-fog-ce-zombieland-16": "CEZombielandUserData",
             }
             if profile not in profiles:

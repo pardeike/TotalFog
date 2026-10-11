@@ -6541,6 +6541,18 @@ Evidence: `artifacts/hauling-native-before-20261011.json` and
 `artifacts/hauling-native-after-20261011.json`. These bounded functional controls
 do not establish a new whole-game performance acceptance.
 
+The supplied subtitled clip is explicitly linked by the user to that same
+Hauling save. It shows hauling already prioritized over research and draft/
+undraft starting the haul. It does not show a hauling-priority increase or
+establish current sight from the remembered chunk drawing. On the delivered
+gameplay candidate `2603f99b...`, a native staged chunk remains known/designated
+but currently hidden; both reservation checks and native `HaulToCell` succeed.
+Generic draft/undraft obtains the job without assigning it through the fixture.
+Native playback completes the delivery after 2,172 ticks. The exact ongoing
+research job and full player mod list remain unreproduced. The private clip
+review and native receipts are in `hauling-video-review-20261011.json` and
+`heart-hauling-native-diagnostics-20261011.json` under ignored artifacts.
+
 ## Fleshmass Heart performance diagnostic, 2026-10-11
 
 The ordered-chunk candidate above is profiled through DPA in the isolated core
@@ -6693,3 +6705,29 @@ The full mod list and natural Heart history remain untested. There are no
 captured errors; existing import-time faction/precept repair warnings remain.
 Audio settings are restored, DPA is unpatched and the unchanged base reloaded.
 The complete local receipt is `heart-hearing-active-audio-20261011.json`.
+
+### Zombie-triggered Heart response alerts, 11 October 2026
+
+A Zombieland-only native battle identifies a separate notification bug: removing
+the zombie-triggered response letter afterward leaves native automatic pause,
+forced slowdown, alert sound and archive effects already applied. Zombieland
+now suppresses that exact letter before delivery and before Total Fog can queue
+it, while retaining native response beasts and player-triggered alerts.
+
+Zombieland gameplay `5d3fb1f7...` with unchanged Total Fog `2603f99b...` passes
+the updated 37-case direct contract both paired and without fog. A real player
+response still shows its letter and pauses according to native preferences.
+Unprofiled 60-zombie/two-Heart battles in both profiles complete at Superfast
+with no response letters; the paired pending queue remains zero. DPA attributes
+the small measured response bursts mainly to native beast creation. It does not
+establish sustained CPU cost in a mature field or the full player loadout.
+
+A separate mass-object teardown logs native region rebuild errors; that result
+is retained and excluded from the clean log gate. Battles observed without
+object teardown, then discarded by loading the unchanged base, have clean
+post-startup journals in both profiles. The exact teardown cause remains open.
+Full native counts, operation IDs and profiling limits are owned by Zombieland's
+`TEST_SCENARIOS.md`; the private receipt is
+`artifacts/heart-response-alert-diagnostics-20261011.json`. DPA is removed from
+both isolated profiles, and test games are stopped. This is a Zombieland fix;
+the previously delivered Total Fog gameplay bytes remain unchanged.
