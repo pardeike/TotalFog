@@ -352,9 +352,22 @@ public sealed class PerformanceScenarios
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         int durationMs = 8000,
-        string speed = "Ultrafast"
+        string speed = "Ultrafast",
+        string audioMode = "existing"
     )
     {
+        if (
+            audioMode
+            is not ("existing" or "unfiltered" or "hearing" or "hidden-mute" or "mute-and-hearing")
+        )
+            throw new ArgumentException(
+                "Use existing, unfiltered, hearing, hidden-mute or mute-and-hearing.",
+                nameof(audioMode)
+            );
+        var originalAudio = await ctx.MainThread.InvokeAsync(
+            () => (FogSettings.MuteHiddenSounds, FogSettings.DoAudioCheck),
+            cancellationToken
+        );
         var status = await ctx.Tools.CallAsync(
             "rimworld/dpa_status",
             new { includePresets = false },
@@ -373,6 +386,20 @@ public sealed class PerformanceScenarios
             };
         try
         {
+            if (audioMode != "existing")
+                await ctx.MainThread.InvokeAsync(
+                    () =>
+                    {
+                        FogSettings.MuteHiddenSounds =
+                            audioMode is "hidden-mute" or "mute-and-hearing";
+                        FogSettings.DoAudioCheck = audioMode is "hearing" or "mute-and-hearing";
+                    },
+                    cancellationToken
+                );
+            var sampledAudio = await ctx.MainThread.InvokeAsync(
+                () => new { FogSettings.MuteHiddenSounds, FogSettings.DoAudioCheck },
+                cancellationToken
+            );
             var reset = await ctx.Tools.CallAsync(
                 "rimworld/dpa_reset",
                 new { },
@@ -407,6 +434,8 @@ public sealed class PerformanceScenarios
             return new
             {
                 success = snapshot.Succeeded(),
+                audioMode,
+                sampledAudio,
                 playback,
                 snapshot = snapshot.Result,
                 snapshot.Error,
@@ -414,6 +443,13 @@ public sealed class PerformanceScenarios
         }
         finally
         {
+            await ctx.MainThread.InvokeAsync(
+                () =>
+                {
+                    (FogSettings.MuteHiddenSounds, FogSettings.DoAudioCheck) = originalAudio;
+                },
+                CancellationToken.None
+            );
             var stop = await ctx.Tools.CallAsync(
                 "rimworld/dpa_stop",
                 new { },

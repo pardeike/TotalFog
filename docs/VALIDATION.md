@@ -6606,3 +6606,37 @@ complete quest-generation/acceptance flow, prove natural cargo/quest deliveries,
 validate modded pod producers or establish new Multiplayer/performance acceptance.
 Native evidence is kept locally in `pod-native-before-20261011.json` and
 `pod-native-after-20261011.json`; companion instrumentation is excluded from ZIPs.
+
+
+The cumulative preliminary Total Fog ZIP was delivered after these controls. Its
+remote download is byte-identical to the local package and contains the native-
+tested gameplay DLL. The superseded Total Fog post was removed only after that
+read-back; other mod downloads were retained. ZIP SHA-256:
+`e3ed00d0620535ed8106fd8823627932d75d35d811b647de81ae3e60b5d9b19d`.
+
+### Mature Fleshmass geometry diagnostics, 11 October 2026
+
+Mortal's public 1.6 before/after saves contain 3,133 active mass objects after the
+Heart appears. The full 46-mod loadout is not installed, so these results do not
+reproduce his colony. The companion imports only the native Heart, mass, three
+nerve bundles and one spitter into the unchanged isolated fixture. It rejects
+pawn/player-object overlaps before spawning. The tested offset is (-47, 34),
+with 3,158 connected native cells. Saved growth schedules, tendrils and colony
+state are not restored; this is a geometry diagnostic, not an aged-save replay.
+
+A wide camera covers 50,750 cells. With Total Fog and Zombieland, an eight-second
+Normal sample advances 476 ticks, with mean frame time 17.29 ms and p95 21.81 ms.
+There are no zombies in that fixture. The native Heart row costs 0.00042 ms per
+frame, Total Fog's pawn visibility row 0.288 ms and fog drawing 0.085 ms. These
+inclusive DPA rows overlap and must not be summed. Native errors are absent and
+DPA instrumentation is stopped/cleaned afterward.
+
+The separate core-only sample uses a different window resolution and cannot be
+compared as a Zombieland performance result. Its forced Ultrafast diagnostic uses
+the bridge's private multiplier and does not establish ordinary fourth-speed
+throughput. No paired upstream/candidate acceptance was performed for this build.
+Native evidence remains in the ignored `heart-mature-dpa-20261011.json` and
+`heart-mature-zombieland-dpa-20261011.json`. The reported slowdown remains open;
+sustained hidden audio and natural growth are not yet established by these runs.
+The companion can select temporary audio policies for a traced interval and
+restores both audio flags in its cleanup path.
