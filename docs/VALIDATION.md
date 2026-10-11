@@ -6540,3 +6540,26 @@ Multiplayer hauling remain unverified.
 Evidence: `artifacts/hauling-native-before-20261011.json` and
 `artifacts/hauling-native-after-20261011.json`. These bounded functional controls
 do not establish a new whole-game performance acceptance.
+
+## Fleshmass Heart performance diagnostic, 2026-10-11
+
+The ordered-chunk candidate above is profiled through DPA in the isolated core
+profile. A staged native hidden Heart grows over 2,243 forced fourth-speed ticks.
+The retained DPA window contains its last 2,000 ticks. Inclusive fog component
+tick cost averages 0.090 ms/tick; sight refresh averages 0.044 ms/tick within that
+work. These overlapping figures must not be added. This instrumented forced-speed
+sample is diagnostic, not ordinary player TPS acceptance or a baseline comparison.
+
+Two eight-second Normal update samples cover hidden and then revealed growth at
+the same far camera, root size 55.32, with 15,836 visible map cells including the
+Heart's area. Inclusive root update averages 6.04 and 5.95 ms/frame; common thing
+visibility queries average 0.167 and 0.157 ms/frame. Neither reproduces the reported
+severe slowdown. The second sample advances the existing scene and adds a native
+player ghoul, so the difference is not a controlled before/after improvement.
+Native errors remain empty. DPA is confirmed unpatched/stopped, the game is stopped,
+and DPA is removed from the isolated profile afterward.
+
+Evidence: `artifacts/heart-dpa-tick-20261011.json` and
+`artifacts/heart-dpa-update-20261011.json`. Full incident emergence, a mature mass,
+Mortal's complete loadout and his reported slowdown remain open. A save from the
+slowdown and whether it affects FPS, ticks or both have been requested privately.
