@@ -36,6 +36,7 @@ public class TotalFogMod : Mod
         harmony = new Harmony("brrainz.totalfog");
         Compatibility.LegacySaveTypes.Install(harmony);
         injectDetours();
+        Watchtowers.WatchtowerPatches.Install(harmony);
     }
 
     public TotalFogMod(ModContentPack content)

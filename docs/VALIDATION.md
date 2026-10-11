@@ -7229,3 +7229,31 @@ The downloaded Discord attachment matches before the superseded Zombieland
 post is removed. The current Total Fog post remains. The read-back receipt is
 `artifacts/mortal-work-delivery-20261011.json`. Build, formatting and source
 checks pass; no fresh full performance gate or public Workshop release is claimed.
+
+## 2026-10-12 — first production watchtower checkpoint
+
+Public Steam 1.6.4871, all five DLCs, Harmony, Total Fog and RimBridgeServer;
+paused TotalFogRegression. `totalfog/watchtower_gameplay` passes 28 native
+checks, including all four rotations, timed drafted-order interruption,
+freestanding-wall sight, opaque roofs/removal, disabled platform shooting,
+native incoming/outgoing bullet damage over a low wall, native ladder rescue
+and bed handoff, and collapse injury/ejection. The unchanged fixture is reloaded
+and the game stopped. Close/root-size-35 captures have been inspected; labels
+and the selection bracket follow the raised pawn. Root-size 35 uses native
+cached pawn rendering. This is presentation coverage, not performance evidence.
+
+Gameplay SHA-256 `1d66ad7cc6bc99120fc5fba4b08ec6514d9377c2d0b217f5112baa3d949f37a7`;
+companion `3ebebee3a195503c83cf15a39e4e361694432aa9b233864148b89fb5b1cc9733`.
+Receipt `artifacts/tower-gameplay-third-20261012.json`. The preceding failed
+run retains its rescue failure in `artifacts/tower-gameplay-second-20261012.json`:
+native bed searching began from the patient inside the solid edifice; the
+production patch changes only the two native search roots to ladder ground.
+Earlier startup attempts also exposed and fixed overload selection, fallback
+texture, the holdsRoof XML location and unintended native SectionLayer discovery.
+These failures are not passing acceptance evidence.
+
+Remaining: climb/flight save-load, interrupted/blocked/rescuer transitions,
+death/corpse and automatic rescue discovery, target acquisition, melee/tall
+obstacle/shield/other-projectile controls, muzzle/impact/camera-edge projection,
+natural breaching, lightning, optional mod/Multiplayer checks and a small normal
+versus wide performance sample. No Steam release or feedback ZIP is claimed.

@@ -34,6 +34,10 @@ a wild boar or something much worse. To be safe, you have to look.
 - Surveillance cameras: on posts, on walls, under roofs, hidden in bushes, or solar
   powered. Watch them from a camera console.
 - A watch telescope doubles the sight range of pawns standing on it.
+- An experimental 3x3 watchtower has a timed ladder and room for one lookout.
+  Its lookout sees over freestanding walls, while roofs, mountains and other
+  towers block the view. Shooting from it is off by default. Tower testing is
+  still in progress; existing old towers remain retired.
 - Better cameras and the telescope come with research.
 
 Inspector animals, security bells, light beacons and the old watchtowers are

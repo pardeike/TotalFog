@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>TotalFog_Watchtower</defName>
+    <label>watchtower</label>
+    <description>A solid, three-cell-wide watchtower with room for one lookout. Colonists climb its ladder to see over freestanding walls. Roofed rooms, mountains and other towers block its view. The exposed lookout is easier to shoot. An occupied tower must be emptied before deconstruction; destruction can injure its occupant.</description>
+    <thingClass>TotalFog.Watchtowers.Building_Watchtower</thingClass>
+    <size>(3,3)</size>
+    <rotatable>true</rotatable>
+    <drawerType>RealtimeOnly</drawerType>
+    <tickerType>Never</tickerType>
+    <altitudeLayer>BuildingOnTop</altitudeLayer>
+    <passability>Impassable</passability>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <holdsRoof>false</holdsRoof>
+    <designationCategory>Security</designationCategory>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <costStuffCount>150</costStuffCount>
+    <stuffCategories>
+      <li>Woody</li>
+      <li>Stony</li>
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/Linked/WallSmooth_MenuIcon</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>Cutout</shaderType>
+      <drawSize>(3,3)</drawSize>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>450</MaxHitPoints>
+      <WorkToBuild>6000</WorkToBuild>
+      <Mass>150</Mass>
+      <Flammability>1</Flammability>
+      <Beauty>0</Beauty>
+    </statBases>
+    <building>
+      <isEdifice>true</isEdifice>
+      <ai_chillDestination>false</ai_chillDestination>
+      <canBuildNonEdificesUnder>false</canBuildNonEdificesUnder>
+      <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+    </building>
+    <placeWorkers>
+      <li>TotalFog.Watchtowers.PlaceWorker_Watchtower</li>
+    </placeWorkers>
+  </ThingDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerWatch</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Watching from TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerDescend</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Climbing down TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerRetrieve</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Retrieving TargetC from TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <WorkGiverDef>
+    <defName>TotalFog_WatchtowerRescue</defName>
+    <label>rescue watchtower occupant</label>
+    <giverClass>TotalFog.Watchtowers.WorkGiver_WatchtowerRescue</giverClass>
+    <workType>Doctor</workType>
+    <verb>rescue</verb>
+    <gerund>rescuing</gerund>
+    <priorityInType>61</priorityInType>
+    <directOrderable>false</directOrderable>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+</Defs>

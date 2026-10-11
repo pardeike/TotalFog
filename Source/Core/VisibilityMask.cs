@@ -32,6 +32,14 @@ public sealed class VisibilityMask
 
     public void Add(int index) => AddCell(index % mapWidth, index / mapWidth);
 
+    public void Remove(int index)
+    {
+        int x = index % mapWidth - minX;
+        int z = index / mapWidth - minZ;
+        if ((uint)x < width && (uint)z < height)
+            words[z * wordsPerRow + (x >> 6)] &= ~(1UL << (x & 63));
+    }
+
     public void AddCell(int x, int z)
     {
         x -= minX;

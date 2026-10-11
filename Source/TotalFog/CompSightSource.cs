@@ -28,6 +28,7 @@ public class CompSightSource : FogSubcomponent
         nextHearing,
         lastMovement;
     private bool setup;
+    private Watchtowers.Building_Watchtower elevatedTower;
     public int LastSightRange { get; private set; }
     internal LinkedListNode<CompSightSource> PendingRefresh;
 
@@ -151,6 +152,10 @@ public class CompSightSource : FogSubcomponent
             peekDirections = null;
             return;
         }
+        var tower = pawn == null ? null : Watchtowers.TowerPresentation.TowerFor(pawn);
+        var elevated = tower?.ProvidesSight == true ? tower : null;
+        forceUpdate |= elevatedTower != elevated || elevated?.SightDirty == true;
+        elevatedTower = elevated;
         int radius =
             modifier == 0
                 ? -1
@@ -159,7 +164,13 @@ public class CompSightSource : FogSubcomponent
                         ? CalcPawnSightRange(parent.Position, false, false) * modifier
                         : BuildingRange()
                 );
-        var peeking = GetPeeking();
+        if (elevated != null && radius > 0)
+            radius = TowerGeometry.SightRadius(
+                radius,
+                FogSettings.TowerVisionMultiplier,
+                FogSettings.TowerMaxSightRange
+            );
+        var peeking = elevated == null ? GetPeeking() : null;
         if (
             !forceUpdate
             && position == parent.Position
@@ -199,9 +210,16 @@ public class CompSightSource : FogSubcomponent
                 position.x,
                 position.z,
                 radius,
-                fog.viewBlockerCells,
+                elevated == null ? fog.viewBlockerCells : elevated.SightWindow(rect),
                 next
             );
+            if (elevated != null)
+            {
+                foreach (var cell in rect)
+                    if (cell.Roofed(map))
+                        next.Remove(map.cellIndices.CellToIndex(cell));
+                elevated.SightDirty = false;
+            }
             if (peeking != null)
                 CastPeeking(rect, radius, peeking);
         }

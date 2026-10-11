@@ -1,3 +1,4 @@
+- Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
 - Keep splitting fleshbeasts hidden while they fly through unrevealed terrain.
 - Check walking pawns at their drawn position so crossing a sight boundary does not reveal a pawn still outside view.
 - Correct hidden-pawn visibility after landing, transport, or respawning.

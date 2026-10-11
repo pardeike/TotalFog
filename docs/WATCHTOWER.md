@@ -1,14 +1,46 @@
 # Watchtower design draft
 
-Status: compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
+Status: first production gameplay checkpoint on 12 October 2026, following the
+compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
 default. Native-scale wall-front pieces remain a separate optional experiment.
 A separate
-non-shipping native access prototype now proves the solid footprint and ladder
-route; production gameplay is not implemented. This replaces the retired watchtower
+non-shipping native access prototype is retained as a historical control. The
+new production definition, ladder jobs, elevated sight and ordinary bullet policy
+pass the first 28-check native suite. Persistence, further presentation/combat
+edges, weather, compatibility and performance acceptance remain outstanding.
+This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
-The new definition and runtime types will belong to Total Fog.
+The new definition and runtime types belong to Total Fog.
+
+## Production checkpoint
+
+`TotalFog_Watchtower` is the new, solid 3x3 stuff building. Legacy saved towers
+keep their old footprints and remain retired. Defaults are a 2x pawn sight
+multiplier, a 96-cell sight cap, 120 ticks per full climb/descent and shooting
+disabled. All four values are settings and use the existing Multiplayer settings
+registration. The defaults are provisional until the bounded performance check.
+
+`totalfog/watchtower_gameplay` exercises the actual player definition and job,
+not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
+28 checks, including four ladder rotations, timed descent after a drafted move,
+opaque roofs, shooting disabled, native incoming/outgoing bullet damage across
+a freestanding wall, ladder rescue followed by native bed rescue, and collapse.
+Close and wider captures show raised pawn labels and selection brackets. The
+native bed search keeps its own preferences and validation, using the ladder
+approach as its reachability search root for an elevated patient.
+
+Rendering projects the native pawn only in drawing/UI calls. Projectile
+interception uses a separate height rule and keeps `ExactPosition` in native
+map space. Own-footprint exemptions use private sight windows. Native wall
+geometry is captured through an existing native layer object; no custom
+SectionLayer is registered in every map section. The original control artwork
+remains in the companion.
+
+This checkpoint is not a release or complete tower acceptance. Record remaining
+cases and their actual evidence below rather than inferring them from the first
+suite.
 
 ## Requested behavior
 

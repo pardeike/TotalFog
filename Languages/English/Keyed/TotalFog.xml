@@ -33,4 +33,21 @@
   <TotalFog_PrisonerVisionDesc>Colony prisoners provide vision at one fifth of their normal range.</TotalFog_PrisonerVisionDesc>
   <TotalFog_MapRevealDesc>Mark terrain as explored when a map initializes. This does not provide current sight.</TotalFog_MapRevealDesc>
   <TotalFog_HearingRangeDesc>Maximum distance in tiles for indicators of nearby hidden movement.</TotalFog_HearingRangeDesc>
+  <TotalFog_Watchtowers>Watchtowers</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Lookout sight multiplier</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Multiply the lookout's ordinary sight range when standing on the platform. Roofed rooms, mountains and other towers block this view.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Maximum lookout sight range</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Limit lookout vision to this many tiles.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Ladder climb time in ticks</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Time for a full climb up or down. Sixty ticks is one game second.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Allow shooting from watchtowers</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Lookouts can shoot over freestanding walls. They are exposed to incoming fire and cannot attack ground targets in melee.</TotalFog_TowerShootingDesc>
+  <TotalFog_TowerOccupied>Occupant: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Watch from tower</TotalFog_TowerWatch>
+  <TotalFog_TowerDescend>Climb down</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Retrieve tower occupant</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>occupied or ladder inaccessible</TotalFog_TowerUnavailable>
+  <TotalFog_TowerBlockedLadder>The ladder needs a clear approach cell.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>A watchtower needs open sky.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>The watchtower must be empty before deconstruction.</TotalFog_TowerEmptyFirst>
 </LanguageData>

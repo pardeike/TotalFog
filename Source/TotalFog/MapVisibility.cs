@@ -243,6 +243,7 @@ public class MapVisibility : MapComponent
             wasTree = treeBlockerCells[index];
         treeBlockerCells[index] = treeBlockers[index] > 0;
         viewBlockerCells[index] = wallBlockers[index] > 0 || treeBlockerCells[index];
+        map.GetComponent<Watchtowers.MapComponent_Watchtowers>().CellChanged(cell);
         if (
             !Initialized
             || wasBlocked == viewBlockerCells[index] && wasTree == treeBlockerCells[index]

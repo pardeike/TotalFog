@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using CaptureLayer = Verse.SectionLayer_ThingsGeneral;
 
-namespace TotalFog.BridgeTools;
+namespace TotalFog.Watchtowers;
 
-/// <summary>Cached, test-only fragments of native wall Print geometry.</summary>
+/// <summary>Cached fragments of native wall Print geometry.</summary>
 internal sealed class WatchtowerWallJoins
 {
     private const float SideInnerAtCenter = 1.34f;
@@ -17,7 +18,7 @@ internal sealed class WatchtowerWallJoins
     internal bool HasGeometry => VertexCount() > 0;
     internal float MappingError { get; private set; }
 
-    internal WatchtowerWallJoins(WatchtowerVisualPrototype tower)
+    internal WatchtowerWallJoins(WatchtowerGraphic tower)
     {
         var section = tower.Map.mapDrawer.SectionAt(tower.Position);
         layer = new CaptureLayer(section);
@@ -86,7 +87,7 @@ internal sealed class WatchtowerWallJoins
     // Separate artwork experiment. The source is a real straight native wall.
     // Copy its front band at native map scale, using translation and clipping
     // only. The accepted tower remains the default and its deck is unchanged.
-    internal WatchtowerWallJoins(WatchtowerVisualPrototype tower, Thing wall, Vector3[] face)
+    internal WatchtowerWallJoins(WatchtowerGraphic tower, Thing wall, Vector3[] face)
     {
         var section = tower.Map.mapDrawer.SectionAt(tower.Position);
         layer = new CaptureLayer(section);
@@ -324,13 +325,5 @@ internal sealed class WatchtowerWallJoins
             );
 
         internal Vertex Move(Vector3 shift) => new(position + shift, uv, uvTwo, color, normal);
-    }
-
-    private sealed class CaptureLayer : SectionLayer
-    {
-        internal CaptureLayer(Section section)
-            : base(section) { }
-
-        public override void Regenerate() { }
     }
 }

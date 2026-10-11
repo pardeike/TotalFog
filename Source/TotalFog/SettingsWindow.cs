@@ -183,6 +183,30 @@ public partial class FogSettings
             2f,
             "TotalFog_ColonyMechVisionDesc"
         );
+        Section(row, "TotalFog_Watchtowers");
+        Range(
+            row,
+            "TotalFog_TowerVision",
+            ref TowerVisionMultiplier,
+            1f,
+            3f,
+            "TotalFog_TowerVisionDesc"
+        );
+        Range(
+            row,
+            "TotalFog_TowerRange",
+            ref TowerMaxSightRange,
+            30,
+            120,
+            "TotalFog_TowerRangeDesc"
+        );
+        Range(row, "TotalFog_TowerClimb", ref TowerClimbTicks, 60, 300, "TotalFog_TowerClimbDesc");
+        Check(
+            row,
+            "TotalFog_TowerShooting",
+            ref TowerShootingAllowed,
+            "TotalFog_TowerShootingDesc"
+        );
         Section(row, "TotalFog_AdditionalObservers");
         Check(row, "allyGiveVision", ref AllyGiveVision, "TotalFog_AllyVisionDesc");
         Check(row, "prisonerGiveVision", ref PrisonerGiveVision, "TotalFog_PrisonerVisionDesc");
@@ -402,6 +426,10 @@ public partial class FogSettings
         TurretVisionModifier = .7f;
         AnimalVisionModifier = .5f;
         ColonyMechVisionModifier = 1f;
+        TowerVisionMultiplier = 2f;
+        TowerMaxSightRange = 96;
+        TowerClimbTicks = 120;
+        TowerShootingAllowed = false;
         HideSpeakBubble = false;
         AISmart = false;
         NeedWatcher = true;
