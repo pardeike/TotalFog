@@ -6,6 +6,8 @@
 - Keep renderer registration under the game's ownership, including held and flying pawns.
 - Preserve deferred letters and messages across saves, including their original sounds and targets.
 - Add settings to suppress combat music and mute hidden sound sources.
+- Include Anomaly music in combat music suppression, with normal music retained.
+- Delay Anomaly codex discovery and its notice until a player first sees the entity.
 - Add an optional Silent Raids setting for enemy raid and manhunter arrival letters and slowdown, while preserving their spawning and normal combat slowdown.
 - Apply audio settings to already-running loops and restore their volume when filtering is disabled.
 - Calculate nearby audio from living listeners rather than previously explored terrain.

@@ -53,6 +53,7 @@ namespace Verse
 
     public class ThingDef
     {
+        public RimWorld.EntityCodexEntryDef entityCodexEntry;
         public DrawerType drawerType = DrawerType.RealtimeOnly;
         public bool hasTooltip;
         public bool IsBlueprint;
@@ -130,6 +131,7 @@ namespace Verse
 
     public class Pawn : ThingWithComps
     {
+        public bool IsMutant;
         public bool Dead;
         public bool IsPrisonerOfColony;
         public Faction HostFaction = Faction.PrimaryPlayer;
@@ -370,6 +372,7 @@ namespace Verse
 
     public static class Find
     {
+        public static RimWorld.EntityCodex EntityCodex = new();
         public static Selector Selector = new();
         public static TickManager TickManager = new();
         public static FactionManager FactionManager = new();
@@ -381,6 +384,7 @@ namespace Verse
 
     public static class ModsConfig
     {
+        public static bool AnomalyActive;
         public static bool OdysseyActive;
         public static readonly HashSet<string> Active = new(
             System.StringComparer.OrdinalIgnoreCase
@@ -706,6 +710,7 @@ namespace TotalFog
 
     public class FogSettings : Verse.ModSettings
     {
+        public static bool SuppressCombatMusic = true;
         public static int BaseViewRange = 60;
         public static float BuildingVisionModifier = 1;
         private static bool treesBlockSightValue = false;

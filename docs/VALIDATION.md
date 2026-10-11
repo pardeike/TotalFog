@@ -6465,3 +6465,43 @@ Evidence: `artifacts/multiplayer-startup/native-blocker-bursts.json`,
 does not establish construction work jobs, explosion destruction, large bursts
 or load spikes, active-blocker save/rejoin, autonomous raids, cross-platform
 behavior or overall Multiplayer compatibility.
+
+## Anomaly discovery and music, 2026-10-11
+
+Public Steam 1.6.4871 rev597, engine MVID
+`967ddb80559449f0a776dafa26a855d1`. Gameplay candidate SHA-256
+`86f9e8ab6d32b256905b3cbb24eb7a2b85cfa9cab173fcf4c0839d4a99964dc6`.
+The quiet build/package checks pass all 335 independent tests.
+
+The native codex previously discovered a spawned entity on explored terrain
+before Total Fog allowed it to be seen. Its journal flag, discovery message,
+research letter and native progression signal originate in `EntityCodex.SetDiscovered`.
+That call now waits for current sight from a player faction. The existing first
+observation callback retries native discovery; no per-tick codex scan, saved
+pending queue, or custom letter is introduced. Entries intended to start known
+and mapless discoveries retain the native path.
+
+In the core profile, a native Fleshmass Heart remains unseen and undiscovered
+for 650 ticks, then through a saved hidden-state reload. A player ghoul's native
+sight reveals it and immediately discovers its entry. The actual native
+`HorrorRelaxTransition` reports true with the music option off and false with
+it on, even while that Heart is hidden. All six native Anomaly workers call
+the patched base transition condition. Independent tests cover each worker,
+forced-transition suppression and clearing an existing Anomaly sequence.
+Native clearing/forced-transition behavior has not yet been exercised.
+
+For the research-letter control, a copied hidden-Heart fixture has only its
+native `highestLevelReached` set to 1 to enable Anomaly study. A Golden Cube
+stays undiscovered and sends no letter over 650 hidden ticks. First sight adds
+the entry; after another 650 native ticks exactly one native discovery letter
+is live and archived. The seen-state reload retains one letter. Native error
+logs are empty throughout these successful controls. They exercise staged
+objects and actual sight, codex, music and letter execution, not a full natural
+incident or a performance benchmark.
+
+Evidence: `artifacts/anomaly-discovery-native-20261011.json` and
+`artifacts/anomaly-letter-native-20261011.json`. Existing discoveries are not
+erased. Research and later progression retain the engine's behavior once
+discovery is allowed; this does not attempt to conceal every indirect gameplay
+or history-graph clue. Natural Heart performance, other entity lifecycles and
+native Multiplayer discovery remain outstanding.

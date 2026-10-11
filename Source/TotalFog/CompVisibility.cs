@@ -163,5 +163,6 @@ public class CompVisibility : FogSubcomponent
         }
         else
             (otherObserverFactionIds ??= new()).Add(faction.loadID);
+        Notifications.EntityDiscovery.Observed(parent);
     }
 }

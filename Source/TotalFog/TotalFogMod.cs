@@ -538,6 +538,44 @@ public class TotalFogMod : Mod
             )
         );
 
+        harmony.Patch(
+            AccessTools.Method(
+                typeof(MusicTransition),
+                nameof(MusicTransition.IsTransitionSatisfied)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.TransitionPrefix)
+            )
+        );
+        harmony.Patch(
+            AccessTools.Method(typeof(MusicManagerPlay), nameof(MusicManagerPlay.CheckTransitions)),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.CheckTransitionsPrefix)
+            )
+        );
+        harmony.Patch(
+            AccessTools.Method(
+                typeof(MusicManagerPlay),
+                nameof(MusicManagerPlay.ForceTriggerTransition)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.ForceTransitionPrefix)
+            )
+        );
+        harmony.Patch(
+            AccessTools.Method(
+                typeof(EntityCodex),
+                nameof(EntityCodex.SetDiscovered),
+                [typeof(EntityCodexEntryDef), typeof(ThingDef), typeof(Thing)]
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Notifications.EntityDiscovery),
+                nameof(Notifications.EntityDiscovery.DiscoverPrefix)
+            )
+        );
         Compatibility.GravshipVisibility.Install(harmony);
     }
 

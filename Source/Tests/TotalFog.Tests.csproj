@@ -20,6 +20,8 @@
     <Compile Include="../TotalFog/Visibility.cs" Link="Production/Visibility.cs" />
     <Compile Include="../TotalFog/Notifications/NotificationVisibility.cs" Link="Production/NotificationVisibility.cs" />
     <Compile Include="../TotalFog/Notifications/SilentRaidPolicy.cs" Link="Production/SilentRaidPolicy.cs" />
+    <Compile Include="../TotalFog/Notifications/EntityDiscovery.cs" Link="Production/EntityDiscovery.cs" />
+    <Compile Include="../TotalFog/Audio/MusicVisibility.cs" Link="Production/MusicVisibility.cs" />
     <Compile Include="../TotalFog/Presentation/DynamicVisibility.cs" Link="Production/DynamicVisibility.cs" />
     <Compile Include="../TotalFog/Presentation/CustomRenderVisibility.cs" Link="Production/CustomRenderVisibility.cs" />
     <Compile Include="../TotalFog/Presentation/CustomInspectionCell.cs" Link="Production/CustomInspectionCell.cs" />

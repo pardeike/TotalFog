@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <LanguageData>
-  <TotalFog_SuppressCombatMusic>Suppress combat music</TotalFog_SuppressCombatMusic>
-  <TotalFog_SuppressCombatMusicDesc>Use normal music during combat so a music change cannot reveal a raid.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_SuppressCombatMusic>Suppress combat and Anomaly music</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Use normal music during combat and Anomaly events so a music change cannot reveal unseen threats.</TotalFog_SuppressCombatMusicDesc>
   <TotalFog_MuteHiddenSounds>Mute sounds from hidden sources</TotalFog_MuteHiddenSounds>
   <TotalFog_MuteHiddenSoundsDesc>Silence hidden sound sources completely, including ongoing loops. This takes priority over hearing-based filtering.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Use hearing-based sound filtering</TotalFog_FilterHiddenSounds>

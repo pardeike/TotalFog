@@ -37,7 +37,7 @@ a wild boar or something much worse. To be safe, you have to look.
 - Better cameras and the telescope come with research.
 
 ### Sounds keep secrets, or give hints
-- Combat music is off by default, so the music cannot warn you about a raid.
+- Combat and Anomaly music are off by default, so the music cannot warn you about unseen threats.
 - Sounds from hidden things can be muted, or muffled by distance. Only living
   pawns in your faction provide hearing, according to their hearing capacity.
 - Small hearing indicators can show that *something* moves out there.
@@ -47,6 +47,7 @@ a wild boar or something much worse. To be safe, you have to look.
 - Or you can throw away unseen events, sorted by type (big threats, small threats,
   good news, bad news).
 - Colony health and global events always arrive at once.
+- New Anomaly entities enter the journal and send their discovery notice when someone first sees them.
 - **Silent raids** (optional): no arrival letter for raids and manhunter packs.
   Arrival slowdown is suppressed too; spawning and normal combat slowdown stay intact.
 
