@@ -36,9 +36,10 @@
   <!-- no tier -->
   <ThingDef ParentName="BaseVisionStuff">
     <defName>SecurityBellSmall</defName>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>small security bell </label>
     <uiIconScale>0.25</uiIconScale>
-    <description>Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it..</description>
+    <description>A retired security bell retained for existing saves. It no longer provides vision.</description>
     <graphicData>
       <texPath>Things/Buildings/SecurityBellSmall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -64,22 +65,19 @@
       <Steel>5</Steel>
     </costList>
     <designationCategory>Security</designationCategory>
-    <comps>
-      <li Class="TotalFog.CompProperties_BuildingSight">
-        <viewRadius>3</viewRadius>
-      </li>
-    </comps>
+    <comps Inherit="False" />
     <building>
       <expandHomeArea>false</expandHomeArea>
       <ai_chillDestination>false</ai_chillDestination>
     </building>
-    <specialDisplayRadius>2.9</specialDisplayRadius>
+    <specialDisplayRadius>0</specialDisplayRadius>
   </ThingDef>
   <ThingDef ParentName="BaseVisionStuff">
     <defName>SecurityBell</defName>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>large security bell</label>
     <uiIconScale>0.25</uiIconScale>
-    <description>Bell to see if enemies are coming. It reveals a very narrow range of vision. The enemy disappears when you step on it..</description>
+    <description>A retired security bell retained for existing saves. It no longer provides vision.</description>
     <graphicData>
       <texPath>Things/Buildings/SecurityBell</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -105,16 +103,12 @@
       <Steel>10</Steel>
     </costList>
     <designationCategory>Security</designationCategory>
-    <comps>
-      <li Class="TotalFog.CompProperties_BuildingSight">
-        <viewRadius>5</viewRadius>
-      </li>
-    </comps>
+    <comps Inherit="False" />
     <building>
       <expandHomeArea>false</expandHomeArea>
       <ai_chillDestination>false</ai_chillDestination>
     </building>
-    <specialDisplayRadius>4.9</specialDisplayRadius>
+    <specialDisplayRadius>0</specialDisplayRadius>
   </ThingDef>
   <!-- Tier 1, blocky and non curved-->
   <ThingDef ParentName="BaseCamera">

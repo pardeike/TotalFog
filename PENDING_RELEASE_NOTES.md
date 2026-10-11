@@ -4,6 +4,7 @@
 - Keep visibility updates working when game ticks advance in larger intervals.
 - Restore camera textures on macOS and load their portable PNG files directly.
 - Retire Chicken on a Stick and both watchtowers from construction and remove their sight bonuses, while retaining existing saved objects.
+- Retire the remaining inspector animals, both security bells and light beacons, retaining saved objects without their vision, light or fuel consumption.
 - Keep renderer registration under the game's ownership, including held and flying pawns.
 - Preserve deferred letters and messages across saves, including their original sounds and targets.
 - Apply unseen-event settings to refugee pod letters sent before their passenger enters the map.

@@ -1,5 +1,42 @@
 # Local validation
 
+This is the retained evidence ledger. Read dated checkpoints with their exact
+gameplay hashes, loadouts and stated limits: older test counts, “current” builds
+and outstanding lists refer to their checkpoint, not today. Rejected candidates
+remain recorded. For the current acceptance summary and remaining work, use
+[COVERAGE.md](COVERAGE.md#current-status-7-october-2026); for implementation rules,
+use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
+snapshot from later source commits.
+
+## Retired inspector animals, bells and beacon, 2026-10-11
+
+The remaining InspectorHare, InspectorMonkey, InspectorRat and InspectorSquirrel,
+SecurityBellSmall, SecurityBell and TowerLightBeacon are retired using native
+default-designator suppression and empty sight/fuel/power/light components.
+Saved object, blueprint/frame and texture definitions remain. The main gameplay
+DLL remains identical to the preceding development check below. No new tower
+gameplay is implemented; its confirmed requirements and proposals are recorded
+in WATCHTOWER.md.
+
+All 347 independent tests, formatting and the quiet paired build/deploy pass.
+Native public Steam 1.6 with all DLCs and Zombieland loads the unchanged
+TotalFog_Zombieland_Base. Its complete Security construction list, including
+hidden entries, contains none of the ten retired definitions and still contains
+the seven cameras, console and telescope. Captured native error logs are empty.
+
+Diagnostic scenarios no longer depend on retired bells. FixtureSightSource
+attaches a radius-three sight component to one telescope instance, neutralizing
+that instance's pawn sight modifier without mutating the public definition.
+Saved test fights explicitly configure this instrumentation again after loading.
+The focused native contamination contract passes all eight detailed/cached
+hidden/visible/hidden-again/colony-bypass rows with nativeSightSource=true and
+stagedSight=false. Contamination stays 0.65 and the base reloads unchanged.
+Evidence is artifacts/retired-bells-fixture-20261011.json and
+artifacts/retired-devices-20261011.json. The instrumented saved-fight round trip,
+CE fixture behavior and existing retired-object saves were not rerun; previous
+results retain their old source identities. Older bell-based prepared fights must
+be recreated before accepting a new cold-resume result. Game stopped afterward.
+
 ## Retired chicken and watchtowers, 2026-10-11
 
 The active 1.6 definitions retire InspectorChicken, WatchTower and WatchTowerRoofed
@@ -22,14 +59,6 @@ fixture's native missing Funeral precept repair. No existing fixture contains th
 retired buildings; their actual saved-object round trip was not exercised.
 The unchanged save is not written, and the game is stopped after this check.
 This is a source-development check, not a new feedback package or performance gate.
-
-This is the retained evidence ledger. Read dated checkpoints with their exact
-gameplay hashes, loadouts and stated limits: older test counts, “current” builds
-and outstanding lists refer to their checkpoint, not today. Rejected candidates
-remain recorded. For the current acceptance summary and remaining work, use
-[COVERAGE.md](COVERAGE.md#current-status-7-october-2026); for implementation rules,
-use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
-snapshot from later source commits.
 
 ## Symbiant cell clipping, 2026-10-05
 

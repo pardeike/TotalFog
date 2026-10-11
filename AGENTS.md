@@ -35,7 +35,7 @@ It checks fourteen native contamination sight/refresh controls with paired
 pixels, including hidden mutations, reopening, zoom return and clearing.
 It also verifies that all five fog audio modes preserve global creepy ambience.
 Use `totalfog/stream_feedback` on a paused initialized paired map for the changed
-blueprint/corpse/lighting/door/highlight controls and portable camera/watchtower
+blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
@@ -186,7 +186,7 @@ hosting that loaded replay; it rejects an existing live session. Inspect status
 for completed hosting/join and compare fog only at matching paused ticks.
 Use `totalfog/ce_ammo_fixture` for the scoped no-magazine short-bow control.
 It observes CE's own attack orders, ammunition preparation and shot results;
-play through ordinary Normal playback. Remove/recreate its real security bell
+play through ordinary Normal playback. Remove/recreate its fixture sight source
 to change sight during warmup, then call cleanup to restore the temporary base
 range and remove owned objects/probe patches. It is companion instrumentation,
 excluded from player ZIPs, and does not support save/load.

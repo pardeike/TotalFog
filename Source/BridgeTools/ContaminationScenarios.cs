@@ -385,8 +385,7 @@ public sealed class ContaminationScenarios
             {
                 if (visible)
                 {
-                    observer = (ThingWithComps)
-                        ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("SecurityBellSmall"));
+                    observer = FixtureSightSource.Create();
                     observer.SetFaction(Faction.OfPlayer);
                     GenSpawn.Spawn(observer, cell + IntVec3.West, map);
                 }

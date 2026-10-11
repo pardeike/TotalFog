@@ -33,14 +33,13 @@ a wild boar or something much worse. To be safe, you have to look.
 ### Build your own eyes
 - Surveillance cameras: on posts, on walls, under roofs, hidden in bushes, or solar
   powered. Watch them from a camera console.
-- Small and large security bells reveal a short range around their position.
-- Light beacons remove the darkness penalty for pawns standing on them; a watch
-  telescope doubles their sight range.
+- A watch telescope doubles the sight range of pawns standing on it.
 - Better cameras and the telescope come with research.
 
-Chicken on a Stick and the current watchtowers are retired. Existing buildings,
-blueprints and frames remain loadable, but the buildings no longer provide or
-extend sight and cannot be selected for new construction.
+Inspector animals, security bells, light beacons and the old watchtowers are
+retired. Existing buildings, blueprints and frames remain loadable, but these
+buildings no longer provide light or vision, extend sight, or consume fuel.
+They cannot be selected for new construction.
 
 ### Sounds keep secrets, or give hints
 - Combat and Anomaly music are off by default, so the music cannot warn you about unseen threats.

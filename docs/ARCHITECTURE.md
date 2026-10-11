@@ -6,6 +6,9 @@ saves, settings, camera views and hardware. Kernel timings alone cannot establis
 whole-game performance. Do not add a feature that makes representative gameplay
 slower than the original mod.
 
+The replacement watchtower remains a [design draft](WATCHTOWER.md), not an
+implemented source of elevated vision or combat behavior.
+
 ## Ownership
 
 RimWorld owns spawned objects, simulation, renderer registration, meshes,

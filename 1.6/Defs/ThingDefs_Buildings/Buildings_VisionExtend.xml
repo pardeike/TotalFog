@@ -145,8 +145,9 @@
   </ThingDef>
   <ThingDef ParentName="BaseVisionStuff">
     <defName>TowerLightBeacon</defName>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>light beacon</label>
-    <description>Allow colonist can see further in the dark</description>
+    <description>A retired light beacon retained for existing saves. It no longer provides light or extends vision.</description>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -185,23 +186,7 @@
       <Flammability>0</Flammability>
       <Beauty>-1</Beauty>
     </statBases>
-    <comps>
-      <li Class="CompProperties_Forbiddable" />
-      <li Class="CompProperties_Power">
-        <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>250</basePowerConsumption>
-      </li>
-      <li Class="CompProperties_Flickable" />
-      <li Class="CompProperties_Breakdownable" />
-      <li Class="CompProperties_Glower">
-        <glowRadius>6</glowRadius>
-        <glowColor>(217,217,208,0)</glowColor>
-      </li>
-      <li Class="TotalFog.CompProperties_SightModifier">
-        <fovMultiplier>1.05</fovMultiplier>
-        <denyDarkness>true</denyDarkness>
-      </li>
-    </comps>
+    <comps Inherit="False" />
   </ThingDef>
   <!--	<ThingDef ParentName="BaseVisionStuff">
 		<defName>TowerLightBeaconBase</defName>

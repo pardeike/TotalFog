@@ -21,7 +21,7 @@ public sealed class SymbiantCombatSightScenarios
 
     [Tool(
         "totalfog/symbiant_combat_sight",
-        Description = "Use the existing combat fixture and real faction sight to check automatic Symbiant acquisition and logical hit cells across disabled enemy fog, hidden, visible-root and visible-body/hidden-root states. Ranged or melee variants use the native fight scan flags. If the paused matrix passes, order a native hostile attack for 25 seconds at Normal speed with enemy fog enabled while an actual security bell supplies partial player sight. No nearby player pawn competes for targeting. Requires shared damage, unchanged host injury and bell health, a hidden root and partly visible body. Optionally save/reload the active fight in process, verify exact identities, health, body, job and partial sight, then require further damage during 10 seconds of native playback. Retains the named PartialSymbiant fixture; restores options and reloads the unchanged named base. With resumeLoadedFight, load the previously prepared variant using the same sight settings and resume ten seconds of native combat without creating a new fixture. Caller must restart first and compare returned loaded identities/health/body/tick with preparation evidence. Not every weapon/sight range."
+        Description = "Use the existing combat fixture and real faction sight to check automatic Symbiant acquisition and logical hit cells across disabled enemy fog, hidden, visible-root and visible-body/hidden-root states. Ranged or melee variants use the native fight scan flags. If the paused matrix passes, order a native hostile attack for 25 seconds at Normal speed with enemy fog enabled while an instrumented building supplies partial player sight. No nearby player pawn competes for targeting. Requires shared damage, unchanged host injury and sight-source health, a hidden root and partly visible body. Optionally save/reload the active fight in process, verify exact identities, health, body, job and partial sight, then require further damage during 10 seconds of native playback. Retains the named PartialSymbiant fixture; restores options and reloads the unchanged named base. With resumeLoadedFight, load the previously prepared variant using the same sight settings and resume ten seconds of native combat without creating a new fixture. Caller must restart first and compare returned loaded identities/health/body/tick with preparation evidence. Not every weapon/sight range."
     )]
     public static async Task<object> SymbiantCombatSight(
         IRimBridgeContext ctx,
@@ -284,8 +284,7 @@ public sealed class SymbiantCombatSightScenarios
                     Record("hidden-after-reveal", false);
                     // Keep a colonist on the map for native colony-center queries,
                     // far from the fight. Building sight supplies the partial view.
-                    sightSource = (ThingWithComps)
-                        ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("SecurityBellSmall"));
+                    sightSource = FixtureSightSource.Create();
                     sightSource.SetFaction(Faction.OfPlayer);
                     GenSpawn.Spawn(sightSource, remote, map);
                     bool playerPartial = false;
@@ -505,6 +504,7 @@ public sealed class SymbiantCombatSightScenarios
                         );
                         sightSource = (ThingWithComps)
                             map.listerThings.AllThings.Single(thing => thing.ThingID == sourceId);
+                        FixtureSightSource.Configure(sightSource);
                         host = (Pawn)AccessTools.Property(type, "LinkedHost").GetValue(target);
                         float currentHealth = (float)health.GetValue(target),
                             hostInjuries = HostInjuries();
@@ -840,7 +840,8 @@ public sealed class SymbiantCombatSightScenarios
                     host = (Pawn)AccessTools.Property(type, "LinkedHost").GetValue(target);
                     sightSource = map
                         .listerThings.AllThings.OfType<ThingWithComps>()
-                        .Single(thing => thing.def.defName == "SecurityBellSmall");
+                        .Single(thing => thing.def.defName == FixtureSightSource.DefName);
+                    FixtureSightSource.Configure(sightSource);
                     initialHealth = Health();
                     initialInjuries = HostInjuries();
                     initialSourceHealth = sightSource.HitPoints;

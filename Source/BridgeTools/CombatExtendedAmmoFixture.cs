@@ -254,7 +254,7 @@ public sealed class CombatExtendedAmmoFixture
     {
         if (reveal && bell == null)
         {
-            bell = ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("SecurityBellSmall"));
+            bell = FixtureSightSource.Create();
             Owned.Add(bell);
             bell.SetFaction(Faction.OfPlayer);
             GenSpawn.Spawn(bell, target.Position + IntVec3.East, target.Map);

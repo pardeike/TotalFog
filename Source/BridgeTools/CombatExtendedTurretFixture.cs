@@ -224,12 +224,12 @@ public sealed class CombatExtendedTurretFixture
                     if (action == "configure")
                     {
                         SetHoldFire(gunTurret, holdFire);
-                        var bell = owned.FirstOrDefault(t => t.def.defName == "SecurityBellSmall");
+                        var bell = owned.FirstOrDefault(t =>
+                            t.def.defName == FixtureSightSource.DefName
+                        );
                         if (reveal && bell == null)
                         {
-                            bell = ThingMaker.MakeThing(
-                                DefDatabase<ThingDef>.GetNamed("SecurityBellSmall")
-                            );
+                            bell = FixtureSightSource.Create();
                             made.Add(bell);
                             bell.SetFaction(gunTurret.Faction);
                             GenSpawn.Spawn(bell, targetThing.Position + IntVec3.East, map);
