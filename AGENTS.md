@@ -45,6 +45,11 @@ captures a combined overview and tight empty/occupied and straight/corner views,
 checks all four ladder orientations, advances no ticks and reloads the unchanged
 named fixture. The drawing code and definitions stay in the companion. It proves
 visual geometry only, not climbing, placement, breaching, sight or combat.
+The compact deck fixture also verifies four cached native wall overlaps and
+that every occupant's logical position remains the tower center cell. Wall
+fragments preserve native Print materials/vertex data and are cached before
+capture; their extra draw calls are reported per tower. This does not establish
+modded-wall rendering or automatic neighbour invalidation.
 It checks exact measured/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland

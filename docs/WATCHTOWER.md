@@ -31,6 +31,12 @@ The new definition and runtime types will belong to Total Fog.
 Use one platform occupant and an explicit watch job. Keep the pawn spawned on
 the map, selectable and governed by native health, damage, needs and faction
 rules. Do not place the pawn in a container or create a second simulation layer.
+The logical pawn position remains the tower's center cell; the upper-platform
+position is a presentation projection. The paused artwork fixture verifies this
+for all four occupants and records their projected DrawPos separately. Its
+scoped DrawPos postfix is test instrumentation, not the final gameplay patch:
+production rendering must avoid changing unrelated consumers of DrawPos, and
+elevated sight/projectile/cover rules must be implemented explicitly.
 Climbing, on-platform and descending are simulation states; rendering only reads
 their progress. Ladder rotation changes the approach cell and drawing together.
 
@@ -81,9 +87,10 @@ put the foreground railing in front of it without hiding the whole pawn.
 Wall placement is a normal use case. Include a straight perimeter wall meeting
 opposite tower edges and a corner meeting two adjacent edges in the first
 visual review. Walls meet the outer footprint; they do not share tower cells.
-The platform stays visibly above wall height. Use native wall linking rather
-than custom copies of adjacent walls. The ladder and its approach cell must
-remain clear, including at corners. Final construction/pathfinding checks must
+The platform stays visibly above wall height. Keep actual native walls and
+their link flags, reusing small fragments of their printed geometry for visual
+overlap rather than spawning extra wall objects. The ladder and its approach
+cell must remain clear, including at corners. Final construction/pathfinding checks must
 reject blocked access without inventing automatic openings in player walls.
 
 The initial visual prototype belongs to the non-shipping BridgeTools companion.
@@ -113,22 +120,24 @@ colonists remain legible on the compact platform. The 1.4-cell proportions are
 a reviewable draft, not a final art commitment. The older wide-deck screenshot
 remains preserved for comparison.
 
-### Proposed cached native wall overlaps
+### Cached native wall overlap prototype
 
-For wall appearance, prototype a short overlap generated from the actual adjacent
-wall's graphic, retaining its materials, texture coordinates, stuff tint and
-connection state. Prefer letting the opaque tower body hide the inner portion
-through draw order. If that does not fit the geometry, clip the cached vertices
-and interpolate their texture coordinates once when rebuilding the join. Do
-not replace the wall shader with a generic masking shader or create additional
-wall objects in the simulation.
+The companion now prints the actual adjacent wall into a temporary native
+SectionLayer, retaining its materials, texture coordinates, vertex colours,
+secondary texture coordinates, normals and connection state. It shifts a small
+fragment into the tower and clips its triangles once to the overlap boundaries.
+The side join's diagonal clipping edge and dark visible seam use the same
+definition. Layering puts these fragments above the lower supports and below
+the platform/railing. The ladder's geometry is unchanged. No replacement masking
+shader or extra simulation wall object is created.
 
 Public 1.6 source inspection confirms that Graphic_Linked.MatSingleFor resolves
 the connected material from the actual wall and its neighbours. A material-only
 copy does not include all geometry: Graphic_LinkedCornerFiller.Print adds extra
 corner planes. Graphic.Print and SectionLayer/MapDrawLayer provide a possible
-route for retaining the actual printed geometry and materials. This is a design
-proposal, not a native-tested join implementation or a compatibility guarantee.
+route for retaining the actual printed geometry and materials. The straight
+wood and granite corner fixtures now establish the appearance of native centered
+joins. This is not a compatibility guarantee for other renderers.
 Mods with dynamic DrawAt rendering, animated shaders or external drawing patches
 need explicit checks before claiming support.
 
@@ -138,8 +147,12 @@ do not eagerly generate every modded wall/stuff permutation. The exact join
 depends on neighbouring placed walls, so build it on tower spawn/load and
 invalidate it on relevant local wall or appearance changes. Rendering reads
 cached meshes and materials without rebuilding, scanning neighbours or allocating
-each frame. The current sketch already builds its two meshes once per spawn;
-it does not yet implement wall-overlap caching or a launch warmup.
+each frame. The fixture explicitly rebuilds its caches after staging the walls.
+Native counts are two draw calls for an unjoined tower, three for the straight
+wood example and four for the granite corner, with joins grouped by material.
+This is a draw-call count, not a benchmark. Wall spawn/destruction/appearance
+invalidation, off-center edge joins and a launch warmup remain implementation
+work; the prototype is not a player building.
 
 An empty tower provides no sight. Sleeping or downed occupants provide no elevated
 sight. Tower range scales with the lookout's ordinary sight capacities and

@@ -121,6 +121,8 @@ public sealed class WatchtowerVisualScenarios
                     {
                         Rand.PopState();
                     }
+                    foreach (var tower in drawings)
+                        tower.RebuildWallJoins();
                     foreach (var thing in owned)
                         thing.TryGetComp<CompFog>()?.HideFromPlayer?.UpdateVisibility(true);
                     manifest.environment.gameVersion = VersionControl.CurrentVersionString;
@@ -141,6 +143,7 @@ public sealed class WatchtowerVisualScenarios
                             {
                                 p.ThingID,
                                 cell = p.Position.ToString(),
+                                drawPosition = p.DrawPos.ToString(),
                                 facing = p.Rotation.ToString(),
                             })
                             .ToArray(),
@@ -151,9 +154,12 @@ public sealed class WatchtowerVisualScenarios
                                 stuff = t.Stuff.defName,
                                 cell = t.Position.ToString(),
                                 rotation = t.Rotation.ToString(),
+                                wallJoins = t.WallJoinCount,
+                                cachedDrawCalls = t.CachedDrawCalls,
                             })
                             .ToArray(),
-                        drawCallsPerTower = 2,
+                        nativeWallJoins = drawings.Sum(t => t.WallJoinCount),
+                        geometryBuiltBeforeCapture = true,
                     };
                 },
                 cancellationToken
@@ -169,6 +175,21 @@ public sealed class WatchtowerVisualScenarios
             await ctx.MainThread.InvokeAsync(
                 () =>
                 {
+                    manifest.assertions.Add(
+                        RimBridgeEvidence.IsTrue(
+                            "occupants stay in tower center cells",
+                            projectedOccupants.Keys.All(p =>
+                                drawings.Any(t => t.Position == p.Position && t.Map == p.Map)
+                            )
+                        )
+                    );
+                    manifest.assertions.Add(
+                        RimBridgeEvidence.AreEqual(
+                            "four cached native wall overlaps",
+                            4,
+                            drawings.Sum(t => t.WallJoinCount)
+                        )
+                    );
                     manifest.assertions.Add(
                         RimBridgeEvidence.AreEqual(
                             "no simulation ticks advanced",

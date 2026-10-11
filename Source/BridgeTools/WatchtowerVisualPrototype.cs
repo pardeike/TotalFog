@@ -16,6 +16,10 @@ public sealed class WatchtowerVisualPrototype : Building
     private Mesh body;
     private Mesh foreground;
     private Material material;
+    private WatchtowerWallJoins wallJoins;
+
+    internal int WallJoinCount => wallJoins?.Directions.Count ?? 0;
+    internal int CachedDrawCalls => 2 + (wallJoins?.DrawCalls ?? 0);
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
@@ -24,15 +28,50 @@ public sealed class WatchtowerVisualPrototype : Building
         var drawing = new Drawing(
             Rotation,
             Stuff.stuffProps.color,
-            Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony)
+            Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+            Array.Empty<IntVec3>()
         );
         (body, foreground) = drawing.Build();
+    }
+
+    // The artwork fixture calls this after its walls have spawned. Production
+    // neighbour invalidation belongs to the later gameplay implementation.
+    internal void RebuildWallJoins()
+    {
+        var next = new WatchtowerWallJoins(this);
+        Mesh nextBody = null;
+        Mesh nextForeground = null;
+        try
+        {
+            var drawing = new Drawing(
+                Rotation,
+                Stuff.stuffProps.color,
+                Stuff.stuffProps.categories.Contains(StuffCategoryDefOf.Stony),
+                next.Directions
+            );
+            (nextBody, nextForeground) = drawing.Build();
+            next.Complete(AltitudeLayer.BuildingOnTop.AltitudeFor() + drawing.WallJoinDepth);
+            UnityEngine.Object.Destroy(body);
+            UnityEngine.Object.Destroy(foreground);
+            wallJoins?.Dispose();
+            body = nextBody;
+            foreground = nextForeground;
+            wallJoins = next;
+        }
+        catch
+        {
+            UnityEngine.Object.Destroy(nextBody);
+            UnityEngine.Object.Destroy(nextForeground);
+            next.Dispose();
+            throw;
+        }
     }
 
     public override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         drawLoc.y = AltitudeLayer.BuildingOnTop.AltitudeFor();
         Graphics.DrawMesh(body, drawLoc, Quaternion.identity, material, 0);
+        wallJoins?.Draw();
         drawLoc.y = AltitudeLayer.PawnState.AltitudeFor();
         Graphics.DrawMesh(foreground, drawLoc, Quaternion.identity, material, 0);
     }
@@ -43,6 +82,8 @@ public sealed class WatchtowerVisualPrototype : Building
         UnityEngine.Object.Destroy(body);
         UnityEngine.Object.Destroy(foreground);
         body = foreground = null;
+        wallJoins?.Dispose();
+        wallJoins = null;
     }
 
     private sealed class Drawing
@@ -53,15 +94,24 @@ public sealed class WatchtowerVisualPrototype : Building
         private readonly Rot4 rotation;
         private readonly Color stuff;
         private readonly bool stone;
+        private readonly IReadOnlyList<IntVec3> wallDirections;
         private readonly Geometry body = new();
         private readonly Geometry front = new();
         private readonly Color outline = new(.10f, .095f, .085f);
 
-        internal Drawing(Rot4 rotation, Color stuff, bool stone)
+        internal float WallJoinDepth { get; private set; }
+
+        internal Drawing(
+            Rot4 rotation,
+            Color stuff,
+            bool stone,
+            IReadOnlyList<IntVec3> wallDirections
+        )
         {
             this.rotation = rotation;
             this.stuff = stuff;
             this.stone = stone;
+            this.wallDirections = wallDirections;
         }
 
         internal (Mesh, Mesh) Build()
@@ -70,6 +120,15 @@ public sealed class WatchtowerVisualPrototype : Building
             bool rearLadder = Point(0, -1, 0).z > 0;
             if (rearLadder)
                 Ladder();
+            if (wallDirections.Count > 0)
+            {
+                WallJoinDepth = body.ReserveDepth();
+                foreach (var direction in wallDirections)
+                {
+                    WatchtowerWallJoins.GetCutEdge(direction, out var a, out var b);
+                    body.Line(a, b, .06f, outline);
+                }
+            }
             Floor();
             Railings();
             if (!rearLadder)
@@ -315,12 +374,19 @@ public sealed class WatchtowerVisualPrototype : Building
         private readonly List<Vector3> vertices = new();
         private readonly List<Color> colors = new();
         private readonly List<int> triangles = new();
-        private int polygons;
+        private float depth;
+
+        internal float ReserveDepth()
+        {
+            float reserved = depth + .01f;
+            depth += .02f;
+            return reserved;
+        }
 
         internal void Polygon(Color color, params Vector3[] points)
         {
             int start = vertices.Count;
-            float depth = ++polygons * .000015f;
+            depth += .000015f;
             foreach (var point in points)
             {
                 vertices.Add(new Vector3(point.x, depth, point.z));

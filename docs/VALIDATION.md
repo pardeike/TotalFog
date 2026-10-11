@@ -10,6 +10,42 @@ snapshot from later source commits.
 
 ## New watchtower artwork prototype, 2026-10-11
 
+### Native wall overlap and logical occupant position
+
+The companion now calls the actual adjacent wall's Print into a temporary native
+SectionLayer and clips a cached fragment into the tower. Material references,
+primary/secondary texture coordinates, colours, normals and connection state
+are retained. A shared diagonal boundary defines both side clipping and its
+visible dark seam. The overlaps sit above the lower supports and below the deck;
+no simulation walls or replacement shaders are introduced. Ladder geometry is
+unchanged. Cache meshes and temporary captures are disposed during cleanup.
+
+Formatting, all 347 tests and the quiet deploy pass with zero build warnings
+or errors. Exact built/deployed gameplay remains
+`2603f99b83cc8d38c8ca597e3f6ca7cf46858516a2e98d127c7f922eff524443`;
+the new exact built/deployed companion is
+`68593554dc340ee84c67d6685c572944d9557620d832d4a7ea9599020cc8351d`.
+Public Steam 1.6.4871, all five DLCs and the unchanged TotalFogRegression fixture
+pass seven fully visible capture receipts, four cached native overlaps, eight
+3x3 buildings, native spawned-occupant checks and unchanged tick 1202. The new
+position assertion verifies all four occupants remain in their tower's center
+cell while the manifest separately records projected DrawPos. The combined
+overview, wood straight-wall and granite corner pixels were inspected: the
+horizontal walls extend into the faces and terminate at the slanted seam; the
+rear connection is occluded beneath the deck. Captured errors are empty.
+Cleanup reloads the unchanged fixture without saving. The game was stopped.
+One combined image was sent to Andreas's phone.
+
+Native cached draw counts are two per unjoined tower, three for the wood tower
+and four for the granite corner. No per-frame geometry generation or neighbour
+scan is added, but this is not a performance benchmark. The prototype only
+establishes the staged native centered wall joins; other wall renderers,
+off-center connections and automatic lifecycle invalidation remain unverified.
+Gameplay occupation, elevation and combat remain unimplemented.
+
+Evidence: `artifacts/watchtower-wall-joins-20261011.json` and
+`artifacts/UserData/Screenshots/tower-wall-joins-20261011-*__cell_rect.png`.
+
 ### Compact deck and simpler outlines
 
 The test-only drawing now tapers from the native 3x3 base to a 1.4x1.4-cell
