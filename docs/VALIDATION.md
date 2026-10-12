@@ -7415,3 +7415,76 @@ These short sequential samples are diagnostic, not a paired performance floor
 or proof that occupation improves performance. Frame p99 is 20.65–26.96 ms.
 Partial-climb interception, other combat producers, natural construction and
 breaching, and tower-specific optional integrations remain open.
+
+## 2026-10-12 — ladder interception, quiet fourth speed and native building jobs
+
+The native firing check previously accepted a rear shot through the solid base
+at a partly climbed pawn. Receipt `artifacts/tower-projectiles-before30-20261012.json`
+retains that failure. The exemption now requires a completed platform position;
+partial heights and presentation projections are still recorded. The fixed
+10-check core run `artifacts/tower-projectiles-after31-20261012.json` observes an
+actual bullet striking the base, reducing wood HP from 290 to 279 while the
+partial climber's injury total remains unchanged. Open ladder-side fire remains
+valid, as do completed-platform incoming/outgoing fire. A native frag grenade
+completes flight/fuse, damages its ground target and leaves the source tower at
+279 HP. No ExactPosition/physics coordinate is moved to match the artwork.
+
+Gameplay SHA-256 for that run and the later 76-check lifecycle/quiet sample is
+`3974498c0e0fd88fbb15289cd2b47a1b4ae7e36245c09ae47392c8548af2ce9c`,
+MVID `0c257f04-142b-4388-9a61-69ba7703e1e4`. The quiet receipt is
+`artifacts/tower-gameplay-quiet33-20261012.json`. Its earlier quiet32 attempt
+exceeded the SDK's 10-second tick-step timeout during an 850-tick wait; bounded
+100-tick steps preserve the same native wait. Native attention remains empty.
+The slowdown trace30 receipt identifies ordinary attack and fight-AI requests
+in the base save. The quiet control temporarily gives hostile faction pawns
+the player faction, holds all 128 native pawns with Wait jobs and allows the
+native combat timer to expire. It never forces the native rate. The unchanged
+base save restores the original factions/jobs afterward.
+
+All measured ticks retain native multiplier 15, Ultrafast selection and disabled
+private UltraSpeedBoost, with no focus loss or overflowing buffers. Four short
+4-second samples are deliberately diagnostic, not a three-pair original-mod
+performance floor. Close contains 1,014 visible map cells and six pawn roots;
+wide contains 50,750 cells and 127 roots. Ground/occupied TPS is 890.12/885.36
+close and 881.70/889.21 wide. Mean tick time is 0.470/0.443 ms close and
+0.511/0.494 ms wide; tick p99 is 1.02–1.05 ms and frame p99 is 33.40–42.03 ms.
+The waiting workload is quieter than a normal colony; these numbers establish
+a small stationary-tower cost under ordinary fourth speed, not a general colony
+throughput promise. The later custom-rotation fix changes gameplay bytes, so
+this is evidence for the stated earlier binary.
+
+The paired Zombieland run exposes a genuine custom-projectile issue in
+`artifacts/tower-spitter-rotation-before35-20261012.json`: projection rotated
+the spitter ball away from its own ExactRotation override. Rotation policy is
+now resolved once per projectile type at launch/load. Native flight-direction
+projectiles use projected drawing rotation; custom overrides keep their result.
+No reflection occurs in the draw path.
+
+The fixed paired projectile suite passes 13 checks in
+`artifacts/tower-spitter-rotation-after36-20261012.json`, including actual spitter
+ball drawing, core ladder interception and completed frag flight/fuse. The native
+building suite passes 16 checks in `artifacts/tower-building-after37-20261012.json`.
+A native blueprint becomes a frame, accepts 150 prefilled wood, and a native
+construction job performs its 4,200 material-adjusted work and completes the
+player tower. Rotation and nine impassable cells are retained. Actual adjacent
+wall spawn/removal automatically changes cached join count 0/2/1/0. A native
+breach job giver with a supplied target and valid stationary lord issues the
+attack; it reduces tower HP from 290 to 227. This is not hauling or autonomous
+breacher-raid coverage. The rejected building34 fixture omitted the breach axe's
+stuff and the native required lord; its error/Player.log remain preserved and
+that process was stopped. No production change was needed for construction.
+
+The full paired combat/effect/weather suite also passes all 75 checks in
+`artifacts/tower-combat-paired38-20261012.json`. These three latest paired runs
+use Total Fog SHA-256
+`0582442b70152eeb6c9da9c32bc595eacf0634b7c6d69bc430d7a68a046cc289`,
+MVID `d1c6073e-0f6f-45f3-94ad-2cf7f8fb20c9`; Zombieland
+`16b8249481712bfaba87ba2cf5ed36cb581860ed2abcb4a6ec37e2df74ac098e`;
+Total Fog companion
+`a06b2bad92b449345a5f1ef1127d17e2809fc5a897bcf453cc5c346309809e45`.
+All three restore the unchanged paired base, have empty native attention and
+no recognized Player.log errors. The 358 independent tests pass with zero
+build warnings. Zombieland source remains unchanged; setup's generated metadata
+whitespace and tracked DLL changes were restored. Both game processes are stopped.
+Further combat producers, tower-specific zombie behavior, Combat Extended,
+Multiplayer and the final original-mod performance floor remain outstanding.

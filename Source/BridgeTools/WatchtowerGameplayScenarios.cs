@@ -214,9 +214,25 @@ public sealed class WatchtowerGameplayScenarios
                 wall.Destroy(DestroyMode.Vanish);
                 if (performanceSample)
                 {
-                    enemy.SetFaction(Faction.OfPlayer);
-                    foreach (var pawn in pawns)
+                    // The base regression save contains active combat. A quiet
+                    // native control is required to measure ordinary fourth speed
+                    // without overriding the engine's combat slowdown policy.
+                    foreach (var pawn in map.mapPawns.AllPawnsSpawned.ToArray())
+                    {
+                        if (pawn.Faction != null && pawn.HostileTo(Faction.OfPlayer))
+                            pawn.SetFaction(Faction.OfPlayer);
+                        if (pawn.drafter != null && pawn.Faction == Faction.OfPlayer)
+                            pawn.drafter.Drafted = true;
+                        pawn.stances.CancelBusyStanceHard();
                         pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
+                    }
+                    states.Add(
+                        new
+                        {
+                            phase = "quiet-performance-control",
+                            pawns = map.mapPawns.AllPawnsSpawned.Count,
+                        }
+                    );
                 }
                 renderProbe.Patch(
                     AccessTools.Method(typeof(Pawn), nameof(Pawn.DynamicDrawPhaseAt)),
@@ -248,6 +264,16 @@ public sealed class WatchtowerGameplayScenarios
                     speedMode.Succeeded() && !speedMode.ReadResult<bool>("currentUltraSpeedBoost")
                 );
                 oldUltraSpeedBoost = speedMode.ReadResult<bool>("previousUltraSpeedBoost");
+                for (int ticks = 0; ticks < 850; ticks += 100)
+                    await Step(Math.Min(100, 850 - ticks));
+                await On(() =>
+                    Check(
+                        "native combat slowdown expires before timing",
+                        !AccessTools
+                            .FieldRefAccess<TickManager, TimeSlower>("slower")(Find.TickManager)
+                            .ForcedNormalSpeed
+                    )
+                );
                 await Capture("ground-performance-camera", 12);
                 await Measure("ground-normal", false);
                 await Measure("ground-wide", true);

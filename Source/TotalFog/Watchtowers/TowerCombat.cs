@@ -23,9 +23,11 @@ internal static class TowerCombat
         internal Vector3 TargetProjection;
         internal Building_Watchtower SourceTower;
         internal Building_Watchtower TargetTower;
+        internal bool ProjectRotation;
     }
 
     private static readonly ConditionalWeakTable<Projectile, ShotPath> paths = new();
+    private static readonly Dictionary<Type, bool> rotationPolicies = new();
     private static readonly AccessTools.StructFieldRef<ShotReport, float> targetSize =
         AccessTools.StructFieldRefAccess<ShotReport, float>("factorFromTargetSize");
     private static readonly AccessTools.StructFieldRef<ShotReport, float> coverChance =
@@ -45,6 +47,22 @@ internal static class TowerCombat
         TowerGeometry.GroundAimHeight
         + (TowerPresentation.TowerFor(thing)?.ElevationFor(thing) ?? 0)
             * (TowerGeometry.PlatformAimHeight - TowerGeometry.GroundAimHeight);
+
+    private static Building_Watchtower PlatformFor(Thing actor, Building_Watchtower tower) =>
+        tower?.ElevationFor(actor) > .999f ? tower : null;
+
+    private static bool UsesNativeFlightRotation(Projectile projectile)
+    {
+        var type = projectile.GetType();
+        if (!rotationPolicies.TryGetValue(type, out bool result))
+        {
+            result =
+                AccessTools.PropertyGetter(type, nameof(Projectile.ExactRotation))?.DeclaringType
+                == typeof(Projectile);
+            rotationPolicies.Add(type, result);
+        }
+        return result;
+    }
 
     internal static void Install(Harmony harmony)
     {
@@ -143,8 +161,8 @@ internal static class TowerCombat
                 seer.Map,
                 seer.Position,
                 target.Position,
-                source,
-                destination ?? target as Building_Watchtower,
+                PlatformFor(seer, source),
+                PlatformFor(target, destination) ?? target as Building_Watchtower,
                 Height(seer),
                 Height(target),
                 validator
@@ -205,8 +223,8 @@ internal static class TowerCombat
                 caster.Map,
                 root,
                 targ.Cell,
-                source,
-                target ?? targ.Thing as Building_Watchtower,
+                PlatformFor(caster, source),
+                PlatformFor(targ.Thing, target) ?? targ.Thing as Building_Watchtower,
                 Height(caster),
                 Height(targ.Thing)
             );
@@ -288,7 +306,11 @@ internal static class TowerCombat
         var targetTower = TowerPresentation.TowerFor(target.Thing);
         if (sourceTower == null && targetTower == null)
             return;
-        coverChance(ref __result) = 0;
+        if (
+            PlatformFor(caster, sourceTower) != null
+            || PlatformFor(target.Thing, targetTower) != null
+        )
+            coverChance(ref __result) = 0;
         if (targetTower?.ElevationFor(target.Thing) > .999f)
             targetSize(ref __result) = Mathf.Min(2f, targetSize(ref __result) * 1.25f);
     }
@@ -316,8 +338,11 @@ internal static class TowerCombat
                 TargetHeight = Height(aim),
                 SourceProjection = TowerPresentation.Offset(launcher),
                 TargetProjection = TowerPresentation.Offset(aim),
-                SourceTower = source,
-                TargetTower = target,
+                // The solid base shields an actor on the exterior ladder.
+                // Only a completed platform position can shoot across its footprint.
+                SourceTower = PlatformFor(launcher, source),
+                TargetTower = PlatformFor(aim, target),
+                ProjectRotation = UsesNativeFlightRotation(__instance),
             }
         );
     }
@@ -390,7 +415,7 @@ internal static class TowerCombat
     internal static Quaternion DrawingRotation(Projectile projectile)
     {
         var native = projectile.ExactRotation;
-        if (!paths.TryGetValue(projectile, out var path))
+        if (!paths.TryGetValue(projectile, out var path) || !path.ProjectRotation)
             return native;
         var direction =
             native
@@ -445,6 +470,9 @@ internal static class TowerCombat
         Scribe_References.Look(ref path.SourceTower, "totalFogShotSourceTower");
         Scribe_References.Look(ref path.TargetTower, "totalFogShotTargetTower");
         if (!known && (path.SourceHeight > 1 || path.TargetHeight > 1))
+        {
+            path.ProjectRotation = UsesNativeFlightRotation(__instance);
             paths.Add(__instance, path);
+        }
     }
 }

@@ -10,7 +10,7 @@ and a result applies only to its recorded gameplay bytes and loadout.
 
 The new 3x3 watchtower has separate development evidence; the delivered
 preliminary pair below predates this feature. Native Steam 1.6.4871 with all DLCs
-passes 75 access, persistence and actor lifecycle checks. A separate 75-check
+passes 76 access, persistence and actor lifecycle checks. A separate 75-check
 suite establishes native targeting/weapon producers, low-wall shots, tall
 blockers, melee exclusion, projected projectile rotation and ground shadows,
 four blueprint/ghost rotations, attached effects, fire and lightning. Native
@@ -19,13 +19,22 @@ Actual camera-edge drawing passes. A separate 15-check suite establishes native
 patient/body drop and fall injury during carrier collapse, downing and death. Exact
 bytes and earlier failures are retained in VALIDATION.md.
 
-Still open: partial-climb interception, further combat producers,
-construction/breaching, fourth-speed performance and tower-specific Zombieland, Combat
+Native rear shots now hit the solid base instead of a partial climber. The open
+ladder side and completed platform retain incoming fire. Native frag-grenade
+flight/fuse and Zombieland's spinning projectile drawing pass. Native blueprint/
+frame completion, local wall-cache invalidation and a supplied-target native
+breach job pass. Materials are prefilled; an autonomous raid is not tested.
+
+Still open: further combat producers, hauling/autonomous raids, the original-mod
+performance floor on final tower bytes and tower-specific Zombieland, Combat
 Extended and Multiplayer checks. Existing compatibility evidence below does
 not establish elevated tower behavior. The tower remains experimental and
 has not been delivered to the tester or released publicly.
-Four small close/wide samples ran with the engine's native normal-speed limit
-active. Their timings do not establish fourth-speed throughput.
+The first close/wide samples were rejected as fourth-speed proof because ordinary
+combat held the native rate at 1. A quiet native waiting control lets that timer
+expire normally and retains multiplier 15 for all ticks in four short samples.
+Ground/occupied throughput is 882–890 TPS at close and wide zoom. This is a
+bounded stationary-tower check; exact bytes and limits are in VALIDATION.md.
 
 ## Current status: 10 October 2026
 

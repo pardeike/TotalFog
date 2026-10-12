@@ -1,6 +1,6 @@
 # Watchtower design draft
 
-Status: fourth production gameplay checkpoint on 12 October 2026, following the
+Status: fifth production gameplay checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -8,8 +8,9 @@ default. Native-scale wall-front pieces remain a separate optional experiment.
 A separate
 non-shipping native access prototype is retained as a historical control. The
 new production definition, ladder jobs, elevated sight and ordinary bullet policy
-pass the expanded 75-check native suite. The separate native combat/weather
-suite passes 75 checks, and 15 carrier-emergency checks pass. Further combat
+pass the expanded 76-check native suite. The separate native combat/weather
+suite passes 75 checks, 15 carrier-emergency checks pass, and native projectile
+and construction/breach boundary controls pass. Further combat
 producers, compatibility and
 performance acceptance remain outstanding.
 This replaces the retired watchtower
@@ -26,7 +27,7 @@ registration. The defaults are provisional until the bounded performance check.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
-75 checks, including four ladder rotations, timed descent after a drafted move,
+76 checks, including four ladder rotations, timed descent after a drafted move,
 opaque roofs, shooting disabled, native incoming/outgoing bullet damage across
 a freestanding wall, ladder rescue followed by native bed rescue, and collapse.
 Close and wider captures show raised pawn labels and selection brackets. The
@@ -75,11 +76,29 @@ geometry is captured through an existing native layer object; no custom
 SectionLayer is registered in every map section. The original control artwork
 remains in the companion.
 
-Four small close/wide samples were captured, but all native ticks had multiplier
-1 despite Ultrafast selection and disabled private speed boost. Their tick CPU
-and frame timings are diagnostic only; they do not establish fourth-speed
-performance. Construction/breaching, partial-climb interception, further combat
-producers and tower-specific Zombieland/CE/Multiplayer acceptance remain open.
+The solid base protects a partly climbed actor from incoming fire on the opposite
+side; the open ladder side remains exposed. A completed platform is exempt from
+its own footprint. A real rear bullet damages the base without injuring the
+partial climber. A native frag grenade completes flight/fuse and damages its
+ground target without damaging the source tower. Custom projectile rotation
+overrides remain native; Zombieland's spinning ball passes actual drawing checks.
+
+A native blueprint becomes a frame and a native worker completes it, preserving
+material, rotation and all nine solid cells. Materials are prefilled in this
+control, so it does not establish hauling. Native wall spawn/removal rebuilds
+and clears the cached joins. The native breach job giver, supplied a target and
+a valid lord, issues an attack that actually damages the tower. This is not an
+autonomous breacher raid.
+
+The initial performance samples were limited by existing combat in the base save.
+A bounded native trace identifies ordinary attack/AI slowdown requests. After
+staging quiet native waiting pawns and allowing that timer to expire normally,
+four 4-second close/wide samples retain multiplier 15 on every measured tick,
+with private speed boost disabled. Ground/occupied throughput is 882–890 TPS.
+This is a small stationary-tower cost check with 128 waiting pawns, not the
+whole-game comparison against the original mod. Further combat producers,
+autonomous raids/hauling and tower-specific Zombieland/CE/Multiplayer acceptance
+remain open. Exact tested bytes and newer changes are recorded in VALIDATION.md.
 
 This checkpoint is not a release or complete tower acceptance. Record remaining
 cases and their actual evidence below rather than inferring them from the first

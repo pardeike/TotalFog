@@ -310,10 +310,18 @@ during carrier collapse, downing and death. The combat suite includes native
 shield absorption/drawing, moving particles and loose injury effects. The gameplay
 suite includes actual camera-edge drawing; optional `performanceSample=true`
 captures four short close/wide intervals and restores private speed boost.
+It stages quiet native waiting pawns and allows combat slowdown to expire without
+forcing the engine rate. The unchanged base save restores their prior state.
 Inspect the actual tick-rate multipliers before treating an interval as fourth
 speed; native normal-speed limits can remain active despite Ultrafast selection.
-These suites do not complete partial-climb interception, other combat producers,
-natural construction/breaching, optional mod or performance
+Use `totalfog/watchtower_projectiles` for partial-climb rear/ladder-side firing,
+actual base interception, native frag flight/fuse and, when Zombieland is loaded,
+its actual spinning projectile drawing. Use `totalfog/watchtower_building` for
+native blueprint/frame completion, automatic wall-cache invalidation and a
+supplied-target native breach attack. It prefills materials and supplies the
+breaching target/lord; it is not hauling or autonomous raid coverage.
+These suites do not complete other combat producers,
+hauling/autonomous raids, optional mod or original-baseline performance
 acceptance; track these in WATCHTOWER.md
 and VALIDATION.md. Never substitute the old test-only projection for production
 rendering or change native projectile ExactPosition to fit the artwork.
