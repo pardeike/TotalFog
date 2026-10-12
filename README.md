@@ -73,6 +73,23 @@ hidden activity. You can play it as a hard survival challenge or as a light
 atmosphere change. Colony mechs have their own vision multiplier, from 0.2 to 2.
 Its default of 1 keeps their normal sight range.
 
+### Defaults and information limits
+
+The current defaults enable map fog and suppress Combat and Anomaly music.
+Hidden-source sound checks and delayed unseen-event letters/messages are off,
+and the Wildlife tab remains available. To prevent those channels from revealing
+hidden activity, enable audio checks and delayed notifications and hide the
+Wildlife tab in the settings. Silent Raids, discarding unseen messages and
+muting hidden sounds are separate choices and default off. Existing saved
+settings are retained when updating.
+
+Fog does not hide research availability, storyteller threat calculations,
+world-map information or the game's pathfinding and flee decisions. Combat can
+still trigger native slowdown. Hearing uses distance rather than sound travelling
+through rooms. Ordinary sight is a two-dimensional cell grid; roofs affect tower
+sight, but ordinary sources do not model height or overhangs. Optional enemy fog
+currently applies to humanlike enemies, rather than every animal, mech or insect.
+
 ### Made for big colonies
 The sight engine is new and written for speed. Performance comes before extra
 features. Old visual snapshots of explored areas were removed because they cost

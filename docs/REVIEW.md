@@ -280,3 +280,9 @@ tests where they are pure:
   are checked again at firing. Explicit cell targets retain native blind fire.
   Carried target checks use PositionHeld. Pure controls cover hidden/seen
   targets, blind cells, non-player turrets and preservation of native failures.
+
+- Step 4, item 6: verified FogSettings:36-55 and its serialization defaults.
+  README and About now state the actual default policy, optional information
+  settings and simple engine-level limits. Andreas has been asked whether to
+  enable audio checks/delayed unseen events and hide Wildlife by default. No
+  default values have changed while that decision is pending.
