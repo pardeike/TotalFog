@@ -1,10 +1,9 @@
 # Total Fog and Zombieland preliminary feedback builds
 
-Private feedback update, 11 October 2026, for RimWorld 1.6. These are two
+Private feedback update, 12 October 2026, for RimWorld 1.6. These are two
 separate, complete mod ZIPs. Replace the previous local TotalFog and ZombieLand
-folders. They retain the earlier test-build fixes and add the settings below.
-This is not a public release. Keep the separate No Pause Challenge setup fix
-if you use that mod.
+folders. Earlier feedback fixes are included. This is not a public release.
+Keep the separate No Pause Challenge setup fix if you use that mod.
 
 Support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
 Source: [Total Fog](https://github.com/pardeike/TotalFog) and
@@ -21,62 +20,81 @@ must end in `Mods/TotalFog/About/About.xml` and
 only one copy is enabled. Disable NWN Real Fog of War and other fog mods.
 Use a copy of your save. Neither mod requires the other to be loaded.
 
-## New settings
+## New watchtower
 
-- Total Fog, Vision: **Colony mech vision multiplier**. It defaults to 1 and
-  ranges from 0.2 to 2. It changes colony-mech sight, including fog targeting,
-  without changing human sight, hostile-mech sight, or weapon range.
-- Zombieland, Miscellaneous: **Use normal flee response when avoidance is off**.
-  It defaults to off. Enable it while **Automatic avoidance of zombies** is
-  off to let the Assign-tab Flee response use RimWorld's normal checks for
-  nearby zombies. Ignore remains Ignore. The option does not enable automatic
-  path avoidance or change the existing avoidance-on behavior.
+Build the 3x3 watchtower under Security using wood, stone or metal. Rotate it
+to choose the ladder side and leave the cell immediately outside the ladder
+open. Select a colonist and right-click the tower to watch from it. There is
+room for one lookout. The old retired towers remain loadable; they do not turn
+into the new building.
 
-The cumulative Total Fog fixes include hidden refugee-pod letters sent before
-the passenger spawns, delayed Anomaly codex discovery, Anomaly music suppression,
-and hauling known vanilla chunks after sight is lost. Combat music suppression
-also suppresses Anomaly music. General ambient phenomena remain unchanged.
+- Climbing and descending use a normal progress bar and take 120 game ticks
+  each by default. The colonist moves visually from the ladder to the raised
+  deck. Orders and needs bring the lookout down before ordinary work resumes.
+- Sight doubles by default, capped at 96 cells. Freestanding walls can be seen
+  over; roofed rooms, mountains and other towers block sight.
+- Shooting from the tower defaults to off. Enable it in Total Fog settings
+  if wanted. A lookout is exposed to incoming fire. The solid base still
+  protects a partly climbed colonist from the opposite side of the ladder.
+- Collapse causes fall injuries and can kill. Empty the tower before
+  deconstruction. Downed occupants and corpses can be retrieved from the ladder;
+  rescue continues through RimWorld's normal bed rules.
+- Towers are more likely to receive an existing lightning strike. Material
+  resistance and fire behavior remain native; an exposed occupant can be hurt.
 
-The later Zombieland Heart feedback ZIP also prevents zombie-triggered Heart
-response alerts from pausing or forcing normal speed after the alert is hidden.
-It retains the earlier Flee option. The fleshbeasts and normal player-triggered
-alerts still happen. Keep the current Total Fog ZIP when applying this
-Zombieland-only update.
+Sight multiplier, sight cap, climb time and shooting are settings. No automatic
+lookout scheduling is included. The optional near-wall blind strip discussed
+while designing the tower is not part of this build.
 
-The subsequent Zombieland work feedback ZIP retains those fixes and corrects
-facing during corpse work, chainsaw repair, shocker activation and roping.
-Dead or downed Spitters stop animating and their custom jobs cannot move or
-spit. Its bounded native checks and fixture limits are in the ZIP's own
-preliminary notes. Keep the same Total Fog ZIP for this update as well.
+## Zombieland update and retained fixes
+
+Spitter balls that land on a solid building now place their zombie on nearby
+open ground. The impact and smoke stay at the actual impact cell. If no open
+cell exists within six cells, no zombie payload is spawned.
+
+The earlier corpse-work facing, chainsaw repair, shocker activation, roping,
+dead/downed Spitter and hidden Heart alert fixes are retained. Total Fog retains
+the colony-mech sight slider, hidden refugee-pod letters, delayed Anomaly codex
+discovery, Anomaly music suppression and hauling known vanilla chunks after
+sight is lost. Zombieland's optional normal Flee response with avoidance off
+remains off by default. This update does not claim to fix every natural
+Fleshmass Heart slowdown or reproduce the complete streamed mod list.
 
 ## What was checked
 
-All 347 independent Total Fog tests pass. Fresh native Mac RimWorld 1.6 checks
-with all DLCs and both mods confirm mech ranges at multipliers 1, 0.2, 0.5, 2,
-and 1 again. Human and hostile-mech controls remain unchanged. The native Vision
-page shows the slider and its default.
+All 364 independent Total Fog tests pass. Native Mac RimWorld 1.6 checks with
+all five DLCs cover four ladder rotations, blocked exits, orders and needs,
+ascent/descent/rescue/corpse save-load, native bed rescue, collapse, camera-edge
+visibility and the raised body, label and selection position. Actual native
+incoming/outgoing bullets, grenade flight/fuse, shields, particles, fire,
+lightning, construction completion, wall joins and a supplied-target breaching
+job have bounded controls. The zombie boundary checks run actual structure
+damage, native spitter flight/impact/spawn and a bomber's queued blast. They
+supply some targets; they do not establish autonomous horde target selection.
 
-Native zombie controls confirm the new Flee option is off by default, allows
-the normal zombie threat check when enabled with avoidance off, preserves Ignore
-and hostile-human behavior, and retains the existing special-zombie rules with
-avoidance on. The scoped fixture also obtains a native FleeAndCower job. It does
-not prove every autonomous escape, special-zombie combination, or long session.
-Native error journals are empty after these checks.
+The exact gameplay pair passes a fresh three-pair, uninstrumented 1,000-zombie
+comparison at native fourth speed: 317.97 versus 280.36 median TPS for the
+original fog mod. A one-pair wide spot check covers 50,750 map cells and gives
+161.15 versus 155.68 TPS, but frame p95 is worse at 86.95 versus 74.38 ms.
+These are bounded results, not a promise about every map or mod list. The common
+baseline has no occupied towers; a separate small close/wide occupation check
+addresses stationary tower cost.
 
-The archive gameplay DLLs must match the exact native-tested builds. Diagnostic
-companions are excluded. Earlier rendering and performance gates identify older
-DLLs and were not rerun for these small settings changes. These archives do not
-establish fresh performance acceptance, Windows behavior, or every mod list.
+The package requires fresh exact-pair native rendering, interaction, audio,
+contamination, incident and warning gates in addition to those tower checks.
+Archive gameplay DLLs must match the native-tested builds. Diagnostic companions
+are excluded.
 
-## Still open
+## Useful feedback
 
-The reported mature Fleshmass Heart slowdown is still under investigation.
-The local geometry fixture does not reproduce the complete streamed mod list
-or the Heart's natural growth history. This update does not claim to fix it.
-Research availability and similar deep game systems can still reveal activity;
-the fog does not rewrite those systems. Explored scenery uses native current
-drawing rather than an exact archive of its last observed appearance.
+Try building a tower into a wall, climbing from each ladder direction, giving
+orders during a climb, rescuing a downed lookout, saving/loading while occupied,
+and fighting zombies around it. If shooting is enabled, try it with your usual
+weapons. A short description plus Player.log or a save is enough to start
+investigating a problem; no need to run this whole list.
 
-For this update, try the mech slider and the Flee setting in your normal save.
-If they misbehave, a short description and Player.log or save are enough to
-start investigating.
+Windows, long sessions, further weapons, autonomous hauling/raids and broader
+combined mod lists remain open. Research availability and similar deep game
+systems can still reveal activity; the fog does not rewrite those systems.
+Explored scenery uses native current drawing rather than an exact archive of
+its last observed appearance.

@@ -7641,3 +7641,48 @@ The corresponding Zombieland source checkpoint is `8f820cb1`.
 Autonomous spitter targeting, tanky routes, broader special-zombie combinations,
 cross-platform behavior and the final original-mod performance comparison remain
 open. This does not replace the existing broader Zombieland compatibility gates.
+
+
+## Final tower candidate performance floor and wide spot check, 2026-10-12
+
+The exact gameplay pair is Total Fog
+`1bbba5160a8f9d0f3dbdce57c1c463092590675562c962425bfd6e17107fab44`
+and Zombieland
+`f46305f1b487b50a9c8c8bd8099e3c7da3c829369549318b9ebc4e62d4a5d4ab`.
+Public Steam 1.6.4871 rev597, all five DLCs, Metal, Apple M4 Max, 3,508 x 2,218;
+10 active mods include the bridge but no DPA or diagnostic tick instrumentation.
+Both runs reload the same unchanged 250 x 250 save with 1,000 zombies and 70
+other pawns, match effective settings and camera, disable the private speed
+boost, and leave native speed forcing off. Every measured native tick retains
+multiplier 15 and Ultrafast. The common baseline has no occupied towers; it
+does not replace the earlier bounded occupation delta check.
+
+`artifacts/comparison-tower-quiet-final-20261012.json` completes three alternating
+original/candidate pairs in six fresh game processes. Median TPS is
+317.9681 versus 280.3628, 13.413% higher. Median tick elapsed mean is
+2.2147 versus 2.5230 ms. Median frame p95 is 70.4985 versus 69.8615 ms,
+0.912% worse. The canonical uninstrumented ordinary-fourth-speed TPS floor
+passes; this is neither a universal FPS improvement nor a many-mod/combat soak.
+
+`artifacts/comparison-tower-wide-final-20261012.json` completes one separate
+fresh original/candidate pair, explicitly a spot check. Camera root size 100
+covers 50,750 map cells, 822 pawn roots and 763 zombie roots. TPS is
+161.1459 versus 155.6756, 3.514% higher; tick elapsed mean is 4.2161 versus
+4.5991 ms. Frame p95 is 86.9521 versus 74.3792 ms, 16.904% worse.
+The result retains the wide-frame-tail concern and cannot substitute for a
+three-pair acceptance comparison. No further timing runs are added for this
+bounded tower checkpoint.
+
+The first attempt, `artifacts/comparison-tower-final-20261012.json`, uses the
+NoGrace save and is rejected. Its retained samples run almost entirely at
+native multiplier 1 despite selected Ultrafast, so the roughly 58 TPS readings
+are not fourth-speed evidence. A later candidate process also reports the
+native `Verse.PathGridDoorsBlockedJob.Execute` / ManagedJob background-job
+NullReferenceException, ref `D71F67A7`. The identical stack/ref is already retained
+in `runtime-symbiant-inspection-horde-1000-original-3-1.log` and an earlier
+candidate log. This establishes a pre-existing failure with the original mod,
+not a benign exception or a fixed engine bug. The attempt stops and retains
+its report/logs. The corrected quiet and wide runs have no recognized native
+log errors and finish with the candidate restored and all game processes stopped.
+
+The full paired native/pixel/package gates remain a separate delivery requirement.

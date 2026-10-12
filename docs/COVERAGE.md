@@ -37,8 +37,16 @@ and ordinary-wall push behavior, native structure damage, spitter landings and
 a native bomber collapse. Zombieland now moves a spitter payload off a blocked
 impact cell; the failure and correction are retained separately.
 
-Still open: further combat producers, hauling/autonomous raids, the original-mod
-performance floor on final tower bytes, autonomous special-zombie AI and broader
+The final gameplay pair also passes a fresh three-pair, uninstrumented original-mod
+TPS comparison: 317.97 versus 280.36 median TPS, about 13.4% higher, with native
+fourth-speed multiplier 15 throughout. Its one-pair wide spot check covers
+50,750 map cells and measures 161.15 versus 155.68 TPS, but frame p95 worsens
+to 86.95 versus 74.38 ms. This does not establish a wide-frame improvement.
+The common 1,000-zombie baseline has no occupied towers; the separate short
+close/wide occupation control below addresses only bounded stationary tower cost.
+
+Still open: further combat producers, hauling/autonomous raids,
+autonomous special-zombie AI and broader
 CE/Multiplayer combinations. Existing compatibility evidence below does
 not establish elevated tower behavior. The tower remains experimental and
 has not been delivered to the tester or released publicly.

@@ -11,8 +11,8 @@ new production definition, ladder jobs, elevated sight and ordinary bullet polic
 pass the expanded 76-check native suite. The separate native combat/weather
 suite passes 75 checks, 15 carrier-emergency checks pass, and native projectile
 and construction/breach boundary controls pass. Further combat
-producers, compatibility and
-performance acceptance remain outstanding.
+producers and broader compatibility acceptance remain outstanding. Final gameplay
+bytes pass the bounded original-mod TPS floor; wide frame tails remain a limit.
 The fresh shared-colony Multiplayer tower slice now passes 27 controls for native
 player orders, all four settings, matching fog/actor state, partial descent,
 cold live rejoin and deterministic collapse/death. The existing reflection-only
@@ -36,7 +36,7 @@ The new definition and runtime types belong to Total Fog.
 keep their old footprints and remain retired. Defaults are a 2x pawn sight
 multiplier, a 96-cell sight cap, 120 ticks per full climb/descent and shooting
 disabled. All four values are settings and use the existing Multiplayer settings
-registration. The defaults are provisional until the bounded performance check.
+registration. These defaults remain provisional for preliminary playtesting.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
@@ -109,7 +109,13 @@ staging quiet native waiting pawns and allowing that timer to expire normally,
 four 4-second close/wide samples retain multiplier 15 on every measured tick,
 with private speed boost disabled. Ground/occupied throughput is 882–890 TPS.
 This is a small stationary-tower cost check with 128 waiting pawns, not the
-whole-game comparison against the original mod. Further combat producers,
+whole-game comparison against the original mod. The later final-byte comparison
+uses three fresh original/candidate pairs with 1,000 zombies and native fourth
+speed throughout: 317.97 versus 280.36 median TPS. A separate one-pair wide spot
+check covers 50,750 cells: 161.15 versus 155.68 TPS, with frame p95 worse at
+86.95 versus 74.38 ms. This accepts the bounded TPS floor, not universal
+performance or improved wide frame tails. That common baseline has no occupied
+towers. Further combat producers,
 autonomous raids/hauling, special-zombie route/target AI and broader CE/Multiplayer
 acceptance remain open. Exact tested bytes and newer changes are recorded in
 VALIDATION.md.
