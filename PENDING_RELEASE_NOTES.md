@@ -92,3 +92,5 @@
 - Visibility changes avoid rebuilding unrelated terrain and overlay meshes. Hidden gas no longer draws outside current sight.
 
 - Delayed information also filters selected hidden threat alerts and their jump targets. Known home-area fires and your own known corpses remain available for colony work.
+
+- Hidden looping sounds reuse hearing checks within a map tick. Delayed letters use the owning map clock and remain in History when their unseen targets disappear.

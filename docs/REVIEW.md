@@ -307,3 +307,15 @@ tests where they are pure:
   on known cells are actionable without granting live effects current sight.
   Native reservations/reachability still have to succeed. Pure controls cover
   home/unknown fire, own/foreign corpses and filtered/unlocated alert reports.
+
+- Step 7, items 11 and 12: verified SoundAudibility:38-48, the sustainer
+  volume hook and DeferredNotifications:47-65 against PendingQueue:23-27.
+  Audio now snapshots living hearing-capable faction listeners once per map
+  tick/faction, and caches nearest distance per source cell for that tick;
+  storage is reused and stays owned by the map. Sight/muting still checks live
+  before that cache. Deferred deadlines and polling both use TicksFor(map).
+  Letters whose targets disappear are retained until their deadline and added
+  to the native archive in recipient faction context, instead of silently
+  dropping. Pure tests cover cache clocks/factions/hearing/allocations and
+  single replay retention; native async-time/history playback remains untested
+  on these bytes.

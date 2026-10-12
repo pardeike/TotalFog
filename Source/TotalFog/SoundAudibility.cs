@@ -33,19 +33,21 @@ public static class SoundAudibility
             return 1;
         if (FogSettings.MuteHiddenSounds || maxDistance <= 0)
             return 0;
-        float nearest = float.PositiveInfinity;
-        // A living listener supplies hearing. Explored cells and cameras do not.
-        foreach (var listener in map.mapPawns.AllPawnsSpawned)
+        var cache = fog.HearingDistances;
+        var faction = Faction.OfPlayer;
+        if (cache.Begin(Compatibility.MultiplayerIntegration.TicksFor(map), faction.loadID))
         {
-            if (listener.Faction != Faction.OfPlayer || listener.Dead)
-                continue;
-            float hearing = listener.health.capacities.GetLevel(PawnCapacityDefOf.Hearing);
-            if (hearing <= 0)
-                continue;
-            float distance = listener.Position.DistanceTo(origin) / hearing;
-            if (distance < nearest)
-                nearest = distance;
+            // Scan the spawned-pawn list once, then only the living faction's
+            // hearing-capable listeners for each unique source cell this tick.
+            foreach (var listener in map.mapPawns.AllPawnsSpawned)
+                if (listener.Faction == faction && !listener.Dead)
+                    cache.Add(
+                        listener.Position.x,
+                        listener.Position.z,
+                        listener.health.capacities.GetLevel(PawnCapacityDefOf.Hearing)
+                    );
         }
+        float nearest = cache.Nearest(map.cellIndices.CellToIndex(origin), origin.x, origin.z);
         return VisibilityPolicy.Hearing(nearest, maxDistance, FogSettings.VolumeMufflingModifier);
     }
 }

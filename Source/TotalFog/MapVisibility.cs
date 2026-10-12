@@ -14,6 +14,7 @@ public class MapVisibility : MapComponent
     private const int SectionSize = 17;
     private const string OuterSpaceBiome = "OuterSpaceBiome";
     private readonly VisibilityGrid coverage;
+    internal readonly ListenerDistanceCache HearingDistances = new();
     private readonly ListenerCell<CompVisibility>[] hiddenAt;
     private readonly Dictionary<int, List<CompSightModifier>> affectersAt = new();
     private readonly Dictionary<int, List<CompTreeOcclusion>> treesAt = new();

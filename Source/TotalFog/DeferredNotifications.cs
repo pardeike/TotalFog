@@ -21,7 +21,7 @@ public class DeferredNotifications : MapComponent
     public DeferredNotifications(Map map)
         : base(map)
     {
-        valid = n => NotificationVisibility.HasLiveTarget(n.Targets);
+        valid = n => n.letter != null || NotificationVisibility.HasLiveTarget(n.Targets);
         ready = Ready;
         replay = Replay;
     }
@@ -52,9 +52,9 @@ public class DeferredNotifications : MapComponent
 
     public override void MapComponentTick()
     {
-        if (queue.Items.Count == 0 || Find.TickManager.TicksGame < nextCheck)
+        if (queue.Items.Count == 0 || MultiplayerIntegration.TicksFor(map) < nextCheck)
             return;
-        nextCheck = Find.TickManager.TicksGame + 30;
+        nextCheck = MultiplayerIntegration.TicksFor(map) + 30;
         queue.Drain(valid, ready, replay);
     }
 
@@ -62,10 +62,10 @@ public class DeferredNotifications : MapComponent
     {
         if (
             !map.GetVisibility().Initialized
-            || Find.TickManager.TicksGame < notification.earliestTick
+            || MultiplayerIntegration.TicksFor(map) < notification.earliestTick
         )
             return false;
-        if (!FogSettings.DelayAlertsUntilSeen)
+        if (!FogSettings.DelayAlertsUntilSeen || LostLetterTargets(notification))
             return true;
         var pushed = MultiplayerIntegration.BeginFactionContext(map, notification.faction);
         try
@@ -78,13 +78,20 @@ public class DeferredNotifications : MapComponent
         }
     }
 
+    private static bool LostLetterTargets(DeferredNotification notification) =>
+        notification.letter != null
+        && notification.Targets?.targets?.Count > 0
+        && !NotificationVisibility.HasLiveTarget(notification.Targets);
+
     private void Replay(DeferredNotification notification)
     {
         var pushed = MultiplayerIntegration.BeginFactionContext(map, notification.faction);
         IsReplayingLetter = true;
         try
         {
-            if (notification.letter != null)
+            if (LostLetterTargets(notification))
+                Find.Archive.Add(notification.letter);
+            else if (notification.letter != null)
                 Find.LetterStack.ReceiveLetter(
                     notification.letter,
                     notification.debugInfo,

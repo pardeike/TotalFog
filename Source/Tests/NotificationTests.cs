@@ -47,6 +47,20 @@ public class NotificationTests
     }
 
     [Fact]
+    public void Dead_letter_payload_can_reach_history_once_instead_of_being_invalidated()
+    {
+        var queue = new PendingQueue<string>();
+        queue.Add("dead-target letter");
+        var archive = new List<string>();
+        queue.Drain(_ => true, _ => false, archive.Add);
+        Assert.Single(queue.Items);
+        queue.Drain(_ => true, _ => true, archive.Add);
+        queue.Drain(_ => true, _ => true, archive.Add);
+        Assert.Single(archive);
+        Assert.Empty(queue.Items);
+    }
+
+    [Fact]
     public void FailedReplayDoesNotLoseThePayload()
     {
         var queue = new PendingQueue<string>();
