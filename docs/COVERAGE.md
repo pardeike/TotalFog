@@ -32,9 +32,13 @@ The CE tower slice passes 26 native controls for climbing/descending collision
 height, tall blockers, real outgoing/incoming arrows, projected drawing and
 in-flight save/load. CE's native trajectories and damage remain authoritative.
 The final CE candidate also passes a fresh 65-check core lifecycle run without CE.
+The paired zombie boundary slice passes 27 controls for melee exclusion, tower
+and ordinary-wall push behavior, native structure damage, spitter landings and
+a native bomber collapse. Zombieland now moves a spitter payload off a blocked
+impact cell; the failure and correction are retained separately.
 
 Still open: further combat producers, hauling/autonomous raids, the original-mod
-performance floor on final tower bytes, tower-specific zombie AI and broader
+performance floor on final tower bytes, autonomous special-zombie AI and broader
 CE/Multiplayer combinations. Existing compatibility evidence below does
 not establish elevated tower behavior. The tower remains experimental and
 has not been delivered to the tester or released publicly.

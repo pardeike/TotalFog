@@ -1,4 +1,4 @@
-# Watchtower design draft
+# Watchtower design and validation
 
 Status: production gameplay and CE checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
@@ -23,6 +23,9 @@ incoming damage, climb/descent collision height, tall obstacles, projected
 arrows and in-flight reload. This is a bounded weapon/height slice, not every CE
 weapon or combined loadout. A fresh 65-check core lifecycle run also passes on
 this candidate without CE loaded.
+The paired zombie slice passes 27 native controls for wall pushing, structure
+attacks, spitter center/ladder landings and an actual bomber collapse. The
+spitter payload fix belongs to Zombieland and has no Total Fog dependency.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types belong to Total Fog.
@@ -107,7 +110,7 @@ four 4-second close/wide samples retain multiplier 15 on every measured tick,
 with private speed boost disabled. Ground/occupied throughput is 882–890 TPS.
 This is a small stationary-tower cost check with 128 waiting pawns, not the
 whole-game comparison against the original mod. Further combat producers,
-autonomous raids/hauling, tower-specific zombie AI and broader CE/Multiplayer
+autonomous raids/hauling, special-zombie route/target AI and broader CE/Multiplayer
 acceptance remain open. Exact tested bytes and newer changes are recorded in
 VALIDATION.md.
 
@@ -135,7 +138,12 @@ suite.
 - Towers attract a greater share of ordinary lightning strikes. Occupants can
   be injured and flammable towers can catch fire.
 
-## Proposed operating rules
+## Operating rules and prototype history
+
+The production checkpoint above is the current implementation. The prototype
+notes below preserve the earlier design controls and their limits; they do not
+override newer production evidence. Optional blind areas and automatic staffing
+remain proposals.
 
 Use one platform occupant and an explicit watch job. Keep the pawn spawned on
 the map, selectable and governed by native health, damage, needs and faction
@@ -175,7 +183,8 @@ The prototype is not the player job. It uses immediate emergency cleanup on
 interruption, not the required timed descent, and does not define what to do
 when an exit becomes blocked. These, automatic rescue discovery, persistence,
 death/destruction, drawing occlusion during climbing and final combat geometry
-must be addressed before moving it into gameplay.
+were addressed in the production checkpoints above. The prototype remains a
+historical control.
 
 ## Sight and combat
 
@@ -325,7 +334,8 @@ An empty tower provides no sight. Sleeping or downed occupants provide no elevat
 sight. Tower range scales with the lookout's ordinary sight capacities and
 weather/lighting rules. Proposed starting balance is about twice normal sight,
 with a finite maximum radius chosen from measured cost rather than an unlimited
-multiplier. Exact bounds and defaults remain open.
+multiplier. Production currently uses 2x with a 96-cell cap; performance evidence
+and the finite settings bounds are recorded in the production checkpoint.
 
 Sight, attack target eligibility, cover and projectile interception are separate
 rules. Incoming fire also matters: merely increasing hit chance cannot make a
@@ -340,9 +350,8 @@ Outgoing and incoming trajectories therefore need elevation-aware interception,
 with mountains and other towers still acting as tall obstacles. The policy must
 not simply let the projectile ignore every building along its path. Native
 targeting, target cover and intermediate obstacles must agree with the trajectory.
-Combat Extended needs its own proven adapter for its trajectory rules. Elevated
-incoming-fire geometry, enemy acquisition and compatibility need native proof
-before final implementation.
+Combat Extended uses the optional adapter and native bow/height controls recorded
+above. Further weapons and combined loadouts remain unverified.
 The disabled-shooting policy must cover automatic and manual ranged attacks, with
 an explicit decision for offensive abilities and thrown weapons.
 
@@ -400,8 +409,8 @@ projectile controls. Do not infer compatibility from successful vanilla sight.
 4. Compare a small representative workload with several occupied towers at normal
    and wide zoom. Establish the range cap and defaults before adding more options.
 
-Do not begin full gameplay implementation until the footprint and combat choices
-have a reviewable, workable design. Optional balance extras can wait.
+The accepted footprint and combat design is now implemented. Keep optional
+balance extras separate from the current acceptance work.
 
 ### Native ladder access checkpoint
 

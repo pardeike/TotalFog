@@ -338,6 +338,13 @@ in-flight save/reload and descent. Generated targets are unarmored and capable
 of violence; this is geometry/damage coverage, not CE armor or every weapon.
 Compare reload against the uninterrupted reference tick because native
 Pause-on-load advances one tick. Preserve the native launch/impact evidence.
+Use `totalfog/watchtower_zombies` in the paused paired tower fixture for native
+wall-push eligibility with an ordinary-wall control, melee exclusion, normal/
+tanky/bomber structure eligibility, actual supplied-target zombie structure
+damage, spitter center/ladder landings and bomber collapse. Spitter targets are
+supplied; its Shoot, flight, impact and spawn remain native. Run the bomber in
+ordinary playback: Zombieland's scheduler/explosion queue is outside single-tick
+stepping. This does not establish autonomous spitter or tanky route selection.
 These suites do not complete other combat producers,
 hauling/autonomous raids, optional mod or original-baseline performance
 acceptance; track these in WATCHTOWER.md

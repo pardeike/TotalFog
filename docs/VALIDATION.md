@@ -7597,3 +7597,47 @@ This is a bounded public macOS CE bow/height check. Further CE weapons, armor
 regions, suppressive/indirect fire, combined Zombieland/Multiplayer, Windows and
 long sessions remain open. The original-mod performance floor on these final
 tower bytes remains outstanding. The tower has not been released or delivered.
+
+## Production tower zombie boundaries and solid-cell spit landing, 2026-10-12
+
+Public Steam 1.6.4871 rev597, all five DLCs, Harmony, RimBridgeServer, Total Fog
+and Zombieland. Total Fog retains SHA-256
+`1bbba5160a8f9d0f3dbdce57c1c463092590675562c962425bfd6e17107fab44`,
+MVID `44ffe7b8-7f40-4caf-bd2a-978b4b6119ab`. Updated Zombieland is
+`f46305f1b487b50a9c8c8bd8099e3c7da3c829369549318b9ebc4e62d4a5d4ab`;
+the non-shipping Total Fog companion is
+`87148981c7f746415bef9e26d1dd3a8ff29fa9a96e49dca72cd12b2102933257`.
+
+`artifacts/tower-zombies58-20261012.json` passes 27 controls. Ground zombie melee
+cannot target the raised lookout. Actual wall-push evaluation rejects the
+tower's impassable interior, while the same native evaluation starts a push over
+an ordinary wall. Normal/tanky/bomber structure eligibility remains valid.
+Zombieland's supplied-target attack handoff starts a native AttackStatic job
+which reduces wooden tower health from 290 to 288 and retains the lookout.
+This is not autonomous horde or tanky route coverage.
+
+The actual Spitter Shoot producer launches cell-targeted balls at the tower
+center and its ladder approach. Native flight, smoke, impact and spawn run;
+target selection alone is supplied. Both balls preserve the structure and
+lookout. The center target places one zombie at adjacent open `(43,5)` rather
+than the solid center `(41,5)`; the ladder target retains its ordinary `(41,3)`
+landing. Native adjacent-building evaluation then arms a bomber at the ladder.
+Ordinary playback completes its shortened fuse, native death and queued blast.
+The tower is destroyed; exactly one surviving native lookout remains at the
+walkable ladder approach with zero drawing offset and no tower ownership.
+
+Run 55 reproduces the original Zombieland payload at the impassable tower center
+with the tower still alive. The general correction lives in ZombieBall, uses a
+bounded nearest-open-cell search only for a blocked landing and preserves impact
+and smoke coordinates. It has no Total Fog dependency. If no open cell exists
+within six cells, it skips the payload. Run 56 passes the landing boundary.
+Run 57's bomber stepping timeout is rejected: its scheduler and explosion queue
+require ordinary playback rather than bridge single-tick stepping.
+All receipts and native logs are retained; run 58 has empty native attention
+and no recognized log errors, reloads the unchanged base, and ends with verified
+process termination. The 364 independent tests and paired quiet build pass.
+The corresponding Zombieland source checkpoint is `8f820cb1`.
+
+Autonomous spitter targeting, tanky routes, broader special-zombie combinations,
+cross-platform behavior and the final original-mod performance comparison remain
+open. This does not replace the existing broader Zombieland compatibility gates.
