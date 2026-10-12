@@ -98,6 +98,55 @@ The manifest records the supplied preview's actual height. The shared validator'
 640 by 358 recommendation remains a documented warning for this user-supplied
 image; it does not require altering the provided artwork.
 
+## Watchtower UI icons
+
+The new tower's Architect designator and native build-copy command use
+`Current/Textures/UI/Watchtower/Build.png`. This is a neutral grayscale thumbnail
+of the accepted compact deck, slanted solid base and front ladder. Its separate
+`uiIconPath` leaves the procedural in-game building and blueprint graphics alone.
+Existing watch, descend and retrieval float-menu actions use the matching tower,
+ladder/down-arrow and carrying-person icons. All are ordinary transparent PNGs;
+they add no shader, AssetBundle, per-frame drawing or gameplay state.
+
+The icons were generated with OpenAI image generation on 2026-10-12.
+`Build.png` is 256 by 256; `Descend.png` and `Retrieve.png` are 128 by 128.
+The tower source was cropped to a centered 900 by 900 square at pixel offset
+177,177, then resampled. The action icons were resampled without cropping.
+Normalization used macOS `sips`, preserved transparency and did not stretch the
+square source images. The original generated files remain in the local image
+archive, outside the player payload. No legacy watchtower art was reused.
+Native in-game icon appearance remains to be checked after installing the candidate.
+
+### Tower thumbnail
+
+Original source: `exec-a3d5593f-4b72-452e-ac81-3af86897ef69.png`.
+Final source: `exec-908a3294-2fe5-480a-8fe0-9d33d8e82d7a.png`.
+The reference was our own accepted native tower material-comparison screenshot.
+The final brightness adjustment keeps native wood/steel/stone tinting readable.
+
+Exact prompt:
+
+Create a single transparent square UI icon for the new Total Fog watchtower in RimWorld, using the supplied in-game reference only for its geometry and style. Render ONLY ONE free-standing tower, no adjacent wall pieces, no terrain, no background, no text, no border, no badge. Match the compact top-down tower at the top-left of the reference: a wide solid square base tapering into a much narrower single-person square platform at the top, broad slanted faces, compact squared railings on the top, an opening centered in the front railing, and one straight ladder running from the front ground edge to that opening. Use simple native RimWorld building art: flat broad grayscale shaded faces, restrained internal detail, strong connected dark outer contour, thin internal seams, no thick internal outlines, no perspective camera tilt, no fantasy battlements, no tall posts, no roof. Preserve the accepted compact platform and slanted-solid-base silhouette. Make all parts neutral light gray rather than wood brown so the game can tint this UI icon to the selected building material. Leave generous transparent margin, keep every stroke connected, and optimize for clear recognition when reduced to a 32 to 64 pixel Architect button. The tower should occupy about 82 percent of the square. Ground base at bottom, top platform above. A clean flat professional game UI asset, crisp anti-aliased edges, transparent background.
+
+Exact brightness-adjustment prompt:
+
+Edit this transparent watchtower UI thumbnail. Preserve its exact silhouette, platform proportions, railing geometry, ladder, position, transparent margins, and every line. Change ONLY the neutral surface brightness for use as a material-tinted game UI texture. Make the broad front faces and platform approximately near-white, with subtle very light-gray shading; keep the side faces light gray, at least 75 percent gray brightness. Keep the outer silhouette outline dark charcoal and the internal lines subdued gray. Keep all ladder and railing faces pale gray to near-white. No yellow, no brown, no blue, strictly neutral grayscale. It must look like a light neutral uncolored RimWorld building icon because the game will multiply the entire icon by a dark wood, steel or stone color. Thus the surface should be much brighter than in the input, roughly 1.6 times its current brightness. Do not change the design, composition or transparency. No background, no text, no scenery. Crisp clean icon with simple shaded faces.
+
+### Climb down
+
+Source: `exec-c260f59a-9e7f-4644-bada-76faaf3aa788.png`.
+
+Exact prompt:
+
+Create a single square RimWorld-style action icon on a transparent background, no text and no surrounding button. The action is 'climb down a watchtower'. A very simple bold pale-gray ladder with two rails and four thick rungs in the left half, alongside one large solid pale-gray downward-pointing arrow in the right half. Strong connected dark-gray outer outlines around the ladder, quiet soft shading; the arrow is clear off-white with a thin dark outside edge. All details must remain readable at 24 by 24 pixels. No tower building, no person, no perspective, no scenery, no gradients beyond very slight native game shading. Balanced composition, occupies 78 percent of square with equal transparent margins. Clean restrained flat game command icon.
+
+### Retrieve occupant
+
+Source: `exec-a91537ab-78b7-4eef-ba3f-84db534b3671.png`.
+
+Exact prompt:
+
+Create a single square RimWorld-style action icon on a transparent background, no text and no surrounding button. The action is 'retrieve an injured lookout from a watchtower'. One clear compact off-white simplified person icon being carried horizontally by another standing person, with a small solid pale-red medical plus symbol in the upper right. Broad connected shapes, dark-gray outer outline, flat restrained native game command art, no faces or clothing details, no circular badges, no scenery, no ladder or building. This should read as carrying/rescuing a downed person, not as a running healthy person. Strong contrast and as few details as possible, readable at 24 by 24 pixels. Balanced composition occupying 78 percent of square with equal transparent margins.
 ## Historical branding prompts
 
 The previous branding images were generated with OpenAI image generation on

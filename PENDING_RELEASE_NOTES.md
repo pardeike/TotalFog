@@ -2,6 +2,7 @@
 - Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
+- Keep a lookout on the platform when drafted, face idle lookouts toward the player, and prevent a rotation error after climbing.
 - Clear the ladder before an undrafted lookout resumes idle wandering, while preserving queued work.
 - Keep raised watchtower occupants vulnerable to fire, with their normal fire resistance preserved.
 - Preserve a watchtower and its occupant's corpse when saving and reloading after a death.
@@ -83,6 +84,7 @@
 - Add a separate colony mech vision slider, preserving normal range by default.
 
 - Keep colonists facing the ladder during descent.
+- Turn idle lookouts toward the player, retain their platform when drafted, and allow dragged formation orders across tower decks.
 - Offer explicit one-, two- and four-hour tower watches; drafted lookouts can hold until undrafted or ordered away. Show the remaining watch time and respect Fire at will.
 - Connect adjacent walls to the solid tower base without unwanted wall end caps.
 - Remove watchtower and blueprint startup configuration errors while preserving adjacent wall connections.

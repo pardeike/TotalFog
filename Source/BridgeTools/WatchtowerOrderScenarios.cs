@@ -296,11 +296,26 @@ public sealed class WatchtowerOrderScenarios
                     !pawns[0].Drafted && !pawns[3].Drafted
                 );
                 pawns[1].drafter.Drafted = true;
-                Record("drafting-interrupts-timed-use");
+                Check(
+                    "drafting timed lookout holds the same platform",
+                    towers[1].Watching
+                        && Driver(pawns[1]).HoldingWhileDrafted
+                        && pawns[1].CurJob.count == 0
+                );
+                Record("drafting-retains-platform");
+            });
+            await Step(60);
+            await On(() =>
+            {
+                Check(
+                    "drafted timed lookout remains on top",
+                    towers[1].Watching && towers[1].Elevation == 1
+                );
+                pawns[1].drafter.Drafted = false;
             });
             await Until(
                 () => towers[1].Occupant == null,
-                "native draft change releases timed watch"
+                "native undraft releases converted timed watch"
             );
             await On(() => Record("finished"));
 
@@ -464,55 +479,107 @@ public sealed class WatchtowerOrderScenarios
                             "native tower move eligibility " + i,
                             FloatMenuOptionProvider_DraftedMove.PawnCanGoto(p, top).Accepted
                         );
+                        var deck = TowerMoveOrders.DeckCell(tower);
+                        Check(
+                            "visible deck resolves native destination " + i,
+                            RCellFinder.BestOrderedGotoDestNear(deck, p) == tower.Position
+                                && TowerMoveOrders.MoveAnchor(deck, map, 2.9f) == deck
+                        );
+                        var center = tower.Position;
+                        Check(
+                            "formation pawn and marker draw above logical center " + i,
+                            TowerMoveOrders.FormationDrawPosition(ref center, 0)
+                                == center.ToVector3Shifted()
+                                    + new UnityEngine.Vector3(
+                                        0,
+                                        0,
+                                        Core.TowerGeometry.PawnProjection
+                                    )
+                        );
                     }
-                    // Native dragged-line destination distribution and native
-                    // PawnGotoAction issue the actual jobs, not fixture watch jobs.
-                    var controller = Find.Selector.gotoController;
-                    controller.StartInteraction(towers[0].Position);
-                    HarmonyLib
-                        .AccessTools.Field(controller.GetType(), "end")
-                        .SetValue(controller, towers[3].Position);
-                    foreach (var p in pawns)
-                        controller.AddPawn(p);
-                    controller.FinalizeInteraction();
-                    Check(
-                        "native dragged line creates four ladder jobs",
-                        pawns
-                            .Select(
-                                (p, i) =>
-                                    p.CurJobDef == WatchtowerDefOf.TotalFog_WatchtowerWatch
-                                    && p.CurJob.targetA.Thing == towers[i]
-                            )
-                            .All(v => v)
-                    );
                 });
-                await Until(
-                    () => towers.All(t => t.Watching),
-                    "dragged line occupies four platforms"
-                );
-                await On(() =>
+                // Literal UI drags include Selector's separate starting-cell
+                // lookup. Direct StartInteraction calls missed that lookup.
+                foreach (int count in new[] { 3, 4 })
                 {
-                    int start = pawns[0].CurJob.startTick;
-                    FloatMenuOptionProvider_DraftedMove.PawnGotoAction(
-                        towers[0].Position,
-                        pawns[0],
-                        towers[0].Position
+                    await On(() =>
+                    {
+                        Find.Selector.ClearSelection();
+                        foreach (var p in pawns.Take(count))
+                        {
+                            p.drafter.Drafted = true;
+                            Find.Selector.Select(
+                                p,
+                                playSound: false,
+                                forceDesignatorDeselect: true
+                            );
+                        }
+                    });
+                    var from = TowerMoveOrders.DeckCell(towers[0]);
+                    var to = TowerMoveOrders.DeckCell(towers[count - 1]);
+                    var dragged = await ctx.Tools.CallAsync(
+                        "rimworld/drag_cell",
+                        new
+                        {
+                            fromX = from.x,
+                            fromZ = from.z,
+                            toX = to.x,
+                            toZ = to.z,
+                            button = "right",
+                        },
+                        cancellationToken: cancellationToken
                     );
-                    Check(
-                        "repeated same-platform order keeps current watch",
-                        pawns[0].CurJob.startTick == start && towers[0].Watching
+                    Check("literal right drag dispatched " + count, dragged.Succeeded());
+                    await On(() =>
+                        Check(
+                            "native dragged line creates ladder jobs " + count,
+                            pawns
+                                .Take(count)
+                                .Select(
+                                    (p, i) =>
+                                        p.CurJobDef == WatchtowerDefOf.TotalFog_WatchtowerWatch
+                                        && p.CurJob.targetA.Thing == towers[i]
+                                )
+                                .All(v => v)
+                        )
                     );
-                    for (int i = 0; i < towers.Count; i++)
-                        pawns[i].drafter.Drafted = false;
-                });
-                await Until(
-                    () => towers.All(t => t.Occupant == null),
-                    "platform move undraft descends"
-                );
-                await Until(
-                    () => pawns.All(p => p.CurJobDef != WatchtowerDefOf.TotalFog_WatchtowerDescend),
-                    "platform move clears ladder"
-                );
+                    await Until(
+                        () => towers.Take(count).All(t => t.Watching),
+                        "dragged line occupies platforms " + count
+                    );
+                    await On(() =>
+                    {
+                        foreach (var p in pawns.Take(count))
+                            p.rotationTracker.ProcessPostTickVisuals(0);
+                        Check(
+                            "idle lookouts face the player " + count,
+                            pawns.Take(count).All(p => p.Rotation == Rot4.South)
+                        );
+                        int start = pawns[0].CurJob.startTick;
+                        FloatMenuOptionProvider_DraftedMove.PawnGotoAction(
+                            TowerMoveOrders.DeckCell(towers[0]),
+                            pawns[0],
+                            TowerMoveOrders.DeckCell(towers[0])
+                        );
+                        Check(
+                            "repeated same-platform order keeps current watch " + count,
+                            pawns[0].CurJob.startTick == start && towers[0].Watching
+                        );
+                        foreach (var p in pawns)
+                            p.drafter.Drafted = false;
+                    });
+                    await Until(
+                        () => towers.All(t => t.Occupant == null),
+                        "platform move undraft descends " + count
+                    );
+                    await Until(
+                        () =>
+                            pawns.All(p =>
+                                p.CurJobDef != WatchtowerDefOf.TotalFog_WatchtowerDescend
+                            ),
+                        "platform move clears ladder " + count
+                    );
+                }
             }
             async Task Until(Func<bool> done, string label, int limit = 1500)
             {

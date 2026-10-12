@@ -9,10 +9,10 @@ and a result applies only to its recorded gameplay bytes and loadout.
 ## Engine versions and maintenance
 
 The advertised versions are 1.6 and 1.7. Their explicit load-folder entries
-currently select the same 1.6/ DLL, definitions and shared assets. All five
+currently select the same Current/ DLL, definitions and shared assets. All five
 assemblies below 1.6 remain byte-identical to the upstream snapshot. Development
 follows 1.7; if the versions diverge, the complete last working 1.6 payload is
-retained and active development moves to 1.7/. Later 1.6 backports require an
+retained in 1.6/ and active development stays in Current/. Later 1.6 backports require an
 explicit request.
 
 The unchanged local candidate reaches the 1.7 main menu with the released Steam
@@ -22,6 +22,13 @@ Workshop Harmony copy and shared Total Fog DLL, SHA-256
 This is startup evidence only. Fog gameplay, save/load, performance, DLC behavior,
 Zombieland, CE and Multiplayer acceptance on 1.7 remain unverified. Existing
 native results below belong to their recorded 1.6 checkpoints.
+
+The later `Current/` candidate also passes the user's literal three-tower row
+drag on native 1.7, idle south-facing presentation, undraft descent and timed
+watch conversion to a drafted hold. All five DLCs were loaded. It passes 380
+independent tests; exact bytes, the rejected rotation change and bridge/fixture
+limits are recorded in VALIDATION.md. This narrow tower slice does not establish
+the broader 1.7 compatibility targets listed above.
 
 ## Watchtower feedback follow-up: 12 October 2026
 

@@ -12,12 +12,23 @@ else:
 
 ROOT = Path(__file__).resolve().parents[1]
 GAME = Path.home() / "Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app"
-MODS = Path(os.environ.get("RIMWORLD_MOD_DIR", str(GAME / "Mods"))).expanduser().resolve()
+# Keep the declared Mods root: resolving a shared symlink would send companion
+# tools to the old engine's parent instead of the running engine's BridgeTools.
+steam_mods = GAME.parent / "Mods"
+MODS = (
+    Path(
+        os.environ.get(
+            "RIMWORLD_MOD_DIR", str(steam_mods if steam_mods.is_dir() else GAME / "Mods")
+        )
+    )
+    .expanduser()
+    .absolute()
+)
 PROJECT = ROOT / "Source/TotalFog/TotalFog.csproj"
 LOGS = ROOT / "artifacts/logs"
 PAYLOAD = [
     "About",
-    "1.6",
+    "Current",
     "LegacyAssets",
     "Languages",
     "LoadFolders.xml",
@@ -82,7 +93,7 @@ def stopped():
         if binary.name in {"RimWorld by Ludeon Studios", "RimWorld"}:
             app = binary.parents[2]
             game_mods = {(app / "Mods").resolve(), (app.parent / "Mods").resolve()}
-            if MODS in game_mods:
+            if MODS.resolve() in game_mods:
                 raise RuntimeError("Stop RimWorld using " + str(MODS) + " before deploying")
 
 
@@ -100,11 +111,21 @@ def stage(destination, baseline=False):
     # loads the upstream bundle, restored from its immutable snapshot below.
     if (destination / "Assets").exists():
         shutil.rmtree(destination / "Assets")
-    assemblies = destination / "1.6/Assemblies"
+    assemblies = destination / ("1.6/Assemblies" if baseline else "Current/Assemblies")
+    assemblies.mkdir(parents=True, exist_ok=True)
+    if not baseline:
+        mapped = {
+            folder.text
+            for version in ET.parse(ROOT / "LoadFolders.xml").getroot()
+            for folder in version
+        }
+        if "1.6" not in mapped:
+            shutil.rmtree(destination / "1.6", ignore_errors=True)
     # Remove the inherited updater metadata from previously staged installs.
     (destination / "About/ModSync.xml").unlink(missing_ok=True)
     (assemblies / "rimworld-mod-real-fow.dll").unlink(missing_ok=True)
     if baseline:
+        shutil.rmtree(destination / "Current", ignore_errors=True)
         # The native baseline must retain the original runtime XML bindings.
         # Total Fog's renamed classes cannot be resolved by the inherited DLL.
         revision = "upstream-baseline"
@@ -156,7 +177,7 @@ def stage(destination, baseline=False):
             path.suffix in {".pdb", ".mdb"}
             or path.name in {".DS_Store", "0Harmony.dll"}
             or path.name.startswith("._")
-            or (not baseline and path.name == "VersionFromManifest.dll" and "1.6" in path.parts)
+            or (not baseline and path.name == "VersionFromManifest.dll" and "Current" in path.parts)
         ):
             path.unlink()
     if not (assemblies / "TotalFog.dll").is_file():
@@ -232,7 +253,7 @@ try:
             step = "installed metadata"
             stopped()
             destination = MODS / "TotalFog"
-            if not (destination / "1.6/Assemblies/TotalFog.dll").is_file():
+            if not (destination / "Current/Assemblies/TotalFog.dll").is_file():
                 raise RuntimeError("Install Total Fog before updating its metadata")
             about = ET.parse(ROOT / "About/About.xml")
             folders = ET.parse(ROOT / "LoadFolders.xml")
@@ -405,7 +426,7 @@ try:
                         expected = ROOT / (
                             "artifacts/baseline/rimworld-mod-real-fow.dll"
                             if variant == "original"
-                            else "1.6/Assemblies/TotalFog.dll"
+                            else "Current/Assemblies/TotalFog.dll"
                         )
                         if (
                             evidence["mainSha256"]
@@ -1159,16 +1180,18 @@ try:
                 if bundle.testzip() is not None:
                     raise RuntimeError("Feedback ZIP integrity check failed")
                 for name, built in [
-                    ("TotalFog", ROOT / "1.6/Assemblies/TotalFog.dll"),
+                    ("TotalFog", ROOT / "Current/Assemblies/TotalFog.dll"),
                     ("ZombieLand", zombie_root / "1.6/Assemblies/ZombieLand.dll"),
                 ]:
                     dll = "TotalFog.dll" if name == "TotalFog" else "ZombieLand.dll"
-                    if bundle.read(f"{name}/1.6/Assemblies/{dll}") != built.read_bytes():
+                    payload = "Current" if name == "TotalFog" else "1.6"
+                    if bundle.read(f"{name}/{payload}/Assemblies/{dll}") != built.read_bytes():
                         raise RuntimeError(
                             "Feedback DLL differs from the native-tested build: " + name
                         )
                     about = ET.fromstring(bundle.read(f"{name}/About/About.xml"))
-                    if [li.text for li in about.findall("supportedVersions/li")] != [expected]:
+                    versions = [li.text for li in about.findall("supportedVersions/li")]
+                    if expected not in versions:
                         raise RuntimeError("Feedback game version metadata drifted: " + name)
             archive.with_suffix(".zip.sha256").write_text(
                 hashlib.sha256(archive.read_bytes()).hexdigest() + "  " + archive.name + "\n"
@@ -1228,8 +1251,8 @@ try:
                     if name.endswith(".dll") and Path(name).name != "TotalFog.dll":
                         raise RuntimeError("Unexpected runtime DLL: " + name)
                 if (
-                    z.read("TotalFog/1.6/Assemblies/TotalFog.dll")
-                    != (ROOT / "1.6/Assemblies/TotalFog.dll").read_bytes()
+                    z.read("TotalFog/Current/Assemblies/TotalFog.dll")
+                    != (ROOT / "Current/Assemblies/TotalFog.dll").read_bytes()
                 ):
                     raise RuntimeError("Packaged DLL does not match the build")
                 advertised = [

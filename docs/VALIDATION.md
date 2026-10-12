@@ -8,6 +8,59 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Shared Current payload and native tower orders, 2026-10-12
+
+Both 1.6 and 1.7 load `Current/`, with the shared portable assets retained.
+The build and companion references, deployment, baseline staging and package
+audits use this layout. The upstream baseline still uses its original 1.6
+folders. Deployment retains the declared Mods path rather than resolving the
+shared Steam symlink, so the companion reaches the current engine's sibling
+BridgeTools folder. Running-game protection still compares resolved paths.
+
+The fresh local candidate passes formatting and 380 independent tests with zero
+build warnings/errors. Native Steam 1.7 with released Workshop Harmony 3.0.0,
+RimBridgeServer 2.3.0, Core, all five DLCs and Total Fog loads the candidate and
+its companion. Built/deployed gameplay SHA-256 is
+`bef73fb04e668227628b1dfdb11de34159c443f199bd93450dbef4b95290910b`;
+companion SHA-256 is
+`bc4adbadd1add9e1794d03c5b539a9bb4e70323836e1659032727cca78860cd9`.
+The installed obsolete active 1.6 folder was removed; older frozen repository
+payloads were not changed.
+
+In Andreas's `total-fog-3-drafted-3-towers` save, a literal native right drag
+across the visible decks gives Hayhouse, Sienna and Ingersoll individual tower
+watch jobs. After 450 ticks across native update frames, all three occupy their
+correct logical centres. The native close-up shows all three facing south.
+Undrafting Hayhouse starts descent; after 180 ticks he is clear of the ladder
+at (213,181), while the other two remain watching. The real two-hour undrafted
+menu action climbs and remains on the deck after another 200 ticks. Activating
+the native Draft gizmo retains that watch and platform position for another
+160 ticks. Activating Undraft releases it and reaches the same clear ground
+cell after another 180 ticks. A subsequent 1.5-second Normal playback advances
+90 ticks. The fresh native Player.log has no errors.
+
+The preceding rejected candidate, gameplay SHA-256
+`79a79058c1cc402794d46fc8aa27b97bd959aa8787e640ff6b7ec0353218d7b2`,
+used `TargetIndex.None` to stop facing the building. Andreas's row-drafting
+reproduction exposed repeated `Job.GetTarget` exceptions in the native rotation
+tracker. Both inspected engine versions require an actual A/B/C index. The
+correction uses the unused, empty B target while watching, retaining native
+combat facing and assigning B normally for the ground exit.
+
+Limits: the expanded four-orientation order fixture found no suitable clear,
+unroofed, vanilla-unfogged 28x16 area in this map and staged no objects. It is
+not a passing suite. Two bridge colonist-list reads later failed a main-thread
+guard; selected-pawn inspection and native gizmo execution supplied the draft
+transition evidence instead. Those bridge failures are separate from the
+fixed gameplay exception. Fresh combat, Achtung, CE, Multiplayer, performance,
+full timed expiry and timer save/load acceptance were not repeated here.
+The original user save was not written. No build was published or sent.
+
+Evidence: `artifacts/tower-input-20261012/native-feedback-checks.json`,
+`current-orders-result.json`, `current-three-row-watching__cell_rect.png`,
+`current-timed-watching__cell_rect.png`, and
+`current-draft-retains-timed-watch__cell_rect.png`.
+
 ## Watchtower feedback follow-up, 2026-10-12
 
 The local feedback candidate passes 364 independent tests and all 59 controls

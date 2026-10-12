@@ -206,7 +206,9 @@ public sealed class Building_Watchtower : WatchtowerGraphic
                 () =>
                     pawn.jobs.TryTakeOrderedJob(
                         JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerDescend, this)
-                    )
+                    ),
+                WatchtowerIcons.Descend,
+                Color.white
             );
             yield break;
         }
@@ -217,7 +219,9 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         {
             yield return new FloatMenuOption(
                 label.Translate() + " (" + "TotalFog_TowerUnavailable".Translate() + ")",
-                null
+                null,
+                retrieve ? WatchtowerIcons.Retrieve : WatchtowerIcons.Watch,
+                Color.white
             );
             yield break;
         }
@@ -226,14 +230,18 @@ public sealed class Building_Watchtower : WatchtowerGraphic
             if (pawn.Drafted)
                 yield return new FloatMenuOption(
                     "TotalFog_TowerWatchDrafted".Translate(),
-                    () => OrderWatch(pawn, 0)
+                    () => OrderWatch(pawn, 0),
+                    WatchtowerIcons.Watch,
+                    Color.white
                 );
             foreach (int hours in new[] { 1, 2, 4 })
             {
                 int ticks = hours * GenDate.TicksPerHour;
                 yield return new FloatMenuOption(
                     "TotalFog_TowerWatchTimed".Translate(ticks.ToStringTicksToPeriod()),
-                    () => OrderWatch(pawn, ticks)
+                    () => OrderWatch(pawn, ticks),
+                    WatchtowerIcons.Watch,
+                    Color.white
                 );
             }
             yield break;
@@ -291,7 +299,9 @@ public sealed class Building_Watchtower : WatchtowerGraphic
                     + " ("
                     + "TotalFog_TowerUnavailable".Translate()
                     + ")",
-                null
+                null,
+                WatchtowerIcons.Retrieve,
+                Color.white
             );
         return new FloatMenuOption(
             "TotalFog_TowerRetrieve".Translate(),
@@ -306,7 +316,9 @@ public sealed class Building_Watchtower : WatchtowerGraphic
                         checkSocialProperness: false
                     );
                 worker.jobs.TryTakeOrderedJob(next);
-            }
+            },
+            WatchtowerIcons.Retrieve,
+            Color.white
         );
     }
 

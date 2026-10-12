@@ -9,13 +9,13 @@ the existing SDK install under ~/Library/Application Support/dotnet when present
 including for nested companion builds. Gameplay and companion DLLs still target
 net472 for RimWorld; independent tests run on net10.0.
 About/About.xml owns the advertised game versions: 1.6 and 1.7. Both explicit
-LoadFolders.xml entries currently use the same 1.6/ payload and LegacyAssets.
+LoadFolders.xml entries currently use the same Current/ payload and LegacyAssets.
 The reference package, build output and .steam-mods.json rimworldVersion remain
 1.6 while this shared binary is used. Do not copy the DLL into a second version
 folder or compile against a new engine merely to advertise support.
 Development follows 1.7. When code/content actually diverges, freeze the complete
 last working 1.6 payload, including its required shared assets and translations,
-and move active output/content to 1.7/. Update packaging and the two load-folder
+and keep active output/content in Current/. Update packaging and the two load-folder
 mappings together. Do not backport later changes to 1.6 unless Andreas requests
 it. Folders below 1.6 stay frozen. Clean 1.7 startup is not gameplay acceptance.
 For source-only review builds that must preserve the tracked release DLL, set

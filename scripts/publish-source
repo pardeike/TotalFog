@@ -24,7 +24,7 @@ def main():
     if repo["visibility"] != "PUBLIC":
         raise RuntimeError("The source repository must be public")
     metadata = ET.fromstring(output("git", "show", "HEAD:About/About.xml"))
-    if [node.text for node in metadata.findall("supportedVersions/li")] != ["1.6"]:
+    if [node.text for node in metadata.findall("supportedVersions/li")] != ["1.6", "1.7"]:
         raise RuntimeError("Public supported versions must match the approved public game target")
     forbidden = re.compile(
         rb"discord\.com/channels/@me/|github_pat_[A-Za-z0-9_]{20,}|"

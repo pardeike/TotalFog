@@ -45,10 +45,11 @@ for name, repository, bundle in [
     ("TotalFog", ROOT, "TotalFog"),
     ("ZombieLand", ROOT.parent / "Zombieland", "Zombieland"),
 ]:
+    payload = "Current" if name == "TotalFog" else "1.6"
     for built, deployed in [
         (
-            repository / "1.6/Assemblies" / (name + ".dll"),
-            mods / name / "1.6/Assemblies" / (name + ".dll"),
+            repository / payload / "Assemblies" / (name + ".dll"),
+            mods / name / payload / "Assemblies" / (name + ".dll"),
         ),
         (
             repository / "artifacts/BridgeTools" / bundle / (bundle + ".BridgeTools.dll"),

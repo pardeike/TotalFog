@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -21,6 +24,39 @@ internal static class TowerMoveOrders
                 new[] { typeof(FloatMenuContext) }
             ),
             transpiler: new HarmonyMethod(owner, nameof(MoveAnchorTranspiler))
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(Selector),
+                "HandleMultiselectGoto",
+                new[] { typeof(FloatMenuContext) }
+            ),
+            transpiler: new HarmonyMethod(owner, nameof(MoveAnchorTranspiler))
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.PropertySetter(
+                typeof(Pawn_DraftController),
+                nameof(Pawn_DraftController.Drafted)
+            ),
+            transpiler: new HarmonyMethod(owner, nameof(DraftInterruptionTranspiler))
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(MultiPawnGotoController),
+                nameof(MultiPawnGotoController.Draw)
+            ),
+            transpiler: new HarmonyMethod(owner, nameof(FormationDrawingTranspiler))
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(MultiPawnGotoController),
+                nameof(MultiPawnGotoController.OnGUI)
+            ),
+            transpiler: new HarmonyMethod(owner, nameof(FormationLabelsTranspiler))
         );
         PatchSafety.Patch(
             harmony,
@@ -81,7 +117,10 @@ internal static class TowerMoveOrders
     {
         if (map == null || !cell.InBounds(map))
             return null;
-        if (cell.GetEdifice(map) is Building_Watchtower tower && cell == tower.Position)
+        if (
+            cell.GetEdifice(map) is Building_Watchtower tower
+            && (cell == tower.Position || cell == DeckCell(tower))
+        )
             return tower;
         // The drawn standing point is north of the logical center for every
         // rotation. Two grid lookups suffice; no scan of maps or tower lists.
@@ -96,6 +135,12 @@ internal static class TowerMoveOrders
             ? projected
             : null;
     }
+
+    internal static IntVec3 DeckCell(Building_Watchtower tower) =>
+        (
+            tower.Position.ToVector3Shifted()
+            + new Vector3(0, 0, WatchtowerGraphic.PlatformProjection)
+        ).ToIntVec3();
 
     private static bool Available(Building_Watchtower tower, Pawn pawn) =>
         pawn?.Spawned == true
@@ -128,6 +173,93 @@ internal static class TowerMoveOrders
             throw new InvalidOperationException(
                 "Drafted move anchor changed: expected one native standable-cell lookup."
             );
+    }
+
+    internal static IEnumerable<CodeInstruction> DraftInterruptionTranspiler(
+        IEnumerable<CodeInstruction> instructions
+    ) =>
+        ReplaceCalls(
+            instructions,
+            AccessTools.Method(
+                typeof(Pawn_JobTracker),
+                nameof(Pawn_JobTracker.IsCurrentJobPlayerInterruptible)
+            ),
+            AccessTools.Method(typeof(TowerMoveOrders), nameof(InterruptForDraftChange)),
+            1
+        );
+
+    internal static bool InterruptForDraftChange(Pawn_JobTracker jobs) =>
+        jobs.curDriver is JobDriver_Watchtower driver && driver.HoldWhenDrafted()
+            ? false
+            : jobs.IsCurrentJobPlayerInterruptible();
+
+    internal static IEnumerable<CodeInstruction> FormationDrawingTranspiler(
+        IEnumerable<CodeInstruction> instructions
+    ) =>
+        ReplaceCalls(
+            instructions,
+            AccessTools.Method(
+                typeof(IntVec3),
+                nameof(IntVec3.ToVector3ShiftedWithAltitude),
+                new[] { typeof(float) }
+            ),
+            AccessTools.Method(typeof(TowerMoveOrders), nameof(FormationDrawPosition)),
+            4
+        );
+
+    internal static IEnumerable<CodeInstruction> FormationLabelsTranspiler(
+        IEnumerable<CodeInstruction> instructions
+    ) =>
+        ReplaceCalls(
+            instructions,
+            AccessTools.Method(typeof(IntVec3), nameof(IntVec3.ToUIRect)),
+            AccessTools.Method(typeof(TowerMoveOrders), nameof(FormationLabelRect)),
+            1
+        );
+
+    private static IEnumerable<CodeInstruction> ReplaceCalls(
+        IEnumerable<CodeInstruction> instructions,
+        MethodInfo original,
+        MethodInfo replacement,
+        int expected
+    )
+    {
+        int count = 0;
+        foreach (var instruction in instructions)
+        {
+            if (instruction.Calls(original))
+            {
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = replacement;
+                count++;
+            }
+            yield return instruction;
+        }
+        if (count != expected)
+            throw new InvalidOperationException(
+                $"Tower order hook changed: expected {expected} calls to {original.Name}, found {count}."
+            );
+    }
+
+    private static Vector3 FormationOffset(IntVec3 cell)
+    {
+        var tower = At(cell, Find.CurrentMap);
+        return tower != null && cell == tower.Position
+            ? new Vector3(0, 0, Core.TowerGeometry.PawnProjection)
+            : Vector3.zero;
+    }
+
+    internal static Vector3 FormationDrawPosition(ref IntVec3 cell, float altitude) =>
+        cell.ToVector3ShiftedWithAltitude(altitude) + FormationOffset(cell);
+
+    internal static Rect FormationLabelRect(ref IntVec3 cell)
+    {
+        var rect = cell.ToUIRect();
+        var offset = FormationOffset(cell);
+        if (offset != Vector3.zero)
+            rect.position +=
+                (cell.ToVector3() + offset).MapToUIPosition() - cell.ToVector3().MapToUIPosition();
+        return rect;
     }
 
     internal static IntVec3 MoveAnchor(
@@ -183,14 +315,10 @@ internal static class TowerMoveOrders
 
     internal static bool OrderedJobPrefix(ref Job job, Pawn ___pawn, ref bool __result)
     {
-        if (
-            job?.def != JobDefOf.Goto
-            || !___pawn.Drafted
-            || job.targetA.HasThing
-            || !job.targetA.Cell.InBounds(___pawn.Map)
-            || job.targetA.Cell.GetEdifice(___pawn.Map) is not Building_Watchtower tower
-            || job.targetA.Cell != tower.Position
-        )
+        if (job?.def != JobDefOf.Goto || !___pawn.Drafted || job.targetA.HasThing)
+            return true;
+        var tower = At(job.targetA.Cell, ___pawn.Map);
+        if (tower == null)
             return true;
         if (tower.Occupant == ___pawn)
         {

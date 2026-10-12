@@ -47,13 +47,18 @@ panel shows the release condition or remaining time. Explicit player orders do
 not end at the ordinary hunger/rest thresholds: a hungry pawn still holds its
 drafted position or completes the requested time. Autonomous undrafted orders
 retain their needs checks. Downing, mental states, burning and native job
-interruptions still end duty. Normal draft changes interrupt building use through
-RimWorld's existing job tracker, with our descent finalizer. Automatic shooting
+interruptions still end duty. Drafting a lookout already watching on the deck
+converts its current watch into a drafted hold, retaining occupation and reservations.
+Undrafting still interrupts through RimWorld's existing job tracker and descent
+finalizer. Automatic shooting
 respects Fire at will. Both ladder directions own native facing during the climb
-and face the rungs; ordinary watching retains native combat facing.
+and face the rungs; idle watching faces south toward the player and retains native
+combat facing while aiming.
 
 Drafted Go here orders recognize both the logical center and the drawn platform
-cell. Native dragged lines distribute pawns across individual platforms; Achtung
+cells, including the lower visible deck and the raised pawn position. Native
+drag input keeps its platform anchor instead of snapping to ground; formation
+previews and labels use the raised position. Native dragged lines distribute pawns across individual platforms; Achtung
 uses the same destination and ordered-job pipeline with one optional late-bound
 anchor hook. The tower stays solid for ordinary pathfinding, with one occupant
 and native reservations. Undrafted pawns clear the ladder by one reachable cell
@@ -64,10 +69,15 @@ the ground starting point before their descent. Other pawns, blocked ladders
 and the footprint's native impassability retain their original rules. Targets,
 danger limits and traversal modes still pass through native reachability.
 
-The local follow-up passes 59 focused native order/facing/wall controls with
+The earlier local follow-up passes 59 focused native order/facing/wall controls with
 Core, Harmony, RimBridgeServer, Camera+ and Total Fog. The delivered pair's
 broader combat, CE, Multiplayer and performance evidence below belongs to its
 older recorded bytes; these slices have not been rerun for the follow-up.
+The later shared `Current/` candidate passes a literal three-pawn row drag in
+the user's native 1.7 save, idle south facing, undraft descent, and conversion
+of a timed undrafted watch into drafted holding. Its broader order fixture
+could not stage clear ground in that map. See VALIDATION.md for exact bytes and
+the limits of this focused check.
 
 The realtime tower registers its wall flags across the full footprint when it
 spawns and removes them when it despawns. It does not declare a mesh link drawer.

@@ -16,6 +16,7 @@
     <holdsRoof>false</holdsRoof>
     <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
     <designationCategory>Security</designationCategory>
+    <uiIconPath>UI/Watchtower/Build</uiIconPath>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <costStuffCount>150</costStuffCount>
     <researchPrerequisites>

@@ -7,7 +7,7 @@
     <DebugType>None</DebugType>
   </PropertyGroup>
   <PropertyGroup>
-    <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../1.6/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
+    <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../Current/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="TotalFog" HintPath="$(TotalFogGameplayAssembly)" Private="false" />

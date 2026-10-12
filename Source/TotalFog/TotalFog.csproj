@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
   <PropertyGroup>
-    <OutputPath Condition="'$(TotalFogBuildOutput)' == ''">../../1.6/Assemblies</OutputPath>
+    <OutputPath Condition="'$(TotalFogBuildOutput)' == ''">../../Current/Assemblies</OutputPath>
     <OutputPath Condition="'$(TotalFogBuildOutput)' != ''">$(TotalFogBuildOutput)</OutputPath>
     <TargetFramework>net472</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

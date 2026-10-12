@@ -18,6 +18,28 @@ public sealed class JobDriver_Watchtower : JobDriver
     internal bool HoldingWhileDrafted => job.count <= 0 && pawn.Drafted;
     internal int WatchTicksRemaining => HoldingWhileDrafted ? -1 : ticksLeftThisToil;
 
+    internal bool HoldWhenDrafted()
+    {
+        if (
+            !pawn.Drafted
+            || pawn.Downed
+            || pawn.Dead
+            || pawn.InMentalState
+            || job.def != WatchtowerDefOf.TotalFog_WatchtowerWatch
+            || Climbing
+            || Tower?.Watching != true
+            || Tower.Occupant != pawn
+            || Tower.Elevation != 1
+            || CurToil == null
+        )
+            return false;
+        // Drafting converts timed building use into holding this position.
+        // Keep the same driver, reservation and platform occupation.
+        job.count = 0;
+        CurToil.defaultCompleteMode = ToilCompleteMode.Never;
+        return true;
+    }
+
     public override string GetReport() =>
         !Climbing && Tower is { Watching: false, ApproachClear: false } && Tower.HasActor(pawn)
             ? "TotalFog_TowerWaitingForExit".Translate(Tower.Label)
@@ -126,7 +148,11 @@ public sealed class JobDriver_Watchtower : JobDriver
         }
         if (!Descending && !Retrieving)
         {
+            // The native rotation tracker always calls Job.GetTarget. None is
+            // not a valid index there; B is unused until the ground exit.
+            rotateToFace = TargetIndex.B;
             var watch = ToilMaker.MakeToil("Watch from tower");
+            watch.initAction = () => job.targetB = LocalTargetInfo.Invalid;
             // Drafted orders hold a position. Undrafted building use has a
             // bounded duration, including older/programmatic orders with no count.
             int watchTicks =
@@ -138,7 +164,9 @@ public sealed class JobDriver_Watchtower : JobDriver
             watch.defaultDuration = watchTicks;
             watch.tickAction = () =>
             {
-                pawn.Rotation = Tower.Rotation.Opposite;
+                // The empty target leaves combat aim to the native tracker.
+                if (!pawn.stances.FullBodyBusy)
+                    pawn.Rotation = Rot4.South;
                 if (
                     !job.playerForced
                         && !pawn.Drafted

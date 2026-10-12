@@ -360,9 +360,9 @@ map area at root size 100. This is a spot check; the normal performance gate
 still uses three pairs.
 
 Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 currently load the
-same DLL, definitions and assets from `1.6/`. The older version folders stay for
+same DLL, definitions and assets from `Current/`. The older version folders stay for
 history. Development follows 1.7. If the versions need different code or content,
-we will keep the last working 1.6 payload and move new development to `1.7/`;
+we will freeze the last working payload in `1.6/` and keep new development in `Current/`;
 continued fixes or new features for 1.6 are not promised. The current 1.7 check
 establishes clean startup with Steam Harmony, not full gameplay or compatibility
 acceptance. The existing detailed native results belong to 1.6. More details:
