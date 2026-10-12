@@ -29,6 +29,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     private bool[] sightWindow;
 
     public IntVec3 Approach => Position + Rotation.FacingCell * 2;
+    internal bool ApproachClear => Spawned && Approach.InBounds(Map) && Approach.Walkable(Map);
     internal Thing OccupantBody => Occupant?.Dead == true ? Occupant.Corpse : Occupant;
     private Thing RescuerBody => Rescuer?.Dead == true ? Rescuer.Corpse : Rescuer;
 
@@ -179,6 +180,8 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         if (Occupant == null)
             return text;
         text += "\n" + "TotalFog_TowerOccupied".Translate(Occupant.LabelShortCap);
+        if (!ApproachClear)
+            text += "\n" + "TotalFog_TowerExitBlocked".Translate();
         if (Watching && Occupant.jobs.curDriver is JobDriver_Watchtower driver)
             text +=
                 "\n"
@@ -235,21 +238,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
             }
             yield break;
         }
-        yield return new FloatMenuOption(
-            label.Translate(),
-            () =>
-            {
-                var next = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerRetrieve, this);
-                next.targetC = body;
-                if (body is Pawn patient)
-                    next.targetB = RestUtility.FindBedFor(
-                        patient,
-                        pawn,
-                        checkSocialProperness: false
-                    );
-                pawn.jobs.TryTakeOrderedJob(next);
-            }
-        );
+        yield return RetrievalOption(pawn, body);
     }
 
     private void OrderWatch(Pawn pawn, int ticks)
@@ -273,6 +262,52 @@ public sealed class Building_Watchtower : WatchtowerGraphic
             GroundActor(Rescuer, injury);
         }
         base.Destroy(mode);
+    }
+
+    internal bool TryEmergencyExit(Pawn pawn)
+    {
+        if (!HasActor(pawn) || ApproachClear || pawn.Dead || pawn.Downed)
+            return false;
+        var ground = FindGroundCell();
+        if (!ground.InBounds(Map) || !ground.Walkable(Map))
+            return false;
+        Messages.Message(
+            "TotalFog_TowerEmergencyExit".Translate(pawn.LabelShortCap),
+            pawn,
+            MessageTypeDefOf.NegativeEvent,
+            false
+        );
+        // A desperate jump uses the existing collapse/drop cleanup and fall
+        // injuries. Ordinary orders still wait for and descend the ladder.
+        GroundActor(pawn, true);
+        return true;
+    }
+
+    internal FloatMenuOption RetrievalOption(Pawn worker, Thing body)
+    {
+        if (!CanEnter(worker, body) || !worker.CanReserve(body) || !worker.CanReserve(this))
+            return new FloatMenuOption(
+                "TotalFog_TowerRetrieve".Translate()
+                    + " ("
+                    + "TotalFog_TowerUnavailable".Translate()
+                    + ")",
+                null
+            );
+        return new FloatMenuOption(
+            "TotalFog_TowerRetrieve".Translate(),
+            () =>
+            {
+                var next = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerRetrieve, this);
+                next.targetC = body;
+                if (body is Pawn patient)
+                    next.targetB = RestUtility.FindBedFor(
+                        patient,
+                        worker,
+                        checkSocialProperness: false
+                    );
+                worker.jobs.TryTakeOrderedJob(next);
+            }
+        );
     }
 
     private IntVec3 FindGroundCell()

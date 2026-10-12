@@ -18,6 +18,9 @@
     <designationCategory>Security</designationCategory>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <costStuffCount>150</costStuffCount>
+    <researchPrerequisites>
+      <li>ComplexFurniture</li>
+    </researchPrerequisites>
     <stuffCategories>
       <li>Woody</li>
       <li>Stony</li>

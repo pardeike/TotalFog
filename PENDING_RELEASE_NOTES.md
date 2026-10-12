@@ -94,3 +94,5 @@
 - Delayed information also filters selected hidden threat alerts and their jump targets. Known home-area fires and your own known corpses remain available for colony work.
 
 - Hidden looping sounds reuse hearing checks within a map tick. Delayed letters use the owning map clock and remain in History when their unseen targets disappear.
+
+- Watchtowers require Complex furniture, protect their ladder from blocking construction, show blocked-exit warnings and permit rescue without a bed from the pawn menu. Desperate blocked exits can cause fall injuries; outgoing shots keep the target's normal cover.

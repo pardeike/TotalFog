@@ -319,3 +319,14 @@ tests where they are pure:
   dropping. Pure tests cover cache clocks/factions/hearing/allocations and
   single replay retention; native async-time/history playback remains untested
   on these bytes.
+
+- Step 8, items 13-15: verified the blocked-ladder toil, bed requirement,
+  pawn-menu gap, missing research and outgoing cover reset at the cited lines.
+  Impassable blueprint placement now protects existing ladders, and new towers
+  reject planned ladder obstructions. Waiting has a persistent report/inspect
+  warning and ends on downing; urgent needs can use the existing injured fall
+  cleanup if free ground exists. A completely enclosed forced obstruction
+  still needs clearing. Native own-pawn rescue menus now offer retrieval,
+  automatic/manual retrieval do not require a bed, and tending/feeding follows
+  retrieval. Towers require Complex furniture; shooting out retains native
+  target cover. These engine-bound changes still need native play checks.

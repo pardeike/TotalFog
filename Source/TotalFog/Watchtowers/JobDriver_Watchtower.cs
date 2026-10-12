@@ -19,11 +19,13 @@ public sealed class JobDriver_Watchtower : JobDriver
     internal int WatchTicksRemaining => HoldingWhileDrafted ? -1 : ticksLeftThisToil;
 
     public override string GetReport() =>
-        Climbing
+        !Climbing && Tower is { Watching: false, ApproachClear: false } && Tower.HasActor(pawn)
+            ? "TotalFog_TowerWaitingForExit".Translate(Tower.Label)
+        : Climbing
             ? (goingDown ? "TotalFog_TowerClimbingDown" : "TotalFog_TowerClimbingUp").Translate(
                 Tower.Label
             )
-            : base.GetReport();
+        : base.GetReport();
 
     private float TransitionElevation =>
         goingDown ? Mathf.Lerp(startingElevation, 0, Progress) : Progress;
@@ -171,7 +173,13 @@ public sealed class JobDriver_Watchtower : JobDriver
         clear.defaultCompleteMode = ToilCompleteMode.Never;
         clear.initAction = () =>
         {
-            if (!Tower.Approach.Walkable(pawn.Map))
+            Climbing = false;
+            if (Tower.Occupant == pawn)
+            {
+                Tower.Watching = false;
+                Tower.RefreshSight();
+            }
+            if (!Tower.ApproachClear)
                 Messages.Message(
                     "TotalFog_TowerExitBlocked".Translate(),
                     Tower,
@@ -181,8 +189,20 @@ public sealed class JobDriver_Watchtower : JobDriver
         };
         clear.tickAction = () =>
         {
-            if (Tower.Approach.InBounds(pawn.Map) && Tower.Approach.Walkable(pawn.Map))
+            if (pawn.Downed || pawn.Dead)
+            {
+                EndJobWith(JobCondition.Incompletable);
+                return;
+            }
+            if (Tower.ApproachClear)
                 ReadyForNextToil();
+            else if (
+                pawn.needs.food?.CurLevelPercentage < .05f
+                || pawn.needs.rest?.CurLevelPercentage < .05f
+                || pawn.InMentalState
+                || pawn.IsBurning()
+            )
+                Tower.TryEmergencyExit(pawn);
         };
         yield return clear;
         yield return Climb(true);

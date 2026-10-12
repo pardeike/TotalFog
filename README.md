@@ -40,7 +40,9 @@ a wild boar or something much worse. To be safe, you have to look.
   Its lookout sees over freestanding walls, while roofs, mountains and other
   towers block the view. Shooting from it is off by default. Tower testing is
   still in progress; existing old towers remain retired.
-- Better cameras and the telescope come with research.
+- The new tower needs Complex furniture research. Better cameras and the telescope also need research.
+- Keep tower ladders clear. A trapped lookout waits, with a persistent warning. Critical needs, burning or a mental state can force a jump with fall injuries if there is free ground nearby. Retrieve a downed lookout from the tower or pawn menu before tending or feeding them; a bed is optional.
+- Shooting from a tower keeps the target's normal cover. A lookout on the deck is exposed to incoming fire.
 
 Inspector animals, security bells, light beacons and the old watchtowers are
 retired. Existing buildings, blueprints and frames remain loadable, but these

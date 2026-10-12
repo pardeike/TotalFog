@@ -30,6 +30,12 @@ internal static class WatchtowerPatches
                 finalizer: finalizer == null ? null : new HarmonyMethod(owner, finalizer)
             );
         }
+        Patch(typeof(GenConstruct), "CanPlaceBlueprintAt_NewTemp", nameof(LadderPlacementPrefix));
+        Patch(
+            typeof(FloatMenuOptionProvider_RescuePawn),
+            "GetSingleOptionFor",
+            nameof(RescueMenuPrefix)
+        );
         Patch(typeof(Building), nameof(Building.SpawnSetup), postfix: nameof(SpawnPostfix));
         Patch(
             typeof(Building),
@@ -520,8 +526,7 @@ internal static class WatchtowerPatches
             && (forced || !patient.IsForbidden(pawn) && !GenAI.EnemyIsNear(patient, 25))
             && tower.CanEnter(pawn, patient)
             && pawn.CanReserve(patient)
-            && pawn.CanReserve(tower)
-            && RestUtility.FindBedFor(patient, pawn, checkSocialProperness: false) != null;
+            && pawn.CanReserve(tower);
         return false;
     }
 
@@ -531,16 +536,53 @@ internal static class WatchtowerPatches
         if (tower == null || t is not Pawn patient)
             return true;
         var bed = RestUtility.FindBedFor(patient, pawn, checkSocialProperness: false);
-        __result =
-            bed == null
-                ? null
-                : JobMaker.MakeJob(
-                    WatchtowerDefOf.TotalFog_WatchtowerRetrieve,
-                    tower,
-                    bed,
-                    patient
-                );
+        __result = JobMaker.MakeJob(
+            WatchtowerDefOf.TotalFog_WatchtowerRetrieve,
+            tower,
+            bed,
+            patient
+        );
         return false;
+    }
+
+    internal static bool RescueMenuPrefix(
+        Pawn clickedPawn,
+        FloatMenuContext context,
+        ref FloatMenuOption __result
+    )
+    {
+        var tower = TowerPresentation.TowerFor(clickedPawn);
+        var worker = context.FirstSelectedPawn;
+        if (
+            tower == null
+            || clickedPawn.Dead
+            || !clickedPawn.Downed
+            || clickedPawn.Faction != worker.Faction
+        )
+            return true;
+        __result = tower.RetrievalOption(worker, clickedPawn);
+        return false;
+    }
+
+    internal static bool LadderPlacementPrefix(
+        BuildableDef entDef,
+        IntVec3 center,
+        Rot4 rot,
+        Map map,
+        Thing thingToIgnore,
+        ref AcceptanceReport __result
+    )
+    {
+        if (entDef is not ThingDef { passability: Traversability.Impassable } def)
+            return true;
+        var rect = GenAdj.OccupiedRect(center, rot, def.size);
+        foreach (var tower in map.GetComponent<MapComponent_Watchtowers>().Towers)
+            if (tower != thingToIgnore && rect.Contains(tower.Approach))
+            {
+                __result = "TotalFog_TowerBlockedLadder".Translate();
+                return false;
+            }
+        return true;
     }
 
     internal static void LightningPrefix(ref IntVec3 strikeLoc, Map map)

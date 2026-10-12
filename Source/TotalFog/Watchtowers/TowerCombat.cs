@@ -325,14 +325,10 @@ internal static class TowerCombat
         ref ShotReport __result
     )
     {
-        var sourceTower = TowerPresentation.TowerFor(caster);
         var targetTower = TowerPresentation.TowerFor(target.Thing);
-        if (sourceTower == null && targetTower == null)
+        if (targetTower == null)
             return;
-        if (
-            PlatformFor(caster, sourceTower) != null
-            || PlatformFor(target.Thing, targetTower) != null
-        )
+        if (PlatformFor(target.Thing, targetTower) != null)
             coverChance(ref __result) = 0;
         if (targetTower?.ElevationFor(target.Thing) > .999f)
             targetSize(ref __result) = Mathf.Min(2f, targetSize(ref __result) * 1.25f);

@@ -466,3 +466,18 @@ Twenty native checks pass over 1,560 game ticks in public 1.6.4871. This settles
 the basic access representation; it does not establish interrupted descents,
 blocked exits, save/load, collapse, elevated sight or combat. Exact proof and
 earlier rejected attempts are recorded in [VALIDATION.md](VALIDATION.md).
+
+### First-version review adjustments
+
+New construction requires Complex furniture. Ordinary blueprint placement
+rejects impassable structures across an existing ladder, and tower placement
+rejects an impassable blueprint/frame already on its approach. Forced/modded
+obstructions still produce a persistent inspect warning and a waiting report.
+Downing ends the waiting job. Critical food/rest, burning or a mental state
+can force a jump using the existing fall/drop cleanup when free ground exists.
+A completely enclosed tower still needs an obstruction cleared; no escape moves
+through solid cells. Downed own-faction lookouts have a retrieval option on the
+pawn, and rescue no longer requires a bed before getting them to ground.
+Tending/feeding happens after retrieval. Outgoing shots retain target cover.
+These changes have source/build proof; new native safety/rescue checks remain
+outstanding, and earlier exact-byte proofs do not validate this revision.
