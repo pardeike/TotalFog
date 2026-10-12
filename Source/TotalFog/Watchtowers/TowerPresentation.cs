@@ -16,7 +16,9 @@ internal static class TowerPresentation
     internal static int DrawingDepth;
 
     internal static Building_Watchtower TowerFor(Thing thing) =>
-        thing?.MapHeld?.GetVisibility().TowerComponent?.For(thing);
+        MapComponent_Watchtowers.SpawnedTowerCount == 0
+            ? null
+            : thing?.MapHeld?.GetVisibility().TowerComponent?.For(thing);
 
     internal static Vector3 Offset(Thing thing)
     {
@@ -121,6 +123,8 @@ internal static class TowerPresentation
         List<Thing> __result
     )
     {
+        if (MapComponent_Watchtowers.SpawnedTowerCount == 0)
+            return;
         var component = Find.CurrentMap?.GetVisibility().TowerComponent;
         if (component == null || component.Towers.Count == 0 || __result == null)
             return;

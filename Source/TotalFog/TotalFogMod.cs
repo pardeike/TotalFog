@@ -438,28 +438,14 @@ public class TotalFogMod : Mod
             typeof(bool)
         );
 
-        foreach (
-            var type in new[]
-            {
-                typeof(RimWorld.FertilityGrid),
-                typeof(Verse.TerrainGrid),
-                typeof(Verse.RoofGrid),
-            }
-        )
-            PatchSafety.Patch(
-                harmony,
-                AccessTools.DeclaredMethod(
-                    type,
-                    type == typeof(Verse.RoofGrid)
-                        ? nameof(Verse.RoofGrid.GetCellBool)
-                        : "CellBoolDrawerGetBoolInt",
-                    new[] { typeof(int) }
-                ),
-                postfix: new HarmonyMethod(
-                    typeof(Presentation.DiscoveryOverlays),
-                    nameof(Presentation.DiscoveryOverlays.OverlayPostfix)
-                )
-            );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(CellBoolDrawer), nameof(CellBoolDrawer.RegenerateMesh)),
+            transpiler: new HarmonyMethod(
+                typeof(Presentation.DiscoveryOverlays),
+                nameof(Presentation.DiscoveryOverlays.Transpiler)
+            )
+        );
 
         //Area only designator
         patchMethod(

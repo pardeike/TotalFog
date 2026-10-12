@@ -12,6 +12,7 @@ local testing do not indicate that a new player build has been released.
 - Keep unsupported tower-order hooks from interrupting other mods' patches, and prevent one failed delayed notification from blocking later notifications.
 - Prevent failed visibility listeners from leaving cells permanently visible, including during source removal.
 - Give delayed letters with vanished targets their actual archive time instead of sorting them at the start of the colony.
+- Reduce overhead in colonies without watchtowers and when drawing tooltips, terrain, roof and fertility overlays.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
 - Keep a lookout on the platform when drafted and prevent a rotation error after climbing.

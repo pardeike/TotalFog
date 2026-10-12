@@ -695,3 +695,33 @@ existing archive-only behavior for dead targets without a new sound, pause or
 live letter-stack entry. A native archive-order/save-load check remains open.
 Formatting and the redirected Release build pass 406 tests with zero
 warnings/errors. The tracked gameplay DLL remains unchanged.
+
+### Step 4: bounded hot-path lookups
+
+Verified R2-8 in `TowerPresentation.TowerFor`, R2-9 at
+`InterfaceVisibility.Patches.cs:116-138`, and each R2-10 lookup in the cited
+files. Tower lookup now checks a spawned-tower count before `MapHeld`, the weak
+map lookup or occupant dictionary. Registration, despawn, map removal and a
+new game's first map own the count. The game key is weak, and old-map cleanup
+cannot decrement the new game's count.
+
+DecompilerServer confirms the tooltip's two position reads: camera bounds first,
+native fog second. Only the second read is now replaced. The world-owned
+gravship controller is weak-key cached while Playing, with component-count
+changes and initialization invalidating it; its live landing state is still
+read on every query. Tests verify one component scan for repeated live queries,
+world switching, late controllers and initialization replacement.
+
+The map owns its stable Home area reference and caches the space-biome flag
+against biome identity. Home-map and landing-preview bypass are resolved once
+per overlay regeneration with that viewer's discovery array. The roof,
+terrain and fertility native getters retain their own results. Other drawers
+keep native behavior. The per-cell postfixes are replaced by one shape-checked
+`CellBoolDrawer.RegenerateMesh` transpiler, with no per-cell map/reflection lookup.
+The snapshot test covers faction separation, live discovery and native false
+results. Native `Map.IsPlayerHome` already uses tick-cached grav-engine lookup;
+its faction/ownership rules stay live rather than introducing a second stale
+home-map policy cache.
+Formatting and the redirected Release build pass 407 tests with zero
+warnings/errors. Native overlay pixels, tower-count lifecycle and performance
+remain runtime checks; the tracked DLL is unchanged.

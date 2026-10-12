@@ -53,8 +53,7 @@ internal static class ThingVisibility
             return false;
         if (thing is Corpse corpse && corpse.InnerPawn?.Faction == observerFaction)
             return true;
-        return thing.MapHeld.areaManager.Home[cell]
-            && (thing is Fire || thing.Faction == observerFaction);
+        return fog.HomeArea[cell] && (thing is Fire || thing.Faction == observerFaction);
     }
 
     // A visibility component already owns its observation flag and a current

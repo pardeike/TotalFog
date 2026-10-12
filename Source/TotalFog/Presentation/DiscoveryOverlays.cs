@@ -1,23 +1,27 @@
+using System;
 using RimWorld;
 using Verse;
 
 namespace TotalFog.Presentation;
 
-internal static class DiscoveryOverlays
+internal static partial class DiscoveryOverlays
 {
-    // All three engine grids own the same private Map field. Harmony supplies
-    // it directly, without per-cell reflection or an incompatible instance type.
-    public static void OverlayPostfix(int index, Map ___map, ref bool __result)
+    internal static bool[] KnownCells(Map map)
     {
-        if (__result)
-            __result = IsKnown(___map, index);
+        if (map == null || ThingVisibility.Bypass(map))
+            return null;
+        var fog = map.GetVisibility();
+        return !fog.Initialized
+            ? null
+            : fog.GetFactionKnownCells(Faction.OfPlayer) ?? Array.Empty<bool>();
     }
+
+    internal static bool VisibleCell(Func<int, bool> original, int index, bool[] known) =>
+        (known == null || (uint)index < known.Length && known[index]) && original(index);
 
     internal static bool IsKnown(Map map, int index)
     {
-        if (map == null || ThingVisibility.Bypass(map))
-            return true;
-        var fog = map.GetVisibility();
-        return !fog.Initialized || fog.IsKnown(Faction.OfPlayer, index);
+        var known = KnownCells(map);
+        return known == null || (uint)index < known.Length && known[index];
     }
 }

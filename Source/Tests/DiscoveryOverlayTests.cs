@@ -24,8 +24,11 @@ public sealed class DiscoveryOverlayTests
         TotalFog.FogSettings.OnlyOutsideColony = bypass;
         map.Fog.Initialized = initialized;
         map.Fog.knownCells[1] = known;
-        bool result = original;
-        DiscoveryOverlays.OverlayPostfix(1, map, ref result);
+        bool result = DiscoveryOverlays.VisibleCell(
+            _ => original,
+            1,
+            DiscoveryOverlays.KnownCells(map)
+        );
         TotalFog.FogSettings.OnlyOutsideColony = false;
         Assert.Equal(expected, result);
     }
@@ -37,8 +40,38 @@ public sealed class DiscoveryOverlayTests
     {
         var map = new Map();
         map.Fog.Initialized = true;
-        bool result = true;
-        DiscoveryOverlays.OverlayPostfix(index, map, ref result);
+        bool result = DiscoveryOverlays.VisibleCell(
+            _ => true,
+            index,
+            DiscoveryOverlays.KnownCells(map)
+        );
         Assert.False(result);
+    }
+
+    [Fact]
+    public void RegenerationSnapshotKeepsTheViewedFactionAndNativeFalseResult()
+    {
+        var first = Faction.OfPlayer;
+        var second = new Faction { loadID = 2, IsPlayer = true };
+        var map = new Map();
+        map.Fog.Initialized = true;
+        map.Fog.knownCells[0] = true;
+        map.Fog.FactionKnown[second] = new[] { false, true, false, false };
+        try
+        {
+            var firstSnapshot = DiscoveryOverlays.KnownCells(map);
+            Faction.OfPlayer = second;
+            var secondSnapshot = DiscoveryOverlays.KnownCells(map);
+            Assert.True(DiscoveryOverlays.VisibleCell(_ => true, 0, firstSnapshot));
+            Assert.False(DiscoveryOverlays.VisibleCell(_ => true, 0, secondSnapshot));
+            Assert.True(DiscoveryOverlays.VisibleCell(_ => true, 1, secondSnapshot));
+            Assert.False(DiscoveryOverlays.VisibleCell(_ => false, 1, secondSnapshot));
+            map.Fog.knownCells[2] = true;
+            Assert.True(DiscoveryOverlays.VisibleCell(_ => true, 2, firstSnapshot));
+        }
+        finally
+        {
+            Faction.OfPlayer = first;
+        }
     }
 }

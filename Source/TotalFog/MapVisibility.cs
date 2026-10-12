@@ -25,6 +25,23 @@ public class MapVisibility : MapComponent
     private readonly LinkedList<CompSightSource> dirtySources = new();
     private readonly List<CompSightSource> blockerSources = new();
     private int[] fullVisibility;
+    private Area_Home homeArea;
+    private BiomeDef checkedBiome;
+    private bool outerSpace;
+    internal Area_Home HomeArea => homeArea ??= map.areaManager.Home;
+    internal bool IsOuterSpace
+    {
+        get
+        {
+            var biome = map.Biome;
+            if (checkedBiome != biome)
+            {
+                checkedBiome = biome;
+                outerSpace = biome.defName == OuterSpaceBiome;
+            }
+            return outerSpace;
+        }
+    }
     private bool discoveryDirty;
     private int primaryPlayerFactionId;
     private Faction primaryPlayerFaction;
@@ -127,7 +144,7 @@ public class MapVisibility : MapComponent
 
     public int[] GetFactionShownCells(Faction faction) =>
         faction == null ? null
-        : map.Biome.defName == OuterSpaceBiome ? SpaceVisibility()
+        : IsOuterSpace ? SpaceVisibility()
         : coverage.Counts(Key(faction));
 
     private int[] SpaceVisibility()
@@ -147,7 +164,7 @@ public class MapVisibility : MapComponent
         && faction != null
         && (
             FogSettings.OnlyOutsideColony && Presentation.ThingVisibility.IsHomeFor(map, faction)
-            || map.Biome.defName == OuterSpaceBiome
+            || IsOuterSpace
             || coverage.IsVisible(Key(faction), x, z)
         );
 
@@ -494,7 +511,7 @@ public class MapVisibility : MapComponent
             if (!factionDiscovery.TryGetValue(faction.loadID, out var known))
             {
                 factionDiscovery.Add(faction.loadID, known = new bool[coverage.CellCount]);
-                if (FogSettings.MapRevealAtStart || map.Biome.defName == OuterSpaceBiome)
+                if (FogSettings.MapRevealAtStart || IsOuterSpace)
                     for (int i = 0; i < known.Length; i++)
                         known[i] = true;
             }

@@ -8,13 +8,24 @@ namespace TotalFog.Watchtowers;
 
 public sealed class MapComponent_Watchtowers : MapComponent
 {
+    private static System.WeakReference<Game> countedGame;
+    private readonly Game ownerGame;
+    internal static int SpawnedTowerCount { get; private set; }
     internal readonly List<Building_Watchtower> Towers = new();
     private readonly HashSet<Building_Watchtower> dirtyDrawings = new();
     private readonly Dictionary<Pawn, Building_Watchtower> occupants = new();
     private bool[] elevatedBlockers;
 
     public MapComponent_Watchtowers(Map map)
-        : base(map) { }
+        : base(map)
+    {
+        ownerGame = Current.Game;
+        if (countedGame == null || !countedGame.TryGetTarget(out var game) || game != Current.Game)
+        {
+            countedGame = new System.WeakReference<Game>(Current.Game);
+            SpawnedTowerCount = 0;
+        }
+    }
 
     internal bool[] ElevatedBlockers
     {
@@ -38,7 +49,10 @@ public sealed class MapComponent_Watchtowers : MapComponent
     internal void Register(Building_Watchtower tower)
     {
         if (!Towers.Contains(tower))
+        {
             Towers.Add(tower);
+            SpawnedTowerCount++;
+        }
         dirtyDrawings.Add(tower);
     }
 
@@ -48,8 +62,19 @@ public sealed class MapComponent_Watchtowers : MapComponent
             Untrack(tower.Occupant);
         if (tower.Rescuer != null)
             Untrack(tower.Rescuer);
-        Towers.Remove(tower);
+        if (Towers.Remove(tower) && countedGame.TryGetTarget(out var game) && game == ownerGame)
+            SpawnedTowerCount--;
         dirtyDrawings.Remove(tower);
+    }
+
+    public override void MapRemoved()
+    {
+        if (countedGame.TryGetTarget(out var game) && game == ownerGame)
+            SpawnedTowerCount -= Towers.Count;
+        Towers.Clear();
+        occupants.Clear();
+        dirtyDrawings.Clear();
+        base.MapRemoved();
     }
 
     internal void Track(Building_Watchtower tower)

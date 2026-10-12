@@ -746,6 +746,7 @@ namespace TotalFog
     public class MapVisibility : Verse.MapComponent
     {
         public readonly Verse.Map Owner;
+        internal Verse.HomeArea HomeArea => map.areaManager.Home;
 
         public MapVisibility(Verse.Map owner = null)
         {

@@ -37,6 +37,7 @@ public sealed class GravshipVisibilityTests : IDisposable
         var controller = AddController();
         for (int i = 0; i < 100; i++)
             Assert.False(GravshipVisibility.Revealed);
+        Assert.Equal(1, Find.World.ComponentLookups);
         controller.LandingAreaConfirmationInProgress = true;
         Assert.True(GravshipVisibility.Revealed);
         controller.LandingAreaConfirmationInProgress = false;

@@ -111,8 +111,8 @@ internal static partial class InterfaceVisibility
         return result;
     }
 
-    // An invalid position fails the existing camera-rectangle check before shot
-    // reports, GetTooltip, or custom tooltip code can disclose a hidden Thing.
+    // Keep the cheap camera-rectangle check first. Only the second position
+    // read runs the fog gate, before native tooltips or shot reports are built.
     public static IEnumerable<CodeInstruction> TooltipTranspiler(
         IEnumerable<CodeInstruction> instructions
     )
@@ -125,9 +125,10 @@ internal static partial class InterfaceVisibility
         )
             return body;
         var result = new List<CodeInstruction>();
+        int positionRead = 0;
         foreach (var instruction in body)
         {
-            if (instruction.Calls(original))
+            if (instruction.Calls(original) && ++positionRead == 2)
             {
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
