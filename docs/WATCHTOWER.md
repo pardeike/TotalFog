@@ -13,6 +13,11 @@ suite passes 75 checks, 15 carrier-emergency checks pass, and native projectile
 and construction/breach boundary controls pass. Further combat
 producers, compatibility and
 performance acceptance remain outstanding.
+The fresh shared-colony Multiplayer tower slice now passes 27 controls for native
+player orders, all four settings, matching fog/actor state, partial descent,
+cold live rejoin and deterministic collapse/death. The existing reflection-only
+loader error remains a limit on overall acceptance; saved-replay loading,
+separate factions, combined mods and cross-platform tower checks remain open.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types belong to Total Fog.

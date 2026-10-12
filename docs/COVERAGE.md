@@ -345,6 +345,16 @@ open. Multiplayer compatibility remains unverified.
 
 ## Zetrith's Multiplayer: unverified
 
+The new tower has a separate 27-control shared-colony checkpoint on 12 October
+2026. The production right-click watch/descent actions use native ordered-job
+serialization; both clients agree on all four tower settings, native actor/job
+state, partial climb/descent offsets and complete fog snapshots at matching
+paused ticks. A fresh client rejoins during descent and both finish normally.
+Synchronized collapse retains one native corpse at the ladder with matching
+injuries on both clients. This does not establish saved-replay loading, separate
+factions, combined CE/Zombieland or cross-platform tower behavior. The known
+InputLegacyModule loader exception persists. See the dated validation entry.
+
 The separate compatibility-check session supplied the following evidence, checked
 on 2026-10-05. These are upstream community reports, not Total Fog runtime results.
 The [Multiplayer team's compatibility spreadsheet](https://docs.google.com/spreadsheets/d/1jaDxV8F7bcz4E9zeIRmZGKuaX7d0kvWWq28aKckISaY/edit)

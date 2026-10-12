@@ -169,6 +169,17 @@ both native status receipts show the same paused tick. A submitted pause is
 asynchronous and does not establish a comparison boundary. The settings tool
 uses the same native MPAPI watcher as the UI; verify the applied value on both
 clients. Never run single-player mutation fixtures on only one connected client.
+For tower checks, register `totalfog/multiplayer_watchtower` ALONE on both main
+menus in a fresh session, with equal appended handler IDs. Do not mix its saves
+with the older four-probe registration sequence. Setup/collapse/cleanup are
+synchronized commands; watch/descend invoke the production float-menu action
+outside simulation to exercise Multiplayer's native ordered-job serializer.
+Compare native actor/tower state and complete fog snapshots at matching paused
+clocks. Its status resolves saved native objects by ID after rejoin. A lethal
+fall must be checked through `multiplayer_pawns`, which also finds corpse inner
+pawns. The settings probe supports all four tower settings with the UI's ranges.
+Cold live rejoin is separate from loading a saved replay, separate factions and
+cross-platform acceptance. Preserve known loader errors in the evidence.
 Use `totalfog/multiplayer_hearing` to read native cue recipients and per-map RNG
 states. Cues are read from the native drawing collection, not ListerThings.
 The settings probe accepts the UI's BaseHearingRange range of 0..30; compare

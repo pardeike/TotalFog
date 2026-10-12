@@ -7488,3 +7488,51 @@ build warnings. Zombieland source remains unchanged; setup's generated metadata
 whitespace and tracked DLL changes were restored. Both game processes are stopped.
 Further combat producers, tower-specific zombie behavior, Combat Extended,
 Multiplayer and the final original-mod performance floor remain outstanding.
+
+## Production tower shared-colony Multiplayer checkpoint, 2026-10-12
+
+Public Steam 1.6.4871 rev597, all five DLCs, Harmony, RimBridgeServer,
+Prepatcher and Multiplayer 0.11.5+4a3be27-dirty. Gameplay SHA-256 is
+`0582442b70152eeb6c9da9c32bc595eacf0634b7c6d69bc430d7a68a046cc289`;
+companion SHA-256 is
+`9e133fc3fa4d762bdc94b36b7826252b6420c945a2b3e2b7240930c693516632`.
+The opt-in tower probe registered alone on both fresh main menus with ID 766,
+without renumbering existing handlers. The base was copied from the unchanged
+single-player TotalFogRegression save, not an older instrumented MP replay.
+
+`artifacts/tower-mp39-20261012.json` passes 27 controls. Setup creates identical
+native objects through a synchronized command. The client invokes the actual
+watch float-menu action outside simulation: its immediate job remains Wait,
+then the synchronized command starts identical watch jobs on both clients.
+At paused tick 1884 both occupy the platform, with job ID 906, elevation 1,
+1.65 drawing offset and sight range 96. All four tower settings synchronize
+through the production UI watcher; range changes to 72 on both. Complete fog
+snapshots, including faction discovery, coverage, observations, blockers and
+source schedules, agree at the paused boundaries.
+
+The host's actual descend menu order produces matching progress and offset at
+tick 2015. A native MP save is verified at
+`artifacts/MPHostUserData/MpReplays/Tower_MP_Partial_20261012.zip`. After verified
+client termination, a fresh client registers the same handler and joins the
+live session. Both agree at tick 2016 on elevation 0.7583333, job ID 1608,
+logical center, 0.77 drawing offset, settings and complete fog snapshot. Both
+finish descent at the native ladder approach. A second ascent has matching
+partial progress and reaches the platform. Synchronized destructive collapse
+at tick 2468 kills this lookout: both retain exactly one native corpse at the
+ladder and every injury/removed body part agrees. No desync is reported.
+Defaults are restored and both process terminations are verified.
+
+The first collapse assertion incorrectly required a survivor. Its failed receipt
+is retained as `tower-mp39-survivor-assumption-20261012.json`; read-only native
+corpse lookup resolves the outcome without changing production fall damage.
+One attempted second-ascent endpoint was still partial because the buffered
+climb setting had not applied at job start; ordinary playback completed it.
+
+The known reflection-only InputLegacyModule exception and native gpath
+assertions remain in the logs. The prematurely submitted initial client join
+failed before hosting; the subsequent host-ready join succeeds. These are
+retained limitations, not clean-log compatibility acceptance. Native logs are
+`tower-mp-partial39-20261012-{host,client}-Player.log` and
+`tower-mp-collapse39-20261012-{host,client}-Player.log`. This slice proves cold
+live rejoin; cold saved-replay loading, separate factions, combined CE/Zombieland,
+cross-platform tower behavior and long sessions remain open.

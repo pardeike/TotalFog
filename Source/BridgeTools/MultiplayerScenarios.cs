@@ -237,7 +237,7 @@ public sealed class MultiplayerScenarios
 
     [Tool(
         "totalfog/multiplayer_settings",
-        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), ColonyMechVisionModifier (0.2..2), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
+        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), ColonyMechVisionModifier (0.2..2), TowerVisionMultiplier (1..3), TowerMaxSightRange (30..120), TowerClimbTicks (60..300), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
     )]
     public static Task<object> Settings(
         IRimBridgeContext context,
@@ -275,6 +275,9 @@ public sealed class MultiplayerScenarios
                 name != "BaseViewRange"
                 && name != "BaseHearingRange"
                 && name != "ColonyMechVisionModifier"
+                && name != "TowerVisionMultiplier"
+                && name != "TowerMaxSightRange"
+                && name != "TowerClimbTicks"
                 && (
                     field == null
                     || field.FieldType != typeof(bool)
@@ -285,17 +288,39 @@ public sealed class MultiplayerScenarios
                 return new
                 {
                     success = false,
-                    message = "Use BaseViewRange, BaseHearingRange, ColonyMechVisionModifier or a public boolean FogSettings field from multiplayer_snapshot.",
+                    message = "Use a documented range setting or a public boolean FogSettings field from multiplayer_snapshot.",
                 };
             object parsed;
-            if (name == "BaseViewRange")
+            if (name is "BaseViewRange" or "TowerMaxSightRange" or "TowerClimbTicks")
             {
-                if (!int.TryParse(value, out var range) || range < 10 || range > 100)
-                    return new { success = false, message = "BaseViewRange must be 10..100." };
+                int minimum =
+                    name == "BaseViewRange" ? 10
+                    : name == "TowerClimbTicks" ? 60
+                    : 30;
+                int maximum =
+                    name == "BaseViewRange" ? 100
+                    : name == "TowerClimbTicks" ? 300
+                    : 120;
+                if (!int.TryParse(value, out var range) || range < minimum || range > maximum)
+                    return new
+                    {
+                        success = false,
+                        message = name + " must be " + minimum + ".." + maximum + ".",
+                    };
                 parsed = range;
             }
-            else if (name is "BaseHearingRange" or "ColonyMechVisionModifier")
+            else if (
+                name is "BaseHearingRange" or "ColonyMechVisionModifier" or "TowerVisionMultiplier"
+            )
             {
+                float minimum =
+                    name == "BaseHearingRange" ? 0
+                    : name == "TowerVisionMultiplier" ? 1f
+                    : .2f;
+                float maximum =
+                    name == "BaseHearingRange" ? 30
+                    : name == "TowerVisionMultiplier" ? 3
+                    : 2;
                 if (
                     !float.TryParse(
                         value,
@@ -304,15 +329,13 @@ public sealed class MultiplayerScenarios
                         out var range
                     )
                     || float.IsNaN(range)
-                    || range < (name == "BaseHearingRange" ? 0 : .2f)
-                    || range > (name == "BaseHearingRange" ? 30 : 2)
+                    || range < minimum
+                    || range > maximum
                 )
                     return new
                     {
                         success = false,
-                        message = name == "BaseHearingRange"
-                            ? "BaseHearingRange must be 0..30."
-                            : "ColonyMechVisionModifier must be 0.2..2.",
+                        message = name + " must be " + minimum + ".." + maximum + ".",
                     };
                 parsed = range;
             }
