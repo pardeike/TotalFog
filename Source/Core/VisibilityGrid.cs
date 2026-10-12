@@ -9,6 +9,7 @@ public sealed class VisibilityGrid
 {
     private readonly Dictionary<int, int[]> factions = new();
     private int[]? playerCounts;
+    private Dictionary<int, bool[]>? debugSources;
     public int Width { get; }
     public int Height { get; }
     public int CellCount { get; }
@@ -79,6 +80,29 @@ public sealed class VisibilityGrid
         if (counts == null || counts[index] == 0)
             return false;
         return --counts[index] == 0;
+    }
+
+    // A debug reveal is one additional observer, not a replacement for live
+    // coverage. Only debug commands allocate or consult this bookkeeping.
+    public void SetDebugVisible(int faction, int index, bool visible)
+    {
+        CheckIndex(index);
+        bool[]? cells = null;
+        debugSources?.TryGetValue(faction, out cells);
+        if (cells == null)
+        {
+            if (!visible)
+                return;
+            debugSources ??= new();
+            debugSources.Add(faction, cells = new bool[CellCount]);
+        }
+        if (cells[index] == visible)
+            return;
+        cells[index] = visible;
+        if (visible)
+            Add(faction, index);
+        else
+            Remove(faction, index);
     }
 
     public void LoadKnown(bool[] saved)

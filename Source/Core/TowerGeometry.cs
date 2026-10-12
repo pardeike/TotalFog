@@ -10,6 +10,11 @@ public static class TowerGeometry
     public const float LowWallHeight = 1f;
     public const float PawnProjection = 1.65f;
 
+    // Six seconds per direction at normal speed. Derive the phase from the
+    // existing job clock so save/load and Multiplayer need no extra state.
+    public static int WatchFacing(int elapsedTicks, bool drafted) =>
+        drafted ? 2 : (2 + Math.Max(0, elapsedTicks) / 360) % 4;
+
     public static float Interpolate(float from, float to, float progress) =>
         from + (to - from) * Math.Max(0f, Math.Min(1f, progress));
 

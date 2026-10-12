@@ -8,6 +8,61 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Debug fog commands and lookout facing, 2026-10-12
+
+The shared Current/ candidate passes formatting and the quiet build with 399
+independent tests, zero warnings and zero errors. Fifteen new facing cases cover
+undrafted phase boundaries and fixed drafted facing. Four new coverage tests
+cover idempotent debug reveals, preservation of real observers, observer movement,
+cell/faction isolation and refogging without a debug source. Existing ordinary
+coverage allocation checks still pass.
+
+Gameplay SHA-256 is
+`e10c9ba576b95f840c8fd860178163c7ac3e81c63c9b71159cf26be3beed305c`;
+companion SHA-256 is
+`0c102ed0a9487df68363e51fc8fc6999d8f1d1bee13c49a3e0d0e31436d6a354`.
+Built and deployed copies match. One fresh Steam 1.7 process uses Workshop
+Harmony 3.0.0, RimBridgeServer 2.3.0, Core, all five DLCs and Total Fog. Native
+1.6 and 1.7 command sources have the same audited signatures/calls; 1.6 runtime
+was not restarted for this small follow-up.
+
+On the temporary checkpoint of the user's current game, tick 19081, tower
+(109,115) and distant cell (80,120) are known but outside current sight; Maker's
+cell (130,103) is visible. Clear All Fog makes all three currently visible while
+paused. Repeating it does not change those results. After a real native melee
+order and 600 ticks, Maker reaches (111,114), retains AttackMelee and reduces the
+tower's HP from 290 to 266. Refog Map clears the remote cell's known/current sight
+while Maker's actual cell remains known and visible. This reproduces a target
+rejection outside current sight and a successful visible tower attack. No new
+combat eligibility override was required.
+
+At tick 19681, Unfog (rect) is executed through the existing two-corner debug
+tool for (96,120)..(98,122). The corner and centre become known/currently visible;
+(99,121), just outside, remains unknown/invisible. Fog (rect) over the same
+rectangle restores native fog and clears its Total Fog known/current sight.
+All command edits are paused, reconcile ordinary registered things and regenerate
+immediately without fade. Normal source counts remain independent. Debug reveal
+coverage is deliberately transient and is rebuilt normally after a reload.
+
+The actual two-hour watch menu order is then issued to undrafted Maker. Native
+cell queries report west at tick 20161, north at 20521, east at 20881 and south
+at 21241, at the tower's logical centre (109,115). The west-facing raised pawn is
+also captured in `watch-rotation-west__cell_rect.png`. Drafting on the deck keeps
+the watch job and the next 360 ticks, to 21601, retain south-facing rotation.
+No combat aiming scenario was repeated; the existing FullBodyBusy guard and
+native tracker retain precedence.
+
+The pre-test checkpoint is reloaded at tick 19081: tower HP is back to 290,
+remote cells have their original known/hidden state and Maker is back at
+(130,103). The original `towers-space-bug.rws` remains byte-identical,
+SHA-256 `c5466f6910bf1367856e519281c13e8ac7337edb0af416781f53fbef0c766cc2`.
+The game remains paused. No native errors or exceptions occur in this fresh
+process; `Player-debug-fog-facing.log` and `facing-native-evidence.json` retain the
+bounded evidence under `artifacts/watchtower-space/`. An earlier bridge pawn
+selector error belongs to the previous process and is not a Total Fog failure.
+No ZIP was sent and nothing was published. Broader compatibility and performance
+gates were not repeated.
+
 ## Tower blueprint presentation and front ladder, 2026-10-12
 
 The previous preview reused opaque completed-building colors and detailed beams.

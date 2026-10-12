@@ -7,6 +7,29 @@ namespace TotalFog.Tests;
 public class TowerGeometryTests
 {
     [Theory]
+    [InlineData(-1, 2)]
+    [InlineData(0, 2)]
+    [InlineData(359, 2)]
+    [InlineData(360, 3)]
+    [InlineData(719, 3)]
+    [InlineData(720, 0)]
+    [InlineData(1079, 0)]
+    [InlineData(1080, 1)]
+    [InlineData(1439, 1)]
+    [InlineData(1440, 2)]
+    public void UndraftedLookoutPausesAtEachDirectionThenRepeats(int elapsedTicks, int facing) =>
+        Assert.Equal(facing, TowerGeometry.WatchFacing(elapsedTicks, false));
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(360)]
+    [InlineData(720)]
+    [InlineData(1080)]
+    [InlineData(1000000)]
+    public void DraftedLookoutKeepsFacingThePlayer(int elapsedTicks) =>
+        Assert.Equal(2, TowerGeometry.WatchFacing(elapsedTicks, true));
+
+    [Theory]
     [InlineData(-.2f, 0f)]
     [InlineData(0f, 0f)]
     [InlineData(.25f, .5f)]

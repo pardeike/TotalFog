@@ -38,6 +38,25 @@ non-walkable. New placements default to the front ladder. This is a presentation
 and placement-default check; broader compatibility and performance gates were
 not repeated. Exact bytes and evidence are recorded in VALIDATION.md.
 
+The subsequent debug-command and lookout-facing slice passes 399 independent
+tests and focused native Steam 1.7 controls. Clear All Fog and Unfog (rect)
+provide current sight, not just discovered terrain. Fog (rect) removes that
+debug sight and discovery in its rectangle. Refog Map clears debug sight and
+discovery across the map while retaining real observers' current coverage.
+Changes render immediately while paused. Debug sight is temporary until a fog
+command removes it or the map is reloaded; ordinary exploration and observation
+remain saved. Ordinary coverage queries and updates do not consult debug state.
+Both rectangle edges and an unaffected neighbouring cell were checked, as were
+repeated clears and ordinary observer sight after refogging.
+
+An undrafted lookout completed all four facing phases in the native example
+save; a drafted lookout stayed south-facing through the next phase boundary.
+The existing native melee command accepted the visible tower, reached it and
+reduced its health from 290 to 266. The same tower's remembered appearance outside
+current sight had been rejected as a manual target. No combat eligibility
+override was added. These are focused controls, not broader compatibility or
+performance acceptance. The user's pre-test state was restored afterward.
+
 ## Watchtower feedback follow-up: 12 October 2026
 
 The local follow-up fixes descent facing, native move eligibility from the

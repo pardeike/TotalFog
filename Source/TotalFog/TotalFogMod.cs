@@ -39,6 +39,7 @@ public class TotalFogMod : Mod
             () => Compatibility.LegacySaveTypes.Install(harmony)
         );
         PatchSafety.Install("base fog hooks", injectDetours);
+        PatchSafety.Install("debug fog commands", () => DebugFogCommands.Install(harmony));
         PatchSafety.Install("watchtowers", () => Watchtowers.WatchtowerPatches.Install(harmony));
     }
 

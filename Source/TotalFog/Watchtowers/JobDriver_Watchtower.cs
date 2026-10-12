@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RimWorld;
+using TotalFog.Core;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -166,7 +167,12 @@ public sealed class JobDriver_Watchtower : JobDriver
             {
                 // The empty target leaves combat aim to the native tracker.
                 if (!pawn.stances.FullBodyBusy)
-                    pawn.Rotation = Rot4.South;
+                    pawn.Rotation = new Rot4(
+                        TowerGeometry.WatchFacing(
+                            Find.TickManager.TicksGame - job.startTick,
+                            pawn.Drafted
+                        )
+                    );
                 if (
                     !job.playerForced
                         && !pawn.Drafted

@@ -552,7 +552,7 @@ public sealed class WatchtowerOrderScenarios
                         foreach (var p in pawns.Take(count))
                             p.rotationTracker.ProcessPostTickVisuals(0);
                         Check(
-                            "idle lookouts face the player " + count,
+                            "idle drafted lookouts face the player " + count,
                             pawns.Take(count).All(p => p.Rotation == Rot4.South)
                         );
                         int start = pawns[0].CurJob.startTick;

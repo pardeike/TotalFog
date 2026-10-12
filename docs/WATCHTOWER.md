@@ -64,8 +64,10 @@ converts its current watch into a drafted hold, retaining occupation and reserva
 Undrafting still interrupts through RimWorld's existing job tracker and descent
 finalizer. Automatic shooting
 respects Fire at will. Both ladder directions own native facing during the climb
-and face the rungs; idle watching faces south toward the player and retains native
-combat facing while aiming.
+and face the rungs. Undrafted lookouts turn through south, west, north and east,
+pausing 360 game ticks at each direction. The phase comes from the existing job
+clock, with no extra saved state or random calls. Idle drafted lookouts face
+south toward the player. Native combat facing still takes priority while aiming.
 
 Drafted Go here orders recognize both the logical center and the drawn platform
 cells, including the lower visible deck and the raised pawn position. Native

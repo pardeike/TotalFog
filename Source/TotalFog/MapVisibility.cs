@@ -512,6 +512,38 @@ public class MapVisibility : MapComponent
             VisibilityChanged(faction, index);
     }
 
+    internal void DebugSetFog(CellRect rect, bool fogged, bool restoreSight = false)
+    {
+        var faction = Faction.OfPlayer;
+        if (faction == null)
+            return;
+        int key = Key(faction);
+        var known = GetFactionKnownCells(faction);
+        if (known == null)
+        {
+            factionDiscovery.Add(faction.loadID, known = new bool[coverage.CellCount]);
+            if (!otherPlayerFactions.Contains(faction))
+                otherPlayerFactions.Add(faction);
+        }
+        var counts = coverage.Counts(key);
+        foreach (var cell in rect.ClipInsideMap(map))
+        {
+            int index = map.cellIndices.CellToIndex(cell);
+            bool wasKnown = known[index];
+            coverage.SetDebugVisible(key, index, !fogged);
+            bool discovered = !fogged || restoreSight && counts[index] > 0;
+            known[index] = discovered;
+            if (wasKnown != discovered)
+            {
+                DiscoveryChanged(index, faction);
+            }
+            // Vanilla fog can change even when an actual observer keeps its
+            // coverage. Reconcile registered things while the game is paused.
+            VisibilityChanged(faction, index);
+        }
+        FlushDirty();
+    }
+
     private void DiscoveryChanged(int index, Faction faction = null)
     {
         discoveryDirty = true;

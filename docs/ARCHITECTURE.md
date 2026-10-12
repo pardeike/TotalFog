@@ -56,6 +56,17 @@ normal current-sight designator gates.
 
 ## Update and save rules
 
+### Debug fog commands
+
+The native Clear All Fog, Refog Map, Fog (rect) and Unfog (rect) debug commands
+also update Total Fog. A debug reveal contributes one idempotent observer to
+the current player's existing coverage grid. Removing it never overwrites real
+sight-source counts. Its bookkeeping is allocated and read only by debug
+commands, and is not saved. Discovery changes still use the usual saved grids.
+Rectangle hooks wrap the native rectangle action; ordinary native unfogging is
+unchanged. Debug commands reconcile registered presentation immediately and
+regenerate with fading temporarily disabled so edits work while paused.
+
 ### Multiplayer context
 
 Multiplayer is optional. Its API is bound once, with retained delegates and no
