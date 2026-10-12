@@ -217,6 +217,12 @@ public class TotalFogMod : Mod
             prefix: new HarmonyMethod(typeof(TotalFogMod), nameof(InitializeCompsPrefix))
         );
         patchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
+        patchMethod(typeof(Verse.Verb), typeof(Verb), nameof(Verse.Verb.TryFindShootLineFromTo));
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(Building_TurretGun), "IsValidTarget"),
+            postfix: new HarmonyMethod(typeof(Verb), nameof(Verb.TurretTargetPostfix))
+        );
         // Selection proxies recurse directly into SelectInternal. Guard the
         // actual target as well as the initial public Select request.
         patchMethod(typeof(RimWorld.Selector), typeof(Selector), "SelectInternal");

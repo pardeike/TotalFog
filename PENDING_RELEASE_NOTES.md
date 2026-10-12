@@ -86,3 +86,5 @@
 - An unavailable patch or optional Multiplayer binding no longer prevents unrelated fog features from loading.
 
 - Loading a save no longer explores through walls before those walls have spawned.
+
+- Player mortars and turrets stop automatically selecting hidden targets; manual mortar fire at a cell remains available.

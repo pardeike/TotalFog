@@ -53,7 +53,7 @@ internal static class HarmonyPatches
             target == null
             || seer?.Map == null
             || target.MapHeld != seer.Map
-            || Visibility.AllowsTarget(seer, target.Position)
+            || Visibility.AllowsTarget(seer, target.PositionHeld)
         )
         {
             return true;

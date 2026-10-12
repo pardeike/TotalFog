@@ -330,6 +330,9 @@ namespace Verse
         public Thing caster;
         public VerbProperties verbProps = new();
         public LocalTargetInfo CurrentTarget;
+        public bool FliesOverhead;
+
+        public bool ProjectileFliesOverhead() => FliesOverhead;
     }
 
     public readonly struct LocalTargetInfo
@@ -555,6 +558,8 @@ namespace RimWorld
     }
 
     public class Building_Turret : Verse.Building { }
+
+    public class Building_TurretGun : Building_Turret { }
 
     public class IncidentDef { }
 

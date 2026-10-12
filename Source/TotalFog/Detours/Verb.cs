@@ -32,6 +32,31 @@ internal static class Verb
             || fovLineOfSight(sourceSq, targetLoc, caster);
     }
 
+    internal static void TryFindShootLineFromTo_Postfix(
+        Verse.Verb __instance,
+        LocalTargetInfo targ,
+        ref bool __result
+    )
+    {
+        if (
+            __result
+            && targ.HasThing
+            && __instance.caster?.Faction?.IsPlayer == true
+            && __instance.ProjectileFliesOverhead()
+        )
+            __result = seenByFaction(__instance.caster, targ.Thing.PositionHeld);
+    }
+
+    internal static void TurretTargetPostfix(
+        Building_TurretGun __instance,
+        Thing t,
+        ref bool __result
+    )
+    {
+        if (__result && t != null && __instance.Faction?.IsPlayer == true)
+            __result = seenByFaction(__instance, t.PositionHeld);
+    }
+
     private static bool seenByFaction(Thing thing, IntVec3 targetLoc)
     {
         if (thing?.Map == null || thing.Faction == null)

@@ -272,3 +272,11 @@ tests where they are pure:
   initialization; the core grid also refuses discovery before initialization.
   A pure test covers transient pre-init coverage, preserved loaded discovery,
   and durable discovery after initialization.
+
+- Step 3, item 5: verified the cited early return and enemy-only target gate.
+  Native 1.6 turret acquisition passes `IsValidTarget` into target search;
+  overhead shoot-line checks otherwise return true without checking sight.
+  Player turret candidates now require faction sight and overhead Thing shots
+  are checked again at firing. Explicit cell targets retain native blind fire.
+  Carried target checks use PositionHeld. Pure controls cover hidden/seen
+  targets, blind cells, non-player turrets and preservation of native failures.
