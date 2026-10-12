@@ -75,7 +75,7 @@ public sealed class PresentationScenarios
                             "Use a gas with an unmodified lifetime of 1..4000 ticks."
                         );
                     harmony.Patch(
-                        AccessTools.Method(def.thingClass, nameof(Thing.DrawAt)),
+                        AccessTools.Method(def.thingClass, "DrawAt"),
                         postfix: new HarmonyMethod(
                             typeof(PresentationScenarios),
                             nameof(ObserveGasDraw)

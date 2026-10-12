@@ -8,21 +8,21 @@ and a result applies only to its recorded gameplay bytes and loadout.
 
 ## Current status
 
-Review round 2 is being addressed in ten ordered commits on 13 October 2026.
-Steps 1-9 pass 407 independent tests and redirected Release builds without
-warnings/errors. The bounded native checks below use Core-only offline 1.6;
+Review round 2 is complete in ten ordered commits on 13 October 2026.
+The final clean-cache Release build passes 407 C# tests and seven pure artifact-
+gate tests with zero warnings/errors. The bounded native checks below use Core-only offline 1.6;
 full DLC/optional-mod gates remain open. Earlier GitHub source checks passed
 for their recorded commits, not this local review batch.
 
 | Area | Current evidence and boundary |
 |---|---|
 | Versions | Only 1.6 is advertised and loads Current/. The active folder is a declared project exception; 1.7 support awaits renewed acceptance. |
-| Latest native check | Core-only offline 1.6: clean startup, native gas mesh 0/36/0 across sight changes, and zero paused target/drawn-alpha mismatches across 1,102,500 vertices. Five-DLC setup needs repair before renewed acceptance. |
+| Latest native check | Core-only offline 1.6 on the final Release DLL: clean startup, native gas mesh 0/36/0 across sight changes, and zero paused target/drawn-alpha mismatches across 1,102,500 vertices. Five-DLC setup needs repair before renewed acceptance. |
 | Other 1.7 checks | Earlier shared-payload candidates pass three-pawn tower row dragging, timed/drafted watch behavior, blueprints, lookout facing, visible tower melee and all four native fog debug commands. Each retains its own tested hash. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
 | CE and Multiplayer | Bounded native 1.6 checks exist, including tower slices. Broader combinations, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. |
 | Performance | Latest Core-only wide one-pair spot check fails: 493.715 vs 528.149 TPS (-6.520%), frame p95 72.565 vs 69.949 ms. The earlier delivered pair retains its old acceptance; current broad performance is unverified. |
-| Release | No public player release or Workshop item exists. Build before installing a source checkout; the tracked DLL is an earlier review snapshot. |
+| Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match this review source; expanded Linux/Windows CI is configured but has not run remotely for this batch. |
 
 The sections below retain dated delivery and compatibility checkpoints. Their
 test counts, hashes, phrases such as "current pair", and remaining-check lists
@@ -165,7 +165,7 @@ to 85.49 versus 75.66 ms. The full paired native gate, packaging and remote
 archive checks passed. These rendering and performance gates were not rerun
 for the startup-only change. This is a single-player 1,000-zombie fixture with
 matching settings/camera and no debug speed boost, not a claim about all mod lists.
-This is development evidence; tracked DLLs remain last-release snapshots.
+At this dated checkpoint, tracked DLLs remained last-release snapshots.
 The first 10 October private test ZIPs contained that exact pair and superseded
 the 6 October delivery.
 No public player release or Workshop item exists yet.

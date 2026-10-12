@@ -144,9 +144,10 @@ Windows gameplay and longer sessions still need confirmation.
 
 See [coverage](docs/COVERAGE.md#current-status) for the current
 evidence and remaining checks. No public player release or Workshop item exists yet.
-Build before installing this source checkout, or use the separately supplied
-preliminary ZIPs. Tracked DLLs are snapshots of the local review checkpoint and
-can lag behind source and definition changes.
+The tracked Release DLL has a source/binary receipt checked by CI. Build after
+editing gameplay source, or use the separately supplied
+preliminary ZIPs. Dated testing and older private archives retain their own
+recorded hashes and are not automatically refreshed by a source commit.
 
 ## For mod developers: support Total Fog in your mod
 
@@ -365,7 +366,8 @@ installed game's `Mods` folder.
 | `./scripts/mod format` | Formats active C# and Python source with the pinned tools |
 | `./scripts/mod format-check` | Checks formatting without editing files |
 | `./scripts/mod test` | Checks formatting and runs pure tests without a game install or DLL changes |
-| `./scripts/mod build` | Checks formatting, runs the tests and builds the mod |
+| `./scripts/mod build` | Checks formatting, runs the tests, builds the mod and records its source/binary receipt |
+| `./scripts/mod verify-binary` | Checks that the tracked DLL and build receipt match the current gameplay source and build inputs |
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
 | `./scripts/mod deploy-built` | Installs the already-built gameplay/companion pair without rebuilding; the game must be stopped |
 | `./scripts/mod metadata` | Updates the installed description and version/load-folder metadata without changing DLLs; the game must be stopped |

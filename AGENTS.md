@@ -7,7 +7,13 @@ source/payload; do not keep redundant upstream scratch files in the active tree.
 Build with the .NET 10.0.301 SDK pinned in global.json. The quiet workflow uses
 the existing SDK install under ~/Library/Application Support/dotnet when present,
 including for nested companion builds. Gameplay and companion DLLs still target
-net472 for RimWorld; independent tests run on net10.0.
+net472 for RimWorld; independent tests run on net10.0. Krafs.Publicizer 2.3.2
+prepares build-only references in obj/, with virtual members excluded. Keep
+native virtual access levels, including protected job/drawing overrides. The
+companion reuses the main DLL's internal access-check attribute through its
+existing InternalsVisibleTo contract. Canonical workflows default NuGet output
+to artifacts/nuget so another project's publicised cache files cannot change our
+reference resolution; an explicit NUGET_PACKAGES overrides this for CI/probes.
 About/About.xml advertises only RimWorld 1.6. Its LoadFolders.xml entry loads
 Current/ and LegacyAssets. Current/ is a declared project exception to the
 steam-mods standard's version-numbered active folder: keep this folder, the
@@ -19,14 +25,22 @@ as current support. A future 1.7 support decision belongs to Andreas.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.
-Use the canonical quiet command `./scripts/mod test|build|deploy|package|setup|baseline|benchmark`.
+Use the canonical quiet command `./scripts/mod test|build|verify-binary|deploy|package|setup|baseline|benchmark`.
+Every gameplay source/build-input commit must carry a matching Release DLL and
+Current/Assemblies/TotalFog.build.json receipt. The canonical build writes the
+receipt only after compilation succeeds. CI checks it against the checkout and
+DLL before rebuilding, so a fresh CI build cannot conceal a stale tracked file.
+The snapshot uses normalized text hashes, not Git commit age: documentation-only
+commits and Windows CRLF checkouts do not invalidate it, while changed, added or
+removed compiled inputs do. Explicit source-only review batches may redirect
+output, but refresh the tracked pair before completing/pushing the batch.
 Use `./scripts/mod metadata` for installed About/About.xml, LoadFolders.xml and
 README.md changes without rebuilding or replacing gameplay/companion DLLs.
 The target game must be stopped. Set RIMWORLD_MOD_DIR to the intended Mods root;
 both macOS executable names and the external Mods layout are guarded.
 `./scripts/mod test` runs formatting checks and pure tests without a game install
-or gameplay/companion DLL changes. CI uses `python scripts/mod format-check` and
-`python scripts/mod test` on Linux and Windows. Native deployment/runtime commands
+or gameplay/companion DLL changes. CI uses `python scripts/mod verify-binary`, then
+`python scripts/mod build` with output redirected to artifacts on Linux and Windows. Native deployment/runtime commands
 retain their macOS Steam/GABS requirements; CI is not native compatibility proof.
 The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.
@@ -165,9 +179,16 @@ three pairs for the existing performance-floor acceptance.
 Verify gameplay screenshots and semantic evidence with
 `./scripts/mod verify-rendered artifacts/<evidence-folder>`. This uses Pillow
 from artifacts/pixel-analysis-env when present, otherwise the current Python.
-Use the `total-fog-16` GABS game for the isolated 1.6 baseline. Its savedata is isolated
-under artifacts/UserData. Core and all five DLCs plus Harmony and Total Fog are
-the gameplay loadout; RimBridgeServer is test instrumentation. For a bug in
+The isolated 1.6 baseline savedata is artifacts/UserData, normally associated
+with GABS total-fog-16. Its configured SteamManaged launcher now follows Steam
+1.7 and is not a valid 1.6 launch without an explicit temporary reconfiguration.
+The installed offline 1.6 engine can run Core-only checks; its expansion symlinks
+point at the removed old Steam app path. Repair using actual 1.6 DLC content
+before all-DLC gates, never substitute 1.7 expansion data. Verify the actual
+engine version and loaded package IDs, not merely ModsConfig.xml. Review round
+2 temporarily used DirectPath and Core-only content, then restored the original
+GABS entry and isolated config. The intended full loadout remains Core, five
+DLCs, Harmony and Total Fog; RimBridgeServer is test instrumentation. For a bug in
 Andreas's running game, reconnect to that existing GABS game instead of launching
 a second instance or replacing its mods/settings. The current ordinary Steam
 game is `rimworld` on 1.7; discover its state before using it. Preserve the active

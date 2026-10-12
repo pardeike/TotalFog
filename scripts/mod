@@ -4,6 +4,7 @@
 from pathlib import Path
 import hashlib, json, os, shutil, statistics, subprocess, sys, traceback, zipfile
 import xml.etree.ElementTree as ET
+from build_receipt import verify_receipt, write_receipt
 
 if os.name == "nt":
     import msvcrt
@@ -41,6 +42,7 @@ LOGS.mkdir(parents=True, exist_ok=True)
 step = "arguments"
 logpath = LOGS / ((sys.argv[1] if len(sys.argv) > 1 else "usage") + ".log")
 workflow_env = os.environ.copy()
+workflow_env.setdefault("NUGET_PACKAGES", str(ROOT / "artifacts/nuget"))
 pinned_dotnet = Path.home() / "Library/Application Support/dotnet/sdk-10.0.301"
 if (pinned_dotnet / "dotnet").is_file():
     workflow_env["PATH"] = str(pinned_dotnet) + os.pathsep + workflow_env.get("PATH", "")
@@ -68,6 +70,7 @@ def format_sources(log, check=False):
         if path.is_file()
         and (path.suffix == ".py" or path.read_bytes().startswith(b"#!/usr/bin/env python3"))
     ]
+    scripts.extend(str(p) for p in sorted((ROOT / "Source/Tests").glob("*.py")))
     run(
         [
             "uv",
@@ -128,6 +131,9 @@ def stage(destination, baseline=False):
     assemblies.mkdir(parents=True, exist_ok=True)
     if not baseline:
         shutil.copy2(candidate, assemblies / "TotalFog.dll")
+        receipt = candidate.with_suffix(".build.json")
+        if receipt.exists():
+            shutil.copy2(receipt, assemblies / receipt.name)
         mapped = {
             folder.text
             for version in ET.parse(ROOT / "LoadFolders.xml").getroot()
@@ -224,6 +230,7 @@ try:
         "format-check",
         "test",
         "build",
+        "verify-binary",
         "deploy",
         "deploy-built",
         "metadata",
@@ -246,19 +253,27 @@ try:
         "source-publish",
     }:
         raise RuntimeError(
-            "Use format, format-check, test, build, deploy, metadata, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
         )
     if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
         raise RuntimeError(
             "Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]"
         )
     with logpath.open("w") as log:
+        if mode == "verify-binary":
+            step = "tracked gameplay DLL"
+            verify_receipt(ROOT, ROOT / "Current/Assemblies/TotalFog.dll")
         if mode in {"format", "format-check"}:
             step = "formatting"
             format_sources(log, check=mode == "format-check")
-        if mode not in {"format", "format-check", "test", "build", "source-publish"} and (
-            MODS.name != "Mods" or not MODS.is_dir()
-        ):
+        if mode not in {
+            "format",
+            "format-check",
+            "test",
+            "build",
+            "verify-binary",
+            "source-publish",
+        } and (MODS.name != "Mods" or not MODS.is_dir()):
             raise RuntimeError("RIMWORLD_MOD_DIR must name an existing Mods folder")
         if mode == "source-publish":
             step = "public source publication"
@@ -314,6 +329,7 @@ try:
         if mode not in {
             "format",
             "format-check",
+            "verify-binary",
             "baseline",
             "deploy-built",
             "metadata",
@@ -329,6 +345,7 @@ try:
             step = "formatting"
             format_sources(log, check=True)
             step = "tests"
+            run([sys.executable, str(ROOT / "Source/Tests/BuildReceiptTests.py")], log)
             run(
                 [
                     "dotnet",
@@ -359,6 +376,8 @@ try:
                     ],
                     log,
                 )
+                step = "gameplay build receipt"
+                write_receipt(ROOT, gameplay_assembly())
         if mode == "runtime-compare":
             step = "runtime comparison"
             pairs = int(os.environ.get("TOTALFOG_COMPARISON_PAIRS", "3"))

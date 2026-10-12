@@ -140,7 +140,7 @@ public sealed class ModdedPawnScenarios
                         var pair in new[]
                         {
                             (nameof(Pawn.DynamicDrawPhaseAt), nameof(ObservePhase)),
-                            (nameof(Thing.DrawAt), nameof(ObserveDrawAt)),
+                            ("DrawAt", nameof(ObserveDrawAt)),
                             (nameof(Thing.DrawGUIOverlay), nameof(ObserveOverlay)),
                         }
                     )
@@ -779,7 +779,7 @@ public sealed class ModdedPawnScenarios
                         var name in new[]
                         {
                             nameof(Pawn.DynamicDrawPhaseAt),
-                            nameof(Thing.DrawAt),
+                            "DrawAt",
                             nameof(Thing.DrawGUIOverlay),
                         }
                     )
@@ -799,7 +799,7 @@ public sealed class ModdedPawnScenarios
                             postfix: new HarmonyMethod(
                                 typeof(ModdedPawnScenarios),
                                 name == nameof(Pawn.DynamicDrawPhaseAt) ? nameof(ObservePhase)
-                                    : name == nameof(Thing.DrawAt) ? nameof(ObserveDrawAt)
+                                    : name == "DrawAt" ? nameof(ObserveDrawAt)
                                     : nameof(ObserveOverlay)
                             )
                         );
@@ -864,9 +864,7 @@ public sealed class ModdedPawnScenarios
                     () => Snapshot(pawn),
                     cancellationToken
                 );
-                var drawAtType = AccessTools
-                    .Method(pawn.GetType(), nameof(Thing.DrawAt))
-                    .DeclaringType;
+                var drawAtType = AccessTools.Method(pawn.GetType(), "DrawAt").DeclaringType;
                 bool customDrawAt = drawAtType != typeof(Pawn) && drawAtType != typeof(Thing);
                 rows.Add(
                     new

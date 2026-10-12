@@ -247,3 +247,6 @@ build_output.txt
 /artifacts/
 /dist/
 /.runs/
+
+# Python workflow caches
+__pycache__/

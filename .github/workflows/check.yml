@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   checks:
-    name: Format and pure tests (${{ matrix.os }})
+    name: Tracked DLL, build and pure tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
@@ -27,10 +27,12 @@ jobs:
         with:
           python-version: '3.12'
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-      - name: Check formatting
-        run: python scripts/mod format-check
-      - name: Run pure tests
-        run: python scripts/mod test
+      - name: Check tracked gameplay DLL before rebuilding
+        run: python scripts/mod verify-binary
+      - name: Check formatting, run pure tests and build gameplay and companion
+        env:
+          TotalFogBuildOutput: ${{ github.workspace }}/artifacts/ci/Assemblies/
+        run: python scripts/mod build
       - name: Preserve diagnostics on failure
         if: failure()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6

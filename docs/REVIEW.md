@@ -837,3 +837,43 @@ probe uses. Rejected logs are retained; neither failure is an accepted result.
 Evidence is under artifacts/review-round-2 and comparison-review2-core-wide-350.json.
 Formatting and the redirected build pass 407 tests with zero warnings/errors.
 The tracked DLL is still unchanged, and all test processes are stopped.
+
+### Step 10: current Release artifact and CI freshness gate
+
+R2-3 reproduces: the tracked DLL was the earlier review snapshot, while source
+had later gameplay changes. It stayed byte-identical through steps 1-9. The
+final successful Release build now supplies Current/Assemblies/TotalFog.dll
+and its matching TotalFog.build.json, committed with this source. SHA-256 is
+`0af94ae95748d5b373720e803a8e4a8b070e8b4607aa84206559425eda8b451a`.
+
+The receipt fingerprints all 121 gameplay source/build inputs and the DLL.
+CI runs verify-binary before its redirected build, then the canonical build
+checks formatting, pure tests and both gameplay/companion compilation. Changed,
+added or removed source/build inputs and replaced/missing DLLs fail the gate;
+documentation-only changes and Windows checkout line endings do not. Content
+identity is used rather than commit age, so the binary and its source can be
+committed together without a self-referencing commit hash. Seven pure tests
+cover this mechanism. Linux/Windows workflow execution is configured, not
+claimed to have run remotely: nothing was pushed or published.
+
+The first pristine-package build exposed undeclared reliance on the local
+cache's alternate Assembly-CSharp_publicised.dll. The official Assembly-CSharp
+file itself has the same hash in both caches; the extra transformed file was
+the discrepancy. Krafs.Publicizer 2.3.2 is now declared for both projects, with
+virtual members excluded and native protected overrides verified through
+DecompilerServer. Protected reflection hook names remain literal strings.
+The existing friend-assembly contract shares the internal access-check helper
+with the companion, avoiding duplicate generated attribute warnings. The
+canonical workflow uses a project-local package cache and does not modify the
+shared one. Generated stale reference caches were cleared. Rejected compile
+attempts are retained; the final build passes 407 C# tests and seven artifact-
+gate tests with zero warnings/errors from freshly restored public packages.
+
+Because the reference correction changes the binary, the final DLL received
+a separate bounded Core-only native smoke check. Startup and Player.log are
+clean, native gas meshes again have 0/36/0 vertices with unchanged density/tick,
+and all 1,102,500 paused target/drawn fog alphas match. Built and deployed
+smoke-test bytes match. This does not refresh step 9's failed performance
+result or wider DLC, Zombieland, CE or Multiplayer acceptance. All processes
+are stopped, temporary profile/config changes restored, D1-D11 untouched, and
+no build sent, public release made or source pushed.

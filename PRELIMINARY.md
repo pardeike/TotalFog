@@ -103,8 +103,9 @@ Fleshmass Heart slowdown or reproduce the complete streamed mod list.
 
 ## What was checked
 
-The current source passes 405 independent tests. GitHub source checks pass on
-Linux and Windows; they do not run RimWorld. Focused native 1.7 follow-ups cover
+The review source passes 407 C# tests plus pure artifact-gate checks. Earlier
+GitHub checks apply to their recorded commits; the expanded CI build is configured
+for Linux and Windows and does not run RimWorld. Focused native 1.7 follow-ups cover
 platform orders, blueprints, lookout facing, debug fog commands and paused fog
 seams. Their recorded hashes and limits are in docs/VALIDATION.md.
 

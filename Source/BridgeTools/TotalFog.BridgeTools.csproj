@@ -10,6 +10,10 @@
     <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../Current/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.2" PrivateAssets="all" />
+    <Publicize Include="Assembly-CSharp" IncludeVirtualMembers="false" />
+    <!-- TotalFog exposes this internal helper through InternalsVisibleTo. -->
+    <Compile Remove="$(NuGetPackageRoot)/krafs.publicizer/2.3.2/contentfiles/cs/any/Publicizer/IgnoresAccessChecksToAttribute.cs" />
     <Reference Include="TotalFog" HintPath="$(TotalFogGameplayAssembly)" Private="false" />
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" ExcludeAssets="runtime" />
     <PackageReference Include="Lib.Harmony.Ref" Version="2.4.2" ExcludeAssets="runtime" />

@@ -80,7 +80,7 @@ public sealed class JobDriver_Watchtower : JobDriver
         Scribe_Values.Look(ref Climbing, "towerClimbing");
     }
 
-    public override IEnumerable<Toil> MakeNewToils()
+    protected override IEnumerable<Toil> MakeNewToils()
     {
         this.FailOnDespawnedOrNull(TargetIndex.A);
         SetFinalizerJob(_ =>

@@ -5,7 +5,7 @@ namespace TotalFog;
 
 public class Verb_ExtendSight : Verb
 {
-    public override bool TryCastShot()
+    protected override bool TryCastShot()
     {
         return (!currentTarget.HasThing || currentTarget.Thing.Map == caster.Map)
             && currentTarget.Thing is Pawn

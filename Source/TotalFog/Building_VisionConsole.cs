@@ -66,7 +66,7 @@ public class Building_VisionConsole : Building
         workingGraphics[cameraCount].Draw(DrawPos + new Vector3(0f, 1f, 0f), Rotation, this);
     }
 
-    public override void DrawAt(Vector3 drawLoc, bool flip = false)
+    protected override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         base.DrawAt(drawLoc, flip);
         drawOverLay();

@@ -16,6 +16,7 @@
     <Nullable>warnings</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.2" PrivateAssets="all" />
     <PackageReference Include="Krafs.Rimworld.Ref">
       <Version>1.6.4871</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -28,6 +29,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
+    <Publicize Include="Assembly-CSharp" IncludeVirtualMembers="false" />
     <Compile Include="../Core/*.cs" Link="Core/%(Filename)%(Extension)" />
     <Compile Remove="BridgeTools\**\*.cs" />
   </ItemGroup>

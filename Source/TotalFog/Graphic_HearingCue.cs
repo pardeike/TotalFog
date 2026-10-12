@@ -6,7 +6,7 @@ namespace TotalFog;
 
 public class Graphic_HearingCue : Graphic_Mote
 {
-    public override bool ForcePropertyBlock => true;
+    protected override bool ForcePropertyBlock => true;
 
     public override void DrawWorker(
         Vector3 loc,

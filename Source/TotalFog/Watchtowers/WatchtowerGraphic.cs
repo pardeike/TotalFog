@@ -133,7 +133,7 @@ public class WatchtowerGraphic : Building
     // meshes already draw the tower, so never print the placeholder graphic.
     public override void Print(SectionLayer layer) { }
 
-    public override void DrawAt(Vector3 drawLoc, bool flip = false)
+    protected override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         if (body == null || foreground == null)
             return;

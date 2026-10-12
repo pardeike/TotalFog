@@ -12,7 +12,7 @@ public class Mote_HearingCue : Mote
 
     private float velocity;
 
-    public override bool EndOfLife => AgeSecs >= targetSize / velocity;
+    protected override bool EndOfLife => AgeSecs >= targetSize / velocity;
 
     public override float Alpha
     {
@@ -42,7 +42,7 @@ public class Mote_HearingCue : Mote
         Scale = 0f;
     }
 
-    public override void TimeInterval(float deltaTime)
+    protected override void TimeInterval(float deltaTime)
     {
         base.TimeInterval(deltaTime);
         if (Destroyed)

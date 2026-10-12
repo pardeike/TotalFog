@@ -100,7 +100,7 @@ public sealed class JobDriver_WatchtowerAccessPrototype : JobDriver
         Scribe_Values.Look(ref Phase, "towerPrototypePhase", "approach");
     }
 
-    public override IEnumerable<Toil> MakeNewToils()
+    protected override IEnumerable<Toil> MakeNewToils()
     {
         this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
         AddFinishAction(condition =>

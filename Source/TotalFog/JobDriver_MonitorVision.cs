@@ -13,7 +13,7 @@ internal class JobDriver_MonitorVision : JobDriver
         return pawn.Reserve(targetA, job, 1, -1, null, errorOnFailed);
     }
 
-    public override IEnumerable<Toil> MakeNewToils()
+    protected override IEnumerable<Toil> MakeNewToils()
     {
         this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
         this.FailOnBurningImmobile(TargetIndex.A);

@@ -14,7 +14,7 @@ This is an early version, with no public Workshop release yet. Updated prelimina
 Zombieland builds include fog integration; Combat Extended and Multiplayer have
 bounded native 1.6 checks. Earlier experimental 1.7 tower and fog checks are retained as evidence;
 1.7 support is withdrawn pending renewed acceptance. Build a source checkout before installing it;
-the tracked DLL can lag behind source changes. See the
+the tracked Release DLL has a source/binary receipt checked by CI. See the
 README and docs/COVERAGE.md for current evidence and limits.
 
 Feedback and support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).

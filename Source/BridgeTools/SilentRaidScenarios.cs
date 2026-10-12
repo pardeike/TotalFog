@@ -242,7 +242,7 @@ public sealed class SilentRaidScenarios
     {
         public bool SawSilent;
 
-        public override bool TryExecuteWorker(IncidentParms parms)
+        protected override bool TryExecuteWorker(IncidentParms parms)
         {
             SawSilent = parms.silent;
             return false;
@@ -253,7 +253,7 @@ public sealed class SilentRaidScenarios
     {
         public bool SawSilent;
 
-        public override bool TryExecuteWorker(IncidentParms parms)
+        protected override bool TryExecuteWorker(IncidentParms parms)
         {
             SawSilent = parms.silent;
             throw new InvalidOperationException("Total Fog failed incident fixture");

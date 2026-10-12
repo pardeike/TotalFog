@@ -8,6 +8,32 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Review round 2 final artifact, 2026-10-13
+
+Final Release gameplay SHA-256 is `0af94ae95748d5b373720e803a8e4a8b070e8b4607aa84206559425eda8b451a`. Its tracked
+build receipt fingerprints 121 gameplay/build inputs and matches the current
+source. The canonical pristine-package build passes 407 C# tests plus seven
+pure artifact-gate tests with zero warnings/errors. Both projects now declare
+Krafs.Publicizer 2.3.2, exclude virtual members from publicization and preserve
+native protected overrides. This corrects local dependence on a cache-only
+alternate publicised assembly. Expanded Linux/Windows CI is configured to
+check the tracked artifact before rebuilding; it has not run remotely for this
+batch, which is not pushed. Earlier rejected compiler attempts are retained.
+
+The final DLL's built and installed hashes match. One fresh Core-only offline
+1.6.4871 launch and native save load have a clean Player.log. Paused fog target
+and uploaded alphas match across 441 sections and 1,102,500 vertices. Native
+gas geometry again follows hidden/visible/hidden as 0/36/0 vertices while
+density remains 255 and tick remains 2. Scoped 100-regeneration CPU means are
+0.00943/0.00714/0.00591 ms. The unchanged fixture is reloaded and the process
+is stopped. Final evidence is in artifacts/review-round-2/step-10-* and
+artifacts/UserData/Screenshots/review2-final-gas-*. Temporary GABS and isolated
+DLC-list changes are restored.
+
+The failed wide comparison below applies to its earlier exact DLL and is not
+repeated for this final build. Full DLC setup, broad optional-mod integration
+and current performance acceptance remain open. No build was sent or published.
+
 ## Review round 2 rendering and wide spot check, 2026-10-13
 
 Steps 1-9 build with 407 pure tests, zero warnings/errors. Candidate gameplay

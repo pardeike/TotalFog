@@ -7,7 +7,7 @@ correction, front ladder placement, native-style blueprints and rotating
 undrafted lookouts. It is part of the active `Current/` payload, advertised for 1.6 only.
 Focused native 1.7 controls cover the user's three-tower row drag, watch/draft
 transitions, blueprint presentation, all four lookout facings and a visible
-tower melee attack. The latest source build passes 405 independent tests.
+tower melee attack. Review round 2 passes 407 C# tests and seven artifact-gate tests.
 Broader 1.7 combat, optional-mod and performance acceptance remain open.
 
 The larger suites and performance numbers below belong to the earlier 1.6

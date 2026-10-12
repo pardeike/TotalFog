@@ -333,7 +333,7 @@ public sealed partial class ZombielandProjectileScenarios
 
     private static System.Reflection.MethodInfo DrawMethod(Thing thing)
     {
-        var method = AccessTools.Method(thing.GetType(), nameof(Thing.DrawAt));
+        var method = AccessTools.Method(thing.GetType(), "DrawAt");
         return AccessTools.DeclaredMethod(
             method.DeclaringType,
             method.Name,
