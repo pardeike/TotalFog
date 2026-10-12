@@ -3,7 +3,10 @@
 0.1.0 — unreleased preliminary development
 
 - Independent Total Fog identity and rewritten sight engine.
+- Shared Current payload for RimWorld 1.6 and 1.7; development follows 1.7.
+- Experimental 3x3 watchtower with timed watches, drafted platform orders and rescue.
 - Current-sight rendering, information, notification and audio filtering.
+- Native fog debug commands, rotating undrafted lookouts and corrected paused fog drawing.
 - Performance-first native drawing for previously observed scenery.
 - Optional Silent Raids and updated Zombieland fog integration.
 - Combat Extended targeting guards and developing Multiplayer support.

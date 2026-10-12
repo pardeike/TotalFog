@@ -17,6 +17,7 @@ a wild boar or something much worse. To be safe, you have to look.
 ## What you get
 
 ### See only what your people see
+
 - Colonists, colony mechs, trained animals and turrets each see a circle around them. Walls block their view.
   Trees can block it too, if you want.
 - Areas you explored stay on the map, but they are grey. You see the ground, not
@@ -27,20 +28,29 @@ a wild boar or something much worse. To be safe, you have to look.
   artificial light require current sight. Your own corpses on known cells can be recovered.
 - Use the area Forbid/Allow tools for previously seen player doors outside sight.
   Their live inspector stays closed until someone can see them again.
-- Allies, neutral visitors and even prisoners can share their view with you
-  (each one is a setting).
+- Allies and neutral visitors can share their view with you through one setting;
+  prisoners have a separate sharing option.
 
 ### Build your own eyes
+
 - Surveillance cameras: on posts, on walls, under roofs, hidden in bushes, or solar
   powered. By default they need an operator at a working camera console. Turn off
   the operator requirement to use cameras automatically without console jobs.
 - A watch telescope doubles the sight range of pawns standing on it.
 - An experimental 3x3 watchtower has a timed ladder and room for one lookout.
-  Order a watch of 1, 2 or 4 game hours, or let a drafted lookout hold until
-  undrafted. New orders bring them down first.
+  Order a watch of 1, 2 or 4 game hours, counted from reaching the deck, or let a
+  drafted lookout hold until undrafted. Moving elsewhere or undrafting brings
+  them down first. Drafting an undrafted lookout on the deck converts the watch
+  into a drafted hold. Explicit watch orders do not end just because the pawn
+  starts hungry or tired.
+  Drafted Go here and dragged formation orders can use the tower tops, including
+  Achtung's move orders. Undrafted lookouts turn through all four directions;
+  idle drafted lookouts face the player, with combat aiming taking priority.
   Its lookout sees over freestanding walls, while roofs, mountains and other
   towers block the view. Shooting from it is off by default. Tower testing is
-  still in progress; existing old towers remain retired.
+  still in progress. Completed towers block all nine footprint cells and need
+  heavy ground support. New placements put the ladder at the front; rotate
+  before placing to choose another side. Blueprints remain walkable until built.
 - The new tower needs Complex furniture research. Better cameras and the telescope also need research.
 - Keep tower ladders clear. A trapped lookout waits, with a persistent warning. Critical needs, burning or a mental state can force a jump with fall injuries if there is free ground nearby. Retrieve a downed lookout from the tower or pawn menu before tending or feeding them; a bed is optional.
 - Shooting from a tower keeps the target's normal cover. A lookout on the deck is exposed to incoming fire.
@@ -51,12 +61,14 @@ buildings no longer provide light or vision, extend sight, or consume fuel.
 They cannot be selected for new construction.
 
 ### Sounds keep secrets, or give hints
+
 - Combat and Anomaly music are off by default, so the music cannot warn you about unseen threats.
 - Sounds from hidden things can be muted, or muffled by distance. Only living
   pawns in your faction provide hearing, according to their hearing capacity.
 - Small hearing indicators can show that *something* moves out there.
 
 ### News only when you see it
+
 - Letters and messages about things you cannot see can wait until you see them.
 - Or you can throw away unseen events, sorted by type (big threats, small threats,
   good news, bad news).
@@ -67,15 +79,20 @@ They cannot be selected for new construction.
   Arrival slowdown is suppressed too; spawning and normal combat slowdown stay intact.
 
 ### Fair enemies
+
 - Optional: humanlike enemies can only target what *their* faction can see.
   Your hidden sniper stays hidden.
 
 ### Your rules
+
 Four settings pages (Appearance, Vision, Information, Audio) let you choose how dark
 the fog is, how fast it fades, how far everyone sees and what may give away
 hidden activity. You can play it as a hard survival challenge or as a light
 atmosphere change. Colony mechs have their own vision multiplier, from 0.2 to 2.
 Its default of 1 keeps their normal sight range.
+The native Clear All Fog, Refog Map and rectangle fog debug commands also affect
+Total Fog. Fog drawing updates while paused, including when scrolling an area
+out of view and back.
 
 ### Defaults and information limits
 
@@ -97,6 +114,7 @@ sight, but ordinary sources do not model height or overhangs. Optional enemy fog
 currently applies to humanlike enemies, rather than every animal, mech or insect.
 
 ### Made for big colonies
+
 The sight engine is new and written for speed. Performance comes before extra
 features. Old visual snapshots of explored areas were removed because they cost
 too much.
@@ -107,20 +125,26 @@ too much.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a
   copy of your save first.
-- **Zombieland:** the updated preliminary test copy includes fog support for its
+- **Zombieland, on 1.6:** the updated preliminary test copy includes fog support for its
   effects, warnings and multi-cell Symbiant body. These fixes are not all in the
   Workshop version yet. Total Fog also runs without Zombieland.
-- **Combat Extended:** weapons, powered turrets, mortars and some combined
+- **Combat Extended, on 1.6:** weapons, powered turrets, mortars and some combined
   Zombieland controls have passed native tests. Broader loadouts remain under review.
-- **Multiplayer:** shared settings, separate player factions, independent map
+- **Multiplayer, on 1.6:** shared settings, separate player factions, independent map
   clocks, fog refresh, saved-session rejoin and bounded combat checks have passed
   on two local clients. Overall compatibility is still unverified; combined CE,
   cross-platform play and longer sessions need testing.
 
-See [coverage](docs/COVERAGE.md#current-status-10-october-2026) for the current
+Focused native 1.7 checks cover tower orders, blueprints, lookout facing, debug
+fog commands and paused fog drawing. Broader DLC and optional-mod compatibility
+on 1.7 remain unverified. Most native integration checks above use macOS 1.6;
+Windows gameplay and longer sessions still need confirmation.
+
+See [coverage](docs/COVERAGE.md#current-status) for the current
 evidence and remaining checks. No public player release or Workshop item exists yet.
-Build this source checkout or use the separately supplied preliminary ZIPs;
-tracked DLLs are snapshots of the local review checkpoint.
+Build before installing this source checkout, or use the separately supplied
+preliminary ZIPs. Tracked DLLs are snapshots of the local review checkpoint and
+can lag behind source and definition changes.
 
 ## For mod developers: support Total Fog in your mod
 
@@ -238,8 +262,12 @@ if (TotalFogSupport.AllowsTarget(shooter, targetCell) == false)
 
 ### Step 4: Test both ways
 
-- With Total Fog: put your thing into the dark. Its effects, sounds and labels
-  must disappear. Walk a colonist close: they must come back.
+- With Total Fog: put a non-player thing into the dark. Its effects and labels
+  must disappear. Walk a colonist close: they must come back. Disable colony
+  bypasses for this control so they do not intentionally reveal the test area.
+- For sounds, enable Mute hidden sounds and check silence while hidden, then
+  normal volume when seen. Also check hearing-distance filtering separately.
+  Audio filtering is optional and off by default.
 - Without Total Fog: everything must work like before. No errors in the log.
 
 ### Advanced: things bigger than one cell
@@ -337,6 +365,7 @@ installed game's `Mods` folder.
 | `./scripts/mod test` | Checks formatting and runs pure tests without a game install or DLL changes |
 | `./scripts/mod build` | Checks formatting, runs the tests and builds the mod |
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
+| `./scripts/mod deploy-built` | Installs the already-built gameplay/companion pair without rebuilding; the game must be stopped |
 | `./scripts/mod metadata` | Updates the installed description and version/load-folder metadata without changing DLLs; the game must be stopped |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
@@ -363,14 +392,18 @@ Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 currently load the
 same DLL, definitions and assets from `Current/`. The older version folders stay for
 history. Development follows 1.7. If the versions need different code or content,
 we will freeze the last working payload in `1.6/` and keep new development in `Current/`;
-continued fixes or new features for 1.6 are not promised. The current 1.7 check
-establishes clean startup with Steam Harmony, not full gameplay or compatibility
-acceptance. The existing detailed native results belong to 1.6. More details:
+continued fixes or new features for 1.6 are not promised. The current 1.7 evidence
+includes clean startup and focused tower, blueprint, debug-command and paused-fog
+gameplay checks. Broader compatibility and performance acceptance are still open.
+Earlier integration and performance results retain their recorded 1.6 builds.
+More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),
 [validation](docs/VALIDATION.md) and [AGENTS.md](AGENTS.md).
 
-The local `0.1.0` review checkpoint includes a Release DLL built from its source.
-Later gameplay edits still need a build before installation. GitHub Actions checks
+For source-only review builds that should preserve the tracked DLL, use
+`TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/" ./scripts/mod build`.
+The local `0.1.0` tag identifies an earlier reviewed build, not a public release.
+Later gameplay edits need a build before installation. GitHub Actions checks
 formatting and pure tests on Linux and Windows for pushes and pull requests; it
 does not test RimWorld, mod loading or native rendering.
 Preliminary delivery instructions are in [PRELIMINARY.md](PRELIMINARY.md).

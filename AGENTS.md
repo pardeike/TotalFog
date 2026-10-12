@@ -60,13 +60,16 @@ blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
+The following artwork/access tools retain historical prototype controls; use the
+production watchtower tools below for current gameplay acceptance.
 Use `totalfog/watchtower_access` for the separate non-shipping footprint/ladder
 prototype. It checks four solid 3x3 edifices, exterior approach pathfinding,
 120-tick native climbs/descents, reservations, blocked entry, interrupted-ascent
 cleanup and downed retrieval followed by native bed rescue. It reloads the
 unchanged named fixture after advancing native ticks. Its immediate interruption
-cleanup is not the required production descent policy. Automatic rescue, blocked
-exits, save/load, collapse, sight and combat remain unverified; see WATCHTOWER.md.
+cleanup is not the production descent policy. This prototype does not establish
+automatic rescue, blocked exits, save/load, collapse, sight or combat; their
+production evidence is recorded in WATCHTOWER.md and VALIDATION.md.
 Use `totalfog/watchtower_visuals` for the first new 3x3 tower artwork review.
 It stages eight test-only wood/granite native buildings and four native colonists,
 captures a combined overview and tight empty/occupied and straight/corner views,
@@ -159,9 +162,19 @@ three pairs for the existing performance-floor acceptance.
 Verify gameplay screenshots and semantic evidence with
 `./scripts/mod verify-rendered artifacts/<evidence-folder>`. This uses Pillow
 from artifacts/pixel-analysis-env when present, otherwise the current Python.
-Use the `total-fog-16` GABS game for live verification. Its savedata is isolated
+Use the `total-fog-16` GABS game for the isolated 1.6 baseline. Its savedata is isolated
 under artifacts/UserData. Core and all five DLCs plus Harmony and Total Fog are
-the gameplay loadout; RimBridgeServer is test instrumentation.
+the gameplay loadout; RimBridgeServer is test instrumentation. For a bug in
+Andreas's running game, reconnect to that existing GABS game instead of launching
+a second instance or replacing its mods/settings. The current ordinary Steam
+game is `rimworld` on 1.7; discover its state before using it. Preserve the active
+save and loadout. A focused 1.7 result does not refresh the 1.6 comparison or
+optional-mod gates.
+Use `totalfog/fog_mesh_equivalence` on a paused map for independent vertex-alpha
+checks. `verifyDrawn=true` also draws every layer and compares uploaded colors,
+exercising paused fade completion. The default checks targets only; a target
+pass alone cannot rule out stale rendered colors. This is companion
+instrumentation, not player gameplay code.
 Use `./scripts/mod dpa-setup` to verify the installed Steam Dubs Performance
 Analyzer supports 1.6 and enable it in this isolated profile. Profile through
 RimBridgeServer's `dpa_*` tools, then stop and clean up instrumentation before
@@ -324,7 +337,7 @@ runtime baseline; aim to improve it with matching save/settings/hardware evidenc
 Exact visual-memory snapshots are retired. Do not reintroduce GPU capture,
 material interception or drawing archives into gameplay to support that feature.
 
-## Blocked integrations with other mods
+## Production watchtower tools
 
 Use `totalfog/watchtower_gameplay` in the paused `TotalFogRegression` fixture for
 the production tower access/sight/bullet/rescue/collapse slice. Its historical
@@ -376,6 +389,8 @@ hauling/autonomous raids, optional mod or original-baseline performance
 acceptance; track these in WATCHTOWER.md
 and VALIDATION.md. Never substitute the old test-only projection for production
 rendering or change native projectile ExactPosition to fit the artwork.
+
+## Blocked integrations with other mods
 
 First establish the affected function, a minimal native reproduction and why a
 correct, stable and performant fix cannot reasonably live in Total Fog. A

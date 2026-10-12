@@ -6,9 +6,12 @@ saves, settings, camera views and hardware. Kernel timings alone cannot establis
 whole-game performance. Do not add a feature that makes representative gameplay
 slower than the original mod.
 
-The replacement watchtower has accepted artwork and a non-shipping native
-[ladder access prototype](WATCHTOWER.md). It is not yet a player building or an
-implemented source of elevated vision or combat behavior.
+The replacement [watchtower](WATCHTOWER.md#production-checkpoint) is an implemented
+3x3 player building with ladder jobs, elevated sight and combat rules. Its pawn
+stays spawned at the logical platform cell; body, UI and projectile drawing use
+separate elevation projections. Optional CE behavior is isolated in its adapter.
+Earlier artwork/access prototypes remain companion diagnostics, outside the
+player payload. The tower is experimental and broader acceptance remains open.
 
 ## Ownership
 

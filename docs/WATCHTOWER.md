@@ -1,6 +1,24 @@
 # Watchtower design and validation
 
-Status: local feedback fixes after the preliminary gameplay pair privately
+## Current status
+
+Current source includes the production tower, timed/drafted orders, wall-link
+correction, front ladder placement, native-style blueprints and rotating
+undrafted lookouts. It is part of the shared `Current/` payload for 1.6 and 1.7.
+Focused native 1.7 controls cover the user's three-tower row drag, watch/draft
+transitions, blueprint presentation, all four lookout facings and a visible
+tower melee attack. The latest source build passes 405 independent tests.
+Broader 1.7 combat, optional-mod and performance acceptance remain open.
+
+The larger suites and performance numbers below belong to the earlier 1.6
+preliminary pair and its recorded candidates. Later local source fixes have
+not been delivered as a replacement ZIP and do not refresh those exact-byte
+proofs. [COVERAGE.md](COVERAGE.md#current-status) owns overall status;
+[VALIDATION.md](VALIDATION.md) retains candidate hashes, failures and receipts.
+
+## Recorded 1.6 production evidence
+
+The local feedback fixes follow the preliminary gameplay pair privately
 delivered on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
@@ -236,6 +254,8 @@ Automatic staffing and schedules remain proposed, not requirements for the first
 implementation. Enemies and faction ownership must use the same occupation rules.
 Towers must not support roofs or become portable minified structures.
 
+### Historical footprint prototype
+
 The first footprint prototype uses one native impassable 3x3 edifice, with one
 authoritative structural health value. Ordinary navigation cannot enter its
 center. A ladder job paths to the exterior approach cell and animates ascent;
@@ -263,15 +283,19 @@ and block elevated sight beyond them. They are opaque obstacles, not merely
 cells omitted from the visible result. Natural rock, mountain roofs and other
 towers also remain opaque. Seeing over a freestanding wall must not reveal a
 pawn or item through its building's roof.
-Tree handling should initially retain the configured tree-blocking policy.
+Tree handling retains the configured tree-blocking policy.
 
 A narrow blind strip immediately behind low walls is a tentative option, only
 if it can reuse the cast without expensive extra passes. A blind area near the
-tower is also tentative. Neither is part of the first prototype. If adopted,
+tower is also tentative. Neither is part of the current implementation. If adopted,
 these rules affect this elevated observer only; another observer who sees the
 same cells still reveals them. Do not hide nearby cells globally.
 
-## Artwork and adjacent walls
+## Artwork and adjacent wall history
+
+The following records the 11 October design/prototype review. Production now
+uses the accepted compact deck and cached native wall joins. The optional
+native-front texture studies remain diagnostics, not the default building.
 
 Start with empty and occupied wood/granite towers. Show the 3x3 footprint, a
 raised compact center platform, close railings, supports or slanted masonry walls,
@@ -394,8 +418,10 @@ each frame. The fixture explicitly rebuilds its caches after staging the walls.
 Native counts are two draw calls for an unjoined tower, three for the straight
 wood example and four for the granite corner, with joins grouped by material.
 This is a draw-call count, not a benchmark. Wall spawn/destruction/appearance
-invalidation, off-center edge joins and a launch warmup remain implementation
-work; the prototype is not a player building.
+invalidation, off-center edge joins and a launch warmup were still implementation
+work at this prototype checkpoint. Production now handles local wall-cache
+invalidation, with native construction/link controls recorded above. Broader
+modded wall graphics remain unverified.
 
 An empty tower provides no sight. Sleeping or downed occupants provide no elevated
 sight. Tower range scales with the lookout's ordinary sight capacities and
@@ -465,7 +491,11 @@ adding public integration APIs, prove the actual missing contract. Zombieland
 needs explicit melee/climbing/rescue checks; CE needs native targeting, cover and
 projectile controls. Do not infer compatibility from successful vanilla sight.
 
-## Smallest useful validation sequence
+## Order feedback checkpoint, 12 October 2026
+
+This is the earlier source-only 1.6 order candidate. The later shared `Current/`
+and native 1.7 results are recorded above and in VALIDATION.md; the statements
+below about unchanged installed bytes belong to this checkpoint.
 
 The 2026-10-12 order follow-up passes 80 native assertions in public 1.6.4871,
 using the offline installation and a copy of the active save, with current
@@ -503,7 +533,7 @@ its temporary configuration and mod staging are restored/removed.
 The accepted footprint and combat design is now implemented. Keep optional
 balance extras separate from the current acceptance work.
 
-### Native ladder access checkpoint
+## Historical native ladder access checkpoint
 
 The companion's `totalfog/watchtower_access` stages four solid towers, four
 native colonists and a rescuer/medical bed. Climbing and descent each take 120
@@ -526,7 +556,7 @@ the basic access representation; it does not establish interrupted descents,
 blocked exits, save/load, collapse, elevated sight or combat. Exact proof and
 earlier rejected attempts are recorded in [VALIDATION.md](VALIDATION.md).
 
-### First-version review adjustments
+## First-version review adjustments
 
 New construction requires Complex furniture. Ordinary blueprint placement
 rejects impassable structures across an existing ladder, and tower placement
@@ -538,5 +568,7 @@ A completely enclosed tower still needs an obstruction cleared; no escape moves
 through solid cells. Downed own-faction lookouts have a retrieval option on the
 pawn, and rescue no longer requires a bed before getting them to ground.
 Tending/feeding happens after retrieval. Outgoing shots retain target cover.
-These changes have source/build proof; new native safety/rescue checks remain
-outstanding, and earlier exact-byte proofs do not validate this revision.
+The review introduced these changes after the broad delivered-pair checks.
+Later order/building follow-ups exercise some of them, but fresh safety/rescue
+acceptance on the latest source remains open. Earlier exact-byte proofs do not
+validate changed emergency paths.

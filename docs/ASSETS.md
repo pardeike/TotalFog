@@ -1,12 +1,33 @@
 # Total Fog artwork
 
-The new 3x3 watchtower's first geometry sketch lives in the non-shipping
+## Current watchtower graphics
+
+The player tower uses the accepted compact-deck design in
+`Source/TotalFog/Watchtowers/WatchtowerGraphic.cs`. Two cached colored meshes
+draw the body and foreground railing with native materials and stuff colors.
+`WatchtowerWallJoins.cs` captures and clips actual adjacent walls' printed
+geometry, retaining native materials/UVs and rebuilding on local wall changes.
+The production tower registers wall-link flags across its solid 3x3 footprint.
+No tower-body texture or custom shader/AssetBundle is required. The UI icons
+below are separate PNGs.
+
+Blueprints and placement ghosts use the native tint, strong outer contours,
+translucent fill and broad translucent inner strokes. Wooden cross-braces are
+omitted from previews. A four-rotation cache supplies the two preview passes.
+The ladder defaults to the front on new placements; saved rotations stay intact.
+Native 1.7 blueprint and tower follow-ups are recorded in VALIDATION.md.
+Gameplay, projected occupant drawing and remaining acceptance belong to
+[WATCHTOWER.md](WATCHTOWER.md#production-checkpoint).
+
+## Historical watchtower artwork studies
+
+The first 11 October geometry sketch is retained through the non-shipping
 `Source/BridgeTools/WatchtowerVisualPrototype.cs`. It builds two tower meshes
 once per spawn, uses RimWorld's native vertex-color material and stuff colors,
 and draws native pawns with a scoped test-only projection. It adds no PNG,
 shader or AssetBundle to the player payload. Wood/granite and native straight/
 corner wall junctions were inspected in public 1.6 on 11 October 2026.
-The current draft keeps that 3x3 base and tapers to a 1.4-cell deck, with broad
+That draft kept the 3x3 base and tapered to a 1.4-cell deck, with broad
 surface divisions and thicker dark outlines. The upper deck/railing is shifted
 0.18 cells toward the viewer while the lower wall joins stay fixed;
 the ladder's upper attachment follows the deck. The pawn has a separate
@@ -44,8 +65,8 @@ beams/rails, softer internal shadows and quieter masonry lines. The earlier
 hairline study remains in the validation ledger; the refined edges are wider
 and lower contrast. Native overview, straight wood join and granite corner
 pixels were inspected. Andreas accepted the refined direction for further work;
-it remains a non-shipping artwork prototype.
-The later `materialComparison` option uses this current draft for ten labelled
+this was still a non-shipping artwork prototype at that checkpoint.
+The later `materialComparison` option uses that draft for ten labelled
 towers: wood, steel, plasteel, sandstone, granite, limestone, slate, marble,
 uranium and bioferrite. Each has real matching native walls on its left/right.
 Gold/jade are excluded at Andreas's request; silver is omitted from this
@@ -64,8 +85,11 @@ This is an artwork prototype, not the new tower's gameplay implementation;
 see [WATCHTOWER.md](WATCHTOWER.md).
 The access companion reuses the accepted meshes for a native ladder-job
 experiment. Rungs sit below the pawn's drawing layer so a front-facing ladder
-does not cross its body. Timed movement reads native job progress; climb-specific
-occlusion still needs review before the tower becomes a player building.
+does not cross its body. At that checkpoint, timed movement read native job
+progress while climbing occlusion still needed review. The production drawing
+and gameplay now use the accepted meshes; the earlier controls remain history.
+
+## Portable inherited textures
 
 Original Real Fog of War gameplay textures and assets retain their upstream
 Apache 2.0 attribution in NOTICE.md. The portable texture folder is loaded for

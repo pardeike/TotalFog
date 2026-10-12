@@ -6,6 +6,29 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
+## Current status
+
+Reviewed against source commit `537762b` on 12 October 2026. The latest local
+build passes 405 independent tests with zero warnings/errors. GitHub's
+[source checks](https://github.com/pardeike/TotalFog/actions/runs/38312341294)
+also pass on Linux and Windows for that commit. Those checks establish formatting
+and pure tests, not Windows RimWorld gameplay.
+
+| Area | Current evidence and boundary |
+|---|---|
+| Versions | 1.6 and 1.7 load the same `Current/` payload. Development follows 1.7; future 1.6 backports require an explicit request. |
+| Latest native check | Steam 1.7, all five DLCs, released Harmony and Total Fog: the paused section seam is fixed at maximum normal zoom. All 562,500 target and uploaded vertex alphas match native cell queries. |
+| Other 1.7 checks | Earlier shared-payload candidates pass three-pawn tower row dragging, timed/drafted watch behavior, blueprints, lookout facing, visible tower melee and all four native fog debug commands. Each retains its own tested hash. |
+| Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
+| CE and Multiplayer | Bounded native 1.6 checks exist, including tower slices. Broader combinations, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. |
+| Performance | The delivered 1.6 pair passes the bounded original-mod TPS floor. Its wide frame tails remain worse; later source has no new exact-byte performance acceptance. |
+| Release | No public player release or Workshop item exists. Build before installing a source checkout; the tracked DLL is an earlier review snapshot. |
+
+The sections below retain dated delivery and compatibility checkpoints. Their
+test counts, hashes, phrases such as "current pair", and remaining-check lists
+belong to those checkpoints. Use this summary and the current closeout priorities
+for present work; [VALIDATION.md](VALIDATION.md) owns the detailed evidence.
+
 ## Engine versions and maintenance
 
 The advertised versions are 1.6 and 1.7. Their explicit load-folder entries
@@ -15,31 +38,13 @@ follows 1.7; if the versions diverge, the complete last working 1.6 payload is
 retained in 1.6/ and active development stays in Current/. Later 1.6 backports require an
 explicit request.
 
-The unchanged local candidate reaches the 1.7 main menu with the released Steam
-Harmony 3.0.0 and no startup errors or warnings. Actual loaded paths confirm the
-Workshop Harmony copy and shared Total Fog DLL, SHA-256
-`ee344f3d518e01dfc3264efa2c7db49672945101f241e3a3b6aa88f99a7fa1cc`.
-This is startup evidence only. Fog gameplay, save/load, performance, DLC behavior,
-Zombieland, CE and Multiplayer acceptance on 1.7 remain unverified. Existing
-native results below belong to their recorded 1.6 checkpoints.
+Native 1.7 checks now extend beyond startup to tower orders, blueprint
+presentation, debug fog commands, lookout facing and paused fog rendering.
+Broader DLC behavior, save/lifecycle cases, performance, Zombieland, CE and
+Multiplayer acceptance on 1.7 remain open. All five DLCs were loaded in the
+focused checks; that does not establish every DLC interaction.
 
-The later `Current/` candidate also passes the user's literal three-tower row
-drag on native 1.7, idle south-facing presentation, undraft descent and timed
-watch conversion to a drafted hold. All five DLCs were loaded. It passes 380
-independent tests; exact bytes, the rejected rotation change and bridge/fixture
-limits are recorded in VALIDATION.md. This narrow tower slice does not establish
-the broader 1.7 compatibility targets listed above.
-
-The subsequent blueprint follow-up passes the same 380-test build and a fresh
-native 1.7 load of the user's updated example save. The clear-ground comparison
-with a vanilla wood-fired generator was inspected, and Andreas reported that
-the blueprint looked better. All nine cells of the completed tower remain
-non-walkable. New placements default to the front ladder. This is a presentation
-and placement-default check; broader compatibility and performance gates were
-not repeated. Exact bytes and evidence are recorded in VALIDATION.md.
-
-The subsequent debug-command and lookout-facing slice passes 399 independent
-tests and focused native Steam 1.7 controls. Clear All Fog and Unfog (rect)
+Clear All Fog and Unfog (rect)
 provide current sight, not just discovered terrain. Fog (rect) removes that
 debug sight and discovery in its rectangle. Refog Map clears debug sight and
 discovery across the map while retaining real observers' current coverage.
@@ -57,13 +62,10 @@ current sight had been rejected as a manual target. No combat eligibility
 override was added. These are focused controls, not broader compatibility or
 performance acceptance. The user's pre-test state was restored afterward.
 
-The paused-fog follow-up passes 405 independent tests and a focused native
-Steam 1.7 check at maximum normal zoom. Incomplete section fades now finish on
-paused drawing, removing the persistent straight edge observed while scrolling.
-Panning the affected area completely out of view and back requires no game
-ticks. All 562,500 target and uploaded vertex alphas match independent cell
-queries. Broader runtime/performance checks were not repeated; exact bytes and
-the preserved user state are recorded in VALIDATION.md.
+Incomplete section fades finish on paused drawing, removing the persistent
+straight edge observed while scrolling. The affected area can leave and re-enter
+the camera without advancing game ticks. The user's saved state was retained.
+Exact gameplay/companion hashes and native limits are recorded in VALIDATION.md.
 
 ## Watchtower feedback follow-up: 12 October 2026
 
@@ -143,7 +145,7 @@ bounded stationary-tower check; exact bytes and limits are in VALIDATION.md.
 
 ## Earlier preliminary pair: 10 October 2026
 
-The latest preliminary Total Fog gameplay DLL is
+The 10 October startup-corrected preliminary Total Fog gameplay DLL is
 `10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`.
 It fixes startup when another mod bundles an uninitialized Multiplayer API.
 All 323 independent tests pass. Native failing-before/fixed-after startup and
@@ -197,7 +199,7 @@ probes are excluded from player ZIPs.
 | Coverage/discovery | Sparse factions, checked counters, overlapping/removing sources, discovery persistence, rectangular bounds in independent tests | Full rectangular-map live scenario |
 | Field of view | Newly authored symmetric caster; reciprocal floor sight, radius/edges, wall occlusion, unchanged blocker arrays, zero warm allocations in .NET tests | Dense multi-source end-to-end profiling and reliable native allocation evidence |
 | Sources | Rewritten movement/map/faction ownership and map-clock deadlines; native movement, blocker rotation/despawn, closed/open/closed door, powered CE turret and zero-range wall controls | Camera-console occupancy, fuel variants, animals, weather/night, sleeping/downed and wider tree cases |
-| Rendering | Current-sight native pawn culling/registration; 900-tick original fleshbeast-save control; flyer/grid mutation fix passes Mac reloads; paired Zombieland pixel gates | Windows confirmation, broader custom renderers, full Symbiant GPU fallback and live visuals after removing the redundant upstream bundle |
+| Rendering | Current-sight native pawn culling/registration; 900-tick original fleshbeast-save control; flyer/grid mutation fix passes Mac reloads; paired Zombieland pixel gates; later tower/fog checks load the portable assets without the inherited bundle | Windows confirmation, broader custom renderers, full Symbiant GPU fallback and more inherited camera variants |
 | UI information | Audited virtual overlay, tooltip, mouseover and both pawn-label hooks; remembered-object/proxy gating; native unseen-cell readouts/window decisions/beauty sampling and colony bypass; roof/fertility/terrain methods across discovery states | Direct pawn-label, wildlife and designator interaction acceptance; room-wide aggregates and topology |
 | Simulation | Native failed hit checks remain failed; own vanilla/CE/player/enemy combat controls preserve range, LOS and damage. Ordered known vanilla chunks retain reservations and finish a native haul after sight loss; unordered hidden chunks remain blocked | Wider acquisition/job routes, broader hauling/storage loadouts and combined CE Multiplayer combat |
 | Notifications | Health/global/visible notifications, original deferred payloads/save-load and native Silent Raids arrival controls pass; two-faction queues and world-context map-clock deadlines pass MP cold rejoin | More target forms/maps, modded silent arrivals, delayed sounds/slowdown and broader natural combat |
@@ -240,8 +242,9 @@ all block a preliminary tester build.
 
 ### Current delivery boundary
 
-The 10 October stream-feedback Zombieland pair has been delivered with its exact-byte
-native/pixel/performance/package gates. Contamination sight/refresh is among the
+The 12 October watchtower/Zombieland pair is the latest private delivery, with
+its exact-byte native/pixel/performance/package gates. It supersedes the earlier
+10 October archives. Contamination sight/refresh is among the
 accepted bounded controls, rather than an unimplemented delivery blocker.
 Follow up on concrete tester feedback; do not send Mortal CE or Multiplayer
 progress. He is testing the Zombieland integration, not those release targets.
@@ -255,8 +258,9 @@ evidence identifies a fog interaction. The current development priority is
 Mortal's concrete stream feedback in Total Fog and Zombieland. CE and Multiplayer
 can resume while tester feedback is pending; demonstrated stream regressions
 retain priority. Their earlier evidence keeps its own gameplay identities. Hidden wall
-destruction remains a known limitation of live remembered scenery; the policy
-decision is pending. Mortal's Custom-difficulty follow-up identified a separate
+destruction can change remembered native scenery while unseen; exact appearance
+snapshots remain deliberately excluded for performance. Mortal's Custom-difficulty
+follow-up identified a separate
 No Pause Challenge setup exception. The original DLL reproduces it during the
 transition to Zombieland settings; a preliminary No Pause fix passes Custom and
 preset page transitions and loaded-game dialog controls. Later native controls
@@ -282,7 +286,9 @@ are covered. A dedicated all-arrivals or sound-only pod setting is not added.
 The new native result is scoped to the candidate recorded in VALIDATION.md;
 it is not a new performance-floor or Multiplayer acceptance pass.
 
-The 10 October stream-feedback pair is delivered. Follow up on its reported
+The 12 October pair is delivered. Later local work fixes watch-order behavior,
+wall links, shared-version loading, blueprints, lookout rotation and paused fog
+seams; those fixes are not a new tester ZIP. Follow up on concrete tester
 regressions first, then continue the remaining
 Multiplayer checks below, starting with demonstrated
 failures and existing acceptance gaps. Core two-client queue, rifle, hearing,
@@ -313,9 +319,9 @@ not supersede the already delivered preliminary pair.
 | Overhaul mods | Exact installed 1.6 versions of Combat Extended, Vehicle Framework, Zombieland and relevant Vanilla Expanded content. Inspect overrides and direct drawing paths, then test separate and combined supported loadouts. |
 | Zetrith's Multiplayer | **Unverified for Total Fog.** Establish deterministic simulation, synchronized gameplay settings/actions, fog refresh on both clients, combat targeting, save/rejoin and faction visibility. The reported upstream spreadsheet result does not close this target. See the evidence and acceptance checklist below. |
 | Fog of War parity | Compare original source/settings and gameplay responsibilities. Preserve useful exploration, vision sources, targeting, notification/audio options and integrations while correcting leaks. |
-| Performance | Sparse indices, reused masks, batched sections, clear-row casting, singleton listeners and coalesced refreshes; fresh stream-candidate single-player TPS floor passes; wide-view acceptance remains bounded | Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy and many-mod combined loadouts, Windows and long sessions; kernel timings alone do not establish acceptance |
-| Settings | Grouped, readable page, truthful descriptions, sensible defaults, reset, live setting changes and save persistence. Privacy options must explain intentional information cues. |
-| Translations | Use the language set of Andreas' most translated mod, as requested. The local inventory identifies Achtung with 12 languages: English, Simplified/Traditional Chinese, Dutch, French, German, Polish, Russian, Spanish, Latin American Spanish, Swedish and Turkish. Validate all player-visible keys, placeholders and actual settings layout. |
+| Performance | The delivered 1.6 pair passes its bounded single-player TPS floor. Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy/many-mod loadouts, Windows and long sessions remain open. Kernel timings alone do not establish acceptance. |
+| Settings | Four tabs, documented defaults, reset, live changes and persistence have source/pure-test evidence and bounded native controls. Broader setting combinations and layouts remain open. Privacy options explain intentional information cues. |
+| Translations | Current keyed/watchtower translations cover German, French, Simplified Chinese and Korean, with XML/placeholder checks but no native-speaker acceptance. Broader coverage still targets Achtung's language set: English, Simplified/Traditional Chinese, Dutch, French, German, Polish, Russian, Spanish, Latin American Spanish, Swedish and Turkish. |
 | Persistence and platform | Core-only and DLC loadouts, older saves, multiple maps, map removal/respawn, large-colony soak, exact deployed bytes and Windows render-error reproduction or confirmation. |
 
 Current source research includes Combat Extended, Vehicle Framework and Vanilla

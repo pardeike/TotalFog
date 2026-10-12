@@ -1,11 +1,17 @@
+# Pending release notes
+
+Player-visible changes for the unreleased 0.1.0 version. Source commits and
+local testing do not indicate that a new player build has been released.
+
 - Add RimWorld 1.7 to the advertised game versions; 1.6 and 1.7 currently use the same mod payload.
 - Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
 - Make tower blueprints and placement previews translucent, with the ladder facing the player by default.
 - Let undrafted lookouts slowly look around; idle drafted lookouts keep facing the player.
 - Apply Clear All Fog, Refog Map and rectangle fog debug commands to Total Fog too.
+- Fix persistent straight fog edges when scrolling while the game is paused.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
-- Keep a lookout on the platform when drafted, face idle lookouts toward the player, and prevent a rotation error after climbing.
+- Keep a lookout on the platform when drafted and prevent a rotation error after climbing.
 - Clear the ladder before an undrafted lookout resumes idle wandering, while preserving queued work.
 - Keep raised watchtower occupants vulnerable to fire, with their normal fire resistance preserved.
 - Preserve a watchtower and its occupant's corpse when saving and reloading after a death.

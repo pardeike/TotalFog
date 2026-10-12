@@ -1,5 +1,11 @@
 # Total Fog 0.1.0 review
 
+This is the historical review of commit `12e30f6`, not the current bug backlog.
+All ten work-order steps have responses below, including Andreas's decision to
+retain the defaults. For current implementation and open native checks, use
+[COVERAGE.md](COVERAGE.md#current-status). Original findings and line references
+remain intact so the responses can be audited.
+
 Independent review of the first version, 12 October 2026, commit 12e30f6.
 Four read-only passes: sight engine, information-leak surface, watchtower,
 settings/compatibility/process. Severity is judged for a first public version:
@@ -375,3 +381,17 @@ cannot abort installation of the remaining tower hooks. The final native launch
 has no Total Fog patch failures or runtime exceptions; the existing linked-graphic
 XML configuration warnings remain. This is startup/order evidence, not a gas
 pixel comparison or full acceptance of the tagged review payload.
+
+### Documentation follow-up, 12 October 2026
+
+The source has since moved to the shared `Current/` payload for 1.6 and 1.7.
+Later local candidates pass native tower orders, wall-link/building checks,
+blueprint presentation, lookout facing, debug fog commands and paused fog
+rendering. Their exact hashes and limits are in VALIDATION.md. The tracked DLL
+remains an earlier review snapshot; the README now requires building a source
+checkout before installing it, rather than implying it follows every source edit.
+GitHub's [source-check run for `537762b`](https://github.com/pardeike/TotalFog/actions/runs/38312341294)
+passes formatting and pure tests on both Linux and Windows. This supersedes the
+earlier lack of executed CI evidence, without claiming Windows game testing.
+The earlier responses' native safety, gas-pixel, deferred-letter and broader
+performance gaps are retained in the current coverage checklist.
