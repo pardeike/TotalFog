@@ -331,6 +331,13 @@ its actual spinning projectile drawing. Use `totalfog/watchtower_building` for
 native blueprint/frame completion, automatic wall-cache invalidation and a
 supplied-target native breach attack. It prefills materials and supplies the
 breaching target/lord; it is not hauling or autonomous raid coverage.
+Use `totalfog/watchtower_ce` in the paused `TotalFog_Tower_CE_Native` fixture
+under `total-fog-ce-16` for native collision heights, tall obstacles, actual
+automatic outgoing and ordered incoming short-bow producers, projected arrows,
+in-flight save/reload and descent. Generated targets are unarmored and capable
+of violence; this is geometry/damage coverage, not CE armor or every weapon.
+Compare reload against the uninterrupted reference tick because native
+Pause-on-load advances one tick. Preserve the native launch/impact evidence.
 These suites do not complete other combat producers,
 hauling/autonomous raids, optional mod or original-baseline performance
 acceptance; track these in WATCHTOWER.md

@@ -1,6 +1,6 @@
 # Watchtower design draft
 
-Status: fifth production gameplay checkpoint on 12 October 2026, following the
+Status: production gameplay and CE checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -18,6 +18,11 @@ player orders, all four settings, matching fog/actor state, partial descent,
 cold live rejoin and deterministic collapse/death. The existing reflection-only
 loader error remains a limit on overall acceptance; saved-replay loading,
 separate factions, combined mods and cross-platform tower checks remain open.
+The optional CE adapter passes 26 native controls for real bow producers,
+incoming damage, climb/descent collision height, tall obstacles, projected
+arrows and in-flight reload. This is a bounded weapon/height slice, not every CE
+weapon or combined loadout. A fresh 65-check core lifecycle run also passes on
+this candidate without CE loaded.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types belong to Total Fog.
@@ -102,8 +107,9 @@ four 4-second close/wide samples retain multiplier 15 on every measured tick,
 with private speed boost disabled. Ground/occupied throughput is 882–890 TPS.
 This is a small stationary-tower cost check with 128 waiting pawns, not the
 whole-game comparison against the original mod. Further combat producers,
-autonomous raids/hauling and tower-specific Zombieland/CE/Multiplayer acceptance
-remain open. Exact tested bytes and newer changes are recorded in VALIDATION.md.
+autonomous raids/hauling, tower-specific zombie AI and broader CE/Multiplayer
+acceptance remain open. Exact tested bytes and newer changes are recorded in
+VALIDATION.md.
 
 This checkpoint is not a release or complete tower acceptance. Record remaining
 cases and their actual evidence below rather than inferring them from the first

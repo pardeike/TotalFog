@@ -25,9 +25,17 @@ flight/fuse and Zombieland's spinning projectile drawing pass. Native blueprint/
 frame completion, local wall-cache invalidation and a supplied-target native
 breach job pass. Materials are prefilled; an autonomous raid is not tested.
 
+The shared-colony Multiplayer tower slice passes 27 native controls for player
+orders, settings, matching fog/actor state, partial descent, cold live rejoin and
+deterministic collapse. Its retained loader/log issues prevent overall acceptance.
+The CE tower slice passes 26 native controls for climbing/descending collision
+height, tall blockers, real outgoing/incoming arrows, projected drawing and
+in-flight save/load. CE's native trajectories and damage remain authoritative.
+The final CE candidate also passes a fresh 65-check core lifecycle run without CE.
+
 Still open: further combat producers, hauling/autonomous raids, the original-mod
-performance floor on final tower bytes and tower-specific Zombieland, Combat
-Extended and Multiplayer checks. Existing compatibility evidence below does
+performance floor on final tower bytes, tower-specific zombie AI and broader
+CE/Multiplayer combinations. Existing compatibility evidence below does
 not establish elevated tower behavior. The tower remains experimental and
 has not been delivered to the tester or released publicly.
 The first close/wide samples were rejected as fourth-speed proof because ordinary

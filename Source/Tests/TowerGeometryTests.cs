@@ -7,6 +7,16 @@ namespace TotalFog.Tests;
 public class TowerGeometryTests
 {
     [Theory]
+    [InlineData(-.2f, 0f)]
+    [InlineData(0f, 0f)]
+    [InlineData(.25f, .5f)]
+    [InlineData(.5f, 1f)]
+    [InlineData(1f, 2f)]
+    [InlineData(1.2f, 2f)]
+    public void PhysicalPlatformLiftFollowsClimbingAndDescending(float elevation, float lift) =>
+        Assert.Equal(lift, TowerGeometry.PlatformLift(elevation));
+
+    [Theory]
     [InlineData(1f, 1f, .5f, false)]
     [InlineData(3f, 1f, .1f, true)]
     [InlineData(3f, 1f, .9f, true)]

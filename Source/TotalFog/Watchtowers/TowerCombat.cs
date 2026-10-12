@@ -45,8 +45,30 @@ internal static class TowerCombat
 
     internal static float Height(Thing thing) =>
         TowerGeometry.GroundAimHeight
-        + (TowerPresentation.TowerFor(thing)?.ElevationFor(thing) ?? 0)
-            * (TowerGeometry.PlatformAimHeight - TowerGeometry.GroundAimHeight);
+        + TowerGeometry.PlatformLift(TowerPresentation.TowerFor(thing)?.ElevationFor(thing) ?? 0);
+
+    // A foreign ballistic solver remains authoritative. Only reject its successful
+    // direct shot when our tower/room/mountain policy says the line is blocked.
+    internal static bool AllowsNativeShotLine(
+        Verb verb,
+        IntVec3 root,
+        LocalTargetInfo target,
+        IntVec3 destination
+    )
+    {
+        var sourceTower = TowerPresentation.TowerFor(verb.caster);
+        var targetTower = TowerPresentation.TowerFor(target.Thing);
+        return sourceTower == null && targetTower == null
+            || ClearLine(
+                verb.caster.Map,
+                root,
+                destination,
+                PlatformFor(verb.caster, sourceTower),
+                PlatformFor(target.Thing, targetTower) ?? target.Thing as Building_Watchtower,
+                Height(verb.caster),
+                Height(target.Thing)
+            );
+    }
 
     private static Building_Watchtower PlatformFor(Thing actor, Building_Watchtower tower) =>
         tower?.ElevationFor(actor) > .999f ? tower : null;

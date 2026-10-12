@@ -7536,3 +7536,64 @@ retained limitations, not clean-log compatibility acceptance. Native logs are
 `tower-mp-collapse39-20261012-{host,client}-Player.log`. This slice proves cold
 live rejoin; cold saved-replay loading, separate factions, combined CE/Zombieland,
 cross-platform tower behavior and long sessions remain open.
+
+## Production tower Combat Extended checkpoint, 2026-10-12
+
+Public Steam 1.6.4871 rev597, all five DLCs, Harmony, RimBridgeServer and CE
+16.7.3.0 (312624729d-rel), native CE MVID
+`2154499a-15df-4785-9832-e4d0c305b722`. Gameplay SHA-256 is
+`1bbba5160a8f9d0f3dbdce57c1c463092590675562c962425bfd6e17107fab44`,
+MVID `44ffe7b8-7f40-4caf-bd2a-978b4b6119ab`; companion SHA-256 is
+`10c4716ec4836f02f3173a18a4e7df77e786306a6a11bf36e0797b70e354a5eb`.
+All 364 independent tests pass with zero build warnings.
+
+`artifacts/tower-ce-after53-20261012.json` passes all 26 controls. A real native
+short bow automatically fires inventory stone arrows from the watch job over
+a low steel wall. The native arrow hits and injures an unarmored ground pawn
+without damaging the source tower. A separate ground observer supplies sight,
+so another tower's successful blocking check cannot be explained by fog alone.
+Default-off shooting, ordinary ground collision bounds and native target range
+remain intact. A native enemy bow then launches incoming arrows and injures
+the full-platform lookout. The partial ascent and descent collision floors
+follow elevation rather than remaining at ground or completed-platform height.
+Three actual outgoing/incoming/descent screenshots were inspected.
+
+The CE adapter replaces only the native floor added to a tower actor, preserving
+native body size, crouch and trajectory/damage. Its existing cover cache stores
+the raised body's upper edge instead of body thickness; otherwise the native
+early projectile rejection skips incoming collisions. Successful native direct
+shot-line checks receive the tower's tall-blocker policy. Native overhead shot
+checks retain their ordinary policy. Drawing subtracts the floor projection
+already supplied by the selected native CE trajectory worker before adding
+the sprite projection; physics positions and ground shadows remain native.
+Bindings are compiled once, and ordinary pawn/item rendering avoids CE lookups.
+
+The actual saved arrow resumes at the same native position and presentation as
+an uninterrupted reference tick, then reaches its target. Native Pause-on-load
+advances one tick, so comparing to the pre-save position was an invalid control.
+The adapter persists a tower shot's exact finite native destination as well as
+its presentation. Run 51 proves CE's omitted destination default reloads as
+infinity before its gravity is restored, destroying that shot on the first
+native tick; this is corrected without recalculating a trajectory. Run 52 proves
+the saved arrow reaches the target, but its generated armor deflects the hit and
+the target flees; its injury-only completion assertion times out. Run 53 uses
+unarmored native targets while preserving native damage handling.
+
+Earlier rejected native receipts/logs remain under `tower-ce-before40` through
+`tower-ce-after52`. They include invalid range/material/target controls, a random
+pawn incapable of violence and a hook installation failure. Generic/abstract
+CE verb methods are now excluded from optional patch discovery. No failed run
+is counted as compatibility acceptance.
+
+`artifacts/tower-life54-20261012.json` passes a fresh 65-check core lifecycle run
+on the same gameplay and companion bytes without CE loaded. It covers all four
+rotations, actual camera-edge drawing, interruptions/blocked exits, needs-safe
+descent, roofs, native bullet damage, ascent/descent/flight/rescue/corpse reload,
+native bed rescue, projected corpse selection and collapse. Both runs restore
+the unchanged base, have empty attention and no recognized native log errors;
+both process terminations are verified. Their native Player.logs are retained.
+
+This is a bounded public macOS CE bow/height check. Further CE weapons, armor
+regions, suppressive/indirect fire, combined Zombieland/Multiplayer, Windows and
+long sessions remain open. The original-mod performance floor on these final
+tower bytes remains outstanding. The tower has not been released or delivered.

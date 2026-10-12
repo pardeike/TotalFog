@@ -51,8 +51,10 @@ public class TotalFogMod : Mod
             Compatibility.BubbleIntegration.Install(harmony)
         );
         LongEventHandler.ExecuteWhenFinished(() =>
-            Compatibility.CombatExtendedIntegration.Install(harmony)
-        );
+        {
+            Compatibility.CombatExtendedIntegration.Install(harmony);
+            Compatibility.CombatExtendedTowers.Install(harmony);
+        });
         LongEventHandler.ExecuteWhenFinished(Compatibility.MultiplayerIntegration.Install);
         GetSettings<FogSettings>();
     }

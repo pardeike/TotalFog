@@ -13,6 +13,9 @@ public static class TowerGeometry
     public static float Interpolate(float from, float to, float progress) =>
         from + (to - from) * Math.Max(0f, Math.Min(1f, progress));
 
+    public static float PlatformLift(float elevation) =>
+        Interpolate(0f, PlatformAimHeight - GroundAimHeight, elevation);
+
     public static bool ClearsLowWall(float sourceHeight, float targetHeight, float progress) =>
         Interpolate(sourceHeight, targetHeight, progress) > LowWallHeight + .001f;
 

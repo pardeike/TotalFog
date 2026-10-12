@@ -185,6 +185,8 @@ internal static class TowerPresentation
         var offset =
             thing is Projectile projectile ? TowerCombat.DrawingOffset(projectile)
             : thing is Mote mote ? TowerEffects.MoteOffset(mote)
+            : thing.def.category == ThingCategory.Projectile
+                ? Compatibility.CombatExtendedProjectileDrawing.DrawingOffset(thing)
             : Offset(thing);
         if (offset == Vector3.zero)
             return bounds;
