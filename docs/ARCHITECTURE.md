@@ -56,6 +56,13 @@ normal current-sight designator gates.
 
 ## Update and save rules
 
+### Fog presentation
+
+Fog sections fade using simulation ticks during normal play. A paused draw
+finishes any outstanding fade at its target, including a section returning from
+outside the camera view. This changes presentation only and prevents neighboring
+sections from retaining different stale shades indefinitely while paused.
+
 ### Debug fog commands
 
 The native Clear All Fog, Refog Map, Fog (rect) and Unfog (rect) debug commands

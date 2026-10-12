@@ -146,4 +146,21 @@ public class FogAppearanceTests
         int speed,
         byte expected
     ) => Assert.Equal(expected, FogAppearance.Advance(current, target, ticks, speed));
+
+    [Theory]
+    [InlineData(0, 86, 0)]
+    [InlineData(255, 86, 0)]
+    [InlineData(86, 0, 0)]
+    [InlineData(0, 255, 0)]
+    [InlineData(86, 86, 0)]
+    [InlineData(255, 0, -1)]
+    public void PausedFadeReachesTargetWithoutAdvancingSimulation(
+        byte current,
+        byte target,
+        int elapsedTicks
+    ) =>
+        Assert.Equal(
+            target,
+            FogAppearance.Advance(current, target, elapsedTicks, 20, paused: true)
+        );
 }

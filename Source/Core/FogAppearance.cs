@@ -67,8 +67,16 @@ public static class FogAppearance
     private static byte Max(byte a, byte b, byte c, byte d) =>
         Math.Max(Math.Max(a, b), Math.Max(c, d));
 
-    public static byte Advance(byte current, byte target, int elapsedTicks, int speed)
+    public static byte Advance(
+        byte current,
+        byte target,
+        int elapsedTicks,
+        int speed,
+        bool paused = false
+    )
     {
+        if (paused)
+            return target;
         if (elapsedTicks <= 0 || current == target)
             return current;
         long amount = (long)elapsedTicks * Math.Max(1, speed);

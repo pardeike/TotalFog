@@ -13,11 +13,16 @@ public sealed class FogMeshScenarios
 {
     [Tool(
         "totalfog/fog_mesh_equivalence",
-        Description = "Regenerate every fog section and compare all target vertex alphas against independent native cell queries, including map borders. Requires a paused map."
+        Description = "Regenerate every fog section and compare all target vertex alphas against independent native cell queries, including map borders. Optionally draw each layer and verify its uploaded colors, including paused fade completion. Requires a paused map."
     )]
     public static async Task<object> FogMeshEquivalence(
         IRimBridgeContext ctx,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        [ToolParameter(
+            Description = "Draw each fog layer and verify uploaded alphas against targets",
+            DefaultValue = false
+        )]
+            bool verifyDrawn = false
     )
     {
         return await ctx.MainThread.InvokeAsync(
@@ -45,8 +50,10 @@ public sealed class FogMeshScenarios
                 ];
                 int sections = 0,
                     vertices = 0,
-                    mismatches = 0;
+                    mismatches = 0,
+                    drawnMismatches = 0;
                 object firstMismatch = null;
+                object firstDrawnMismatch = null;
                 byte Cell(int x, int z)
                 {
                     x = Math.Max(0, Math.Min(map.Size.x - 1, x));
@@ -69,6 +76,24 @@ public sealed class FogMeshScenarios
                         sections++;
                         fogLayer.Regenerate();
                         var actual = (byte[])targetsField.GetValue(fogLayer);
+                        UnityEngine.Color32[] drawn = null;
+                        if (verifyDrawn)
+                        {
+                            if (!fogLayer.Visible)
+                                throw new InvalidOperationException(
+                                    "Enable normal fog drawing first."
+                                );
+                            fogLayer.DrawLayer();
+                            var mesh = fogLayer.GetSubMesh(MatBases.FogOfWar);
+                            if (!mesh.disabled)
+                            {
+                                drawn = mesh.mesh.colors32;
+                                if (drawn.Length != actual.Length)
+                                    throw new InvalidOperationException(
+                                        "Uploaded fog colors differ from section geometry."
+                                    );
+                            }
+                        }
                         int offset = 0;
                         var rect = section.CellRect;
                         for (int x = rect.minX; x <= rect.maxX; x++)
@@ -81,17 +106,31 @@ public sealed class FogMeshScenarios
                                     expected,
                                     Cell(x + neighbor % 3 - 1, z + neighbor / 3 - 1)
                                 );
-                            if (actual[offset] == expected)
-                                continue;
-                            mismatches++;
-                            firstMismatch ??= new
+                            if (actual[offset] != expected)
                             {
-                                x,
-                                z,
-                                vertex,
-                                actual = actual[offset],
-                                expected,
-                            };
+                                mismatches++;
+                                firstMismatch ??= new
+                                {
+                                    x,
+                                    z,
+                                    vertex,
+                                    actual = actual[offset],
+                                    expected,
+                                };
+                            }
+                            byte drawnAlpha = drawn == null ? (byte)0 : drawn[offset].a;
+                            if (verifyDrawn && drawnAlpha != expected)
+                            {
+                                drawnMismatches++;
+                                firstDrawnMismatch ??= new
+                                {
+                                    x,
+                                    z,
+                                    vertex,
+                                    actual = drawnAlpha,
+                                    expected,
+                                };
+                            }
                         }
                         if (offset != actual.Length)
                             throw new InvalidOperationException(
@@ -105,11 +144,16 @@ public sealed class FogMeshScenarios
                 }
                 return new
                 {
-                    success = mismatches == 0 && vertices == map.Size.x * map.Size.z * 9,
+                    success = mismatches == 0
+                        && drawnMismatches == 0
+                        && vertices == map.Size.x * map.Size.z * 9,
                     sections,
                     vertices,
                     mismatches,
                     firstMismatch,
+                    verifyDrawn,
+                    drawnMismatches,
+                    firstDrawnMismatch,
                 };
             },
             cancellationToken

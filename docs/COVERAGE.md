@@ -57,6 +57,14 @@ current sight had been rejected as a manual target. No combat eligibility
 override was added. These are focused controls, not broader compatibility or
 performance acceptance. The user's pre-test state was restored afterward.
 
+The paused-fog follow-up passes 405 independent tests and a focused native
+Steam 1.7 check at maximum normal zoom. Incomplete section fades now finish on
+paused drawing, removing the persistent straight edge observed while scrolling.
+Panning the affected area completely out of view and back requires no game
+ticks. All 562,500 target and uploaded vertex alphas match independent cell
+queries. Broader runtime/performance checks were not repeated; exact bytes and
+the preserved user state are recorded in VALIDATION.md.
+
 ## Watchtower feedback follow-up: 12 October 2026
 
 The local follow-up fixes descent facing, native move eligibility from the

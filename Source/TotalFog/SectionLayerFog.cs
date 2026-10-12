@@ -161,7 +161,10 @@ public class SectionLayerFog : SectionLayer
     public override void DrawLayer()
     {
         int tick = Find.TickManager.TicksGame;
-        if (fading && Visible && tick > lastFadeTick)
+        bool paused = Find.TickManager.Paused;
+        // Offscreen sections can retain an unfinished fade. Settle their
+        // presentation while paused, when simulation ticks cannot advance it.
+        if (fading && Visible && (paused || tick > lastFadeTick))
         {
             int speed = Math.Max(
                 1,
@@ -175,7 +178,8 @@ public class SectionLayerFog : SectionLayer
                     colors[i].a,
                     targetAlphas[i],
                     tick - lastFadeTick,
-                    speed
+                    speed,
+                    paused
                 );
                 if (alpha != colors[i].a)
                 {

@@ -8,6 +8,44 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Paused fog section seams, 2026-10-12
+
+The user's live paused map at tick 5422 had a straight fog edge at the z=68
+section boundary. Cells (110,67) and (110,69) were both known, outside current
+sight and outside vanilla fog. Regenerating all 225 sections produced zero
+target-alpha differences across 562,500 vertices but left the seam visible.
+Advancing 15 native ticks removed it. The drawing layer retained incomplete
+colors because its fade could advance only when simulation ticks changed.
+
+Paused drawing now finishes an outstanding fade at its target alpha. Running
+fades retain the existing tick-based arithmetic. No simulation, sight, discovery,
+mesh topology or culling rule changes. Formatting and the quiet build pass with
+405 independent tests, zero warnings and zero errors. Six new cases cover
+paused transitions to remembered, visible and unknown fog with no elapsed ticks.
+
+Gameplay SHA-256 is
+`4c697c82bd8a7c2a4688948e03687984132177472fccf48362d55a190603f430`;
+companion SHA-256 is
+`9ab3510ee348ac27f9a69279fc23c7ee9849be9aa45a77d3182ebb1e8c7ed1c4`.
+Built and deployed copies match. One fresh Steam 1.7 process retains Workshop
+Harmony 3.0.0, RimBridgeServer 2.3.0, Core, all five DLCs and Total Fog.
+The pre-test checkpoint loads at tick 5423, the engine's usual one-tick
+pause-on-load advance. At maximum normal zoom, root size 60, the former seam
+remains absent after panning to (103,170) and back to (103,62) while paused.
+Neither camera movement advances the simulation. The two boundary cells retain
+their known/hidden state. The expanded `fog_mesh_equivalence` tool with
+`verifyDrawn=true` draws each native layer and checks uploaded colors as well as
+targets: both have zero differences across all 562,500 vertices.
+
+The checkpoint file remains byte-identical, SHA-256
+`b02359d5535777352c31ef342eedaf812f1d7656b0c04dc47f9c38f23aac9adf`.
+The game remains paused at tick 5423 with the original camera (103,101), root
+size 60. No native errors or exceptions occur. Screenshots, the native receipt,
+build/deployment hashes and both process logs are retained under
+`artifacts/fog-clipping/`. This is a focused 1.7 presentation check; 1.6 runtime,
+Multiplayer and performance gates were not repeated. No build was sent or
+published, and the ordinary source commit retains the tracked release DLL.
+
 ## Debug fog commands and lookout facing, 2026-10-12
 
 The shared Current/ candidate passes formatting and the quiet build with 399
