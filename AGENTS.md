@@ -11,7 +11,11 @@ net472 for RimWorld; independent tests run on net10.0.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.
-Use the canonical quiet command `./scripts/mod build|deploy|package|setup|baseline|benchmark`.
+Use the canonical quiet command `./scripts/mod test|build|deploy|package|setup|baseline|benchmark`.
+`./scripts/mod test` runs formatting checks and pure tests without a game install
+or gameplay/companion DLL changes. CI uses `python scripts/mod format-check` and
+`python scripts/mod test` on Linux and Windows. Native deployment/runtime commands
+retain their macOS Steam/GABS requirements; CI is not native compatibility proof.
 The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.
 `./scripts/mod format-check` checks without changing files. Frozen historical

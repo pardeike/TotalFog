@@ -120,7 +120,7 @@ too much.
 See [coverage](docs/COVERAGE.md#current-status-10-october-2026) for the current
 evidence and remaining checks. No public player release or Workshop item exists yet.
 Build this source checkout or use the separately supplied preliminary ZIPs;
-tracked DLLs are older snapshots.
+tracked DLLs are snapshots of the local review checkpoint.
 
 ## For mod developers: support Total Fog in your mod
 
@@ -334,6 +334,7 @@ installed game's `Mods` folder.
 |---|---|
 | `./scripts/mod format` | Formats active C# and Python source with the pinned tools |
 | `./scripts/mod format-check` | Checks formatting without editing files |
+| `./scripts/mod test` | Checks formatting and runs pure tests without a game install or DLL changes |
 | `./scripts/mod build` | Checks formatting, runs the tests and builds the mod |
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
@@ -362,8 +363,10 @@ version folders stay for history. More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),
 [validation](docs/VALIDATION.md) and [AGENTS.md](AGENTS.md).
 
-Build before installing this source checkout. Tracked assemblies are previous
-release snapshots; separately delivered test ZIPs contain their tested builds.
+The local `0.1.0` review checkpoint includes a Release DLL built from its source.
+Later gameplay edits still need a build before installation. GitHub Actions checks
+formatting and pure tests on Linux and Windows for pushes and pull requests; it
+does not test RimWorld, mod loading or native rendering.
 Preliminary delivery instructions are in [PRELIMINARY.md](PRELIMINARY.md).
 
 ## Credits and license

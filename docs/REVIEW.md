@@ -343,3 +343,22 @@ tests where they are pure:
   active, so their descriptions were retained. English Keyed fallback was a
   localization gap rather than a gameplay failure. These translations have
   XML/placeholder checks but have not had native-speaker or in-game review.
+
+- Step 10, item 3: confirmed that the old tracked DLL lacked both cited
+  symbols. One fresh Release build now supplies the tracked DLL matching the
+  reviewed source; DecompilerServer finds Building_Watchtower,
+  ColonyMechVisionModifier and the corrected camera setting helper.
+  `format`, game-free `format-check`/`test`, and final `build` pass with
+  380 tests and zero build warnings/errors. The DLL SHA-256 is
+  `32f889abbe24d7b26e292c7f63303035ba4c890340547388004bcd9f5186770d`; its MVID is
+  `e856b568ca5241d9a63ad1464c9595b8`. A local `0.1.0` tag identifies this
+  checkpoint, not a published or runtime-approved release. CI is configured
+  for format checks and pure tests on Linux and Windows using the same quiet
+  project commands; game installation is no longer required for source checks.
+  The YAML was parsed locally. Neither Windows execution nor GitHub Actions
+  execution has occurred in this session, since nothing was pushed.
+
+Defaults remain unchanged pending Andreas's decision from step 4. Native runtime
+comparison, gas pixels, tower exit/rescue interaction and deferred-letter playback
+remain outstanding on this candidate. No running game was stopped or overwritten,
+and no build, tag or commit was published or sent.
