@@ -8,6 +8,45 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Review round 2 rendering and wide spot check, 2026-10-13
+
+Steps 1-9 build with 407 pure tests, zero warnings/errors. Candidate gameplay
+SHA-256 is `a84f06afc58bd69942c5877ac2b9a10c7274acc21d276490795d033984461897`.
+The controlled offline 1.6.4871 Core-only profile uses Steam Harmony and
+RimBridgeServer, without profiling instrumentation. The original-authored
+350x350 fixture has 409 pawns and remains byte-identical, SHA-256
+`d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3`.
+At root size 100, 71,050 map cells and 266 pawn roots are in view.
+
+| Wide one-pair result | Original | Candidate |
+|---|---:|---:|
+| TPS | 528.149 | 493.715 |
+| Mean tick CPU, ms | 1.14134 | 1.14156 |
+| Frame p95, ms | 69.949 | 72.565 |
+
+The -6.520% TPS result fails the measured floor and is retained as a failed
+spot check. It cannot establish general regression or the three-pair acceptance
+gate, and does not isolate gas/fade costs. No further comparison was run.
+Both playback logs are clean.
+
+The native paused gas probe observes normal section regeneration before its
+timed loop. Nine smoke cells produce 0/36/0 vertices when hidden/visible/hidden.
+Density remains 255 and the tick stays 2. Its 100-iteration per-section
+regeneration timings are 0.01114, 0.00794 and 0.00602 ms. Actual screenshots
+show fog transitions; smoke contrast at this dark map corner is weak, so these
+pixels do not establish a bright smoke-cloud comparison. Uploaded geometry
+is rejected again after sight loss. A separate paused fog pass checks 441
+sections and 1,102,500 vertices with zero target and drawn-alpha mismatches.
+
+The initial all-DLC load is rejected because the offline expansions link to
+the removed old Steam app path; no 1.7 expansion data was substituted. The
+initial gas probe's private overload access failure is also retained; the final
+probe uses the native public IntVec3 overload. These are harness/environment
+failures, not accepted tests. Full DLC and optional-mod gates need renewal.
+Records and logs are in artifacts/review-round-2; the comparison and pixel
+metadata remain in artifacts/comparison-review2-core-wide-350.json and
+artifacts/UserData/Screenshots/review2-gas-*. No build was sent or published.
+
 ## Paused fog section seams, 2026-10-12
 
 The user's live paused map at tick 5422 had a straight fog edge at the z=68

@@ -803,3 +803,37 @@ on treating the retained experimental evidence as absent.
 Formatting and the redirected Release build pass all 407 tests without warnings
 or errors. The shared metadata validator reports zero errors and the two
 pre-existing workflow/art-dimension warnings. The tracked DLL is unchanged.
+
+### Step 9: bounded wide performance and paused rendering
+
+Verified R2-14's gas dirtying and paused-fade sites at 6207fc9; no speculative
+gameplay change was made. One completed original/candidate wide comparison on
+offline 1.6.4871 uses a fresh original-authored 350x350 Core-only save, 409
+pawns and 71,050 visible map cells at camera root size 100. Both native logs
+are clean and the saved fixture is unchanged. Candidate TPS is 493.715 versus
+528.149 original (-6.520%); frame p95 is 72.565 versus 69.949 ms. Mean tick
+CPU is 1.14156 versus 1.14134 ms. The canonical comparison correctly fails its
+measured floor. A single pair is a spot check, not performance acceptance or
+proof of a general regression, and does not isolate the gas/fade changes.
+
+A test-only companion checks native section smoke hidden/visible/hidden: the
+normally regenerated mesh has 0/36/0 vertices, all nine gas densities remain
+255 and the paused tick remains 2. A 100-regeneration diagnostic per state
+measures 0.01114/0.00794/0.00602 ms per section. These are scoped CPU timings,
+not frame/TPS estimates. The three screenshots were inspected: fog transitions
+are present, but smoke contrast in this dark map corner is weak. Mesh rejection
+is the stronger gas evidence. The paused fog probe checks 441 sections and
+1,102,500 vertices: zero target-alpha and uploaded-alpha differences.
+
+The first all-DLC fixture attempt is rejected: offline DLC symlinks point at
+the removed old Steam app path. Step 7's statement that its configured five
+DLCs were loaded is therefore too strong: the clean startup applied to the
+available Core content. Rather than mix 1.7 expansion data into 1.6, this check
+used a separate Core-only fixture. Full 1.6 DLC/optional-mod acceptance remains
+open. A first gas probe also failed on a publicized-reference private overload;
+DecompilerServer identified the actual public cell overload, which the final
+probe uses. Rejected logs are retained; neither failure is an accepted result.
+
+Evidence is under artifacts/review-round-2 and comparison-review2-core-wide-350.json.
+Formatting and the redirected build pass 407 tests with zero warnings/errors.
+The tracked DLL is still unchanged, and all test processes are stopped.

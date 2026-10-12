@@ -8,20 +8,20 @@ and a result applies only to its recorded gameplay bytes and loadout.
 
 ## Current status
 
-Reviewed against source commit `537762b` on 12 October 2026. The latest local
-build passes 405 independent tests with zero warnings/errors. GitHub's
-[source checks](https://github.com/pardeike/TotalFog/actions/runs/38312341294)
-also pass on Linux and Windows for that commit. Those checks establish formatting
-and pure tests, not Windows RimWorld gameplay.
+Review round 2 is being addressed in ten ordered commits on 13 October 2026.
+Steps 1-9 pass 407 independent tests and redirected Release builds without
+warnings/errors. The bounded native checks below use Core-only offline 1.6;
+full DLC/optional-mod gates remain open. Earlier GitHub source checks passed
+for their recorded commits, not this local review batch.
 
 | Area | Current evidence and boundary |
 |---|---|
 | Versions | Only 1.6 is advertised and loads Current/. The active folder is a declared project exception; 1.7 support awaits renewed acceptance. |
-| Latest native check | Steam 1.7, all five DLCs, released Harmony and Total Fog: the paused section seam is fixed at maximum normal zoom. All 562,500 target and uploaded vertex alphas match native cell queries. |
+| Latest native check | Core-only offline 1.6: clean startup, native gas mesh 0/36/0 across sight changes, and zero paused target/drawn-alpha mismatches across 1,102,500 vertices. Five-DLC setup needs repair before renewed acceptance. |
 | Other 1.7 checks | Earlier shared-payload candidates pass three-pawn tower row dragging, timed/drafted watch behavior, blueprints, lookout facing, visible tower melee and all four native fog debug commands. Each retains its own tested hash. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
 | CE and Multiplayer | Bounded native 1.6 checks exist, including tower slices. Broader combinations, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. |
-| Performance | The delivered 1.6 pair passes the bounded original-mod TPS floor. Its wide frame tails remain worse; later source has no new exact-byte performance acceptance. |
+| Performance | Latest Core-only wide one-pair spot check fails: 493.715 vs 528.149 TPS (-6.520%), frame p95 72.565 vs 69.949 ms. The earlier delivered pair retains its old acceptance; current broad performance is unverified. |
 | Release | No public player release or Workshop item exists. Build before installing a source checkout; the tracked DLL is an earlier review snapshot. |
 
 The sections below retain dated delivery and compatibility checkpoints. Their
