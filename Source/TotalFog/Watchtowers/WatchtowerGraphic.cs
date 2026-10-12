@@ -31,7 +31,16 @@ public class WatchtowerGraphic : Building
     internal float NativeFrontMappingError => nativeFront?.MappingError ?? 0;
 
     internal static (Mesh body, Mesh foreground) BuildPreview(Rot4 rotation, Color color) =>
-        new Drawing(rotation, color, false, true, Array.Empty<IntVec3>(), false, true).Build();
+        new Drawing(
+            rotation,
+            color,
+            false,
+            true,
+            Array.Empty<IntVec3>(),
+            false,
+            true,
+            true
+        ).Build();
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
@@ -183,6 +192,7 @@ public class WatchtowerGraphic : Building
         private readonly IReadOnlyList<IntVec3> wallDirections;
         private readonly bool nativeFront;
         private readonly bool silhouetteOutlines;
+        private readonly bool preview;
         private readonly Geometry body = new();
         private readonly Geometry front = new();
         private readonly Color outline = new(.10f, .095f, .085f);
@@ -198,7 +208,8 @@ public class WatchtowerGraphic : Building
             bool timber,
             IReadOnlyList<IntVec3> wallDirections,
             bool nativeFront = false,
-            bool silhouetteOutlines = false
+            bool silhouetteOutlines = false,
+            bool preview = false
         )
         {
             this.rotation = rotation;
@@ -208,6 +219,9 @@ public class WatchtowerGraphic : Building
             this.wallDirections = wallDirections;
             this.nativeFront = nativeFront;
             this.silhouetteOutlines = silhouetteOutlines;
+            this.preview = preview;
+            if (preview)
+                outline = stuff;
         }
 
         internal (Mesh, Mesh) Build()
@@ -253,11 +267,18 @@ public class WatchtowerGraphic : Building
         }
 
         private Color Shade(float brightness) =>
-            new(
-                Mathf.Clamp01(stuff.r * brightness),
-                Mathf.Clamp01(stuff.g * brightness),
-                Mathf.Clamp01(stuff.b * brightness)
-            );
+            preview
+                ? new Color(stuff.r * .45f, stuff.g * .45f, stuff.b * .45f, stuff.a * .615f)
+                : new(
+                    Mathf.Clamp01(stuff.r * brightness),
+                    Mathf.Clamp01(stuff.g * brightness),
+                    Mathf.Clamp01(stuff.b * brightness)
+                );
+
+        // Match native blueprint edge detection: .45 fill and .70 inner intensity,
+        // with alpha interpolated from .3 to 1. The silhouette keeps the native tint.
+        private Color PreviewLine =>
+            new(stuff.r * .7f, stuff.g * .7f, stuff.b * .7f, stuff.a * .79f);
 
         private void Supports()
         {
@@ -302,8 +323,8 @@ public class WatchtowerGraphic : Building
                         body.Line(
                             face[edge],
                             face[(edge + 1) % face.Length],
-                            .035f,
-                            Shade(faceBrightness * .76f)
+                            preview ? .04f : .035f,
+                            preview ? PreviewLine : Shade(faceBrightness * .76f)
                         );
                 }
                 else
@@ -352,7 +373,7 @@ public class WatchtowerGraphic : Building
                         );
                     }
                 }
-                else if (timber)
+                else if (timber && !preview)
                 {
                     Beam(
                         body,
@@ -394,7 +415,7 @@ public class WatchtowerGraphic : Building
                 for (int edge = 0; edge < contour.Length; edge++)
                 {
                     Boundary(contour[edge], contour[(edge + 1) % contour.Length]);
-                    body.RoundJoin(contour[edge], .07f, outline);
+                    body.RoundJoin(contour[edge], preview ? .05f : .07f, outline);
                 }
             }
         }
@@ -430,7 +451,7 @@ public class WatchtowerGraphic : Building
                     body.Line(joinB, b, .07f, outline);
                 return;
             }
-            body.Line(a, b, .07f, outline);
+            body.Line(a, b, preview ? .05f : .07f, outline);
         }
 
         private Vector3 SidePoint(int side, float along, float height)
@@ -462,6 +483,20 @@ public class WatchtowerGraphic : Building
         private void Floor()
         {
             const float edge = DeckHalfExtent;
+            if (preview)
+            {
+                var deck = new[]
+                {
+                    LowerDeck(Point(-edge, -edge, 1)),
+                    LowerDeck(Point(-edge, edge, 1)),
+                    LowerDeck(Point(edge, edge, 1)),
+                    LowerDeck(Point(edge, -edge, 1)),
+                };
+                body.Polygon(Shade(1f), deck);
+                for (int i = 0; i < deck.Length; i++)
+                    body.Line(deck[i], deck[(i + 1) % deck.Length], .04f, PreviewLine);
+                return;
+            }
             body.Polygon(
                 silhouetteOutlines ? Shade(.76f) : outline,
                 LowerDeck(Point(-edge, -edge, 1)),
@@ -617,6 +652,13 @@ public class WatchtowerGraphic : Building
             bool silhouette = false
         )
         {
+            if (preview)
+            {
+                // Blueprints show translucent structural lines rather than solid beams.
+                // Only the support silhouette receives the heavier contour.
+                geometry.Line(a, b, .04f, PreviewLine);
+                return;
+            }
             float outerWidth = width + (silhouetteOutlines && !silhouette ? .035f : .085f);
             var edgeColor =
                 silhouetteOutlines && !silhouette ? Color.Lerp(outline, color, .55f) : outline;

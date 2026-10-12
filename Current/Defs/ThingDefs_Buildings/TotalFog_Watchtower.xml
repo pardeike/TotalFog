@@ -7,6 +7,7 @@
     <thingClass>TotalFog.Watchtowers.Building_Watchtower</thingClass>
     <size>(3,3)</size>
     <rotatable>true</rotatable>
+    <defaultPlacingRot>South</defaultPlacingRot>
     <drawerType>RealtimeOnly</drawerType>
     <tickerType>Never</tickerType>
     <altitudeLayer>BuildingOnTop</altitudeLayer>

@@ -39,6 +39,18 @@ multiplier, a 96-cell sight cap, 120 ticks per full climb/descent and shooting
 disabled. All four values are settings and use the existing Multiplayer settings
 registration. These defaults remain provisional for preliminary playtesting.
 
+New placements face the ladder south toward the player by default; existing
+towers retain their saved rotation. Blueprints and placement ghosts use the
+native tint with a strong outer contour, broad translucent interior strokes
+and a visible translucent fill. Preview geometry omits the wooden cross-braces.
+Completed tower artwork retains its materials and detail. The four-rotation
+preview mesh cache and two drawing passes remain unchanged.
+
+Completed towers block all nine footprint cells. Native blueprints remain
+walkable until construction, like other unbuilt structures. The tower requires
+Heavy terrain support across its footprint; unlike walls whose support can vary
+with stuff, the tower keeps that same requirement for every material.
+
 Player orders follow native draft and building-use patterns. Drafted colonists
 can hold until undrafted or ordered elsewhere; timed watches of 1, 2 or 4 game
 hours work with either draft state and do not change it. Time starts at the deck,

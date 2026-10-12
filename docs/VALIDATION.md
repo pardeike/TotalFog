@@ -8,6 +8,44 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Tower blueprint presentation and front ladder, 2026-10-12
+
+The previous preview reused opaque completed-building colors and detailed beams.
+Preview geometry now keeps the native blueprint/ghost tint, a stronger outer
+contour, broad translucent inner strokes and a visible translucent fill. The
+fill and inner-line intensities/alpha follow the native edge-detection shader's
+levels. Wooden cross-braces are omitted only in the preview. Completed artwork,
+pathfinding and terrain requirements are unchanged; the existing four-rotation
+mesh cache and two drawing passes remain in use.
+
+Formatting and the quiet build pass with 380 independent tests, zero warnings
+and zero errors. Built/deployed gameplay SHA-256 is
+`fb15b9bd1e3e520dde670e4f68394093abfa0d35fe0771b4b4eabdfd56c098ab`;
+the unchanged deployed companion SHA-256 is
+`bc4adbadd1add9e1794d03c5b539a9bb4e70323836e1659032727cca78860cd9`.
+The fresh native Steam 1.7 process uses released Workshop Harmony 3.0.0,
+RimBridgeServer 2.3.0, Core, all five DLCs and Total Fog. It loads the updated
+`towers-space-bug` save, pauses at tick 4235 and has no native log errors or
+exceptions. The clean-background comparison shows the tower blueprint at
+(115,119) beside the native wood-fired generator blueprint at (118,118).
+Andreas's Desktop reference was inspected, and he reported "Looking better."
+Earlier thinner-line and near-empty-fill iterations were rejected.
+
+The completed wooden tower at (109,115) remains non-walkable in all nine native
+footprint cells and retains its saved north rotation. The new definition uses
+`defaultPlacingRot=South`; an earlier native Architect placement during this
+follow-up, without an explicit rotation, produced a south-facing blueprint.
+The user save remains byte-identical to its latest user-written version,
+SHA-256 `c5466f6910bf1367856e519281c13e8ac7337edb0af416781f53fbef0c766cc2`.
+It remains loaded and paused. No build was sent or published.
+
+Evidence is retained in `artifacts/watchtower-space/blueprint-final-evidence.json`,
+`clean-pair-native-blueprint-levels__cell_rect.png`,
+`new-default-front-tower__cell_rect.png` and `Player-final.log`.
+This small presentation check does not repeat all rotations, ghost states,
+construction/combat, performance, CE, Zombieland or Multiplayer gates on these
+exact bytes. The ordinary source commit retains the tracked last-release DLL.
+
 ## Shared Current payload and native tower orders, 2026-10-12
 
 Both 1.6 and 1.7 load `Current/`, with the shared portable assets retained.

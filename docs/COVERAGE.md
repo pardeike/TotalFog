@@ -30,6 +30,14 @@ independent tests; exact bytes, the rejected rotation change and bridge/fixture
 limits are recorded in VALIDATION.md. This narrow tower slice does not establish
 the broader 1.7 compatibility targets listed above.
 
+The subsequent blueprint follow-up passes the same 380-test build and a fresh
+native 1.7 load of the user's updated example save. The clear-ground comparison
+with a vanilla wood-fired generator was inspected, and Andreas reported that
+the blueprint looked better. All nine cells of the completed tower remain
+non-walkable. New placements default to the front ladder. This is a presentation
+and placement-default check; broader compatibility and performance gates were
+not repeated. Exact bytes and evidence are recorded in VALIDATION.md.
+
 ## Watchtower feedback follow-up: 12 October 2026
 
 The local follow-up fixes descent facing, native move eligibility from the
