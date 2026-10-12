@@ -28,7 +28,13 @@ public sealed class JobDriver_Watchtower : JobDriver
         if (Tower?.CanEnter(pawn, Retrieving ? job.targetC.Thing : null) != true)
             return false;
         return pawn.Reserve(Tower, job, 1, -1, null, errorOnFailed)
-            && (!Retrieving || pawn.Reserve(job.targetC, job, 1, -1, null, errorOnFailed));
+            && (!Retrieving || pawn.Reserve(job.targetC, job, 1, -1, null, errorOnFailed))
+            && (
+                !Retrieving
+                || !job.targetB.HasThing
+                || job.targetB.Thing is Building_Bed bed
+                    && pawn.Reserve(bed, job, bed.SleepingSlotsCount, 0, null, errorOnFailed)
+            );
     }
 
     public override void ExposeData()

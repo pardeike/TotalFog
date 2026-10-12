@@ -49,6 +49,10 @@ internal static class WatchtowerPatches
             postfix: nameof(FinalizerPostfix)
         );
         Patch(typeof(Thing), nameof(Thing.DeSpawn), nameof(ActorDespawnPrefix));
+        harmony.Patch(
+            AccessTools.PropertyGetter(typeof(Thing), nameof(Thing.FlammableNow)),
+            postfix: new HarmonyMethod(typeof(WatchtowerPatches), nameof(FlammablePostfix))
+        );
         Patch(typeof(Pawn), nameof(Pawn.Kill), nameof(DeathPrefix), nameof(DeathPostfix));
         Patch(
             typeof(GenSpawn),
@@ -92,12 +96,12 @@ internal static class WatchtowerPatches
                 nameof(TowerPresentation.DrawPosPostfix)
             )
         );
-        harmony.Patch(
-            AccessTools.PropertyGetter(typeof(Thing), nameof(Thing.DrawPos)),
-            postfix: new HarmonyMethod(
-                typeof(TowerPresentation),
-                nameof(TowerPresentation.DrawPosPostfix)
-            )
+        Patch(
+            typeof(GenThing),
+            nameof(GenThing.TrueCenter),
+            postfix: nameof(TowerPresentation.TrueCenterPostfix),
+            owner: typeof(TowerPresentation),
+            arguments: new[] { typeof(Thing) }
         );
         Patch(
             typeof(GenMapUI),
@@ -106,6 +110,12 @@ internal static class WatchtowerPatches
             owner: typeof(TowerPresentation),
             finalizer: nameof(TowerPresentation.DrawingFinalizer),
             arguments: new[] { typeof(Thing), typeof(float) }
+        );
+        Patch(
+            typeof(GenDraw),
+            nameof(GenDraw.DrawAimPie),
+            nameof(TowerPresentation.AimPiePrefix),
+            owner: typeof(TowerPresentation)
         );
         Patch(
             typeof(SelectionDrawer),
@@ -242,6 +252,24 @@ internal static class WatchtowerPatches
 
     internal static bool RoofPrefix(IntVec3 c, RoofDef def, Map ___map) =>
         def == null || c.GetEdifice(___map) is not Building_Watchtower;
+
+    internal static void FlammablePostfix(Thing __instance, ref bool __result)
+    {
+        if (__result || !__instance.Spawned)
+            return;
+        var tower = TowerPresentation.TowerFor(__instance);
+        if (tower?.ElevationFor(__instance) <= 0 || tower == null)
+            return;
+        // A solid building protects things sharing its ground cell. An actor
+        // on this platform is above it, but retains native fire resistance and
+        // protection from any other fire bulwark in the same cell.
+        if (__instance.GetStatValue(StatDefOf.Flammability) < .01f)
+            return;
+        foreach (var thing in __instance.Position.GetThingList(__instance.Map))
+            if (thing != tower && thing.FireBulwark)
+                return;
+        __result = true;
+    }
 
     internal static void RoofPostfix(IntVec3 c, Map ___map) =>
         ___map.GetComponent<MapComponent_Watchtowers>().CellChanged(c);

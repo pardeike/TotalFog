@@ -1,6 +1,6 @@
 # Watchtower design draft
 
-Status: second production gameplay checkpoint on 12 October 2026, following the
+Status: third production gameplay checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -8,8 +8,9 @@ default. Native-scale wall-front pieces remain a separate optional experiment.
 A separate
 non-shipping native access prototype is retained as a historical control. The
 new production definition, ladder jobs, elevated sight and ordinary bullet policy
-pass the expanded 54-check native suite. Further presentation/combat edges,
-weather, compatibility and performance acceptance remain outstanding.
+pass the expanded 61-check native suite. The separate native combat/weather
+suite passes 46 checks. Further presentation/combat edges, compatibility and
+performance acceptance remain outstanding.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types belong to Total Fog.
@@ -24,7 +25,7 @@ registration. The defaults are provisional until the bounded performance check.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
-54 checks, including four ladder rotations, timed descent after a drafted move,
+61 checks, including four ladder rotations, timed descent after a drafted move,
 opaque roofs, shooting disabled, native incoming/outgoing bullet damage across
 a freestanding wall, ladder rescue followed by native bed rescue, and collapse.
 Close and wider captures show raised pawn labels and selection brackets. The
@@ -32,19 +33,30 @@ native bed search keeps its own preferences and validation, using the ladder
 approach as its reachability search root for an elevated patient.
 
 The expanded checkpoint reloads during ascent, descent, bullet flight and a
-carrying rescue. It also checks blocked exits, reversing a partial climb,
+carrying rescue, a temporary rescuer's ascent and a corpse still on the deck.
+It also checks blocked exits, reversing a partial climb,
 recovery from downing, an interrupted rescuer, death, projected corpse selection
 and corpse retrieval. Occupant and temporary rescuer elevations are saved on
 the tower; drawing reads those values without moving simulation coordinates.
 Native loading briefly moves only the tower's saved actors out of its footprint
 during building collision checks, then restores their saved cells. Native
 unwalkable-position recovery accepts only the tower's own platform actors; the
-ordinary path grid stays impassable to everybody else.
+ordinary path grid stays impassable to everybody else. Saved references
+retain the native dead pawn owned by its corpse; otherwise the engine would
+forget the platform owner and refund the tower during load-time collision checks.
+Retrieval reserves its destination bed before climbing, using native bed rules.
 
 Mesh/material creation runs after loading finishes on the main thread. Native
 wall printing preserves the outer random stream. Muzzle flashes, attached
-ordinary motes and attached fire have projection hooks; their actual weapon and
-effect controls remain separate from the passing access/persistence suite.
+ordinary motes and attached fire pass actual native drawing controls in
+`totalfog/watchtower_combat`. Projectile meshes rotate along their projected
+flight, shadows remain at native ground coordinates and bonus culling bounds
+follow the raised drawing. Native targeting, default-off shooting, tall blockers,
+ground melee exclusion and all four blueprint/ghost rotations have controls.
+Native lightning damages wood and exposed occupants on both wood and stone;
+stone structure damage matches native resistance within integer rounding.
+An elevated actor keeps its fire resistance but no longer receives protection
+from the solid tower beneath it. Ordinary ground actors retain that protection.
 
 Rendering projects the native pawn only in drawing/UI calls. Projectile
 interception uses a separate height rule and keeps `ExactPosition` in native

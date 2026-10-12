@@ -78,6 +78,37 @@ internal static class TowerPresentation
             __result += Offset(__instance);
     }
 
+    internal static void TrueCenterPostfix(Thing t, ref Vector3 __result)
+    {
+        if (DrawingDepth > 0)
+            __result += Offset(t);
+    }
+
+    internal static bool AimPiePrefix(
+        Thing shooter,
+        LocalTargetInfo target,
+        int degreesWide,
+        float offsetDist
+    )
+    {
+        if (TowerFor(shooter) == null && TowerFor(target.Thing) == null)
+            return true;
+        var source = shooter.DrawPos;
+        var destination = target.HasThing ? target.Thing.DrawPos : target.Cell.ToVector3Shifted();
+        if (DrawingDepth == 0)
+        {
+            source += Offset(shooter);
+            if (target.HasThing)
+                destination += Offset(target.Thing);
+        }
+        GenDraw.DrawAimPieRaw(
+            source + new Vector3(0, offsetDist, 0),
+            (destination - source).AngleFlat(),
+            degreesWide
+        );
+        return false;
+    }
+
     internal static void MouseTargetsPostfix(
         Vector3 clickPos,
         float pawnWideClickRadius,
@@ -146,7 +177,9 @@ internal static class TowerPresentation
     internal static CellRect CullBounds(Thing thing)
     {
         var bounds = thing.OccupiedDrawRect();
-        var offset = Offset(thing);
+        var offset = thing is Projectile projectile
+            ? TowerCombat.DrawingOffset(projectile)
+            : Offset(thing);
         if (offset == Vector3.zero)
             return bounds;
         return new CellRect(

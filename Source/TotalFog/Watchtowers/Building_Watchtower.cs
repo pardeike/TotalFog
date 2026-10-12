@@ -155,8 +155,10 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     public override void ExposeData()
     {
         base.ExposeData();
-        Scribe_References.Look(ref Occupant, "totalFogTowerOccupant");
-        Scribe_References.Look(ref Rescuer, "totalFogTowerRescuer");
+        // Native death marks the pawn destroyed while its corpse still owns
+        // and deep-saves it. Preserve that reference for a body on the deck.
+        Scribe_References.Look(ref Occupant, "totalFogTowerOccupant", saveDestroyedThings: true);
+        Scribe_References.Look(ref Rescuer, "totalFogTowerRescuer", saveDestroyedThings: true);
         Scribe_Values.Look(ref Elevation, "totalFogTowerElevation");
         Scribe_Values.Look(ref Watching, "totalFogTowerWatching");
         Scribe_Values.Look(ref RescuerElevation, "totalFogTowerRescuerElevation");

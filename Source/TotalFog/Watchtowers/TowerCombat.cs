@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using RimWorld;
@@ -33,6 +36,10 @@ internal static class TowerCombat
     private static readonly Action<Projectile, Thing, bool> impact = AccessTools.MethodDelegate<
         Action<Projectile, Thing, bool>
     >(AccessTools.Method(typeof(Projectile), "Impact"));
+    private static readonly AccessTools.FieldRef<Projectile, Vector3> origin =
+        AccessTools.FieldRefAccess<Projectile, Vector3>("origin");
+    private static readonly AccessTools.FieldRef<Projectile, Vector3> destination =
+        AccessTools.FieldRefAccess<Projectile, Vector3>("destination");
 
     internal static float Height(Thing thing) =>
         TowerGeometry.GroundAimHeight
@@ -95,6 +102,11 @@ internal static class TowerCombat
         // DrawAt receives native DrawPos. Changing only that argument leaves
         // ExactPosition, interception, explosions and shields in map space.
         Patch(typeof(Projectile), "DrawAt", nameof(DrawPrefix));
+        Patch(typeof(Projectile), "DrawShadow", nameof(ShadowPrefix));
+        harmony.Patch(
+            AccessTools.Method(typeof(Projectile), "DrawAt"),
+            transpiler: new HarmonyMethod(typeof(TowerCombat), nameof(DrawTranspiler))
+        );
     }
 
     internal static bool CastPrefix(Verb __instance, ref bool __result)
@@ -360,12 +372,56 @@ internal static class TowerCombat
 
     internal static void DrawPrefix(Projectile __instance, ref Vector3 drawLoc)
     {
-        if (paths.TryGetValue(__instance, out var path))
-            drawLoc += Vector3.Lerp(
+        drawLoc += DrawingOffset(__instance);
+    }
+
+    internal static Vector3 DrawingOffset(Projectile projectile) =>
+        paths.TryGetValue(projectile, out var path)
+            ? Vector3.Lerp(
                 path.SourceProjection,
                 path.TargetProjection,
-                distanceCovered(__instance)
+                distanceCovered(projectile)
+            )
+            : Vector3.zero;
+
+    internal static void ShadowPrefix(Projectile __instance, ref Vector3 drawLoc) =>
+        drawLoc -= DrawingOffset(__instance);
+
+    internal static Quaternion DrawingRotation(Projectile projectile)
+    {
+        var native = projectile.ExactRotation;
+        if (!paths.TryGetValue(projectile, out var path))
+            return native;
+        var direction =
+            native
+            * Vector3.forward
+            * (destination(projectile) - origin(projectile)).MagnitudeHorizontal();
+        direction += (path.TargetProjection - path.SourceProjection).Yto0();
+        return direction.sqrMagnitude > .0001f ? Quaternion.LookRotation(direction) : native;
+    }
+
+    // The mesh points along its projected flight. ExactRotation remains native
+    // for simulation/mod consumers; spinning projectiles keep the native override.
+    internal static IEnumerable<CodeInstruction> DrawTranspiler(
+        IEnumerable<CodeInstruction> instructions
+    )
+    {
+        var body = instructions.ToList();
+        var native = AccessTools.PropertyGetter(
+            typeof(Projectile),
+            nameof(Projectile.ExactRotation)
+        );
+        if (body.Count(c => c.Calls(native)) != 1)
+            throw new InvalidOperationException(
+                "Total Fog: projectile drawing must read one native rotation."
             );
+        foreach (var code in body)
+            if (code.Calls(native))
+            {
+                code.opcode = OpCodes.Call;
+                code.operand = AccessTools.Method(typeof(TowerCombat), nameof(DrawingRotation));
+            }
+        return body;
     }
 
     internal static void ExposePostfix(Projectile __instance)

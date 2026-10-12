@@ -6,6 +6,23 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
+## Watchtower development: 12 October 2026
+
+The new 3x3 watchtower has separate development evidence; the delivered
+preliminary pair below predates this feature. Native Steam 1.6.4871 with all DLCs
+passes 61 access, persistence and actor lifecycle checks. A separate 46-check
+suite establishes native targeting/weapon producers, low-wall shots, tall
+blockers, melee exclusion, projected projectile rotation and ground shadows,
+four blueprint/ghost rotations, attached effects, fire and lightning. Exact
+bytes and earlier failures are retained in VALIDATION.md.
+
+Still open: actual camera-edge and loose impact effects, shields/other combat
+producers, construction/breaching, a carrying rescuer's incapacity/collapse,
+small normal/wide performance samples and tower-specific Zombieland, Combat
+Extended and Multiplayer checks. Existing compatibility evidence below does
+not establish elevated tower behavior. The tower remains experimental and
+has not been delivered to the tester or released publicly.
+
 ## Current status: 10 October 2026
 
 The latest preliminary Total Fog gameplay DLL is

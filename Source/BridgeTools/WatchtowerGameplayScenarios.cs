@@ -21,6 +21,35 @@ public sealed class WatchtowerGameplayScenarios
     private static readonly SemaphoreSlim gate = new(1, 1);
     private static readonly Dictionary<string, int> drawnPawns = new();
     private static readonly Dictionary<string, object> culledPawns = new();
+    private static readonly List<object> loadedTowers = new();
+
+    private static void ObserveTowerLoad(Building building, Map map, bool respawningAfterLoad)
+    {
+        if (!respawningAfterLoad || building is not Building_Watchtower tower)
+            return;
+        loadedTowers.Add(
+            new
+            {
+                tower.ThingID,
+                occupant = tower.Occupant?.ThingID,
+                corpse = tower.Occupant?.Corpse?.ThingID,
+                corpseCell = tower.Occupant?.Corpse?.Position.ToString(),
+                collisions = tower
+                    .OccupiedRect()
+                    .SelectMany(c => c.GetThingList(map))
+                    .Distinct()
+                    .Select(t => new
+                    {
+                        t.ThingID,
+                        type = t.GetType().FullName,
+                        category = t.def.category.ToString(),
+                        cell = t.Position.ToString(),
+                        wipes = GenSpawn.SpawningWipes(tower.def, t.def),
+                    })
+                    .ToArray(),
+            }
+        );
+    }
 
     private static void ObservePawnDraw(Pawn __instance, DrawPhase phase, bool __runOriginal)
     {
@@ -77,10 +106,21 @@ public sealed class WatchtowerGameplayScenarios
         var oldHighlight = Prefs.DotHighlightDisplayMode;
         bool oldPauseOnLoad = Prefs.PauseOnLoad;
         bool staged = false;
+        loadedTowers.Clear();
         try
         {
             await On(() =>
             {
+                renderProbe.Patch(
+                    AccessTools.Method(typeof(GenSpawn), nameof(GenSpawn.SpawnBuildingAsPossible)),
+                    prefix: new HarmonyMethod(
+                        typeof(WatchtowerGameplayScenarios),
+                        nameof(ObserveTowerLoad)
+                    )
+                    {
+                        priority = Priority.Last,
+                    }
+                );
                 map = Find.CurrentMap;
                 if (
                     map?.GetVisibility()?.Initialized != true
@@ -147,11 +187,6 @@ public sealed class WatchtowerGameplayScenarios
                         Faction.OfAncientsHostile
                     );
                     enemy.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 10000));
-                    bed = (Building_Bed)ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.WoodLog);
-                    owned.Add(bed);
-                    bed.SetFaction(Faction.OfPlayer);
-                    GenSpawn.Spawn(bed, new IntVec3(area.minX + 17, 0, area.minZ + 2), map);
-                    bed.Medical = true;
                 }
                 finally
                 {
@@ -432,6 +467,14 @@ public sealed class WatchtowerGameplayScenarios
             await On(() =>
             {
                 var workgiver = new WorkGiver_RescueDowned();
+                // Introduce this fixture's bed immediately before its rescue.
+                // Earlier injuries must not let another native patient reserve
+                // it before the control starts; no bed validator is bypassed.
+                bed = (Building_Bed)ThingMaker.MakeThing(ThingDefOf.Bed, ThingDefOf.WoodLog);
+                owned.Add(bed);
+                bed.SetFaction(Faction.OfPlayer);
+                GenSpawn.Spawn(bed, new IntVec3(area.minX + 17, 0, area.minZ + 2), map);
+                bed.Medical = true;
                 states.Add(
                     new
                     {
@@ -468,11 +511,16 @@ public sealed class WatchtowerGameplayScenarios
                     rescue.def == WatchtowerDefOf.TotalFog_WatchtowerRetrieve
                 );
                 helper.jobs.TryTakeOrderedJob(rescue);
+                Check(
+                    "ladder rescue reserves its native destination bed",
+                    !pawns[2].CanReserve(bed)
+                );
             });
             await Until(
                 "rescuer partly climbed",
                 () => towers[1].Rescuer == helper && towers[1].RescuerElevation > .25f
             );
+            await Reload("rescuer-ascent");
             await On(() =>
                 helper.jobs.TryTakeOrderedJob(JobMaker.MakeJob(JobDefOf.Goto, towers[0].Approach))
             );
@@ -510,19 +558,6 @@ public sealed class WatchtowerGameplayScenarios
                         && towers[1].Occupant == null
                         && helper.carryTracker.CarriedThing == null
                 );
-                var victim = pawns[2];
-                towers[2].Destroy(DestroyMode.KillFinalize);
-                Check(
-                    "collapse ejects pawn and removes tower ownership",
-                    !towers[2].Spawned
-                        && TowerPresentation.TowerFor(victim) == null
-                        && (victim.Dead || victim.Position.Walkable(map))
-                );
-                Check(
-                    "collapse inflicts native injury",
-                    victim.Dead || victim.health.hediffSet.hediffs.Any(h => h is Hediff_Injury)
-                );
-                Record("rescue-collapse");
             });
             await On(() =>
             {
@@ -553,6 +588,10 @@ public sealed class WatchtowerGameplayScenarios
                         )
                         .Contains(pawns[3].Corpse)
                 );
+            });
+            await Reload("corpse");
+            await On(() =>
+            {
                 var retrieve = JobMaker.MakeJob(
                     WatchtowerDefOf.TotalFog_WatchtowerRetrieve,
                     towers[3]
@@ -569,6 +608,22 @@ public sealed class WatchtowerGameplayScenarios
                     && helper.carryTracker.CarriedThing == null,
                 3000
             );
+            await On(() =>
+            {
+                var victim = pawns[2];
+                towers[2].Destroy(DestroyMode.KillFinalize);
+                Check(
+                    "collapse ejects pawn and removes tower ownership",
+                    !towers[2].Spawned
+                        && TowerPresentation.TowerFor(victim) == null
+                        && (victim.Dead || victim.Position.Walkable(map))
+                );
+                Check(
+                    "collapse inflicts native injury",
+                    victim.Dead || victim.health.hediffSet.hediffs.Any(h => h is Hediff_Injury)
+                );
+                Record("rescue-collapse");
+            });
 
             Pawn AddPawn(IntVec3 cell, Faction faction)
             {
@@ -640,7 +695,8 @@ public sealed class WatchtowerGameplayScenarios
                 string helperId = null,
                     enemyId = null,
                     bedId = null;
-                float[] elevations = null;
+                float[] elevations = null,
+                    rescuerElevations = null;
                 int tick = 0;
                 await On(() =>
                 {
@@ -652,7 +708,7 @@ public sealed class WatchtowerGameplayScenarios
                     ownedIds = owned.Select(t => t.ThingID).ToArray();
                     helperId = helper.ThingID;
                     enemyId = enemy.ThingID;
-                    bedId = bed.ThingID;
+                    bedId = bed?.ThingID;
                     elevations = towers.Select(t => t.Elevation).ToArray();
                     tick = Find.TickManager.TicksGame;
                     Record("before-save-" + label);
@@ -667,7 +723,11 @@ public sealed class WatchtowerGameplayScenarios
                 // Native PauseOnLoad deliberately executes one tick before
                 // pausing. Compare with that same uninterrupted reference tick.
                 await Step(1);
-                await On(() => elevations = towers.Select(t => t.Elevation).ToArray());
+                await On(() =>
+                {
+                    elevations = towers.Select(t => t.Elevation).ToArray();
+                    rescuerElevations = towers.Select(t => t.RescuerElevation).ToArray();
+                });
                 var loaded = await ctx.Tools.CallAsync(
                     "rimworld/load_game_ready",
                     new
@@ -682,8 +742,14 @@ public sealed class WatchtowerGameplayScenarios
                     throw new InvalidOperationException("Load tower " + label);
                 await On(() =>
                 {
+                    states.Add(
+                        new { phase = "load-collisions-" + label, towers = loadedTowers.ToArray() }
+                    );
+                    loadedTowers.Clear();
                     map = Find.CurrentMap;
                     var things = map.listerThings.AllThings.ToDictionary(t => t.ThingID);
+                    foreach (var corpse in map.listerThings.AllThings.OfType<Corpse>())
+                        things[corpse.InnerPawn.ThingID] = corpse.InnerPawn;
                     foreach (var p in map.mapPawns.AllPawnsSpawned)
                         if (p.carryTracker.CarriedThing is Thing carried)
                             things[carried.ThingID] = carried;
@@ -695,7 +761,7 @@ public sealed class WatchtowerGameplayScenarios
                     owned.AddRange(ownedIds.Where(things.ContainsKey).Select(id => things[id]));
                     helper = (Pawn)things[helperId];
                     enemy = (Pawn)things[enemyId];
-                    bed = (Building_Bed)things[bedId];
+                    bed = bedId == null ? null : (Building_Bed)things[bedId];
                     Record("loaded-" + label);
                     Check(
                         "reload paused at saved tick " + label,
@@ -707,6 +773,7 @@ public sealed class WatchtowerGameplayScenarios
                             .Select(
                                 (t, i) =>
                                     Math.Abs(t.Elevation - elevations[i]) < .00001f
+                                    && Math.Abs(t.RescuerElevation - rescuerElevations[i]) < .00001f
                                     && (
                                         t.Occupant == null
                                         || TowerPresentation.TowerFor(t.OccupantBody) == t
@@ -881,7 +948,7 @@ public sealed class WatchtowerGameplayScenarios
             JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerWatch, tower)
         );
 
-    private static bool Sees(CompSightSource source, IntVec3 cell) =>
+    internal static bool Sees(CompSightSource source, IntVec3 cell) =>
         (
             (VisibilityMask)AccessTools.Field(typeof(CompSightSource), "current").GetValue(source)
         ).Contains(source.parent.Map.cellIndices.CellToIndex(cell));

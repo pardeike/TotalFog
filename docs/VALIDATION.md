@@ -7300,3 +7300,57 @@ shields and other projectiles, actual muzzle/attachment and camera-edge drawing,
 placement/construction, native lightning, optional mod/Multiplayer checks and a
 small normal/wide performance sample. This is a source checkpoint, not a player
 release or feedback delivery.
+
+## 2026-10-12 — tower fire, flight drawing and corpse persistence
+
+The combat/weather suite passes 46 native checks in public Steam 1.6.4871
+with all DLCs. Receipt `artifacts/tower-combat-native12-20261012.json`, gameplay
+`5571b95271d46d7b90d09b53ea564861be298d811f62cdfb67236b4c8ea35bff`,
+companion `898fbfc2b20d6a33427a8b913e0060364e865dca67887b38555b099d61119346`.
+Native automatic lookout and ordered enemy rifles actually emit/draw bullets.
+The rotated mesh and ground-shadow controls also use separate paused native
+launches, including a frag grenade; they are not autonomous grenade AI proof.
+There are 42 actual projected rotation calls and 21 grounded shadow calls.
+Native enemy target acquisition sees the exposed lookout across a wall while
+ordinary ground behind it stays hidden. Default-off firing, rock/other-tower/roof
+blockers, melee exclusion, four blueprint/ghost rotations and native RNG
+preservation pass. Actual attached motes and fire draw on the raised body.
+Native lightning ticks damage wood and occupants on wood/stone; an ordinary
+stone wall controls material resistance within one native rounding unit. Four
+of 2,000 bounded weighting calls select a tower; deliberately fixed locations
+remain unchanged. This is event destination weighting, not added storm frequency.
+
+The updated access/persistence suite passes 61 checks in
+`artifacts/tower-gameplay-corpse-fixed13-20261012.json`, gameplay
+`dbfb232bc323a4b6ea7405c4e1a8fb1797c3d4db64e1d657eb037fa41cbb07a2`,
+companion `bccbfdae5744a0ae71c6755ecbbea1f47ed1e80e3c6b2cd2772a4cbedec9f095`.
+It adds temporary-rescuer ascent and corpse-on-deck reloads, compares both saved
+elevations, and checks the native destination-bed reservation during retrieval.
+Fresh occupied captures show all four bodies, labels and selection brackets.
+Both receipts restore the unchanged base save and have no native attention or
+recognized Player.log errors. The final game process is stopped. The build
+passes all 357 independent tests with zero warnings. The two receipt pairs are
+distinct; the older combat result does not establish every byte of the later build.
+
+Retained failures identify the following mechanisms. The reference package
+publicizes Projectile.launcher, but the running engine keeps it protected. A
+passive probe reading it threw before drawing; using the public Launcher getter
+restored the observation. It was not a gameplay draw failure. Native fire
+eligibility rejects a pawn sharing a cell with a full-fill building. The tower
+now exempts only its own elevated actor from that structure's protection while
+retaining stat-based fire resistance and other bulwarks. Lightning's explosion
+propagates on ticks and stone damage has a 0.05 flammability floor with random
+integer rounding; immediate/zero-damage assertions were incorrect test assumptions.
+
+Corpse reload exposed a real persistence defect: the default native Scribe
+reference call writes a destroyed pawn as null, even while its corpse deep-saves
+it. The load probe found no occupant and one native corpse which SpawningWipes
+classifies as a collision, refunding that tower. Explicit saved destroyed-pawn
+references preserve the corpse-owned actor; the corpse reload now passes. The
+intermittent rescue-bed rejection also has a concrete fixture observation: the
+early bed was not reservable. The fixture now introduces its bed immediately
+before rescue, preserving native validation. Production retrieval separately
+reserves the bed for the climb using the native sleeping-slot reservation count.
+
+Remaining acceptance is listed in COVERAGE.md and WATCHTOWER.md. No release,
+ZIP delivery, broad optional compatibility or performance acceptance is claimed.
