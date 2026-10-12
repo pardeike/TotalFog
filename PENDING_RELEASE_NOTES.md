@@ -77,3 +77,8 @@
 - Avoid a startup error when another mod bundles the Multiplayer API but Multiplayer itself is not loaded.
 
 - Add a separate colony mech vision slider, preserving normal range by default.
+
+- Keep colonists facing the ladder during descent.
+- Offer explicit one-, two- and four-hour tower watches; drafted lookouts can hold until undrafted or ordered away. Show the remaining watch time and respect Fire at will.
+- Connect adjacent walls to the solid tower base without unwanted wall end caps.
+- Check a lookout's ground route from the ladder entrance so normal move orders are available while on the platform.

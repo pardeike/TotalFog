@@ -28,13 +28,19 @@ open. Select a colonist and right-click the tower to watch from it. There is
 room for one lookout. The old retired towers remain loadable; they do not turn
 into the new building.
 
+- Choose a watch of 1, 2 or 4 game hours, or hold until undrafted if the colonist
+  is drafted. Timed watches keep the current draft status, start on reaching
+  the deck and show their remaining time in the tower's inspection panel.
+  Undrafting or ordering the lookout elsewhere makes them climb down first.
+  Urgent needs can end a watch early. Remaining watch time survives save/load.
 - Climbing and descending use a normal progress bar and take 120 game ticks
   each by default. The colonist moves visually from the ladder to the raised
   deck. Orders and needs bring the lookout down before ordinary work resumes.
 - Sight doubles by default, capped at 96 cells. Freestanding walls can be seen
   over; roofed rooms, mountains and other towers block sight.
 - Shooting from the tower defaults to off. Enable it in Total Fog settings
-  if wanted. A lookout is exposed to incoming fire. The solid base still
+  if wanted; automatic shooting also respects Fire at will. A lookout is
+  exposed to incoming fire. The solid base still
   protects a partly climbed colonist from the opposite side of the ladder.
 - Collapse causes fall injuries and can kill. Empty the tower before
   deconstruction. Downed occupants and corpses can be retrieved from the ladder;

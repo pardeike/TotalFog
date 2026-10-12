@@ -1,6 +1,7 @@
 # Watchtower design and validation
 
-Status: privately delivered preliminary gameplay pair on 12 October 2026, following the
+Status: local feedback fixes after the preliminary gameplay pair privately
+delivered on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -37,6 +38,31 @@ keep their old footprints and remain retired. Defaults are a 2x pawn sight
 multiplier, a 96-cell sight cap, 120 ticks per full climb/descent and shooting
 disabled. All four values are settings and use the existing Multiplayer settings
 registration. These defaults remain provisional for preliminary playtesting.
+
+Player orders follow native draft and building-use patterns. Drafted colonists
+can hold until undrafted or ordered elsewhere; timed watches of 1, 2 or 4 game
+hours work with either draft state and do not change it. Time starts at the deck,
+uses the native job/toil timer and is retained across save/load. The inspection
+panel shows the release condition or remaining time. Urgent needs still bring
+the lookout down early. Normal draft changes interrupt building use through
+RimWorld's existing job tracker, with our descent finalizer. Automatic shooting
+respects Fire at will. Both ladder directions own native facing during the climb
+and face the rungs; ordinary watching retains native combat facing.
+
+Route eligibility for a registered platform actor uses the ladder entrance as
+the ground starting point before their descent. Other pawns, blocked ladders
+and the footprint's native impassability retain their original rules. Targets,
+danger limits and traversal modes still pass through native reachability.
+
+The local follow-up passes 59 focused native order/facing/wall controls with
+Core, Harmony, RimBridgeServer, Camera+ and Total Fog. The delivered pair's
+broader combat, CE, Multiplayer and performance evidence below belongs to its
+older recorded bytes; these slices have not been rerun for the follow-up.
+
+Native linked-graphic metadata registers the full footprint in the wall link
+grid. Adjacent walls choose their connected native texture before the existing
+cached slanted cut is drawn, preventing a disconnected end cap inside the join.
+The accepted tower mesh and the wall's own printed material remain unchanged.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all

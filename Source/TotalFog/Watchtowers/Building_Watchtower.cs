@@ -173,13 +173,24 @@ public sealed class Building_Watchtower : WatchtowerGraphic
             component.Track(this);
     }
 
-    public override string GetInspectString() =>
-        base.GetInspectString()
-        + (
-            Occupant == null
-                ? ""
-                : "\n" + "TotalFog_TowerOccupied".Translate(Occupant.LabelShortCap)
-        );
+    public override string GetInspectString()
+    {
+        var text = base.GetInspectString();
+        if (Occupant == null)
+            return text;
+        text += "\n" + "TotalFog_TowerOccupied".Translate(Occupant.LabelShortCap);
+        if (Watching && Occupant.jobs.curDriver is JobDriver_Watchtower driver)
+            text +=
+                "\n"
+                + (
+                    driver.HoldingWhileDrafted
+                        ? "TotalFog_TowerHoldingDrafted".Translate()
+                        : "TotalFog_TowerWatchRemaining".Translate(
+                            driver.WatchTicksRemaining.ToStringTicksToPeriod()
+                        )
+                );
+        return text;
+    }
 
     public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn pawn)
     {
@@ -207,29 +218,45 @@ public sealed class Building_Watchtower : WatchtowerGraphic
             );
             yield break;
         }
+        if (!retrieve)
+        {
+            if (pawn.Drafted)
+                yield return new FloatMenuOption(
+                    "TotalFog_TowerWatchDrafted".Translate(),
+                    () => OrderWatch(pawn, 0)
+                );
+            foreach (int hours in new[] { 1, 2, 4 })
+            {
+                int ticks = hours * GenDate.TicksPerHour;
+                yield return new FloatMenuOption(
+                    "TotalFog_TowerWatchTimed".Translate(ticks.ToStringTicksToPeriod()),
+                    () => OrderWatch(pawn, ticks)
+                );
+            }
+            yield break;
+        }
         yield return new FloatMenuOption(
             label.Translate(),
             () =>
             {
-                var next = JobMaker.MakeJob(
-                    retrieve
-                        ? WatchtowerDefOf.TotalFog_WatchtowerRetrieve
-                        : WatchtowerDefOf.TotalFog_WatchtowerWatch,
-                    this
-                );
-                if (retrieve)
-                {
-                    next.targetC = body;
-                    if (body is Pawn patient)
-                        next.targetB = RestUtility.FindBedFor(
-                            patient,
-                            pawn,
-                            checkSocialProperness: false
-                        );
-                }
+                var next = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerRetrieve, this);
+                next.targetC = body;
+                if (body is Pawn patient)
+                    next.targetB = RestUtility.FindBedFor(
+                        patient,
+                        pawn,
+                        checkSocialProperness: false
+                    );
                 pawn.jobs.TryTakeOrderedJob(next);
             }
         );
+    }
+
+    private void OrderWatch(Pawn pawn, int ticks)
+    {
+        var next = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerWatch, this);
+        next.count = ticks;
+        pawn.jobs.TryTakeOrderedJob(next);
     }
 
     // Normal deconstruction is refused while occupied. Harmful destruction ejects

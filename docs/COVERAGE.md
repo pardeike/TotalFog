@@ -6,7 +6,29 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
-## Watchtower development: 12 October 2026
+## Watchtower feedback follow-up: 12 October 2026
+
+The local follow-up fixes descent facing, native move eligibility from the
+platform, explicit 1/2/4-hour watch orders, drafted holding and wall end caps.
+It passes 364 independent tests and 59 focused native controls on Steam
+1.6.4871 with the user's unchanged five-mod loadout: Harmony, RimBridgeServer,
+Core, Camera+ and Total Fog. The controls exercise all ladder orientations,
+actual watch-menu actions, native draft changes, a drafted move that reaches
+its destination after descent, blocked-exit and unrelated-pawn reachability,
+one-hour expiry, continued two/four-hour watches, timer save/load and native
+wood/granite wall links. The original example scene and four-orientation
+captures have been inspected. The original save was not overwritten.
+
+This is a local candidate, not a new private delivery or public release.
+Its gameplay SHA-256 is
+`6e6244f485356b993b1dc181326b0ffe6f051efb57919c056a8d47cbf9d6e35d`.
+No DLCs, CE, Multiplayer or Zombieland were loaded in this slice. It does not
+establish every modded wall shader, fresh shooting coverage or an exact-byte
+performance floor. The delivered pair's broader evidence below remains a
+separate checkpoint. Exact hashes, rejected attempts and native log evidence
+are recorded in VALIDATION.md.
+
+## Privately delivered watchtower pair: 12 October 2026
 
 The new 3x3 watchtower is included in the 12 October private preliminary pair.
 It has separate development evidence; the earlier pair documented below

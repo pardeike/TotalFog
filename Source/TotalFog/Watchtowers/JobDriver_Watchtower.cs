@@ -15,6 +15,15 @@ public sealed class JobDriver_Watchtower : JobDriver
     private bool goingDown;
     private int duration;
     internal bool Climbing;
+    internal bool HoldingWhileDrafted => job.count <= 0 && pawn.Drafted;
+    internal int WatchTicksRemaining => HoldingWhileDrafted ? -1 : ticksLeftThisToil;
+
+    public override string GetReport() =>
+        Climbing
+            ? (goingDown ? "TotalFog_TowerClimbingDown" : "TotalFog_TowerClimbingUp").Translate(
+                Tower.Label
+            )
+            : base.GetReport();
 
     private float TransitionElevation =>
         goingDown ? Mathf.Lerp(startingElevation, 0, Progress) : Progress;
@@ -116,9 +125,15 @@ public sealed class JobDriver_Watchtower : JobDriver
         if (!Descending && !Retrieving)
         {
             var watch = ToilMaker.MakeToil("Watch from tower");
+            // Drafted orders hold a position. Undrafted building use has a
+            // bounded duration, including older/programmatic orders with no count.
+            int watchTicks =
+                job.count > 0 ? job.count
+                : pawn.Drafted ? 0
+                : GenDate.TicksPerHour;
             watch.defaultCompleteMode =
-                job.count > 0 ? ToilCompleteMode.Delay : ToilCompleteMode.Never;
-            watch.defaultDuration = job.count;
+                watchTicks > 0 ? ToilCompleteMode.Delay : ToilCompleteMode.Never;
+            watch.defaultDuration = watchTicks;
             watch.tickAction = () =>
             {
                 pawn.Rotation = Tower.Rotation.Opposite;
@@ -133,6 +148,7 @@ public sealed class JobDriver_Watchtower : JobDriver
                 else if (
                     FogSettings.TowerShootingAllowed
                     && pawn.Drafted
+                    && pawn.drafter.FireAtWill
                     && !pawn.stances.FullBodyBusy
                 )
                 {
@@ -192,12 +208,14 @@ public sealed class JobDriver_Watchtower : JobDriver
     private Toil Climb(bool descend)
     {
         var toil = ToilMaker.MakeToil(descend ? "Descend tower" : "Climb tower");
+        toil.handlingFacing = true;
         toil.defaultCompleteMode = ToilCompleteMode.Delay;
         toil.defaultDuration = FogSettings.TowerClimbTicks;
         toil.initAction = () =>
         {
             pawn.pather.StopDead();
             pawn.Drawer.tweener.Notify_Teleported();
+            pawn.Rotation = Tower.Rotation.Opposite;
             goingDown = descend;
             Climbing = true;
             startingElevation = descend ? Tower.ElevationFor(pawn) : 0;
@@ -215,7 +233,8 @@ public sealed class JobDriver_Watchtower : JobDriver
         };
         toil.tickAction = () =>
         {
-            pawn.Rotation = descend ? Tower.Rotation : Tower.Rotation.Opposite;
+            // A ladder is climbed backwards on descent: face its rungs both ways.
+            pawn.Rotation = Tower.Rotation.Opposite;
             Tower.SetElevation(pawn, TransitionElevation);
         };
         return toil.WithProgressBar(TargetIndex.None, () => Progress, alwaysShow: true);

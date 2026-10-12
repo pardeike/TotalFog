@@ -44,6 +44,12 @@
   <TotalFog_TowerShootingDesc>Lookouts can shoot over freestanding walls. They are exposed to incoming fire and cannot attack ground targets in melee.</TotalFog_TowerShootingDesc>
   <TotalFog_TowerOccupied>Occupant: {0}</TotalFog_TowerOccupied>
   <TotalFog_TowerWatch>Watch from tower</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Watch from tower until undrafted</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Watch from tower for {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Watching until undrafted or ordered away</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Watch time remaining: {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Climbing up {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Climbing down {0}.</TotalFog_TowerClimbingDown>
   <TotalFog_TowerDescend>Climb down</TotalFog_TowerDescend>
   <TotalFog_TowerRetrieve>Retrieve tower occupant</TotalFog_TowerRetrieve>
   <TotalFog_TowerUnavailable>occupied or ladder inaccessible</TotalFog_TowerUnavailable>

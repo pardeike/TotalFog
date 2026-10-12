@@ -308,6 +308,11 @@ material interception or drawing archives into gameplay to support that feature.
 Use `totalfog/watchtower_gameplay` in the paused `TotalFogRegression` fixture for
 the production tower access/sight/bullet/rescue/collapse slice. Its historical
 `watchtower_access` and `watchtower_visuals` tools remain prototype controls.
+Use `totalfog/watchtower_orders` for the smaller native facing/duty/wall-link
+slice: four rotations, actual float-menu actions, native draft changes, timed
+expiry, save/load and an ordinary drafted move after descent. It stages a
+temporary area and restores the supplied unchanged paused single-player save.
+Its wood/granite wall checks do not establish every modded wall shader.
 The expanded production suite checks climb/descent/flight/carrying persistence,
 temporary rescuer and corpse persistence, blocked exits, interrupted rescue,
 recovery, death and projected corpse retrieval. Use `totalfog/watchtower_combat`

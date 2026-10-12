@@ -4,9 +4,60 @@ This is the retained evidence ledger. Read dated checkpoints with their exact
 gameplay hashes, loadouts and stated limits: older test counts, “current” builds
 and outstanding lists refer to their checkpoint, not today. Rejected candidates
 remain recorded. For the current acceptance summary and remaining work, use
-[COVERAGE.md](COVERAGE.md#current-status-10-october-2026); for implementation rules,
+[COVERAGE.md](COVERAGE.md); for implementation rules,
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
+
+## Watchtower feedback follow-up, 2026-10-12
+
+The local feedback candidate passes 364 independent tests and all 59 controls
+in `totalfog/watchtower_orders` on public Steam 1.6.4871. The user's active
+order was preserved: Harmony 2.4.3.0, RimBridgeServer 2.3.0, Core, Camera+
+3.4.7.0 and Total Fog. Configuration and loaded-session hashes both remain
+`1abfef6c66a51c4c`, with no restart or configuration issues. No DLCs or other
+compatibility targets were activated for this slice.
+
+Gameplay SHA-256:
+`6e6244f485356b993b1dc181326b0ffe6f051efb57919c056a8d47cbf9d6e35d`;
+loaded MVID: `a0d724f6-ffd6-4b44-8869-69fcd1a7f1a3`.
+Companion SHA-256:
+`9828cd9af1c9a0aed5841839f57f09ba0ccfed2f6a245e4249cd03c0e017e576`.
+Both installed files match the fresh build. The native Player.log from the
+successful run contains no errors or exceptions.
+
+The controls establish all four ascent/descent facings after the native
+rotation tracker executes; drafted holding beyond one game hour; native
+undrafting and drafting interruptions; 1/2/4-hour watch menu actions without
+automatic draft changes; inspection wording; native timer persistence across
+save/load; actual one-hour expiry, including an undrafted order with no count;
+and continued longer watches. The route control establishes actual descent
+and arrival after a drafted move, with blocked-ladder and unrelated-pawn
+negative controls. Wood/granite native wall textures link to all nine tower
+footprint cells before the existing slanted cut is drawn. Four-orientation
+captures and before/after captures of the user's two connected towers were
+inspected; the disconnected wall end caps are removed.
+
+Retained rejected attempts distinguish mod defects from harness limitations.
+Wall flags without native `linkType` did not register in LinkGrid. A whole-hour
+single stepping request exceeded the bridge timeout and was replaced with
+bounded requests. A move destination overlapped a neighboring test wall.
+After correcting that destination, the native reachability check still failed
+from the solid platform centre, establishing a real route-origin defect.
+The fix substitutes the clear ladder entrance only for the tower's own actor
+at their current position and retains native target/traversal checks.
+
+The scoped fixture restored a separate backup of the user's current setup,
+leaving it paused at tick 29651, camera position (95,120) and root size
+13.2272272. Native Pause on load accounts for the one tick beyond the backup.
+The original save was not written, and the backup still matches its original
+SHA-256. This checkpoint is
+not a newly delivered ZIP, fresh CE/Multiplayer/Zombieland acceptance, every
+modded wall shader, fresh shooting proof or an exact-byte performance comparison.
+
+Evidence: `artifacts/tower-user-feedback-20261012/orders-pass.json`,
+`deployed-pair.json`, retained `orders-failed-*.json`, `Player-final.log`,
+`tower-orders-routes-20261012-*__cell_rect.png`, and
+`tower-user-feedback-{before,after}*__cell_rect.png` in that same folder.
 
 ## New watchtower native prototypes, 2026-10-11
 

@@ -26,6 +26,8 @@
     <graphicData>
       <texPath>Things/Building/Linked/WallSmooth_MenuIcon</texPath>
       <graphicClass>Graphic_Single</graphicClass>
+      <linkType>Basic</linkType>
+      <linkFlags>Wall</linkFlags>
       <shaderType>Cutout</shaderType>
       <drawSize>(3,3)</drawSize>
     </graphicData>

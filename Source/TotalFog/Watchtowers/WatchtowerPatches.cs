@@ -71,6 +71,18 @@ internal static class WatchtowerPatches
             nameof(PositionRecoveryPrefix)
         );
         Patch(
+            typeof(Reachability),
+            nameof(Reachability.CanReach),
+            nameof(ReachabilityPrefix),
+            arguments: new[]
+            {
+                typeof(IntVec3),
+                typeof(LocalTargetInfo),
+                typeof(PathEndMode),
+                typeof(TraverseParms),
+            }
+        );
+        Patch(
             typeof(Pawn_JobTracker),
             nameof(Pawn_JobTracker.TryOpportunisticJob),
             nameof(DescentPriorityPrefix)
@@ -305,6 +317,32 @@ internal static class WatchtowerPatches
         var tower = TowerPresentation.TowerFor(pawn);
         if (tower?.ElevationFor(pawn) > 0)
             __result = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerDescend, tower);
+    }
+
+    internal static void ReachabilityPrefix(
+        ref IntVec3 start,
+        LocalTargetInfo dest,
+        TraverseParms traverseParams,
+        Map ___map
+    )
+    {
+        var pawn = traverseParams.pawn;
+        if (
+            pawn?.Spawned != true
+            || pawn.Map != ___map
+            || start != pawn.Position
+            || dest.Cell == start
+            || !start.InBounds(___map)
+            || start.GetEdifice(___map) is not Building_Watchtower tower
+            || !tower.HasActor(pawn)
+            || !tower.Approach.InBounds(___map)
+            || !tower.Approach.Walkable(___map)
+        )
+            return;
+        // An ordinary order first descends through the ladder. Keep all native
+        // target/traversal checks, but start that route at its actual ground exit.
+        // The solid platform and queries for other pawns remain impassable.
+        start = tower.Approach;
     }
 
     internal static bool DescentPriorityPrefix(

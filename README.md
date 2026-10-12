@@ -35,6 +35,8 @@ a wild boar or something much worse. To be safe, you have to look.
   powered. Watch them from a camera console.
 - A watch telescope doubles the sight range of pawns standing on it.
 - An experimental 3x3 watchtower has a timed ladder and room for one lookout.
+  Order a watch of 1, 2 or 4 game hours, or let a drafted lookout hold until
+  undrafted. New orders bring them down first.
   Its lookout sees over freestanding walls, while roofs, mountains and other
   towers block the view. Shooting from it is off by default. Tower testing is
   still in progress; existing old towers remain retired.
