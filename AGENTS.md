@@ -8,10 +8,24 @@ Build with the .NET 10.0.301 SDK pinned in global.json. The quiet workflow uses
 the existing SDK install under ~/Library/Application Support/dotnet when present,
 including for nested companion builds. Gameplay and companion DLLs still target
 net472 for RimWorld; independent tests run on net10.0.
+About/About.xml owns the advertised game versions: 1.6 and 1.7. Both explicit
+LoadFolders.xml entries currently use the same 1.6/ payload and LegacyAssets.
+The reference package, build output and .steam-mods.json rimworldVersion remain
+1.6 while this shared binary is used. Do not copy the DLL into a second version
+folder or compile against a new engine merely to advertise support.
+Development follows 1.7. When code/content actually diverges, freeze the complete
+last working 1.6 payload, including its required shared assets and translations,
+and move active output/content to 1.7/. Update packaging and the two load-folder
+mappings together. Do not backport later changes to 1.6 unless Andreas requests
+it. Folders below 1.6 stay frozen. Clean 1.7 startup is not gameplay acceptance.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.
 Use the canonical quiet command `./scripts/mod test|build|deploy|package|setup|baseline|benchmark`.
+Use `./scripts/mod metadata` for installed About/About.xml, LoadFolders.xml and
+README.md changes without rebuilding or replacing gameplay/companion DLLs.
+The target game must be stopped. Set RIMWORLD_MOD_DIR to the intended Mods root;
+both macOS executable names and the external Mods layout are guarded.
 `./scripts/mod test` runs formatting checks and pure tests without a game install
 or gameplay/companion DLL changes. CI uses `python scripts/mod format-check` and
 `python scripts/mod test` on Linux and Windows. Native deployment/runtime commands

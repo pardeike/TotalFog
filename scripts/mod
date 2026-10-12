@@ -78,12 +78,12 @@ def format_sources(log, check=False):
 def stopped():
     listing = subprocess.check_output(["ps", "ax", "-o", "comm="], text=True)
     for line in listing.splitlines():
-        if line.endswith("/RimWorld by Ludeon Studios"):
-            game_mods = (Path(line.strip()).parents[2] / "Mods").resolve()
-            if game_mods == MODS:
-                raise RuntimeError(
-                    "Stop RimWorld using " + str(MODS) + " through GABS before deploying"
-                )
+        binary = Path(line.strip())
+        if binary.name in {"RimWorld by Ludeon Studios", "RimWorld"}:
+            app = binary.parents[2]
+            game_mods = {(app / "Mods").resolve(), (app.parent / "Mods").resolve()}
+            if MODS in game_mods:
+                raise RuntimeError("Stop RimWorld using " + str(MODS) + " before deploying")
 
 
 def stage(destination, baseline=False):
@@ -191,6 +191,7 @@ try:
         "build",
         "deploy",
         "deploy-built",
+        "metadata",
         "package",
         "feedback-package",
         "feedback-verify",
@@ -210,7 +211,7 @@ try:
         "source-publish",
     }:
         raise RuntimeError(
-            "Use format, format-check, test, build, deploy, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+            "Use format, format-check, test, build, deploy, metadata, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
         )
     if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
         raise RuntimeError(
@@ -227,6 +228,27 @@ try:
         if mode == "source-publish":
             step = "public source publication"
             run(["python3", str(ROOT / "scripts/publish-source")], log)
+        if mode == "metadata":
+            step = "installed metadata"
+            stopped()
+            destination = MODS / "TotalFog"
+            if not (destination / "1.6/Assemblies/TotalFog.dll").is_file():
+                raise RuntimeError("Install Total Fog before updating its metadata")
+            about = ET.parse(ROOT / "About/About.xml")
+            folders = ET.parse(ROOT / "LoadFolders.xml")
+            for version in about.findall("supportedVersions/li"):
+                mapping = folders.getroot().find("v" + version.text)
+                if mapping is None or not list(mapping):
+                    raise RuntimeError("Advertised version has no load folders: " + version.text)
+                for folder in mapping:
+                    path = destination if folder.text == "/" else destination / folder.text
+                    if not path.is_dir():
+                        raise RuntimeError("Installed load folder is missing: " + str(path))
+            for name in ["About/About.xml", "LoadFolders.xml", "README.md"]:
+                src, dst = ROOT / name, destination / name
+                shutil.copy2(src, dst)
+                if src.read_bytes() != dst.read_bytes():
+                    raise RuntimeError("Installed metadata differs: " + name)
         if mode == "verify-rendered":
             step = "rendered evidence"
             if len(sys.argv) != 3:
@@ -259,6 +281,7 @@ try:
             "format-check",
             "baseline",
             "deploy-built",
+            "metadata",
             "dpa-setup",
             "mp-setup",
             "mp-layout",
@@ -1215,10 +1238,14 @@ try:
                         "supportedVersions/li"
                     )
                 ]
-                expected = json.loads((ROOT / ".steam-mods.json").read_text())["mod"][
+                expected = [
+                    n.text
+                    for n in ET.parse(ROOT / "About/About.xml").findall("supportedVersions/li")
+                ]
+                build_version = json.loads((ROOT / ".steam-mods.json").read_text())["mod"][
                     "rimworldVersion"
                 ]
-                if advertised != [expected]:
+                if advertised != expected or build_version not in advertised:
                     raise RuntimeError("Supported game version metadata drifted")
             (ROOT / "dist/TotalFog.zip.sha256").write_text(
                 hashlib.sha256(archive.read_bytes()).hexdigest() + "  TotalFog.zip\n"

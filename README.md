@@ -9,7 +9,7 @@ When your colonists walk away, the area goes grey again, and you no longer know
 what happens there. A raid can come out of the dark. A sound in the night may be
 a wild boar or something much worse. To be safe, you have to look.
 
-> **Early version for RimWorld 1.6.** Testing is still going on. Feedback, bug
+> **Early version for RimWorld 1.6 and 1.7.** Testing is still going on. Feedback, bug
 > reports and saves that show problems are very welcome:
 > [Brrainz Discord](https://discord.gg/G4r84eN7w6) or
 > [GitHub issues](https://github.com/pardeike/TotalFog/issues).
@@ -103,7 +103,7 @@ too much.
 
 ## Good to know
 
-- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6.
+- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6 or 1.7. Use the released Steam Harmony for your game version.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a
   copy of your save first.
@@ -337,6 +337,7 @@ installed game's `Mods` folder.
 | `./scripts/mod test` | Checks formatting and runs pure tests without a game install or DLL changes |
 | `./scripts/mod build` | Checks formatting, runs the tests and builds the mod |
 | `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
+| `./scripts/mod metadata` | Updates the installed description and version/load-folder metadata without changing DLLs; the game must be stopped |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
 | `./scripts/mod ce-setup` | Builds and deploys the mod and creates the separate Combat Extended test profile |
@@ -358,8 +359,13 @@ For a short wide-zoom comparison, prefix `runtime-compare` with
 map area at root size 100. This is a spot check; the normal performance gate
 still uses three pairs.
 
-Full logs are kept in `artifacts/logs/`. Only RimWorld 1.6 is supported; the older
-version folders stay for history. More details:
+Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 currently load the
+same DLL, definitions and assets from `1.6/`. The older version folders stay for
+history. Development follows 1.7. If the versions need different code or content,
+we will keep the last working 1.6 payload and move new development to `1.7/`;
+continued fixes or new features for 1.6 are not promised. The current 1.7 check
+establishes clean startup with Steam Harmony, not full gameplay or compatibility
+acceptance. The existing detailed native results belong to 1.6. More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),
 [validation](docs/VALIDATION.md) and [AGENTS.md](AGENTS.md).
 

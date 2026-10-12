@@ -6,6 +6,23 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
+## Engine versions and maintenance
+
+The advertised versions are 1.6 and 1.7. Their explicit load-folder entries
+currently select the same 1.6/ DLL, definitions and shared assets. All five
+assemblies below 1.6 remain byte-identical to the upstream snapshot. Development
+follows 1.7; if the versions diverge, the complete last working 1.6 payload is
+retained and active development moves to 1.7/. Later 1.6 backports require an
+explicit request.
+
+The unchanged local candidate reaches the 1.7 main menu with the released Steam
+Harmony 3.0.0 and no startup errors or warnings. Actual loaded paths confirm the
+Workshop Harmony copy and shared Total Fog DLL, SHA-256
+`ee344f3d518e01dfc3264efa2c7db49672945101f241e3a3b6aa88f99a7fa1cc`.
+This is startup evidence only. Fog gameplay, save/load, performance, DLC behavior,
+Zombieland, CE and Multiplayer acceptance on 1.7 remain unverified. Existing
+native results below belong to their recorded 1.6 checkpoints.
+
 ## Watchtower feedback follow-up: 12 October 2026
 
 The local follow-up fixes descent facing, native move eligibility from the

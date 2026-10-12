@@ -1,3 +1,4 @@
+- Add RimWorld 1.7 to the advertised game versions; 1.6 and 1.7 currently use the same mod payload.
 - Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
