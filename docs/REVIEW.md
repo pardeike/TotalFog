@@ -298,3 +298,12 @@ tests where they are pure:
   has not been run while Andreas's game is running and deployment is forbidden.
   This step has no new measured TPS claim; native pixels and comparison remain
   outstanding for a permitted runtime session.
+
+- Step 6, items 8 and 9: verified no prior Alert patch, fire's attachment
+  category, reservation gates and the corpse exclusion. Selected native threat
+  GetReport overrides now filter hidden culprits and camera-jump targets when
+  delayed information is enabled; health, world-only and unlocated reports stay
+  native. Fire on known home cells, player-owned things there and own corpses
+  on known cells are actionable without granting live effects current sight.
+  Native reservations/reachability still have to succeed. Pure controls cover
+  home/unknown fire, own/foreign corpses and filtered/unlocated alert reports.

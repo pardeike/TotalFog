@@ -7,6 +7,8 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../TotalFog/Notifications/ThreatAlerts.cs" Link="Production/ThreatAlerts.cs" />
+    <Compile Include="../TotalFog/Detours/ReservationUtility.cs" Link="Production/ReservationUtility.cs" />
     <Compile Include="../TotalFog/Presentation/GasVisibility.cs" Link="Production/GasVisibility.cs" />
     <ProjectReference Include="../Core/TotalFog.Core.csproj" />
     <Compile Include="../TotalFog/Compatibility/LegacySaveTypes.cs" Link="Production/LegacySaveTypes.cs" />

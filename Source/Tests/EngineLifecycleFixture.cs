@@ -141,7 +141,12 @@ namespace Verse
 
     public class Building : ThingWithComps { }
 
-    public class Corpse : ThingWithComps { }
+    public class Corpse : ThingWithComps
+    {
+        public Pawn InnerPawn;
+    }
+
+    public class Fire : Thing { }
 
     public class RaceProperties
     {
@@ -164,6 +169,19 @@ namespace Verse
     public class LookTargets
     {
         public List<TargetInfo> targets = new();
+
+        public LookTargets() { }
+
+        public LookTargets(RimWorld.Planet.GlobalTargetInfo target) =>
+            targets.Add(
+                new TargetInfo
+                {
+                    IsValid = target.IsValid,
+                    Thing = target.Thing,
+                    Map = target.Map,
+                    Cell = target.Cell,
+                }
+            );
     }
 
     public struct TargetInfo
@@ -205,8 +223,20 @@ namespace Verse
         public UnityEngine.Vector3 unattachedDrawOffset;
     }
 
+    public class AreaManager
+    {
+        public HomeArea Home = new();
+    }
+
+    public class HomeArea
+    {
+        public bool Active;
+        public bool this[IntVec3 cell] => Active;
+    }
+
     public class Map
     {
+        public AreaManager areaManager = new();
         public IntVec3 Size = new(2, 2);
         public bool Bypass;
         public bool IsPlayerHome;
@@ -659,6 +689,18 @@ namespace RimWorld
         public static List<Verse.IntVec3> beautyRelevantCells = new();
     }
 
+    public struct AlertReport
+    {
+        public bool active;
+        public List<RimWorld.Planet.GlobalTargetInfo> culpritsTargets;
+        public IEnumerable<RimWorld.Planet.GlobalTargetInfo> AllCulprits =>
+            culpritsTargets ?? new();
+        public static AlertReport Inactive => default;
+
+        public static AlertReport CulpritsAre(List<RimWorld.Planet.GlobalTargetInfo> targets) =>
+            new() { active = targets.Count > 0, culpritsTargets = targets };
+    }
+
     public static class MapMeshFlagDefOf
     {
         public const int Things = 1,
@@ -777,6 +819,7 @@ namespace TotalFog
 
     public class FogSettings : Verse.ModSettings
     {
+        public static bool DelayAlertsUntilSeen;
         public static bool SuppressCombatMusic = true;
         public static int BaseViewRange = 60;
         public static float BuildingVisionModifier = 1;
@@ -824,6 +867,14 @@ namespace TotalFog
 
 namespace RimWorld.Planet
 {
+    public struct GlobalTargetInfo
+    {
+        public bool IsValid;
+        public Verse.Thing Thing;
+        public Verse.Map Map;
+        public Verse.IntVec3 Cell;
+    }
+
     public class World
     {
         public readonly List<object> components = new();

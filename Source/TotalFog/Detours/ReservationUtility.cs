@@ -1,4 +1,3 @@
-using TotalFog.Utils;
 using Verse;
 
 namespace TotalFog.Detours;
@@ -16,10 +15,7 @@ public static class ReservationUtility
                 && target.Thing.def.category != ThingCategory.Pawn
             )
             {
-                __result = Presentation.ThingVisibility.IsVisible(
-                    target.Thing,
-                    observerFaction: p.Faction
-                );
+                __result = Presentation.ThingVisibility.IsActionable(target.Thing, p.Faction);
             }
         }
 
@@ -32,10 +28,7 @@ public static class ReservationUtility
                 && target.Thing.def.category != ThingCategory.Pawn
             )
             {
-                __result = Presentation.ThingVisibility.IsVisible(
-                    target.Thing,
-                    observerFaction: p.Faction
-                );
+                __result = Presentation.ThingVisibility.IsActionable(target.Thing, p.Faction);
             }
         }
     }

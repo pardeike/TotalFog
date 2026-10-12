@@ -23,8 +23,8 @@ a wild boar or something much worse. To be safe, you have to look.
   who walks on it right now.
 - Previously observed scenery uses the game's normal drawing. Trees and buildings
   can change while unseen; Total Fog does not preserve a picture of their last appearance.
-- Your construction blueprints remain drawn outside current sight. Corpses and
-  artificial light require current sight.
+- Your construction blueprints remain drawn outside current sight. Foreign corpses and
+  artificial light require current sight. Your own corpses on known cells can be recovered.
 - Use the area Forbid/Allow tools for previously seen player doors outside sight.
   Their live inspector stays closed until someone can see them again.
 - Allies, neutral visitors and even prisoners can share their view with you
@@ -57,6 +57,7 @@ They cannot be selected for new construction.
 - Letters and messages about things you cannot see can wait until you see them.
 - Or you can throw away unseen events, sorted by type (big threats, small threats,
   good news, bad news).
+- With delayed notifications enabled, selected map-threat alerts and their jump targets require sight. Health and global alerts remain native.
 - Colony health and global events always arrive at once.
 - New Anomaly entities enter the journal and send their discovery notice when someone first sees them.
 - **Silent raids** (optional): no arrival letter for raids and manhunter packs.
@@ -81,7 +82,9 @@ and the Wildlife tab remains available. To prevent those channels from revealing
 hidden activity, enable audio checks and delayed notifications and hide the
 Wildlife tab in the settings. Silent Raids, discarding unseen messages and
 muting hidden sounds are separate choices and default off. Existing saved
-settings are retained when updating.
+settings are retained when updating. Player-owned things on known home-area cells,
+fire in that area and your own corpses on known cells remain available for work.
+Those work exceptions do not grant hidden effects or notifications current sight.
 
 Fog does not hide research availability, storyteller threat calculations,
 world-map information or the game's pathfinding and flee decisions. Combat can

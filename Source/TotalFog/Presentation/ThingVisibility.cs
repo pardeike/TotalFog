@@ -24,6 +24,39 @@ internal static class ThingVisibility
     internal static bool Bypass(Map map) =>
         Unrestricted(map) || Compatibility.GravshipVisibility.Revealed;
 
+    // Ownership grants work access, not live effects or notification discovery.
+    internal static bool IsActionable(Thing thing, Faction observerFaction)
+    {
+        if (thing == null || IsVisible(thing, observerFaction: observerFaction))
+            return true;
+        var map = thing.MapHeld;
+        if (
+            map == null
+            || !thing.PositionHeld.InBounds(map)
+            || map.fogGrid.IsFogged(thing.PositionHeld)
+        )
+            return false;
+        return KnownActionable(thing, map.GetVisibility(), thing.PositionHeld, observerFaction);
+    }
+
+    private static bool KnownActionable(
+        Thing thing,
+        MapVisibility fog,
+        IntVec3 cell,
+        Faction observerFaction
+    )
+    {
+        if (
+            observerFaction == null
+            || !fog.IsKnown(observerFaction, thing.MapHeld.cellIndices.CellToIndex(cell))
+        )
+            return false;
+        if (thing is Corpse corpse && corpse.InnerPawn?.Faction == observerFaction)
+            return true;
+        return thing.MapHeld.areaManager.Home[cell]
+            && (thing is Fire || thing.Faction == observerFaction);
+    }
+
     // A visibility component already owns its observation flag and a current
     // map registration. Other callers resolve those inputs through the thing.
     internal static bool IsVisible(
@@ -84,6 +117,8 @@ internal static class ThingVisibility
             || Unrestricted(map, observerFaction)
             || allowMemory && Compatibility.GravshipVisibility.Revealed
         )
+            return true;
+        if (allowMemory && KnownActionable(thing, fog, position, observerFaction))
             return true;
         bool mobile =
             thing is Pawn or PawnFlyer

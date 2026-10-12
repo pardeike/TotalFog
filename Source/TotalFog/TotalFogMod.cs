@@ -116,6 +116,7 @@ public class TotalFogMod : Mod
 
     private static void injectDetours()
     {
+        PatchSafety.Install("threat alerts", () => Notifications.ThreatAlerts.Install(harmony));
         PatchSafety.Patch(
             harmony,
             typeof(Verse.LetterStack).GetMethod(
