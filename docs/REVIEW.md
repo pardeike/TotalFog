@@ -762,3 +762,27 @@ scaling. Ordinary vision and unrelated modded sight modifiers retain their
 existing rules. WorkType and label/translation rendering need native acceptance.
 Formatting and the redirected Release build pass 407 tests with zero
 warnings/errors; the tracked DLL is unchanged. Native acceptance remains open.
+
+### Step 7: tower link registration and clean startup
+
+R2-5 reproduces exactly in the retained 12 October startup log: two tower
+errors and one blueprint error. DecompilerServer confirms that native blueprint
+generation inherits both the drawer and link flags, and LinkGrid reads the
+flags from every occupied cell. The tower now uses MapMeshAndRealTime; tower
+and preview Print overrides suppress the placeholder plane because their
+cached geometry is already drawn in realtime. Wall flags and neighbor
+notifications remain intact.
+
+The isolated profile launched the installed offline 1.6.4871 engine with Core,
+all five DLCs, Steam Harmony, RimBridgeServer and the redirected candidate.
+Player.log has no config errors or runtime errors in the existing log checker;
+the three reported errors are absent. Evidence is retained under
+artifacts/review-round-2/step-7-Player.log. This proves startup, not the full
+tower interaction gates. Formatting and the redirected Release build pass
+407 tests with zero warnings/errors.
+
+Staging and comparison-byte verification now honor TotalFogBuildOutput. Without
+that correction they would deploy/check the old tracked DLL even after a
+redirected build. The tracked DLL is still unchanged. The isolated GABS profile
+is temporarily pointed at offline 1.6 for these checks because ordinary Steam
+now launches 1.7; its original configuration is retained for restoration.

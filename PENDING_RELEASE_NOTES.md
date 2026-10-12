@@ -120,3 +120,5 @@ local testing do not indicate that a new player build has been released.
 - Watchtowers require Complex furniture, protect their ladder from blocking construction, show blocked-exit warnings and permit rescue without a bed from the pawn menu. Desperate blocked exits can cause fall injuries; outgoing shots keep the target's normal cover.
 
 - Disabling the camera operator requirement stops unnecessary console work. Update retired-feature descriptions and translate Total Fog settings and watchtower text into German, French, Simplified Chinese and Korean.
+
+- Watchtowers and their blueprints no longer report wall-link configuration errors on startup.

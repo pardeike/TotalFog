@@ -97,7 +97,20 @@ def stopped():
                 raise RuntimeError("Stop RimWorld using " + str(MODS) + " before deploying")
 
 
+def gameplay_assembly():
+    output = os.environ.get("TotalFogBuildOutput")
+    if not output:
+        return ROOT / "Current/Assemblies/TotalFog.dll"
+    directory = Path(output).expanduser()
+    if not directory.is_absolute():
+        directory = PROJECT.parent / directory
+    return directory / "TotalFog.dll"
+
+
 def stage(destination, baseline=False):
+    candidate = gameplay_assembly()
+    if not baseline and not candidate.is_file():
+        raise RuntimeError("Build output is missing: " + str(candidate))
     destination.mkdir(parents=True, exist_ok=True)
     for name in PAYLOAD:
         src, dst = ROOT / name, destination / name
@@ -114,6 +127,7 @@ def stage(destination, baseline=False):
     assemblies = destination / ("1.6/Assemblies" if baseline else "Current/Assemblies")
     assemblies.mkdir(parents=True, exist_ok=True)
     if not baseline:
+        shutil.copy2(candidate, assemblies / "TotalFog.dll")
         mapped = {
             folder.text
             for version in ET.parse(ROOT / "LoadFolders.xml").getroot()
@@ -423,10 +437,10 @@ try:
                                 "Original and candidate fixture, environment or settings differ"
                             )
                         report["identity"] = identity
-                        expected = ROOT / (
-                            "artifacts/baseline/rimworld-mod-real-fow.dll"
+                        expected = (
+                            ROOT / "artifacts/baseline/rimworld-mod-real-fow.dll"
                             if variant == "original"
-                            else "Current/Assemblies/TotalFog.dll"
+                            else gameplay_assembly()
                         )
                         if (
                             evidence["mainSha256"]

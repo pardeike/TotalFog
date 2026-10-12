@@ -129,6 +129,10 @@ public class WatchtowerGraphic : Building
         }
     }
 
+    // Wall link flags require map-mesh registration. The cached realtime
+    // meshes already draw the tower, so never print the placeholder graphic.
+    public override void Print(SectionLayer layer) { }
+
     public override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         if (body == null || foreground == null)

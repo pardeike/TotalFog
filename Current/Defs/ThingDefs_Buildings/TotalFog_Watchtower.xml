@@ -8,7 +8,7 @@
     <size>(3,3)</size>
     <rotatable>true</rotatable>
     <defaultPlacingRot>South</defaultPlacingRot>
-    <drawerType>RealtimeOnly</drawerType>
+    <drawerType>MapMeshAndRealTime</drawerType>
     <tickerType>Never</tickerType>
     <altitudeLayer>BuildingOnTop</altitudeLayer>
     <passability>Impassable</passability>
