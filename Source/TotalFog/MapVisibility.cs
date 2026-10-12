@@ -38,7 +38,7 @@ public class MapVisibility : MapComponent
         treeBlockers;
     public readonly int mapSizeX;
     public bool[] knownCells;
-    public bool Initialized { get; private set; }
+    public bool Initialized => coverage.Initialized;
     public VisibilityGrid Coverage => coverage;
     private Watchtowers.MapComponent_Watchtowers towerComponent;
     internal Watchtowers.MapComponent_Watchtowers TowerComponent =>
@@ -379,7 +379,7 @@ public class MapVisibility : MapComponent
             if (designation.def == DesignationDefOf.Mine && !designation.target.HasThing)
                 RegisterMineDesignation(designation);
         // All spawned comps have completed registration before map initialization publishes sight.
-        Initialized = true;
+        coverage.Initialized = true;
         foreach (var thing in map.listerThings.AllThings)
         {
             if (!thing.Spawned)

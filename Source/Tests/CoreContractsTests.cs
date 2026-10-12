@@ -22,9 +22,26 @@ public class CoreContractsTests
     }
 
     [Fact]
+    public void Uninitialized_coverage_never_discovers_cells_and_preserves_loaded_discovery()
+    {
+        var grid = new VisibilityGrid(3, 1);
+        grid.LoadKnown(new[] { true, false, false });
+        Assert.False(grid.Initialized);
+        grid.Add(0, 1);
+        Assert.True(grid.IsVisible(0, 1, 0));
+        Assert.Equal(new[] { true, false, false }, grid.Known);
+        grid.Remove(0, 1);
+        grid.Initialized = true;
+        grid.Add(0, 2);
+        Assert.Equal(new[] { true, false, true }, grid.Known);
+        grid.Remove(0, 2);
+        Assert.True(grid.Known[2]);
+    }
+
+    [Fact]
     public void ObserverOverlapDoesNotFlickerAndDiscoverySurvivesRemoval()
     {
-        var grid = new VisibilityGrid(5, 5);
+        var grid = new VisibilityGrid(5, 5) { Initialized = true };
         Assert.True(grid.Add(0, 12));
         Assert.False(grid.Add(0, 12));
         Assert.False(grid.Remove(0, 12));
@@ -53,7 +70,7 @@ public class CoreContractsTests
     [Fact]
     public void PlayerAndNpcCoverageStaySeparateAcrossInterleavedUpdates()
     {
-        var grid = new VisibilityGrid(2, 3);
+        var grid = new VisibilityGrid(2, 3) { Initialized = true };
         Assert.False(grid.Remove(0, 4));
         Assert.False(grid.IsVisible(0, 0, 2));
         Assert.Equal(0, grid.FactionCount);
@@ -78,7 +95,7 @@ public class CoreContractsTests
     [Fact]
     public void RepeatedCoverageUpdatesAndQueriesAllocateNothingAfterSetup()
     {
-        var grid = new VisibilityGrid(2, 3);
+        var grid = new VisibilityGrid(2, 3) { Initialized = true };
         grid.Counts(0);
         grid.Counts(12);
         void Exercise()
@@ -102,7 +119,7 @@ public class CoreContractsTests
     [Fact]
     public void DiscoveryLoadChecksDimensionsAndCopiesState()
     {
-        var grid = new VisibilityGrid(2, 3);
+        var grid = new VisibilityGrid(2, 3) { Initialized = true };
         var saved = new bool[6];
         saved[4] = true;
         grid.LoadKnown(saved);

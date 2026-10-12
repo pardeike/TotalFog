@@ -13,6 +13,7 @@ public sealed class VisibilityGrid
     public int Height { get; }
     public int CellCount { get; }
     public bool[] Known { get; }
+    public bool Initialized { get; set; }
     public int FactionCount => factions.Count + (playerCounts == null ? 0 : 1);
 
     public VisibilityGrid(int width, int height)
@@ -64,7 +65,7 @@ public sealed class VisibilityGrid
         CheckIndex(index);
         var counts = Counts(faction);
         counts[index] = checked(counts[index] + 1);
-        if (faction == 0)
+        if (faction == 0 && Initialized)
             Known[index] = true;
         return counts[index] == 1;
     }

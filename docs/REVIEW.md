@@ -264,3 +264,11 @@ tests where they are pure:
   clock/context bindings. Review builds use ignored output without writing the
   tracked gameplay DLL. `format` and `build` passed, including 368 tests and
   zero build warnings/errors. No live deployment or compatibility claim is made.
+
+- Step 2, item 2: verified CompSightSource:47-56, VisibilityGrid:62-69
+  and MapVisibility:367-391 at the review commit. Native 1.6
+  `Map.FinalizeLoading` explicitly spawns non-buildings before buildings,
+  confirming the cause. Sources register during loading but do not cast until
+  initialization; the core grid also refuses discovery before initialization.
+  A pure test covers transient pre-init coverage, preserved loaded discovery,
+  and durable discovery after initialization.

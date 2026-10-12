@@ -84,3 +84,5 @@
 - Check a lookout's ground route from the ladder entrance so normal move orders are available while on the platform.
 
 - An unavailable patch or optional Multiplayer binding no longer prevents unrelated fog features from loading.
+
+- Loading a save no longer explores through walls before those walls have spawned.

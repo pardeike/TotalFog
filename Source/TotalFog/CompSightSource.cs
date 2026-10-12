@@ -115,6 +115,10 @@ public class CompSightSource : FogSubcomponent
                 fog.fowWatchers.Add(this);
             forceUpdate = true;
         }
+        // Registration during loading precedes walls. Publish neither temporary
+        // coverage nor permanent discovery until every blocker is present.
+        if (!fog.Initialized)
+            return;
         var effectiveFaction = parent.Faction;
         float modifier = 1;
         if (pawn != null)
