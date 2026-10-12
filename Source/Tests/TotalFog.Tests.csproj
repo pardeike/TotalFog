@@ -7,6 +7,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="../TotalFog/Presentation/GasVisibility.cs" Link="Production/GasVisibility.cs" />
     <ProjectReference Include="../Core/TotalFog.Core.csproj" />
     <Compile Include="../TotalFog/Compatibility/LegacySaveTypes.cs" Link="Production/LegacySaveTypes.cs" />
     <Compile Include="../TotalFog/Compatibility/GravshipVisibility.cs" Link="Production/GravshipVisibility.cs" />

@@ -261,6 +261,18 @@ namespace Verse
         public bool IsFogged(IntVec3 cell) => Fogged;
     }
 
+    public class GasGrid
+    {
+        public bool Present = true;
+        public int Reads;
+
+        public bool AnyGasAt(IntVec3 cell)
+        {
+            Reads++;
+            return Present;
+        }
+    }
+
     public class CellIndices
     {
         public int CellToIndex(IntVec3 cell) => cell.z * 2 + cell.x;
@@ -295,8 +307,13 @@ namespace Verse
     public class MapDrawer
     {
         public int DirtyCalls;
+        public int DirtyFlags;
 
-        public void MapMeshDirty(IntVec3 cell, int flags) => DirtyCalls++;
+        public void MapMeshDirty(IntVec3 cell, int flags)
+        {
+            DirtyCalls++;
+            DirtyFlags |= flags;
+        }
 
         public void RegenerateEverythingNow() => DirtyCalls++;
     }
@@ -698,6 +715,10 @@ namespace TotalFog
         public bool[] knownCells = new bool[4],
             InSight = new bool[4];
         public bool[] viewBlockerCells = new bool[4];
+        public readonly int[] ShownCounts = new int[4];
+
+        public int[] GetFactionShownCells(Verse.Faction faction) => ShownCounts;
+
         public int VisibilityQueries;
         public readonly Dictionary<Verse.Faction, bool[]> FactionSight = new();
         public readonly Dictionary<Verse.Faction, bool[]> FactionKnown = new();

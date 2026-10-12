@@ -20,6 +20,25 @@ public class VisibilityLifecycleTests
     }
 
     [Fact]
+    public void Static_thing_transition_dirties_only_thing_and_building_meshes()
+    {
+        var parent = new ThingWithComps();
+        parent.def.drawerType = DrawerType.MapMeshOnly;
+        parent.Map.Fog.Initialized = true;
+        var visibility = new CompPresentationState { parent = parent };
+        visibility.PostSpawnSetup(false);
+        visibility.Hide();
+        visibility.Show();
+        Assert.Equal(2, parent.Map.mapDrawer.DirtyCalls);
+        Assert.Equal(
+            RimWorld.MapMeshFlagDefOf.Things
+                | RimWorld.MapMeshFlagDefOf.Buildings
+                | RimWorld.MapMeshFlagDefOf.BuildingsDamage,
+            parent.Map.mapDrawer.DirtyFlags
+        );
+    }
+
+    [Fact]
     public void RareTickUpdatesSightEvenWhenItSkipsTheNormalDeadline()
     {
         var source = new RareSource { Tick = 250, NextCheck = 30 };

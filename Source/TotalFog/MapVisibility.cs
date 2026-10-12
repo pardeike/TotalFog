@@ -559,7 +559,7 @@ public class MapVisibility : MapComponent
         {
             map.mapDrawer.MapMeshDirty(
                 new IntVec3(section % columns * SectionSize, 0, section / columns * SectionSize),
-                FogDefOf.RealFogOfWar | MapMeshFlagDefOf.GroundGlow
+                FogDefOf.RealFogOfWar | MapMeshFlagDefOf.GroundGlow | MapMeshFlagDefOf.Gas
             );
         }
         dirtySections.Clear();

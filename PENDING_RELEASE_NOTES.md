@@ -88,3 +88,5 @@
 - Loading a save no longer explores through walls before those walls have spawned.
 
 - Player mortars and turrets stop automatically selecting hidden targets; manual mortar fire at a cell remains available.
+
+- Visibility changes avoid rebuilding unrelated terrain and overlay meshes. Hidden gas no longer draws outside current sight.

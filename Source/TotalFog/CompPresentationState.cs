@@ -77,15 +77,7 @@ public class CompPresentationState : FogSubcomponent
                 intVec,
                 MapMeshFlagDefOf.Things
                     | MapMeshFlagDefOf.Buildings
-                    | MapMeshFlagDefOf.GroundGlow
-                    | MapMeshFlagDefOf.Terrain
-                    | MapMeshFlagDefOf.Roofs
-                    | MapMeshFlagDefOf.Snow
-                    | MapMeshFlagDefOf.Pollution
-                    | MapMeshFlagDefOf.Zone
-                    | MapMeshFlagDefOf.PowerGrid
                     | MapMeshFlagDefOf.BuildingsDamage
-                    | MapMeshFlagDefOf.Gas
             );
         }
     }

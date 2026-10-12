@@ -216,6 +216,14 @@ public class TotalFogMod : Mod
             AccessTools.Method(typeof(ThingWithComps), nameof(ThingWithComps.InitializeComps)),
             prefix: new HarmonyMethod(typeof(TotalFogMod), nameof(InitializeCompsPrefix))
         );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(SectionLayer_Gas), nameof(SectionLayer_Gas.Regenerate)),
+            transpiler: new HarmonyMethod(
+                typeof(Presentation.GasVisibility),
+                nameof(Presentation.GasVisibility.Transpiler)
+            )
+        );
         patchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
         patchMethod(typeof(Verse.Verb), typeof(Verb), nameof(Verse.Verb.TryFindShootLineFromTo));
         PatchSafety.Patch(

@@ -286,3 +286,15 @@ tests where they are pure:
   settings and simple engine-level limits. Andreas has been asked whether to
   enable audio checks/delayed unseen events and hide Wildlife by default. No
   default values have changed while that decision is pending.
+
+- Step 5, items 7 and 10: verified CompPresentationState:72-90, the
+  discovery-only overlay invalidation and the absent gas patch. Native 1.6 gas
+  regeneration has one AnyGasAt call per cell. Thing transitions now dirty
+  only Things/Buildings/BuildingsDamage. Fog-section changes dirty Gas and
+  GroundGlow once per affected section; gas emission uses the viewed faction
+  sight array captured once per regeneration without changing gas simulation.
+  Pure tests cover dirty flags and hidden/seen/native-absent gas. The existing
+  runtime-compare redeploys the shared Steam Mods root between samples, so it
+  has not been run while Andreas's game is running and deployment is forbidden.
+  This step has no new measured TPS claim; native pixels and comparison remain
+  outstanding for a permitted runtime session.
