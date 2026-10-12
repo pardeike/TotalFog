@@ -283,9 +283,10 @@ tests where they are pure:
 
 - Step 4, item 6: verified FogSettings:36-55 and its serialization defaults.
   README and About now state the actual default policy, optional information
-  settings and simple engine-level limits. Andreas has been asked whether to
-  enable audio checks/delayed unseen events and hide Wildlife by default. No
-  default values have changed while that decision is pending.
+  settings and simple engine-level limits. On 2026-10-12 Andreas chose to keep
+  the current defaults. Enabling audio checks and delaying unseen events, with
+  Wildlife hidden, remains a possible future policy rather than an accepted
+  change. No setting defaults or existing saved settings changed.
 
 - Step 5, items 7 and 10: verified CompPresentationState:72-90, the
   discovery-only overlay invalidation and the absent gas patch. Native 1.6 gas
@@ -358,7 +359,7 @@ tests where they are pure:
   The YAML was parsed locally. Neither Windows execution nor GitHub Actions
   execution has occurred in this session, since nothing was pushed.
 
-Defaults remain unchanged pending Andreas's decision from step 4. Native runtime
+Defaults remain unchanged by Andreas's decision from step 4. Native runtime
 comparison, gas pixels, tower exit/rescue interaction and deferred-letter playback
 remain outstanding on this candidate. No running game was stopped or overwritten,
 and no build, tag or commit was published or sent.
