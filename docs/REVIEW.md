@@ -744,3 +744,21 @@ Zombieland, CE, Achtung and Multiplayer must validate this changed ordering;
 older exact-byte integration results do not prove it.
 Formatting and the redirected Release build pass 407 tests with zero
 warnings/errors; the tracked gameplay DLL remains unchanged.
+
+### Step 6: camera work priority and telescope limit
+
+Verified R2-12 in the camera-console WorkGiver XML and
+`JobDriver_MonitorVision.cs:33`. Its intentional continuous job was assigned to
+BasicWorker ahead of other basic work. It now has the independent Cameras
+WorkType, naturally below research and controllable in the Work tab. The
+operator-required setting and other defaults are unchanged. This is the
+WorkType option explicitly allowed by step 6, not a D7 progression redesign.
+DecompilerServer confirms the 1.6 WorkType fields and reference resolution.
+
+R2-13 reproduces in `CalcPawnSightRange`: weapon-enhanced sight was doubled by
+the telescope without a limit. Only the telescope modifier now enables the
+configured tower cap, after normal capacities/weather/night and colony-mech
+scaling. Ordinary vision and unrelated modded sight modifiers retain their
+existing rules. WorkType and label/translation rendering need native acceptance.
+Formatting and the redirected Release build pass 407 tests with zero
+warnings/errors; the tracked DLL is unchanged. Native acceptance remains open.

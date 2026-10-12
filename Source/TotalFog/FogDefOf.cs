@@ -10,6 +10,8 @@ public static class FogDefOf
 
     public static ThingDef CameraConsole;
 
+    public static ThingDef WatchTelescope;
+
     public static StatDef DayVisionEffectiveness;
 
     public static StatDef NightVisionEffectiveness;

@@ -76,6 +76,10 @@ while designing the tower is not part of this build.
 
 ## Fog settings and debugging
 
+Camera consoles use their own Cameras work priority. They no longer take a
+colonist away from other work through Basic tasks. The operator requirement
+stays enabled by default. Telescope vision shares the configured tower sight cap.
+
 Combat and Anomaly music suppression is on by default. Hidden-source audio
 filtering, delayed unseen-event notifications, Silent Raids and discarding
 unseen events are optional and off by default; the Wildlife tab stays available.

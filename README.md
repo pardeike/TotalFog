@@ -36,7 +36,9 @@ a wild boar or something much worse. To be safe, you have to look.
 - Surveillance cameras: on posts, on walls, under roofs, hidden in bushes, or solar
   powered. By default they need an operator at a working camera console. Turn off
   the operator requirement to use cameras automatically without console jobs.
-- A watch telescope doubles the sight range of pawns standing on it.
+  Set camera staffing through the separate Cameras priority in the Work tab.
+- A watch telescope doubles the sight range of pawns standing on it, up to the
+  configured watchtower sight cap.
 - An experimental 3x3 watchtower has a timed ladder and room for one lookout.
   Order a watch of 1, 2 or 4 game hours, counted from reaching the deck, or let a
   drafted lookout hold until undrafted. Moving elsewhere or undrafting brings

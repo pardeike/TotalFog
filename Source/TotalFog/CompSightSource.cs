@@ -368,13 +368,15 @@ public class CompSightSource : FogSubcomponent
         }
         float modifier = capacities.GetLevel(PawnCapacityDefOf.Sight);
         bool ignoreDarkness = false,
-            ignoreWeather = false;
+            ignoreWeather = false,
+            onTelescope = false;
         foreach (var affecter in parent.Map.GetVisibility().VisionAffectersAt(cell))
         {
             if (affecter.parent.TryGetComp<CompPowerTrader>() is { PowerOn: false })
                 continue;
             ignoreDarkness |= affecter.Props.denyDarkness;
             ignoreWeather |= affecter.Props.denyWeather;
+            onTelescope |= affecter.parent.def == FogDefOf.WatchTelescope;
             modifier *= affecter.Props.fovMultiplier;
         }
         if (!ignoreDarkness)
@@ -387,7 +389,9 @@ public class CompSightSource : FogSubcomponent
             modifier *= Mathf.Lerp(.5f, 1, parent.Map.weatherManager.CurWeatherAccuracyMultiplier);
         range *= modifier;
         range = range < 1 ? hearing : range;
-        return pawn.IsColonyMech ? range * FogSettings.ColonyMechVisionModifier : range;
+        if (pawn.IsColonyMech)
+            range *= FogSettings.ColonyMechVisionModifier;
+        return onTelescope ? Math.Min(range, FogSettings.TowerMaxSightRange) : range;
     }
 
     private void EmitHearingCues()

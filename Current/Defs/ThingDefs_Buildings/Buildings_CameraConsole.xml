@@ -81,7 +81,7 @@
     <defName>SurveilCameraConsole</defName>
     <label>surveil camera Console</label>
     <giverClass>TotalFog.WorkGiver_MonitorVision</giverClass>
-    <workType>BasicWorker</workType>
+    <workType>TotalFog_Surveillance</workType>
     <priorityInType>150</priorityInType>
     <verb>operate</verb>
     <gerund>operating</gerund>
