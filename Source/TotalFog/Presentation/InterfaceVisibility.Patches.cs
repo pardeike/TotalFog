@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
@@ -19,21 +20,25 @@ internal static partial class InterfaceVisibility
             typeof(InterfaceVisibility),
             nameof(TargetThingsUnderMouse)
         );
-        int matches = 0;
+        var body = instructions.ToList();
+        if (
+            !PatchSafety.Matches(
+                "InterfaceVisibility.Patches.TargetCandidatesTranspiler",
+                body,
+                original,
+                1
+            )
+        )
+            return body;
         var result = new List<CodeInstruction>();
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 1)
-            throw new InvalidOperationException(
-                $"Total Fog: expected one targeting candidate list, found {matches}."
-            );
         return result;
     }
 
@@ -58,21 +63,25 @@ internal static partial class InterfaceVisibility
             new[] { typeof(IntVec3), typeof(Map) }
         );
         var replacement = AccessTools.Method(typeof(InterfaceVisibility), nameof(MouseoverThings));
-        int matches = 0;
+        var body = instructions.ToList();
+        if (
+            !PatchSafety.Matches(
+                "InterfaceVisibility.Patches.MouseoverTranspiler",
+                body,
+                original,
+                1
+            )
+        )
+            return body;
         var result = new List<CodeInstruction>();
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 1)
-            throw new InvalidOperationException(
-                $"Total Fog: expected one mouseover Thing list, found {matches}."
-            );
         return result;
     }
 
@@ -84,22 +93,21 @@ internal static partial class InterfaceVisibility
     {
         var original = AccessTools.Method(typeof(Thing), nameof(Thing.DrawGUIOverlay));
         var replacement = AccessTools.Method(typeof(InterfaceVisibility), nameof(DrawOverlay));
-        int matches = 0;
+        var body = instructions.ToList();
+        if (
+            !PatchSafety.Matches("InterfaceVisibility.Patches.OverlayTranspiler", body, original, 1)
+        )
+            return body;
         var result = new List<CodeInstruction>();
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 1)
-            throw new InvalidOperationException(
-                $"Total Fog: expected one Thing overlay dispatch, found {matches}."
-            );
         return result;
     }
 
@@ -111,22 +119,21 @@ internal static partial class InterfaceVisibility
     {
         var original = AccessTools.PropertyGetter(typeof(Thing), nameof(Thing.Position));
         var replacement = AccessTools.Method(typeof(InterfaceVisibility), nameof(TooltipPosition));
-        int matches = 0;
+        var body = instructions.ToList();
+        if (
+            !PatchSafety.Matches("InterfaceVisibility.Patches.TooltipTranspiler", body, original, 2)
+        )
+            return body;
         var result = new List<CodeInstruction>();
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 2)
-            throw new InvalidOperationException(
-                $"Total Fog: expected two tooltip position reads, found {matches}."
-            );
         return result;
     }
 }

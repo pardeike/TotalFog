@@ -122,7 +122,8 @@ internal static class CombatExtendedProjectileDrawing
                 altitude
             )
             .Compile();
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.DeclaredMethod(
                 projectileType,
                 "Launch",
@@ -143,7 +144,8 @@ internal static class CombatExtendedProjectileDrawing
                 nameof(LaunchPostfix)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.DeclaredMethod(
                 projectileType,
                 "DrawAt",
@@ -151,14 +153,16 @@ internal static class CombatExtendedProjectileDrawing
             ),
             prefix: new HarmonyMethod(typeof(CombatExtendedProjectileDrawing), nameof(DrawPrefix))
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.PropertyGetter(projectileType, "DrawRotation"),
             postfix: new HarmonyMethod(
                 typeof(CombatExtendedProjectileDrawing),
                 nameof(RotationPostfix)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.DeclaredMethod(projectileType, "ExposeData"),
             postfix: new HarmonyMethod(
                 typeof(CombatExtendedProjectileDrawing),

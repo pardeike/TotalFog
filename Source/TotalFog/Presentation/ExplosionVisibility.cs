@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;
@@ -24,23 +25,20 @@ internal static class ExplosionVisibility
             new[] { typeof(float) }
         );
         var replacement = AccessTools.Method(typeof(ExplosionVisibility), nameof(Shake));
-        int matches = 0;
+        var body = instructions.ToList();
+        if (!PatchSafety.Matches("ExplosionVisibility.Transpiler", body, original, 1))
+            return body;
         var result = new List<CodeInstruction>();
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 result.Add(new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(instruction));
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 1)
-            throw new InvalidOperationException(
-                $"Total Fog: expected one explosion camera shake, found {matches}."
-            );
         return result;
     }
 }

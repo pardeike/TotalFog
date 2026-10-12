@@ -6,8 +6,11 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>None</DebugType>
   </PropertyGroup>
+  <PropertyGroup>
+    <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../1.6/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="TotalFog" HintPath="../../1.6/Assemblies/TotalFog.dll" Private="false" />
+    <Reference Include="TotalFog" HintPath="$(TotalFogGameplayAssembly)" Private="false" />
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" ExcludeAssets="runtime" />
     <PackageReference Include="Lib.Harmony.Ref" Version="2.4.2" ExcludeAssets="runtime" />
     <PackageReference Include="RimBridgeServer.Sdk" Version="2.0.0" PrivateAssets="all" ExcludeAssets="runtime" />

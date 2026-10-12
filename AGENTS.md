@@ -8,6 +8,9 @@ Build with the .NET 10.0.301 SDK pinned in global.json. The quiet workflow uses
 the existing SDK install under ~/Library/Application Support/dotnet when present,
 including for nested companion builds. Gameplay and companion DLLs still target
 net472 for RimWorld; independent tests run on net10.0.
+For source-only review builds that must preserve the tracked release DLL, set
+`TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
+`./scripts/mod build`. The companion references that build output directly.
 Use the canonical quiet command `./scripts/mod build|deploy|package|setup|baseline|benchmark`.
 The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.

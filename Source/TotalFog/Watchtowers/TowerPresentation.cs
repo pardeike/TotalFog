@@ -166,10 +166,8 @@ internal static class TowerPresentation
     {
         var body = instructions.ToList();
         var native = AccessTools.PropertyGetter(typeof(FleckStatic), nameof(FleckStatic.DrawPos));
-        if (body.Count(c => c.Calls(native)) != 1)
-            throw new InvalidOperationException(
-                "Total Fog: native fleck drawing must have one draw-position call."
-            );
+        if (!PatchSafety.Matches("tower drawing", body, native, 1))
+            return body;
         foreach (var code in body)
             if (code.Calls(native))
             {
@@ -206,10 +204,8 @@ internal static class TowerPresentation
     {
         var body = instructions.ToList();
         var native = AccessTools.Method(typeof(GenAdj), nameof(GenAdj.OccupiedDrawRect));
-        if (body.Count(c => c.Calls(native)) != 1)
-            throw new InvalidOperationException(
-                "Total Fog: native culling must have one occupied draw-rect call."
-            );
+        if (!PatchSafety.Matches("tower drawing", body, native, 1))
+            return body;
         foreach (var code in body)
             if (code.Calls(native))
             {

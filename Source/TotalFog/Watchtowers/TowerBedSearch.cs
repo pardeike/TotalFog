@@ -27,9 +27,10 @@ internal static class TowerBedSearch
         int positions = body.Count(c => c.Calls(position));
         int heldPositions = body.Count(c => c.Calls(held));
         if (positions != 1 || heldPositions != 1)
-            throw new InvalidOperationException(
-                "Total Fog: native bed search must have one Position and one PositionHeld search root."
-            );
+        {
+            PatchSafety.Warn("tower bed search", "unsupported native position reads");
+            return body;
+        }
         foreach (var code in body)
             if (code.Calls(position) || code.Calls(held))
             {

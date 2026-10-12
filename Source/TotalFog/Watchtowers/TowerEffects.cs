@@ -34,25 +34,30 @@ internal static class TowerEffects
 
     internal static void Install(Harmony harmony)
     {
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(Thing), nameof(Thing.TakeDamage)),
             prefix: new HarmonyMethod(typeof(TowerEffects), nameof(DamagePrefix)),
             finalizer: new HarmonyMethod(typeof(TowerEffects), nameof(EndScope))
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(SubEffecter_Sprayer), "MakeMote"),
             prefix: new HarmonyMethod(typeof(TowerEffects), nameof(SprayerPrefix)),
             finalizer: new HarmonyMethod(typeof(TowerEffects), nameof(EndScope))
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(FleckStatic), nameof(FleckStatic.Setup)),
             postfix: new HarmonyMethod(typeof(TowerEffects), nameof(FleckSetupPostfix))
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(FleckThrown), "NextPosition"),
             postfix: new HarmonyMethod(typeof(TowerEffects), nameof(NextPositionPostfix))
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(ThingMaker), nameof(ThingMaker.MakeThing)),
             postfix: new HarmonyMethod(typeof(TowerEffects), nameof(MoteCreationPostfix))
         );

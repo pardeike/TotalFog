@@ -61,11 +61,13 @@ internal static class CombatExtendedTowers
                 )
                 .Compile();
             nativeBounds = AccessTools.MethodDelegate<Func<Thing, Bounds>>(boundsMethod);
-            harmony.Patch(
+            PatchSafety.Patch(
+                harmony,
                 calculate,
                 postfix: new HarmonyMethod(typeof(CombatExtendedTowers), nameof(HeightPostfix))
             );
-            harmony.Patch(
+            PatchSafety.Patch(
+                harmony,
                 highest,
                 transpiler: new HarmonyMethod(
                     typeof(CombatExtendedTowers),
@@ -104,7 +106,8 @@ internal static class CombatExtendedTowers
                         && !method.IsStatic
                         && method.ReturnType == typeof(bool)
                     )
-                        harmony.Patch(
+                        PatchSafety.Patch(
+                            harmony,
                             method,
                             postfix: new HarmonyMethod(
                                 typeof(CombatExtendedTowers),
@@ -182,9 +185,10 @@ internal static class CombatExtendedTowers
             )
             || body.Skip(index + 1).Take(4).Any(c => c.labels.Count != 0 || c.blocks.Count != 0)
         )
-            throw new InvalidOperationException(
-                "CE highest-cover cache must have one supported bounds-size read."
-            );
+        {
+            PatchSafety.Warn("CE tower cover cache", "unsupported bounds-size read");
+            return body;
+        }
         body[index].operand = AccessTools.Method(typeof(CombatExtendedTowers), nameof(CoverHeight));
         body.RemoveRange(index + 1, 4);
         return body;

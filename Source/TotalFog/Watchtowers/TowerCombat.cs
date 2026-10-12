@@ -95,9 +95,9 @@ internal static class TowerCombat
             string postfix = null,
             Type[] arguments = null
         ) =>
-            harmony.Patch(
-                AccessTools.Method(type, method, arguments)
-                    ?? throw new MissingMethodException(type.FullName, method),
+            PatchSafety.Patch(
+                harmony,
+                AccessTools.Method(type, method, arguments),
                 prefix == null ? null : new HarmonyMethod(typeof(TowerCombat), prefix),
                 postfix == null ? null : new HarmonyMethod(typeof(TowerCombat), postfix)
             );
@@ -143,7 +143,8 @@ internal static class TowerCombat
         // ExactPosition, interception, explosions and shields in map space.
         Patch(typeof(Projectile), "DrawAt", nameof(DrawPrefix));
         Patch(typeof(Projectile), "DrawShadow", nameof(ShadowPrefix));
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(Projectile), "DrawAt"),
             transpiler: new HarmonyMethod(typeof(TowerCombat), nameof(DrawTranspiler))
         );
@@ -458,10 +459,8 @@ internal static class TowerCombat
             typeof(Projectile),
             nameof(Projectile.ExactRotation)
         );
-        if (body.Count(c => c.Calls(native)) != 1)
-            throw new InvalidOperationException(
-                "Total Fog: projectile drawing must read one native rotation."
-            );
+        if (!PatchSafety.Matches("tower projectile rotation", body, native, 1))
+            return body;
         foreach (var code in body)
             if (code.Calls(native))
             {

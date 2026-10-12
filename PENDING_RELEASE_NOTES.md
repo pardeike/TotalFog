@@ -82,3 +82,5 @@
 - Offer explicit one-, two- and four-hour tower watches; drafted lookouts can hold until undrafted or ordered away. Show the remaining watch time and respect Fire at will.
 - Connect adjacent walls to the solid tower base without unwanted wall end caps.
 - Check a lookout's ground route from the ladder entrance so normal move orders are available while on the platform.
+
+- An unavailable patch or optional Multiplayer binding no longer prevents unrelated fog features from loading.

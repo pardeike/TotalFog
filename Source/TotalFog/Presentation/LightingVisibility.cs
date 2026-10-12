@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
@@ -36,6 +37,9 @@ internal static class LightingVisibility
             new[] { typeof(int) }
         );
         var replacement = AccessTools.Method(typeof(LightingVisibility), nameof(VisualGlowAt));
+        var body = instructions.ToList();
+        if (!PatchSafety.Matches("LightingVisibility.Transpiler", body, native, 1))
+            return body;
         var shown = generator.DeclareLocal(typeof(int[]));
         var result = new List<CodeInstruction>
         {
@@ -43,8 +47,7 @@ internal static class LightingVisibility
             new(OpCodes.Call, AccessTools.Method(typeof(LightingVisibility), nameof(ShownCells))),
             new(OpCodes.Stloc, shown),
         };
-        int matches = 0;
-        foreach (var instruction in instructions)
+        foreach (var instruction in body)
         {
             if (instruction.Calls(native))
             {
@@ -54,14 +57,9 @@ internal static class LightingVisibility
                 result.Add(load);
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
-                matches++;
             }
             result.Add(instruction);
         }
-        if (matches != 1)
-            throw new InvalidOperationException(
-                $"Total Fog: expected one visual glow sample, found {matches}."
-            );
         return result;
     }
 }

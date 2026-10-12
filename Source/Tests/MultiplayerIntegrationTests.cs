@@ -245,6 +245,38 @@ public class MultiplayerIntegrationTests
         }
     }
 
+    [Theory]
+    [InlineData("Multiplayer.Client.Extensions")]
+    [InlineData("Multiplayer.Client.Factions.FactionExtensions")]
+    public void Missing_optional_binding_disables_all_multiplayer_entry_points(string missing)
+    {
+        AccessTools.Types["Multiplayer.API.MP"] = typeof(FakeApi);
+        AccessTools.Types["Multiplayer.Client.Extensions"] = typeof(FakeClockExtensions);
+        AccessTools.Types["Multiplayer.Client.Factions.FactionExtensions"] =
+            typeof(FakeFactionContext);
+        try
+        {
+            FakeApi.IsInMultiplayer = true;
+            MultiplayerIntegration.Install();
+            Assert.True(MultiplayerIntegration.Active);
+            AccessTools.Types.Remove(missing);
+            MultiplayerIntegration.Install();
+            Assert.False(MultiplayerIntegration.Active);
+            Assert.False(MultiplayerIntegration.BeginSettingsWatch());
+            Assert.False(MultiplayerIntegration.BeginFactionContext(new Map(), new Faction()));
+            Assert.Equal(Find.TickManager.TicksGame, MultiplayerIntegration.TicksFor(new Map()));
+        }
+        finally
+        {
+            FakeApi.IsInMultiplayer = false;
+            FakeApi.Fields.Clear();
+            AccessTools.Types.Remove("Multiplayer.API.MP");
+            AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
+            MultiplayerIntegration.Install();
+        }
+    }
+
     public static class FakeApi
     {
         public static bool enabled = true;

@@ -34,9 +34,12 @@ public class TotalFogMod : Mod
     static TotalFogMod()
     {
         harmony = new Harmony("brrainz.totalfog");
-        Compatibility.LegacySaveTypes.Install(harmony);
-        injectDetours();
-        Watchtowers.WatchtowerPatches.Install(harmony);
+        PatchSafety.Install(
+            "legacy save import",
+            () => Compatibility.LegacySaveTypes.Install(harmony)
+        );
+        PatchSafety.Install("base fog hooks", injectDetours);
+        PatchSafety.Install("watchtowers", () => Watchtowers.WatchtowerPatches.Install(harmony));
     }
 
     public TotalFogMod(ModContentPack content)
@@ -45,17 +48,28 @@ public class TotalFogMod : Mod
         FogSettings.CurrentVersion = typeof(TotalFogMod).Assembly.GetName().Version.ToString(3);
 
         LongEventHandler.ExecuteWhenFinished(() =>
-            Compatibility.MinimapIntegration.Install(harmony)
+            PatchSafety.Install("minimap", () => Compatibility.MinimapIntegration.Install(harmony))
         );
         LongEventHandler.ExecuteWhenFinished(() =>
-            Compatibility.BubbleIntegration.Install(harmony)
+            PatchSafety.Install(
+                "interaction bubbles",
+                () => Compatibility.BubbleIntegration.Install(harmony)
+            )
         );
         LongEventHandler.ExecuteWhenFinished(() =>
         {
-            Compatibility.CombatExtendedIntegration.Install(harmony);
-            Compatibility.CombatExtendedTowers.Install(harmony);
+            PatchSafety.Install(
+                "Combat Extended targeting",
+                () => Compatibility.CombatExtendedIntegration.Install(harmony)
+            );
+            PatchSafety.Install(
+                "Combat Extended towers",
+                () => Compatibility.CombatExtendedTowers.Install(harmony)
+            );
         });
-        LongEventHandler.ExecuteWhenFinished(Compatibility.MultiplayerIntegration.Install);
+        LongEventHandler.ExecuteWhenFinished(() =>
+            PatchSafety.Install("Multiplayer", Compatibility.MultiplayerIntegration.Install)
+        );
         GetSettings<FogSettings>();
     }
 
@@ -102,14 +116,103 @@ public class TotalFogMod : Mod
 
     private static void injectDetours()
     {
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
+            typeof(Verse.LetterStack).GetMethod(
+                nameof(Verse.LetterStack.ReceiveLetter),
+                [typeof(Letter), typeof(string), typeof(int), typeof(bool)]
+            ),
+            new HarmonyMethod(
+                typeof(Notifications.NotificationHooks),
+                nameof(Notifications.NotificationHooks.LetterPrefix)
+            )
+        );
+
+        LogMessage("Prefixed method LetterStack_ReceiveLetter.");
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.PropertyGetter(typeof(SampleSustainer), "Volume"),
+            postfix: new HarmonyMethod(
+                typeof(Audio.SustainerVisibility),
+                nameof(Audio.SustainerVisibility.VolumePostfix)
+            )
+        );
+
+        PatchSafety.Patch(
+            harmony,
+            typeof(SoundStarter).GetMethod(
+                nameof(SoundStarter.PlayOneShot),
+                [typeof(SoundDef), typeof(SoundInfo)]
+            ),
+            new HarmonyMethod(typeof(Patch_PlayOneShot).GetMethod(nameof(Patch_PlayOneShot.Prefix)))
+        );
+
+        LogMessage("Prefixed method SoundStarter_PlayOneShot.");
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.PropertyGetter(
+                typeof(MusicManagerPlay),
+                nameof(MusicManagerPlay.DangerMusicMode)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.DangerModePrefix)
+            )
+        );
+
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(MusicTransition),
+                nameof(MusicTransition.IsTransitionSatisfied)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.TransitionPrefix)
+            )
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(MusicManagerPlay), nameof(MusicManagerPlay.CheckTransitions)),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.CheckTransitionsPrefix)
+            )
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(MusicManagerPlay),
+                nameof(MusicManagerPlay.ForceTriggerTransition)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Audio.MusicVisibility),
+                nameof(Audio.MusicVisibility.ForceTransitionPrefix)
+            )
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(EntityCodex),
+                nameof(EntityCodex.SetDiscovered),
+                [typeof(EntityCodexEntryDef), typeof(ThingDef), typeof(Thing)]
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Notifications.EntityDiscovery),
+                nameof(Notifications.EntityDiscovery.DiscoverPrefix)
+            )
+        );
+
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(SectionLayer_LightingOverlay), "GenerateLightingOverlay"),
             transpiler: new HarmonyMethod(
                 typeof(Presentation.LightingVisibility),
                 nameof(Presentation.LightingVisibility.Transpiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(ThingWithComps), nameof(ThingWithComps.InitializeComps)),
             prefix: new HarmonyMethod(typeof(TotalFogMod), nameof(InitializeCompsPrefix))
         );
@@ -135,7 +238,8 @@ public class TotalFogMod : Mod
             typeof(Presentation.DynamicVisibility),
             "ComputeCulledThings"
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.DeclaredMethod(typeof(FleckManager), nameof(FleckManager.FleckManagerDraw)),
             prefix: new HarmonyMethod(
                 typeof(Presentation.FleckVisibility),
@@ -146,7 +250,8 @@ public class TotalFogMod : Mod
                 nameof(Presentation.FleckVisibility.EndDrawing)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.DeclaredMethod(
                 typeof(FleckStatic),
                 nameof(FleckStatic.Draw),
@@ -157,21 +262,24 @@ public class TotalFogMod : Mod
                 nameof(Presentation.FleckVisibility.DrawPrefix)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(DamageWorker), nameof(DamageWorker.ExplosionStart)),
             transpiler: new HarmonyMethod(
                 typeof(Presentation.ExplosionVisibility),
                 nameof(Presentation.ExplosionVisibility.Transpiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(ThingOverlays), nameof(ThingOverlays.ThingOverlaysOnGUI)),
             transpiler: new HarmonyMethod(
                 typeof(Presentation.InterfaceVisibility),
                 nameof(Presentation.InterfaceVisibility.OverlayTranspiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(TooltipGiverList),
                 nameof(TooltipGiverList.DispenseAllThingTooltips)
@@ -181,7 +289,8 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.TooltipTranspiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(Verse.MouseoverReadout),
                 nameof(Verse.MouseoverReadout.MouseoverReadoutOnGUI)
@@ -191,7 +300,8 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.MouseoverTranspiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.EnumeratorMoveNext(
                 AccessTools.Method(typeof(Verse.GenUI), nameof(Verse.GenUI.TargetsAt))
             ),
@@ -200,7 +310,8 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.TargetCandidatesTranspiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Constructor(
                 typeof(FloatMenuContext),
                 [typeof(List<Verse.Pawn>), typeof(Vector3), typeof(Map)]
@@ -215,7 +326,8 @@ public class TotalFogMod : Mod
                 .GetMethods()
                 .Where(m => m.Name == nameof(Verse.GenMapUI.DrawPawnLabel))
         )
-            harmony.Patch(
+            PatchSafety.Patch(
+                harmony,
                 method,
                 prefix: new HarmonyMethod(
                     typeof(Presentation.InterfaceVisibility),
@@ -262,7 +374,8 @@ public class TotalFogMod : Mod
             "ShouldShowWindowNow"
         );
 
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(Verse.Messages),
                 nameof(Verse.Messages.Message),
@@ -274,7 +387,8 @@ public class TotalFogMod : Mod
             )
         );
 
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(IncidentWorker), nameof(IncidentWorker.TryExecute)),
             prefix: new HarmonyMethod(
                 typeof(Notifications.SilentRaidPolicy),
@@ -285,7 +399,8 @@ public class TotalFogMod : Mod
                 nameof(Notifications.SilentRaidPolicy.Finalizer)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(IncidentWorker_AggressiveAnimals), "TryExecuteWorker"),
             transpiler: new HarmonyMethod(
                 typeof(HarmonyPatches),
@@ -311,7 +426,8 @@ public class TotalFogMod : Mod
                 typeof(Verse.RoofGrid),
             }
         )
-            harmony.Patch(
+            PatchSafety.Patch(
+                harmony,
                 AccessTools.DeclaredMethod(
                     type,
                     type == typeof(Verse.RoofGrid)
@@ -474,26 +590,16 @@ public class TotalFogMod : Mod
         patchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
         */
 
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             typeof(AttackTargetFinder).GetMethod(nameof(AttackTargetFinder.CanSee)),
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(CanSeePreFix)))
         );
 
         LogMessage("Prefixed method AttackTargetFinder_CanSee.");
-        harmony.Patch(
-            typeof(Verse.LetterStack).GetMethod(
-                nameof(Verse.LetterStack.ReceiveLetter),
-                [typeof(Letter), typeof(string), typeof(int), typeof(bool)]
-            ),
-            new HarmonyMethod(
-                typeof(Notifications.NotificationHooks),
-                nameof(Notifications.NotificationHooks.LetterPrefix)
-            )
-        );
 
-        LogMessage("Prefixed method LetterStack_ReceiveLetter.");
-
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(RimWorld.QuestGen.QuestNode_Root_RefugeePodCrash),
                 "SendLetter_NewTemp"
@@ -508,7 +614,8 @@ public class TotalFogMod : Mod
             )
         );
 
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             typeof(OverlayDrawer).GetMethod(
                 nameof(OverlayDrawer.DrawOverlay),
                 [typeof(Thing), typeof(OverlayTypes)]
@@ -516,17 +623,10 @@ public class TotalFogMod : Mod
             new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(DrawOverlayPrefix)))
         );
 
-        harmony.Patch(
-            AccessTools.PropertyGetter(typeof(SampleSustainer), "Volume"),
-            postfix: new HarmonyMethod(
-                typeof(Audio.SustainerVisibility),
-                nameof(Audio.SustainerVisibility.VolumePostfix)
-            )
-        );
-
         LogMessage("Prefixed method OverlayDrawer_DrawOverlay.");
 
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             typeof(SilhouetteUtility).GetMethod(
                 nameof(SilhouetteUtility.ShouldDrawSilhouette),
                 [typeof(Thing)]
@@ -536,65 +636,10 @@ public class TotalFogMod : Mod
 
         LogMessage("Prefixed method SilhouetteUtility_ShouldDrawSilhouette.");
 
-        harmony.Patch(
-            typeof(SoundStarter).GetMethod(
-                nameof(SoundStarter.PlayOneShot),
-                [typeof(SoundDef), typeof(SoundInfo)]
-            ),
-            new HarmonyMethod(typeof(Patch_PlayOneShot).GetMethod(nameof(Patch_PlayOneShot.Prefix)))
+        PatchSafety.Install(
+            "gravship visibility",
+            () => Compatibility.GravshipVisibility.Install(harmony)
         );
-
-        LogMessage("Prefixed method SoundStarter_PlayOneShot.");
-        harmony.Patch(
-            AccessTools.PropertyGetter(
-                typeof(MusicManagerPlay),
-                nameof(MusicManagerPlay.DangerMusicMode)
-            ),
-            prefix: new HarmonyMethod(
-                typeof(Audio.MusicVisibility),
-                nameof(Audio.MusicVisibility.DangerModePrefix)
-            )
-        );
-
-        harmony.Patch(
-            AccessTools.Method(
-                typeof(MusicTransition),
-                nameof(MusicTransition.IsTransitionSatisfied)
-            ),
-            prefix: new HarmonyMethod(
-                typeof(Audio.MusicVisibility),
-                nameof(Audio.MusicVisibility.TransitionPrefix)
-            )
-        );
-        harmony.Patch(
-            AccessTools.Method(typeof(MusicManagerPlay), nameof(MusicManagerPlay.CheckTransitions)),
-            prefix: new HarmonyMethod(
-                typeof(Audio.MusicVisibility),
-                nameof(Audio.MusicVisibility.CheckTransitionsPrefix)
-            )
-        );
-        harmony.Patch(
-            AccessTools.Method(
-                typeof(MusicManagerPlay),
-                nameof(MusicManagerPlay.ForceTriggerTransition)
-            ),
-            prefix: new HarmonyMethod(
-                typeof(Audio.MusicVisibility),
-                nameof(Audio.MusicVisibility.ForceTransitionPrefix)
-            )
-        );
-        harmony.Patch(
-            AccessTools.Method(
-                typeof(EntityCodex),
-                nameof(EntityCodex.SetDiscovered),
-                [typeof(EntityCodexEntryDef), typeof(ThingDef), typeof(Thing)]
-            ),
-            prefix: new HarmonyMethod(
-                typeof(Notifications.EntityDiscovery),
-                nameof(Notifications.EntityDiscovery.DiscoverPrefix)
-            )
-        );
-        Compatibility.GravshipVisibility.Install(harmony);
     }
 
     private static void patchMethod(
@@ -604,20 +649,27 @@ public class TotalFogMod : Mod
         params Type[] types
     )
     {
-        var original =
-            types.Length == 0
-                ? AccessTools.DeclaredMethod(sourceType, methodName)
-                : AccessTools.DeclaredMethod(sourceType, methodName, types);
-        var prefix = AccessTools.DeclaredMethod(targetType, methodName + "_Prefix");
-        var postfix = AccessTools.DeclaredMethod(targetType, methodName + "_Postfix");
-        if (original == null || prefix == null && postfix == null)
-            throw new InvalidOperationException(
-                $"Total Fog: missing required patch {sourceType.FullName}.{methodName} using {targetType.FullName}."
-            );
-        harmony.Patch(
-            original,
-            prefix == null ? null : new HarmonyMethod(prefix),
-            postfix == null ? null : new HarmonyMethod(postfix)
+        PatchSafety.Install(
+            sourceType.FullName + "." + methodName,
+            () =>
+            {
+                var original =
+                    types.Length == 0
+                        ? AccessTools.DeclaredMethod(sourceType, methodName)
+                        : AccessTools.DeclaredMethod(sourceType, methodName, types);
+                var prefix = AccessTools.DeclaredMethod(targetType, methodName + "_Prefix");
+                var postfix = AccessTools.DeclaredMethod(targetType, methodName + "_Postfix");
+                if (original == null || prefix == null && postfix == null)
+                    throw new InvalidOperationException(
+                        $"Total Fog: missing required patch {sourceType.FullName}.{methodName} using {targetType.FullName}."
+                    );
+                PatchSafety.Patch(
+                    harmony,
+                    original,
+                    prefix == null ? null : new HarmonyMethod(prefix),
+                    postfix == null ? null : new HarmonyMethod(postfix)
+                );
+            }
         );
     }
 }

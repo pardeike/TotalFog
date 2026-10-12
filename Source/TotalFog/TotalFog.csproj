@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
   <PropertyGroup>
-    <OutputPath>../../1.6/Assemblies</OutputPath>
+    <OutputPath Condition="'$(TotalFogBuildOutput)' == ''">../../1.6/Assemblies</OutputPath>
+    <OutputPath Condition="'$(TotalFogBuildOutput)' != ''">$(TotalFogBuildOutput)</OutputPath>
     <TargetFramework>net472</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
@@ -34,7 +35,7 @@
     <GlobalBridgeToolsDir>$(RIMWORLD_MOD_DIR)\..\BridgeTools</GlobalBridgeToolsDir>
   </PropertyGroup>
   <Target Name="BuildBridgeTools" AfterTargets="Build" Condition="'$(SkipBridgeTools)' != 'true'">
-    <Exec Command="dotnet build &quot;$(MSBuildProjectDirectory)/../BridgeTools/TotalFog.BridgeTools.csproj&quot; -c $(Configuration) --nologo -v:q" />
+    <Exec Command="dotnet build &quot;$(MSBuildProjectDirectory)/../BridgeTools/TotalFog.BridgeTools.csproj&quot; -c $(Configuration) --nologo -v:q -p:TotalFogGameplayAssembly=&quot;$(TargetPath)&quot;" />
   </Target>
   <Target Name="DeployPair" AfterTargets="Build" Condition="'$(RIMWORLD_MOD_DIR)' != ''">
     <Exec Command="&quot;$(MSBuildProjectDirectory)/../../scripts/mod&quot; deploy-built" EnvironmentVariables="RIMWORLD_MOD_DIR=$(RIMWORLD_MOD_DIR)" />

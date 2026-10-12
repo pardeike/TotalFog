@@ -8,14 +8,16 @@ internal static partial class LegacySaveTypes
     internal static void Install(Harmony harmony)
     {
         var handler = new HarmonyMethod(typeof(LegacySaveTypes), nameof(ResolvePostfix));
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(BackCompatibility),
                 nameof(BackCompatibility.GetBackCompatibleType)
             ),
             postfix: handler
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(BackCompatibility),
                 nameof(BackCompatibility.GetBackCompatibleTypeDirect)

@@ -22,9 +22,9 @@ internal static class WatchtowerPatches
         )
         {
             owner ??= typeof(WatchtowerPatches);
-            harmony.Patch(
-                AccessTools.Method(type, method, arguments)
-                    ?? throw new MissingMethodException(type.FullName, method),
+            PatchSafety.Patch(
+                harmony,
+                AccessTools.Method(type, method, arguments),
                 prefix == null ? null : new HarmonyMethod(owner, prefix),
                 postfix == null ? null : new HarmonyMethod(owner, postfix),
                 finalizer: finalizer == null ? null : new HarmonyMethod(owner, finalizer)
@@ -49,7 +49,8 @@ internal static class WatchtowerPatches
             postfix: nameof(FinalizerPostfix)
         );
         Patch(typeof(Thing), nameof(Thing.DeSpawn), nameof(ActorDespawnPrefix));
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.PropertyGetter(typeof(Thing), nameof(Thing.FlammableNow)),
             postfix: new HarmonyMethod(typeof(WatchtowerPatches), nameof(FlammablePostfix))
         );
@@ -106,7 +107,8 @@ internal static class WatchtowerPatches
             owner: typeof(TowerPresentation),
             finalizer: nameof(TowerPresentation.DrawingFinalizer)
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.PropertyGetter(typeof(Pawn_DrawTracker), nameof(Pawn_DrawTracker.DrawPos)),
             postfix: new HarmonyMethod(
                 typeof(TowerPresentation),
@@ -183,7 +185,8 @@ internal static class WatchtowerPatches
             nameof(TowerPresentation.AttachmentDrawingPrefix),
             owner: typeof(TowerPresentation)
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.PropertyGetter(typeof(Mote), nameof(Mote.DrawPos)),
             postfix: new HarmonyMethod(
                 typeof(TowerPresentation),
@@ -207,7 +210,8 @@ internal static class WatchtowerPatches
         );
         TowerCombat.Install(harmony);
         TowerEffects.Install(harmony);
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(FleckStatic),
                 nameof(FleckStatic.Draw),
@@ -219,14 +223,16 @@ internal static class WatchtowerPatches
             )
         );
         Patch(typeof(CompColorable), nameof(CompColorable.SetColor), postfix: nameof(ColorPostfix));
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(typeof(DynamicDrawManager), "ComputeCulledThings"),
             transpiler: new HarmonyMethod(
                 typeof(TowerPresentation),
                 nameof(TowerPresentation.CullTranspiler)
             )
         );
-        harmony.Patch(
+        PatchSafety.Patch(
+            harmony,
             AccessTools.Method(
                 typeof(RestUtility),
                 nameof(RestUtility.FindBedFor),
