@@ -22,19 +22,24 @@ internal static class WatchtowerPatches
         )
         {
             owner ??= typeof(WatchtowerPatches);
-            PatchSafety.Patch(
-                harmony,
-                AccessTools.Method(type, method, arguments),
-                prefix == null ? null : new HarmonyMethod(owner, prefix),
-                postfix == null ? null : new HarmonyMethod(owner, postfix),
-                finalizer: finalizer == null ? null : new HarmonyMethod(owner, finalizer)
+            PatchSafety.Install(
+                type.FullName + "." + method,
+                () =>
+                    PatchSafety.Patch(
+                        harmony,
+                        AccessTools.Method(type, method, arguments),
+                        prefix == null ? null : new HarmonyMethod(owner, prefix),
+                        postfix == null ? null : new HarmonyMethod(owner, postfix),
+                        finalizer: finalizer == null ? null : new HarmonyMethod(owner, finalizer)
+                    )
             );
         }
         Patch(typeof(GenConstruct), "CanPlaceBlueprintAt_NewTemp", nameof(LadderPlacementPrefix));
         Patch(
             typeof(FloatMenuOptionProvider_RescuePawn),
             "GetSingleOptionFor",
-            nameof(RescueMenuPrefix)
+            nameof(RescueMenuPrefix),
+            arguments: new[] { typeof(Pawn), typeof(FloatMenuContext) }
         );
         Patch(typeof(Building), nameof(Building.SpawnSetup), postfix: nameof(SpawnPostfix));
         Patch(
@@ -214,6 +219,7 @@ internal static class WatchtowerPatches
             nameof(WeatherEvent_LightningStrike.DoStrike),
             nameof(LightningPrefix)
         );
+        TowerMoveOrders.Install(harmony);
         TowerCombat.Install(harmony);
         TowerEffects.Install(harmony);
         PatchSafety.Patch(

@@ -1,4 +1,7 @@
 - Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
+- Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
+- Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
+- Clear the ladder before an undrafted lookout resumes idle wandering, while preserving queued work.
 - Keep raised watchtower occupants vulnerable to fire, with their normal fire resistance preserved.
 - Preserve a watchtower and its occupant's corpse when saving and reloading after a death.
 - Keep splitting fleshbeasts hidden while they fly through unrevealed terrain.

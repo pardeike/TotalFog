@@ -363,3 +363,15 @@ Defaults remain unchanged by Andreas's decision from step 4. Native runtime
 comparison, gas pixels, tower exit/rescue interaction and deferred-letter playback
 remain outstanding on this candidate. No running game was stopped or overwritten,
 and no build, tag or commit was published or sent.
+
+### Native follow-up during tower feedback checks, 2026-10-12
+
+Fresh public 1.6 startup reproduced two signature-resolution defects that the
+reference build did not catch. GasVisibility's AnyGasAt lookup was ambiguous
+between native overloads, and the new rescue-menu lookup included inherited
+GetSingleOptionFor overloads. Both now bind explicit parameter signatures.
+Tower patch-target lookup is protected per method, so an unavailable target
+cannot abort installation of the remaining tower hooks. The final native launch
+has no Total Fog patch failures or runtime exceptions; the existing linked-graphic
+XML configuration warnings remain. This is startup/order evidence, not a gas
+pixel comparison or full acceptance of the tagged review payload.

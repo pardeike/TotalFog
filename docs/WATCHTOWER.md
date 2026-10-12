@@ -43,11 +43,21 @@ Player orders follow native draft and building-use patterns. Drafted colonists
 can hold until undrafted or ordered elsewhere; timed watches of 1, 2 or 4 game
 hours work with either draft state and do not change it. Time starts at the deck,
 uses the native job/toil timer and is retained across save/load. The inspection
-panel shows the release condition or remaining time. Urgent needs still bring
-the lookout down early. Normal draft changes interrupt building use through
+panel shows the release condition or remaining time. Explicit player orders do
+not end at the ordinary hunger/rest thresholds: a hungry pawn still holds its
+drafted position or completes the requested time. Autonomous undrafted orders
+retain their needs checks. Downing, mental states, burning and native job
+interruptions still end duty. Normal draft changes interrupt building use through
 RimWorld's existing job tracker, with our descent finalizer. Automatic shooting
 respects Fire at will. Both ladder directions own native facing during the climb
 and face the rungs; ordinary watching retains native combat facing.
+
+Drafted Go here orders recognize both the logical center and the drawn platform
+cell. Native dragged lines distribute pawns across individual platforms; Achtung
+uses the same destination and ordered-job pipeline with one optional late-bound
+anchor hook. The tower stays solid for ordinary pathfinding, with one occupant
+and native reservations. Undrafted pawns clear the ladder by one reachable cell
+after duty, unless queued work already provides their next destination.
 
 Route eligibility for a registered platform actor uses the ladder entrance as
 the ground starting point before their descent. Other pawns, blocked ladders
@@ -431,6 +441,30 @@ needs explicit melee/climbing/rescue checks; CE needs native targeting, cover an
 projectile controls. Do not infer compatibility from successful vanilla sight.
 
 ## Smallest useful validation sequence
+
+The 2026-10-12 order follow-up passes 80 native assertions in public 1.6.4871,
+using the offline installation and a copy of the active save, with current
+Achtung loaded. The fixture now starts its four lookouts at 9% food rather than
+full needs. It covers explicit drafted holds, native undrafting, one-cell ladder
+clearance, all four facings, an actual Achtung move order, a native dragged line
+onto four towers, one-hour expiry, longer timed watches and saved timer state.
+The line and order checks do not establish Multiplayer formation compatibility.
+
+Separate live UI checks with the actual hungry colonist confirm that a two-hour
+undrafted watch and an indefinite drafted watch both remain at elevation 1 and
+Watching=true after 400 ticks. A right-click Go here on the drawn platform also
+produces the real ladder/watch job. The long idle pause reported at the ladder
+was not reproduced before the change; vanilla JobGiver_Wander can select idle
+waits there. The new clearance step has native coverage without claiming that
+the old delay was a separate tracker failure.
+
+Evidence is retained under ignored `artifacts/tower-orders-20261012/`, including
+the 80-assertion manifest, native saves, UI receipts and Player.log. The tested
+source-only Release DLL has SHA-256
+`bf592d9af7e199b6ebe3da1623560832ac56c7482eac199f6c8e0d790d62800e`
+and MVID `7546be74-72b3-4a25-98c0-830ccccd92e3`. The tracked 0.1.0 DLL and the
+running Steam installation remain unchanged. The test process is stopped and
+its temporary configuration and mod staging are restored/removed.
 
 1. Prototype footprint, all four ladder rotations, real climb/descent, interruption
    and rescue; confirm the pawn remains one spawned native pawn and breachers work.

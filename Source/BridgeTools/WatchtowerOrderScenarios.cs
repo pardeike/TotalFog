@@ -105,7 +105,7 @@ public sealed class WatchtowerOrderScenarios
                         pawn.drafter.Drafted = true;
                         pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
                         if (pawn.needs.food != null)
-                            pawn.needs.food.CurLevel = 1;
+                            pawn.needs.food.CurLevel = .09f;
                         if (pawn.needs.rest != null)
                             pawn.needs.rest.CurLevel = 1;
                         pawns.Add(pawn);
@@ -152,6 +152,10 @@ public sealed class WatchtowerOrderScenarios
             await On(() => CheckFacing("ascent"));
             await Capture("ascent");
             await Until(() => towers.All(t => t.Watching), "drafted hold");
+            await Step(10);
+            await On(() =>
+                Check("hungry drafted pawns retain explicit hold", towers.All(t => t.Watching))
+            );
             await CheckMove();
             await Step(GenDate.TicksPerHour + 10);
             await On(() =>
@@ -173,6 +177,17 @@ public sealed class WatchtowerOrderScenarios
             await On(() => CheckFacing("descent after undrafting"));
             await Capture("descent");
             await Until(() => towers.All(t => t.Occupant == null), "undraft releases platforms");
+            await Until(
+                () => pawns.All(p => p.CurJobDef != WatchtowerDefOf.TotalFog_WatchtowerDescend),
+                "undrafted pawns finish clearing ladder"
+            );
+            await On(() =>
+                Check(
+                    "undrafted duty clears every ladder before idle wait",
+                    pawns.Select((p, i) => p.Position != towers[i].Approach).All(v => v)
+                )
+            );
+            await CheckPlatformMoves();
             await On(() =>
             {
                 for (int i = 0; i < 4; i++)
@@ -399,9 +414,105 @@ public sealed class WatchtowerOrderScenarios
                     "drafted move descends then reaches ordered cell"
                 );
                 await On(() =>
-                    Choose(pawns[1], towers[1], "TotalFog_TowerWatchDrafted".Translate())
-                );
+                {
+                    var achtung = HarmonyLib.AccessTools.TypeByName("AchtungMod.Tools");
+                    if (achtung == null)
+                        Choose(pawns[1], towers[1], "TotalFog_TowerWatchDrafted".Translate());
+                    else
+                    {
+                        var order = HarmonyLib.AccessTools.Method(
+                            achtung,
+                            "OrderToLocal",
+                            new[] { typeof(Pawn), typeof(int), typeof(int) }
+                        );
+                        order.Invoke(
+                            null,
+                            new object[] { pawns[1], towers[1].Position.x, towers[1].Position.z }
+                        );
+                        Check(
+                            "Achtung native order uses ladder job",
+                            pawns[1].CurJobDef == WatchtowerDefOf.TotalFog_WatchtowerWatch
+                                && pawns[1].CurJob.targetA.Thing == towers[1]
+                        );
+                    }
+                });
                 await Until(() => towers[1].Watching, "drafted watch resumes after move");
+            }
+            async Task CheckPlatformMoves()
+            {
+                await On(() =>
+                {
+                    foreach (var p in pawns)
+                        p.drafter.Drafted = true;
+                    for (int i = 0; i < towers.Count; i++)
+                    {
+                        var tower = towers[i];
+                        var p = pawns[i];
+                        var top = (
+                            tower.Position.ToVector3Shifted()
+                            + new UnityEngine.Vector3(0, 0, Core.TowerGeometry.PawnProjection)
+                        ).ToIntVec3();
+                        Check(
+                            "logical center preserves drafted move anchor " + i,
+                            TowerMoveOrders.MoveAnchor(tower.Position, map, 2.9f) == tower.Position
+                        );
+                        Check(
+                            "drawn top resolves native destination " + i,
+                            RCellFinder.BestOrderedGotoDestNear(top, p) == tower.Position
+                        );
+                        Check(
+                            "native tower move eligibility " + i,
+                            FloatMenuOptionProvider_DraftedMove.PawnCanGoto(p, top).Accepted
+                        );
+                    }
+                    // Native dragged-line destination distribution and native
+                    // PawnGotoAction issue the actual jobs, not fixture watch jobs.
+                    var controller = Find.Selector.gotoController;
+                    controller.StartInteraction(towers[0].Position);
+                    HarmonyLib
+                        .AccessTools.Field(controller.GetType(), "end")
+                        .SetValue(controller, towers[3].Position);
+                    foreach (var p in pawns)
+                        controller.AddPawn(p);
+                    controller.FinalizeInteraction();
+                    Check(
+                        "native dragged line creates four ladder jobs",
+                        pawns
+                            .Select(
+                                (p, i) =>
+                                    p.CurJobDef == WatchtowerDefOf.TotalFog_WatchtowerWatch
+                                    && p.CurJob.targetA.Thing == towers[i]
+                            )
+                            .All(v => v)
+                    );
+                });
+                await Until(
+                    () => towers.All(t => t.Watching),
+                    "dragged line occupies four platforms"
+                );
+                await On(() =>
+                {
+                    int start = pawns[0].CurJob.startTick;
+                    FloatMenuOptionProvider_DraftedMove.PawnGotoAction(
+                        towers[0].Position,
+                        pawns[0],
+                        towers[0].Position
+                    );
+                    Check(
+                        "repeated same-platform order keeps current watch",
+                        pawns[0].CurJob.startTick == start && towers[0].Watching
+                    );
+                    for (int i = 0; i < towers.Count; i++)
+                        pawns[i].drafter.Drafted = false;
+                });
+                await Until(
+                    () => towers.All(t => t.Occupant == null),
+                    "platform move undraft descends"
+                );
+                await Until(
+                    () => pawns.All(p => p.CurJobDef != WatchtowerDefOf.TotalFog_WatchtowerDescend),
+                    "platform move clears ladder"
+                );
             }
             async Task Until(Func<bool> done, string label, int limit = 1500)
             {

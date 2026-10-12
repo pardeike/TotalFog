@@ -140,8 +140,12 @@ public sealed class JobDriver_Watchtower : JobDriver
             {
                 pawn.Rotation = Tower.Rotation.Opposite;
                 if (
-                    pawn.needs.food?.CurLevelPercentage < .18f
-                    || pawn.needs.rest?.CurLevelPercentage < .15f
+                    !job.playerForced
+                        && !pawn.Drafted
+                        && (
+                            pawn.needs.food?.CurLevelPercentage < .18f
+                            || pawn.needs.rest?.CurLevelPercentage < .15f
+                        )
                     || pawn.Downed
                     || pawn.InMentalState
                     || pawn.IsBurning()
@@ -223,6 +227,33 @@ public sealed class JobDriver_Watchtower : JobDriver
                 }
             }
         });
+        if (!Retrieving)
+        {
+            // Finish undrafted duty away from the ladder before vanilla idle
+            // jobs can choose a long Wait_Wander there. Queued work takes over
+            // directly; drafted pawns keep their ordered ground position.
+            yield return Toils_General.Do(() => job.targetB = ExitDestination());
+            yield return Toils_Goto.GotoCell(TargetIndex.B, PathEndMode.OnCell);
+        }
+    }
+
+    private IntVec3 ExitDestination()
+    {
+        if (pawn.Drafted || pawn.jobs.jobQueue.Count > 0)
+            return pawn.Position;
+        for (int i = 0; i < 4; i++)
+        {
+            var cell = Tower.Approach + new Rot4((Tower.Rotation.AsInt + i) % 4).FacingCell;
+            if (
+                cell.InBounds(pawn.Map)
+                && !Tower.OccupiedRect().Contains(cell)
+                && cell.Standable(pawn.Map)
+                && cell.GetFirstPawn(pawn.Map) == null
+                && pawn.CanReach(cell, PathEndMode.OnCell, Danger.Deadly)
+            )
+                return cell;
+        }
+        return pawn.Position;
     }
 
     private Toil Climb(bool descend)

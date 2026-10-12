@@ -16,7 +16,11 @@ internal static partial class GasVisibility
     )
     {
         var body = instructions.ToList();
-        var native = AccessTools.Method(typeof(GasGrid), nameof(GasGrid.AnyGasAt));
+        var native = AccessTools.Method(
+            typeof(GasGrid),
+            nameof(GasGrid.AnyGasAt),
+            new[] { typeof(IntVec3) }
+        );
         if (!PatchSafety.Matches("gas mesh", body, native, 1))
             return body;
         var map = generator.DeclareLocal(typeof(Map));

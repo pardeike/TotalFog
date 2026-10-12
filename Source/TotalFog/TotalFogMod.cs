@@ -219,7 +219,11 @@ public class TotalFogMod : Mod
         );
         PatchSafety.Patch(
             harmony,
-            AccessTools.Method(typeof(SectionLayer_Gas), nameof(SectionLayer_Gas.Regenerate)),
+            AccessTools.Method(
+                typeof(SectionLayer_Gas),
+                nameof(SectionLayer_Gas.Regenerate),
+                Type.EmptyTypes
+            ),
             transpiler: new HarmonyMethod(
                 typeof(Presentation.GasVisibility),
                 nameof(Presentation.GasVisibility.Transpiler)
