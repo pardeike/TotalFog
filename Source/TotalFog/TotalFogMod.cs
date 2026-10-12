@@ -231,7 +231,18 @@ public class TotalFogMod : Mod
             )
         );
         patchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
-        patchMethod(typeof(Verse.Verb), typeof(Verb), nameof(Verse.Verb.TryFindShootLineFromTo));
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(Verse.Verb), nameof(Verse.Verb.TryFindShootLineFromTo)),
+            prefix: new HarmonyMethod(
+                typeof(Watchtowers.TowerCombat),
+                nameof(Watchtowers.TowerCombat.ShootLinePrefix)
+            ),
+            postfix: new HarmonyMethod(typeof(Verb), nameof(Verb.TryFindShootLineFromTo_Postfix))
+            {
+                priority = Priority.Last,
+            }
+        );
         PatchSafety.Patch(
             harmony,
             AccessTools.Method(typeof(Building_TurretGun), "IsValidTarget"),
@@ -241,11 +252,6 @@ public class TotalFogMod : Mod
         // actual target as well as the initial public Select request.
         patchMethod(typeof(RimWorld.Selector), typeof(Selector), "SelectInternal");
         patchMethod(
-            typeof(Verse.MouseoverReadout),
-            typeof(MouseoverReadout),
-            nameof(Verse.MouseoverReadout.MouseoverReadoutOnGUI)
-        );
-        patchMethod(
             typeof(RimWorld.BeautyUtility),
             typeof(BeautyUtility),
             nameof(RimWorld.BeautyUtility.FillBeautyRelevantCells)
@@ -253,10 +259,17 @@ public class TotalFogMod : Mod
         patchMethod(typeof(MainTabWindow_Wildlife), typeof(MainTabWindowWildlife), "get_Pawns");
 
         patchMethod(typeof(Verse.Pawn), typeof(Pawn), nameof(Verse.Pawn.DrawGUIOverlay));
-        patchMethod(
-            typeof(DynamicDrawManager),
-            typeof(Presentation.DynamicVisibility),
-            "ComputeCulledThings"
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(DynamicDrawManager), "ComputeCulledThings"),
+            postfix: new HarmonyMethod(
+                typeof(Presentation.DynamicVisibility),
+                nameof(Presentation.DynamicVisibility.ComputeCulledThings_Postfix)
+            ),
+            transpiler: new HarmonyMethod(
+                typeof(Watchtowers.TowerPresentation),
+                nameof(Watchtowers.TowerPresentation.CullTranspiler)
+            )
         );
         PatchSafety.Patch(
             harmony,
@@ -280,6 +293,10 @@ public class TotalFogMod : Mod
             prefix: new HarmonyMethod(
                 typeof(Presentation.FleckVisibility),
                 nameof(Presentation.FleckVisibility.DrawPrefix)
+            ),
+            transpiler: new HarmonyMethod(
+                typeof(Watchtowers.TowerPresentation),
+                nameof(Watchtowers.TowerPresentation.FleckTranspiler)
             )
         );
         PatchSafety.Patch(
@@ -314,6 +331,10 @@ public class TotalFogMod : Mod
             AccessTools.Method(
                 typeof(Verse.MouseoverReadout),
                 nameof(Verse.MouseoverReadout.MouseoverReadoutOnGUI)
+            ),
+            prefix: new HarmonyMethod(
+                typeof(MouseoverReadout),
+                nameof(MouseoverReadout.MouseoverReadoutOnGUI_Prefix)
             ),
             transpiler: new HarmonyMethod(
                 typeof(Presentation.InterfaceVisibility),
@@ -428,7 +449,18 @@ public class TotalFogMod : Mod
             )
         );
 
-        patchMethod(typeof(RimWorld.MoteBubble), typeof(MoteBubble), "DrawAt");
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(RimWorld.MoteBubble), "DrawAt"),
+            prefix: new HarmonyMethod(
+                typeof(Watchtowers.TowerPresentation),
+                nameof(Watchtowers.TowerPresentation.BubbleDrawingPrefix)
+            ),
+            finalizer: new HarmonyMethod(
+                typeof(Watchtowers.TowerPresentation),
+                nameof(Watchtowers.TowerPresentation.DrawingFinalizer)
+            )
+        );
         patchMethod(
             typeof(Verse.GenView),
             typeof(GenView),

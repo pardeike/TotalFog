@@ -725,3 +725,22 @@ home-map policy cache.
 Formatting and the redirected Release build pass 407 tests with zero
 warnings/errors. Native overlay pixels, tower-count lifecycle and performance
 remain runtime checks; the tracked DLL is unchanged.
+
+### Step 5: patch ordering and shared installation owners
+
+Verified the R2-15 prefixes and all six duplicate installation sites at
+`6207fc9`. Cancellation prefixes with no explicit ordering now receive
+`Priority.Last` in `PatchSafety.Patch`, including designator, sound, music and
+tower combat guards. `OrderedJobPrefix` explicitly uses Last so Multiplayer's
+ordinary synchronization prefix can capture the native order before simulation
+replay converts it. The mortar targeting postfix also runs Last.
+
+The six shared targets now have one installation site in `TotalFogMod`.
+CanSee combines the faction visibility gate and tower geometry in one prefix;
+MoteBubble combines its fog guard with balanced drawing scope/finalizer.
+Shoot-line prefix/postfix, fleck prefix/transpiler, culling postfix/transpiler
+and mouseover prefix/transpiler are installed together. Native checks with
+Zombieland, CE, Achtung and Multiplayer must validate this changed ordering;
+older exact-byte integration results do not prove it.
+Formatting and the redirected Release build pass 407 tests with zero
+warnings/errors; the tracked gameplay DLL remains unchanged.

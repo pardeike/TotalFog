@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -47,7 +48,12 @@ internal static class HarmonyPatches
 
     //Pawn will not target thing that is hidden by the fog
     [HarmonyPrefix]
-    public static bool CanSeePreFix(ref bool __result, Thing seer, Thing target)
+    public static bool CanSeePreFix(
+        ref bool __result,
+        Thing seer,
+        Thing target,
+        Func<IntVec3, bool> validator
+    )
     {
         if (
             target == null
@@ -56,7 +62,7 @@ internal static class HarmonyPatches
             || Visibility.AllowsTarget(seer, target.PositionHeld)
         )
         {
-            return true;
+            return Watchtowers.TowerCombat.AcquisitionPrefix(seer, target, validator, ref __result);
         }
 
         __result = false;

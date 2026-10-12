@@ -34,6 +34,11 @@ The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.
 `./scripts/mod format-check` checks without changing files. Frozen historical
 payloads are excluded. Do not add an auto-modifying commit hook.
+Cancellation prefixes default to `Priority.Last` through `PatchSafety.Patch`,
+so other mods' ordinary prefixes run before Total Fog can skip the original.
+Specify a different priority only for a proven ordering contract. Shared fog/
+tower targets have one installation owner in `TotalFogMod`; keep that order
+explicit instead of adding another registration in an adapter.
 Use `./scripts/mod source-publish` to push committed source to
 https://github.com/pardeike/TotalFog. It verifies the public repository and
 remote commit without building, tagging, releasing or updating Steam.

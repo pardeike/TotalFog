@@ -84,7 +84,9 @@ internal static class TowerMoveOrders
                 nameof(Pawn_JobTracker.TryTakeOrderedJob),
                 new[] { typeof(Job), typeof(JobTag?), typeof(bool) }
             ),
-            prefix: new HarmonyMethod(owner, nameof(OrderedJobPrefix))
+            // Multiplayer serializes the original order first; conversion runs
+            // inside its replayed simulation command on every client.
+            prefix: new HarmonyMethod(owner, nameof(OrderedJobPrefix)) { priority = Priority.Last }
         );
         LongEventHandler.ExecuteWhenFinished(() =>
             PatchSafety.Install("Achtung tower moves", () => InstallAchtung(harmony))

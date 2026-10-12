@@ -70,6 +70,15 @@ internal static class TowerPresentation
         __state = true;
     }
 
+    internal static bool BubbleDrawingPrefix(MoteBubble __instance, out bool __state)
+    {
+        __state = false;
+        if (!Detours.MoteBubble.DrawAt_Prefix(__instance))
+            return false;
+        DrawingPrefix(out __state);
+        return true;
+    }
+
     internal static Exception DrawingFinalizer(bool __state, Exception __exception)
     {
         if (__state)

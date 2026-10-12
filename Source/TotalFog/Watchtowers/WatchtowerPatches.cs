@@ -184,13 +184,6 @@ internal static class WatchtowerPatches
             finalizer: nameof(TowerPresentation.DrawingFinalizer)
         );
         Patch(
-            typeof(MoteBubble),
-            "DrawAt",
-            nameof(TowerPresentation.DrawingPrefix),
-            owner: typeof(TowerPresentation),
-            finalizer: nameof(TowerPresentation.DrawingFinalizer)
-        );
-        Patch(
             typeof(Thing),
             nameof(Thing.DynamicDrawPhaseAt),
             nameof(TowerPresentation.AttachmentDrawingPrefix),
@@ -222,27 +215,7 @@ internal static class WatchtowerPatches
         TowerMoveOrders.Install(harmony);
         TowerCombat.Install(harmony);
         TowerEffects.Install(harmony);
-        PatchSafety.Patch(
-            harmony,
-            AccessTools.Method(
-                typeof(FleckStatic),
-                nameof(FleckStatic.Draw),
-                new[] { typeof(float), typeof(DrawBatch) }
-            ),
-            transpiler: new HarmonyMethod(
-                typeof(TowerPresentation),
-                nameof(TowerPresentation.FleckTranspiler)
-            )
-        );
         Patch(typeof(CompColorable), nameof(CompColorable.SetColor), postfix: nameof(ColorPostfix));
-        PatchSafety.Patch(
-            harmony,
-            AccessTools.Method(typeof(DynamicDrawManager), "ComputeCulledThings"),
-            transpiler: new HarmonyMethod(
-                typeof(TowerPresentation),
-                nameof(TowerPresentation.CullTranspiler)
-            )
-        );
         PatchSafety.Patch(
             harmony,
             AccessTools.Method(

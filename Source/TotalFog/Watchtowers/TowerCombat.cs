@@ -101,8 +101,6 @@ internal static class TowerCombat
                 prefix == null ? null : new HarmonyMethod(typeof(TowerCombat), prefix),
                 postfix == null ? null : new HarmonyMethod(typeof(TowerCombat), postfix)
             );
-        Patch(typeof(Verb), nameof(Verb.TryFindShootLineFromTo), nameof(ShootLinePrefix));
-        Patch(typeof(AttackTargetFinder), "CanSee", nameof(AcquisitionPrefix));
         Patch(
             typeof(Verb),
             nameof(Verb.TryStartCastOn),
