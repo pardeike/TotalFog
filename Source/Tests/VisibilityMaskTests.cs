@@ -8,6 +8,48 @@ namespace TotalFog.Tests;
 
 public class VisibilityMaskTests
 {
+    [Fact]
+    public void ThrowingListenerCompletesCountsAndDoesNotReapplyThemOnNextRefresh()
+    {
+        var grid = new VisibilityGrid(8, 1) { Initialized = true };
+        var current = new VisibilityMask();
+        var next = new VisibilityMask();
+        current.Reset(0, 0, 8, 1, 8);
+        next.Reset(0, 0, 8, 1, 8);
+        current.Add(0);
+        current.Add(1);
+        grid.Add(0, 0);
+        grid.Add(0, 1);
+        next.Add(1);
+        next.Add(2);
+        next.Add(3);
+        void Change(int index, bool visible)
+        {
+            if (visible)
+                grid.Add(0, index);
+            else
+                grid.Remove(0, index);
+            if (index == 2)
+                throw new InvalidOperationException("listener");
+        }
+        Assert.Throws<InvalidOperationException>(() =>
+            VisibilityMask.ApplyAndSwap(ref current, ref next, Change)
+        );
+        Assert.Equal(new[] { 0, 1, 1, 1, 0, 0, 0, 0 }, grid.Counts(0));
+        next.Reset(0, 0, 8, 1, 8);
+        next.Add(1);
+        next.Add(2);
+        next.Add(3);
+        VisibilityMask.ApplyAndSwap(ref current, ref next, Change);
+        Assert.Equal(new[] { 0, 1, 1, 1, 0, 0, 0, 0 }, grid.Counts(0));
+        next.Reset(0, 0, 0, 0, 8);
+        Assert.Throws<InvalidOperationException>(() =>
+            VisibilityMask.ApplyAndSwap(ref current, ref next, Change)
+        );
+        Assert.All(grid.Counts(0), count => Assert.Equal(0, count));
+        Assert.Equal(0, current.Area);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(1)]

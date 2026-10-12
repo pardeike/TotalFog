@@ -10,6 +10,7 @@ local testing do not indicate that a new player build has been released.
 - Apply Clear All Fog, Refog Map and rectangle fog debug commands to Total Fog too.
 - Fix persistent straight fog edges when scrolling while the game is paused.
 - Keep unsupported tower-order hooks from interrupting other mods' patches, and prevent one failed delayed notification from blocking later notifications.
+- Prevent failed visibility listeners from leaving cells permanently visible, including during source removal.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
 - Keep a lookout on the platform when drafted and prevent a rotation error after climbing.

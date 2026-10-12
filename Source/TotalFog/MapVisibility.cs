@@ -476,7 +476,8 @@ public class MapVisibility : MapComponent
             return;
         int key = Key(faction);
         bool discovered =
-            faction.IsPlayer
+            Initialized
+            && faction.IsPlayer
             && (
                 key == 0
                     ? !knownCells[index]
@@ -486,7 +487,7 @@ public class MapVisibility : MapComponent
         bool changed = coverage.Add(key, index);
         if (!faction.IsPlayer || !changed)
             return;
-        if (key != 0)
+        if (key != 0 && Initialized)
         {
             if (!otherPlayerFactions.Contains(faction))
                 otherPlayerFactions.Add(faction);

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 
 namespace TotalFog.Core;
 
@@ -117,11 +118,39 @@ public sealed class VisibilityMask
         Action<int, bool> change
     )
     {
-        next.ReportDifference(previous, true, change);
-        previous.ReportDifference(next, false, change);
+        Exception failure = null;
+        next.ReportDifference(previous, true, change, ref failure);
+        previous.ReportDifference(next, false, change, ref failure);
+        if (failure != null)
+            ExceptionDispatchInfo.Capture(failure).Throw();
     }
 
-    private void ReportDifference(VisibilityMask other, bool visible, Action<int, bool> change)
+    /// <summary>
+    /// Commit coverage even when a notification fails after updating its count.
+    /// The callback must update the count before invoking external listeners.
+    /// </summary>
+    public static void ApplyAndSwap(
+        ref VisibilityMask current,
+        ref VisibilityMask next,
+        Action<int, bool> change
+    )
+    {
+        try
+        {
+            ApplyDifference(current, next, change);
+        }
+        finally
+        {
+            (current, next) = (next, current);
+        }
+    }
+
+    private void ReportDifference(
+        VisibilityMask other,
+        bool visible,
+        Action<int, bool> change,
+        ref Exception failure
+    )
     {
         // Compare 64 cells at once. Only changed cells reach the callback;
         // row shifts are aligned from at most two words of the other footprint.
@@ -140,7 +169,16 @@ public sealed class VisibilityMask
                 {
                     int index = globalRow + word * 64 + TrailingZeros(changed);
                     if (mapWidth == other.mapWidth || !other.Contains(index))
-                        change(index, visible);
+                    {
+                        try
+                        {
+                            change(index, visible);
+                        }
+                        catch (Exception error)
+                        {
+                            failure ??= error;
+                        }
+                    }
                     changed &= changed - 1;
                 }
             }

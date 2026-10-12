@@ -665,3 +665,21 @@ also retains a hidden entry and verifies no duplicate replay on the next drain.
 tests with zero warnings/errors. Output was redirected to ignored
 `artifacts/review-round-2/Assemblies/`; the tracked DLL is unchanged. Native
 patch reapplication with Achtung remains a separate runtime check.
+
+### Step 2: consistent sight updates and initialized faction discovery
+
+Verified R2-2 at `CompSightSource.cs:253-256` and the side-effect path at
+`MapVisibility.cs:473-586`. A callback failure interrupted the difference before
+the mask swap. A swap alone would leave the unprocessed cells inconsistent.
+The difference now completes all count callbacks, preserves the first exception,
+and swaps in `finally` before rethrowing. This also covers source removal. The
+callback contract is explicit: count mutation precedes external side effects.
+The pure regression covers a throwing listener, unchanged subsequent refresh,
+overlap retention, removals after failure and a complete clear.
+
+R2-11 also reproduces at `MapVisibility.cs:493-500`: secondary discovery was
+written before initialization. Secondary discovery and discovery side effects
+now require `Initialized`; transient counts retain their existing behavior.
+Formatting and the redirected Release build pass 406 pure tests with zero
+warnings/errors. The tracked DLL remains byte-identical to the starting tree;
+native listener-failure and Multiplayer initialization controls remain open.

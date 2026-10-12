@@ -94,10 +94,8 @@ public class CompSightSource : FogSubcomponent
     {
         if (faction == null || fog == null)
             return;
-        for (int i = 0; i < current.Area; i++)
-            if (current.At(i))
-                fog.DecrementSeen(faction, current.GlobalIndex(i));
-        current.Reset(0, 0, 0, 0, 1);
+        next.Reset(0, 0, 0, 0, 1);
+        VisibilityMask.ApplyAndSwap(ref current, ref next, change);
     }
 
     public void UpdateFoV(bool forceUpdate = false)
@@ -251,8 +249,9 @@ public class CompSightSource : FogSubcomponent
                     next.Add(map.cellIndices.CellToIndex(platform.Position));
         }
         if (faction != null)
-            VisibilityMask.ApplyDifference(current, next, change);
-        (current, next) = (next, current);
+            VisibilityMask.ApplyAndSwap(ref current, ref next, change);
+        else
+            (current, next) = (next, current);
     }
 
     private void SetSightRange(int radius)
