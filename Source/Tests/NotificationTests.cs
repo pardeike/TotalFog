@@ -61,13 +61,24 @@ public class NotificationTests
     }
 
     [Fact]
-    public void FailedReplayDoesNotLoseThePayload()
+    public void FailedReplayIsDroppedAndLaterItemsStillReplayOnce()
     {
         var queue = new PendingQueue<string>();
-        queue.Add("event");
-        Assert.Throws<InvalidOperationException>(() =>
-            queue.Drain(_ => true, _ => true, _ => throw new InvalidOperationException())
-        );
-        Assert.Single(queue.Items);
+        queue.Add("broken");
+        queue.Add("hidden");
+        queue.Add("later");
+        var replayed = new List<string>();
+        var failed = new List<string>();
+        void Replay(string item)
+        {
+            if (item == "broken")
+                throw new InvalidOperationException();
+            replayed.Add(item);
+        }
+        queue.Drain(_ => true, item => item != "hidden", Replay, (item, _) => failed.Add(item));
+        queue.Drain(_ => true, item => item != "hidden", Replay);
+        Assert.Equal(new[] { "broken" }, failed);
+        Assert.Equal(new[] { "later" }, replayed);
+        Assert.Equal(new[] { "hidden" }, queue.Items);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -158,21 +159,12 @@ internal static class TowerMoveOrders
             nameof(CellFinder.StandableCellNear),
             new[] { typeof(IntVec3), typeof(Map), typeof(float), typeof(Predicate<IntVec3>) }
         );
-        var replacement = AccessTools.Method(typeof(TowerMoveOrders), nameof(MoveAnchor));
-        int count = 0;
-        foreach (var instruction in instructions)
-        {
-            if (instruction.Calls(original))
-            {
-                instruction.operand = replacement;
-                count++;
-            }
-            yield return instruction;
-        }
-        if (count != 1)
-            throw new InvalidOperationException(
-                "Drafted move anchor changed: expected one native standable-cell lookup."
-            );
+        return ReplaceCalls(
+            instructions,
+            original,
+            AccessTools.Method(typeof(TowerMoveOrders), nameof(MoveAnchor)),
+            1
+        );
     }
 
     internal static IEnumerable<CodeInstruction> DraftInterruptionTranspiler(
@@ -224,21 +216,18 @@ internal static class TowerMoveOrders
         int expected
     )
     {
-        int count = 0;
-        foreach (var instruction in instructions)
+        var body = instructions.ToList();
+        if (!PatchSafety.Matches("tower order " + original?.Name, body, original, expected))
+            return body;
+        foreach (var instruction in body)
         {
             if (instruction.Calls(original))
             {
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
-                count++;
             }
-            yield return instruction;
         }
-        if (count != expected)
-            throw new InvalidOperationException(
-                $"Tower order hook changed: expected {expected} calls to {original.Name}, found {count}."
-            );
+        return body;
     }
 
     private static Vector3 FormationOffset(IntVec3 cell)

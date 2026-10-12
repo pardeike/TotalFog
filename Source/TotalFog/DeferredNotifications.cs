@@ -55,7 +55,12 @@ public class DeferredNotifications : MapComponent
         if (queue.Items.Count == 0 || MultiplayerIntegration.TicksFor(map) < nextCheck)
             return;
         nextCheck = MultiplayerIntegration.TicksFor(map) + 30;
-        queue.Drain(valid, ready, replay);
+        queue.Drain(
+            valid,
+            ready,
+            replay,
+            (_, error) => Log.Warning("[Total Fog] Dropped failed deferred notification: " + error)
+        );
     }
 
     private bool Ready(DeferredNotification notification)

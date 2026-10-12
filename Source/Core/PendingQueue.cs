@@ -14,25 +14,35 @@ public sealed class PendingQueue<T>
             Items.Add(payload);
     }
 
-    public void Drain(Func<T, bool> valid, Func<T, bool> ready, Action<T> replay)
+    public void Drain(
+        Func<T, bool> valid,
+        Func<T, bool> ready,
+        Action<T> replay,
+        Action<T, Exception> failed = null
+    )
     {
         int remaining = Items.Count;
         for (int i = 0; i < remaining; )
         {
             var item = Items[i];
-            if (!valid(item))
+            try
             {
-                Items.RemoveAt(i);
-                remaining--;
+                if (valid(item))
+                {
+                    if (!ready(item))
+                    {
+                        i++;
+                        continue;
+                    }
+                    replay(item);
+                }
             }
-            else if (ready(item))
+            catch (Exception error)
             {
-                replay(item);
-                Items.RemoveAt(i);
-                remaining--;
+                failed?.Invoke(item, error);
             }
-            else
-                i++;
+            Items.RemoveAt(i);
+            remaining--;
         }
     }
 }

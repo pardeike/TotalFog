@@ -1,15 +1,268 @@
 # Total Fog 0.1.0 review
 
-This is the historical review of commit `12e30f6`, not the current bug backlog.
-All ten work-order steps have responses below, including Andreas's decision to
-retain the defaults. For current implementation and open native checks, use
-[COVERAGE.md](COVERAGE.md#current-status). Original findings and line references
-remain intact so the responses can be audited.
+Two independent review rounds of the first version. The second round
+(13 October 2026, commit 6207fc9) is first; it verifies the fixes made in
+response to the first round and adds new findings. The first round
+(12 October 2026, commit 12e30f6) and its point-by-point response follow,
+unchanged, so the responses can be audited. For current implementation and
+open native checks, use [COVERAGE.md](COVERAGE.md#current-status).
+Severity is judged for a first public version: small stuff is left out.
 
-Independent review of the first version, 12 October 2026, commit 12e30f6.
+## Second review, 13 October 2026 (commit 6207fc9)
+
+Four read-only passes: verification of the 19 fix commits, features and
+payload decisions the first round skipped, a design pass on the mod's own
+terms, and a complete Harmony hook inventory (about 153 always-installed
+patch sites, 19 transpilers, 22 per-frame-per-thing hooks). Line numbers
+refer to commit 6207fc9.
+
+### Status of the first-round items
+
+| Item | Verdict |
+|---|---|
+| 1 patch isolation | Partially fixed: install is isolated, but two new transpilers throw again (R2-1) |
+| 2 discovery before Initialized | Fixed; the MP second-faction branch lacks the guard (R2-11) |
+| 3 stale tracked DLL | Fixed, then regressed: the DLL is the 28106cf build, six gameplay commits behind HEAD (R2-3) |
+| 4 MP binding | Fixed |
+| 5 mortars | Fixed |
+| 6 defaults | Kept by Andreas's decision; documented |
+| 7 mesh flags | Fixed |
+| 8 alerts | Fixed, off by default |
+| 9 fire and own corpses | Fixed; home-cell fire is drawn without sight by design (R2-13) |
+| 10 gas layer | Fixed; now regenerated on every fog-section flip, unmeasured (R2-14) |
+| 11 listener cache | Fixed |
+| 12 deferred letters | Fixed; archived letters carry no arrival tick (R2-6) |
+| 13 to 15 tower | Fixed |
+| 16 camera operator | Fixed |
+| 17 translations | Fixed structurally; no native-speaker review |
+
+### Must fix before a public build
+
+- **R2-1 Throwing transpilers are back.** Source/TotalFog/Watchtowers/TowerMoveOrders.cs:173
+  and :239 throw on shape mismatch. Install is caught, but Harmony re-runs
+  every transpiler when another mod later patches `Pawn_DraftController.Drafted`,
+  `FloatMenuOptionProvider_DraftedMove`, `Selector.HandleMultiselectGoto` or
+  `MultiPawnGotoController`; the throw then aborts that mod's patch call.
+  Achtung touches exactly this area. Use `PatchSafety.Matches` like the others.
+
+- **R2-2 Reference counts corrupt on any exception inside a sight update.**
+  CompSightSource.cs:253-256 applies the mask difference and only then swaps
+  `(current, next)`. `IncrementSeen` runs `VisibilityChanged`
+  (MapVisibility.cs:563-586), which calls listener `UpdateVisibility`,
+  `RecordObservation`, selection, mesh dirtying, codex discovery and letters
+  inside that transaction. Any throw skips the swap; the next refresh
+  re-applies the increments and the cells stay seen forever. Complete the swap
+  in a `finally`, or queue listener side effects until after the swap.
+
+- **R2-3 Tracked DLL is stale again.** Current/Assemblies/TotalFog.dll is the
+  28106cf build (renamed in 5a0d5fb); it lacks `TowerMoveOrders`,
+  `DebugFogCommands`, `WatchtowerIcons` and `WatchFacing`. Def bindings still
+  resolve so nothing fails to load, but the first-round requirement stands:
+  either every gameplay commit carries its DLL, or the DLL is untracked and
+  the README points at releases. A CI job that fails when the DLL's source
+  commit is older than the newest gameplay commit would enforce this.
+
+- **R2-4 1.7 is advertised on a 1.6-compiled, untested payload.**
+  About/About.xml:7-10 and LoadFolders.xml:26-30 map 1.7 to Current/. The
+  installed 1.7.4976 is the Steam unstable beta; no Krafs 1.7 reference exists
+  and no 1.7 run is in the evidence. Hard type references are caught at
+  install, but runtime references inside job drivers and comps are not. When
+  1.7 goes stable, Steam will show "compatible" with zero re-verification.
+  Drop 1.7 from supportedVersions until a 1.7 reference exists and the gates
+  were rerun, or say "1.7 unstable" in the description.
+
+- **R2-5 Startup logs three red config errors.** Current/Defs/ThingDefs_Buildings/TotalFog_Watchtower.xml:11
+  sets `drawerType RealtimeOnly` while :34 sets `linkFlags Wall`; Verse
+  reports "does not add to map mesh but has a link drawer" for the tower and
+  its blueprint on every launch (artifacts/steam-startup-20261012). Mod
+  managers and players with dev mode will blame Total Fog. Either drop the
+  link flags and keep the custom wall-join drawing, or move to a drawer type
+  that prints.
+
+### Should fix in the first update
+
+- **R2-6 Archived dead-target letters sort to day one.**
+  DeferredNotifications.cs:92 calls `Find.Archive.Add` directly, so
+  `arrivalTick` stays 0 and `Received()` never runs. Set the arrival tick from
+  `TicksFor(map)` or route through `ReceiveLetter` with the replay flag.
+
+- **R2-7 Deferred queue has no per-item isolation.** Source/Core/PendingQueue.cs:17-37:
+  a `replay` that throws leaves the item in place, aborts the loop, and retries
+  every 30 ticks with a log error forever. Catch per item and drop or park it.
+
+- **R2-8 Tower lookup has no zero-tower fast path.**
+  Watchtowers/TowerPresentation.cs:18-19 walks MapHeld, a ConditionalWeakTable
+  and a dictionary for every pawn draw, DrawPos read, TrueCenter, mote draw,
+  CanSee, shoot line, TakeDamage and FlammableNow, in colonies that never
+  build a tower. A static spawned-tower counter checked first removes
+  roughly a thousand weak-table lookups per frame.
+
+- **R2-9 Tooltip transpiler scans every giver map-wide each frame.**
+  Presentation/InterfaceVisibility.Patches.cs:116-138 replaces both `Position`
+  reads, including the one inside the camera-rect test, so `CanRead` plus a
+  linear `TryGetComp` run for every tooltip giver on the map, offscreen
+  included. Replace only the second read.
+
+- **R2-10 Hot-path lookups that should be cached.**
+  `GravshipVisibility.Revealed` (Compatibility/GravshipVisibility.cs:9-15)
+  resolves `Find.GravshipController` through a World component scan per
+  visibility query with Odyssey; `IsShown` compares the biome defName string
+  per call (MapVisibility.cs:130,150); `KnownActionable` fetches
+  `areaManager.Home` through a list scan (ThingVisibility.cs:297); the
+  roof/terrain/fertility overlay postfixes resolve `Bypass` and the weak table
+  per cell on every discovery tick (Presentation/DiscoveryOverlays.cs:10-22).
+  Cache per map or snapshot per regeneration as the gas and lighting
+  transpilers already do.
+
+- **R2-11 Second-faction discovery bypasses the Initialized guard.**
+  MapVisibility.cs:493-500 writes `known[index]` for extra player factions
+  regardless of `coverage.Initialized`. Unreachable before init today only
+  because of one gated call site; add the guard in the grid.
+
+- **R2-12 Camera console job is permanent busywork by default.**
+  `NeedWatcher` defaults true, the WorkGiver is BasicWorker priority 150 with
+  `prioritizeSustains`, and JobDriver_MonitorVision.cs:33 never completes.
+  One console pins a colonist ahead of all non-basic work with no skill gain.
+  Give it its own WorkType or default the setting off.
+
+- **R2-13 Telescope is uncapped and undercuts the tower.**
+  CompSightSource.cs:346-379 takes max(base, weapon range) times 2 with no
+  cap, so a sniper on a telescope sees 120+ cells while the tower caps at 96;
+  the telescope is Medieval research with no prerequisite. Apply the tower cap.
+
+- **R2-14 Unmeasured regeneration costs.** Gas is now dirtied on every
+  fog-section flip (MapVisibility.cs:595) next to GroundGlow, and the paused
+  fade fix (SectionLayerFog.cs:164-182) completes every on-screen fade
+  instantly on pause rather than only off-screen leftovers. Both need one
+  runtime-compare run and a pixel look.
+
+- **R2-15 Prefix etiquette on shared targets.** `CanSeePreFix`, the tower
+  shoot-line prefix, `PlayOneShot.Prefix`, `DangerModePrefix` and the 27
+  designator prefixes return false with no Priority, which skips every later
+  bool prefix from Zombieland, CE and others. `OrderedJobPrefix`
+  (TowerMoveOrders.cs:316) rewrites `ref job` on a method Multiplayer syncs
+  with unspecified ordering. Six targets are patched from two of our classes
+  (`TryFindShootLineFromTo`, `CanSee`, `MoteBubble.DrawAt`, `FleckStatic.Draw`,
+  `ComputeCulledThings`, `MouseoverReadoutOnGUI`) and only work because of
+  install order. Pin priorities and consolidate.
+
+### Keep in mind
+
+- `AnimalVision` requires both a master and Release training; README says
+  "trained animals". Expect "my animals do not see" reports.
+- `DebugFogCommands` write saved discovery and coverage that gates turret
+  targeting; not verified under Multiplayer, and the Fog rect tool is matched
+  by the literal label "Fog".
+- `Current/Defs/Mod_Defaults.xml` defines a `FogDefaultsDef` nobody reads.
+- CI runs format-check and tests but never compiles the gameplay project, so
+  a compile break in Source/TotalFog passes CI.
+- The `Current/` multi-version folder is outside the steam-mods standard
+  (`currentRimWorldVersion 1.6`); record it as a declared exception in
+  AGENTS.md rather than relaxing the validator silently.
+- The draft-setter replacement (TowerMoveOrders.cs:191-194) mutates job state
+  from inside a query; works for the native shape, worth a guard.
+- Save compatibility across the 19 commits is clean; only an unused settings
+  key was removed.
+
+### Design decisions for Andreas
+
+These are design questions, not bugs. Each has a recommended answer.
+
+- **D1 Noise as the second sense.** Today the only signals from a dark raid
+  are hearing cues for moving pawns and native slowdown once shots land. A
+  siege or sapper team sets up and fires from fog with no cue. Recommended:
+  transient noise events (gunfire, explosions, mortar launches, pod impacts,
+  breaching) spawn a fading ring at a jittered position for a few seconds when
+  inside a listener's hearing. Per-sound muting becomes a sub-option. This is
+  what makes silent raids fair.
+
+- **D2 A clock rule for delayed events.** With delayed alerts on, a mech
+  cluster countdown or pit-gate emergence can run out unseen. Recommended:
+  events whose consequence waits for the player (visitors, quests, items)
+  delay fully; events with a running timer arrive as a vague letter with
+  direction and rough distance, no jump target.
+
+- **D3 Escape hatch and "why is this hidden".** `OnlyOutsideColony`
+  (MapVisibility.cs:150) disables fog on every player-home map, not outside
+  the home area as the label suggests, and it is the only in-game off switch.
+  Recommended: rename it, add an explicit "suspend fog" toggle plus a dev-mode
+  cell overlay showing seen count, known flag, blocking source and bypass
+  reason, and a settings button that copies version, settings and mod list to
+  the clipboard for reports.
+
+- **D4 Enemy fog as a visible stealth mechanic.** `AISmart` is one checkbox
+  under Information, humanlike-only, with no player feedback. Recommended:
+  move to Vision as "Enemies have fog too", define species rules explicitly
+  (mechs see all, animals short sight and long hearing, insects see all
+  underground), and show a drafted-pawn indicator for "seen by enemy".
+
+- **D5 Target illumination.** Light only shrinks the observer's radius; a
+  colonist under a lamp is no easier to see than one in the dark. One glow
+  lookup per target cell in the enemy gate would make base lighting a real
+  choice during raids.
+
+- **D6 One hearing stat.** Cues use 10 times hearing capacity, the audio check
+  uses a fixed 30-cell range with any living faction pawn as listener, and a
+  sleeping pawn's sight is 8 times hearing. Unify into one stat, halve while
+  sleeping, and attenuate by door crossings rather than Euclidean distance
+  through walls.
+
+- **D7 Vision sources as a progression.** Telescope, tower and cameras overlap
+  in role. Recommended currencies: telescope costs pawn time early, tower
+  costs pawn time plus exposure mid, cameras cost power plus operator, with
+  operator-free cameras behind Microelectronics.
+
+- **D8 Ally and prisoner vision.** Traders reporting what they see at 0.5x and
+  prisoners at 0.2x is narratively odd and leaks little. Recommended: drop
+  both, or reframe as "friendly pawns are visible to you".
+
+- **D9 Presets.** Atmosphere (visuals only), Survival (delayed letters, audio
+  check, Wildlife hidden, cues) and Hardcore (silent raids, enemy fog, mute
+  hidden, discard threats) plus Custom. Flag the traps: discard flags lose
+  letters permanently, trees-block is reload-only, map reveal applies to new
+  maps only, tower shooting is a balance change dressed as a toggle.
+
+- **D10 Multiplayer sharing.** Per-faction fog is right for separate colonies.
+  For allied player factions `AllyGiveVision` would leak the other player's
+  sight at 0.5x; a synced "allied players share sight" setting and a defined
+  spectator view (union of player factions) are needed.
+
+- **D11 Compatibility message.** The generic gates (dynamic draw, flecks,
+  labels, overlays, GUI, sounds, targeting) already cover most mods.
+  Documentation should say that `TotalFogSupport.cs` is only for custom mesh
+  drawing, counters and AI, and a dev-mode "leak list" of things drawn at
+  hidden cells would find the residue faster than asking authors to opt in.
+
+### Work order 2
+
+One commit per step, pure tests where the step names one.
+
+1. R2-1 and R2-7: shape-tolerant TowerMoveOrders transpilers; per-item
+   isolation in `PendingQueue.Drain` with a test that a throwing replay is
+   dropped and later items still replay.
+2. R2-2 and R2-11: complete the mask swap in a `finally` or defer listener
+   side effects; guard second-faction discovery in the grid. Test: a throwing
+   listener leaves counts consistent on the next refresh.
+3. R2-6: arrival tick for archived letters.
+4. R2-8, R2-9, R2-10: zero-tower fast path, tooltip single-read, cached
+   gravship controller, home-map and biome flags, overlay snapshots.
+5. R2-15: priorities and consolidation of duplicate targets.
+6. R2-12 and R2-13: console WorkType or default, telescope cap.
+7. R2-5: resolve the tower config errors; confirm a clean Player.log.
+8. R2-4: remove 1.7 from supportedVersions and LoadFolders until a 1.7
+   reference exists; keep Current/ and record the folder as a declared
+   exception in AGENTS.md.
+9. R2-14: one runtime-compare and pixel look when a game session is permitted.
+10. R2-3 last: one Release build, commit the DLL with its source, and add the
+    CI check that fails on a stale tracked DLL. Add `build` to CI.
+
+D1 to D11 wait for Andreas's decisions; do not implement them unasked.
+
+## First review, 12 October 2026 (commit 12e30f6)
+
 Four read-only passes: sight engine, information-leak surface, watchtower,
-settings/compatibility/process. Severity is judged for a first public version:
-small stuff is deliberately left out. Line numbers refer to commit 12e30f6.
+settings/compatibility/process. Line numbers refer to commit 12e30f6. The
+point-by-point response follows at the end.
 
 ## Must fix before a public build
 
@@ -395,3 +648,20 @@ passes formatting and pure tests on both Linux and Windows. This supersedes the
 earlier lack of executed CI evidence, without claiming Windows game testing.
 The earlier responses' native safety, gas-pixel, deferred-letter and broader
 performance gaps are retained in the current coverage checklist.
+
+## Review response 2
+
+### Step 1: safe tower hooks and isolated deferred replay
+
+Verified R2-1 at `TowerMoveOrders.cs:173,239` and R2-7 at
+`PendingQueue.cs:17-37` against `6207fc9`. Both reproduce in source: the
+transpilers throw after changing/yielding instructions, and replay exceptions
+leave the payload queued and skip later items. Tower replacements now check the
+complete incoming shape with `PatchSafety.Matches` before editing; unsupported
+shapes return the incoming body unchanged. A failed notification is logged once
+and dropped while later ready entries continue. The pure replay regression test
+also retains a hidden entry and verifies no duplicate replay on the next drain.
+`./scripts/mod format` and a Release `./scripts/mod build` pass all 405 pure
+tests with zero warnings/errors. Output was redirected to ignored
+`artifacts/review-round-2/Assemblies/`; the tracked DLL is unchanged. Native
+patch reapplication with Achtung remains a separate runtime check.
