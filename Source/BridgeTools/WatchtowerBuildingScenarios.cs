@@ -169,6 +169,16 @@ public sealed class WatchtowerBuildingScenarios
                     "completed tower preserves ladder rotation",
                     tower.Rotation == Rot4.South && tower.Approach == origin + IntVec3.South * 2
                 );
+                Check(
+                    "realtime tower has no native mesh link drawer",
+                    tower.def.drawerType == DrawerType.RealtimeOnly && !tower.def.graphicData.Linked
+                );
+                Check(
+                    "completed tower registers native wall links across its footprint",
+                    tower
+                        .OccupiedRect()
+                        .All(c => (map.linkGrid.LinkFlagsAt(c) & LinkFlags.Wall) != 0)
+                );
                 worker.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
             });
             var walls = new List<Thing>();
@@ -179,6 +189,11 @@ public sealed class WatchtowerBuildingScenarios
                     var wall = ThingMaker.MakeThing(ThingDefOf.Wall, ThingDefOf.WoodLog);
                     wall.SetFaction(Faction.OfPlayer);
                     walls.Add(GenSpawn.Spawn(wall, origin + direction * 2, map));
+                    Check(
+                        "adjacent wall links into realtime tower " + direction,
+                        wall.Graphic is Graphic_Linked linked
+                            && linked.ShouldLinkWith(wall.Position - direction, wall)
+                    );
                 }
             });
             await ctx.Game.FramesAsync(5, cancellationToken);
@@ -264,6 +279,15 @@ public sealed class WatchtowerBuildingScenarios
                         tower.HitPoints,
                         tower.Destroyed,
                     }
+                );
+                breacher.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
+                if (tower.Spawned)
+                    tower.Destroy(DestroyMode.Vanish);
+                Check(
+                    "removed tower clears native wall links across its footprint",
+                    tower
+                        .OccupiedRect()
+                        .All(c => (map.linkGrid.LinkFlagsAt(c) & LinkFlags.Wall) == 0)
                 );
             });
 

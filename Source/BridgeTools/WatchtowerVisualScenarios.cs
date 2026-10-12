@@ -562,7 +562,6 @@ public sealed class WatchtowerVisualScenarios
                 texPath = "Things/Buildings/WatchTower",
                 drawSize = new Vector2(3, 4),
                 linkFlags = LinkFlags.Wall,
-                linkType = LinkDrawerType.Basic,
             },
             modContentPack = LoadedModManager.GetMod<TotalFogMod>().Content,
         };

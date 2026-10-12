@@ -36,6 +36,7 @@ public class WatchtowerGraphic : Building
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
         base.SpawnSetup(map, respawningAfterLoad);
+        NotifyWallLinks(map);
         // FinalizeLoading spawns edifices on the background long-event thread.
         // Unity Mesh/Material creation belongs to the finished-event game thread.
         LongEventHandler.ExecuteWhenFinished(() =>
@@ -133,7 +134,9 @@ public class WatchtowerGraphic : Building
 
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
+        var map = Map;
         base.DeSpawn(mode);
+        NotifyWallLinks(map);
         UnityEngine.Object.Destroy(body);
         UnityEngine.Object.Destroy(foreground);
         body = foreground = null;
@@ -141,6 +144,19 @@ public class WatchtowerGraphic : Building
         wallJoins = null;
         nativeFront?.Dispose();
         nativeFront = null;
+    }
+
+    private void NotifyWallLinks(Map map)
+    {
+        // The realtime tower supplies wall flags, not a native mesh link drawer.
+        // Thing's automatic link notification only runs for linked graphics.
+        map.linkGrid.Notify_LinkerCreatedOrDestroyed(this);
+        map.mapDrawer.MapMeshDirty(
+            Position,
+            MapMeshFlagDefOf.Things,
+            regenAdjacentCells: true,
+            regenAdjacentSections: false
+        );
     }
 
     public override void DrawGUIOverlay()

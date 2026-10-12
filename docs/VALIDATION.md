@@ -7780,3 +7780,38 @@ Windows acceptance or a broad autonomous-raid/combined-loadout soak. Gameplay
 source is committed and pushed; tracked gameplay DLLs remain the repository's
 last-release snapshots. The exact native-tested beta pair remains in installed
 mods, build outputs and the verified private ZIPs. All test games are stopped.
+
+## Steam watchtower startup correction, 2026-10-12
+
+The ordinary Steam launch reproduced three native configuration errors for
+`TotalFog_Watchtower` and its generated blueprint. The realtime tower declared
+`linkType=Basic`, which requires native map-mesh printing. Removing that link
+drawer while retaining `LinkFlags.Wall` fixes the definition. Tower spawn and
+despawn now explicitly update the native link grid and its mesh notification;
+`ThingDef.CanAffectLinker` otherwise skips unlinked graphics. The production
+drawing remains realtime and the accepted meshes are unchanged.
+
+The canonical format/build/deploy-built sequence passes all 380 independent
+tests with zero build warnings/errors. The previous Steam process was at the
+main menu and exited before deployment. One fresh Steam process loads matching
+gameplay and companion bytes, with no native configuration errors or Total Fog
+patch failures/exceptions. Gameplay SHA-256 is
+`ee344f3d518e01dfc3264efa2c7db49672945101f241e3a3b6aa88f99a7fa1cc`,
+MVID `6004fc14-7981-4431-8a72-50e7315a7a17`. Companion SHA-256 is
+`75f3c0781bc7e5862235bbaf414d40357d0c170b7aa240fd1939c67861fdc7d4`.
+An existing Camera+ `MarkerCache` asset-initialization warning remains; this
+change does not address it.
+
+The expanded `totalfog/watchtower_building` suite passes all 21 native checks
+on the unchanged captured player map. It completes a native frame, verifies
+wall flags across all nine cells and native wall connections on both sides,
+observes cached joins changing after adjacent wall removal, supplies a native
+breach attack, and verifies all footprint wall flags clear when the tower is
+removed. It then reloads the unchanged named save. The source fix and previously
+tested watch-order changes are installed locally; this startup slice does not
+rerun broad combat, Multiplayer or performance acceptance and sends no build.
+Evidence is in ignored `artifacts/steam-startup-20261012`, including redacted
+before/after logs, native assertions, old installation backups and tested DLLs.
+The saved fixture and active mod list retain their original byte hashes. Steam
+RimWorld is left at the main menu. The tracked gameplay DLL remains the previous
+release snapshot for this ordinary source commit.

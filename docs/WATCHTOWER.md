@@ -69,8 +69,9 @@ Core, Harmony, RimBridgeServer, Camera+ and Total Fog. The delivered pair's
 broader combat, CE, Multiplayer and performance evidence below belongs to its
 older recorded bytes; these slices have not been rerun for the follow-up.
 
-Native linked-graphic metadata registers the full footprint in the wall link
-grid. Adjacent walls choose their connected native texture before the existing
+The realtime tower registers its wall flags across the full footprint when it
+spawns and removes them when it despawns. It does not declare a mesh link drawer.
+Adjacent walls choose their connected native texture before the existing
 cached slanted cut is drawn, preventing a disconnected end cap inside the join.
 The accepted tower mesh and the wall's own printed material remain unchanged.
 
