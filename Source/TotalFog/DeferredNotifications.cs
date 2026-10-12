@@ -95,7 +95,11 @@ public class DeferredNotifications : MapComponent
         try
         {
             if (LostLetterTargets(notification))
+            {
+                notification.letter.arrivalTick = MultiplayerIntegration.TicksFor(map);
+                notification.letter.debugInfo = notification.debugInfo;
                 Find.Archive.Add(notification.letter);
+            }
             else if (notification.letter != null)
                 Find.LetterStack.ReceiveLetter(
                     notification.letter,

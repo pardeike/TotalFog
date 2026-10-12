@@ -683,3 +683,15 @@ now require `Initialized`; transient counts retain their existing behavior.
 Formatting and the redirected Release build pass 406 pure tests with zero
 warnings/errors. The tracked DLL remains byte-identical to the starting tree;
 native listener-failure and Multiplayer initialization controls remain open.
+
+### Step 3: timestamps for dead-target archived letters
+
+Verified R2-6 in `DeferredNotifications.Replay`, originally line 92.
+DecompilerServer confirms that native `LetterStack.ReceiveLetter` writes the
+public `Letter.arrivalTick` before adding it to the archive; `Archive.Add`
+does not supply that stamp. The direct archive branch now sets the replaying
+map's tick and retained debug information before insertion. It keeps the
+existing archive-only behavior for dead targets without a new sound, pause or
+live letter-stack entry. A native archive-order/save-load check remains open.
+Formatting and the redirected Release build pass 406 tests with zero
+warnings/errors. The tracked gameplay DLL remains unchanged.
