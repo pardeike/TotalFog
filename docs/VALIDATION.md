@@ -7686,3 +7686,46 @@ its report/logs. The corrected quiet and wide runs have no recognized native
 log errors and finish with the candidate restored and all game processes stopped.
 
 The full paired native/pixel/package gates remain a separate delivery requirement.
+
+
+## Final watchtower pair native gates and private delivery, 2026-10-12
+
+The canonical `./scripts/mod feedback-verify tower-quiet-final-20261012` succeeds
+without rebuilding the measured gameplay pair. Evidence is retained in
+`artifacts/feedback-verification-tower-quiet-final-20261012-9y_mohlu` and the
+current package gate. It accepts twelve Symbiant pixel cases, 54 manual target
+checks, forty paused 400/4,000-cell dense/sparse render-cost rows, four native
+Silent Raids arrival controls and incident-parameter lifetime, seven danger-area
+warning controls, 21 Albino scream controls, sixteen explosion-camera controls,
+five global ambient controls and fourteen contamination sight/refresh controls.
+Native logs are clean. Representative actual Symbiant core/root/boundary and
+hidden/visible contamination captures are visually inspected in addition to the
+pixel assertions. The connected Symbiant shader remains intact. The unchanged
+base save and exact built/deployed gameplay and diagnostic hashes are preserved;
+the test process terminates normally.
+
+`./scripts/mod feedback-package` succeeds with all 364 independent tests,
+zero build warnings/errors and the refreshed exact-pair gates. It packages two
+complete public-1.6 payloads, excludes diagnostic companions and includes the
+current preliminary testing guide. The separate private upload names and hashes
+are:
+
+- `TotalFog-0.1.0-watchtower-preliminary.zip`: 1,194,689 bytes, SHA-256
+  `4596e3e465ad205e2b14af9f9e9c9a05ce939b526cdbec7e9634b4c09231bb90`.
+- `ZombieLand-5.6.3-watchtower-preliminary.zip`: 193,886,446 bytes, SHA-256
+  `7234eebead4dc03dee6308c905e4c44758ed5bd9c6859ffae569cccac781e869`.
+
+Both archives contain the same gameplay DLL hashes recorded above. Zombieland
+includes all 166 music/sound files in the active payload. The two uploads are
+read back and downloaded from the verified private tester chat; both remote
+archive hashes exactly match. Only after that verification are the two exact
+superseded download posts removed. Technical notes are brief, use the requested
+robot marker at the end and request ordinary tower/wall/zombie gameplay feedback.
+No CE or Multiplayer update is sent to the tester. Delivery receipts stay in
+ignored `artifacts/tower-{feedback-package-audit,mortal-remote-sha,mortal-delivery}-20261012.json`.
+
+This is a private preliminary testing checkpoint, not a Workshop release,
+Windows acceptance or a broad autonomous-raid/combined-loadout soak. Gameplay
+source is committed and pushed; tracked gameplay DLLs remain the repository's
+last-release snapshots. The exact native-tested beta pair remains in installed
+mods, build outputs and the verified private ZIPs. All test games are stopped.

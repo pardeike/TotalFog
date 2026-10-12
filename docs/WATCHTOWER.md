@@ -1,6 +1,6 @@
 # Watchtower design and validation
 
-Status: production gameplay and CE checkpoint on 12 October 2026, following the
+Status: privately delivered preliminary gameplay pair on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the

@@ -8,8 +8,9 @@ and a result applies only to its recorded gameplay bytes and loadout.
 
 ## Watchtower development: 12 October 2026
 
-The new 3x3 watchtower has separate development evidence; the delivered
-preliminary pair below predates this feature. Native Steam 1.6.4871 with all DLCs
+The new 3x3 watchtower is included in the 12 October private preliminary pair.
+It has separate development evidence; the earlier pair documented below
+predates this feature. Native Steam 1.6.4871 with all DLCs
 passes 76 access, persistence and actor lifecycle checks. A separate 75-check
 suite establishes native targeting/weapon producers, low-wall shots, tall
 blockers, melee exclusion, projected projectile rotation and ground shadows,
@@ -49,14 +50,17 @@ Still open: further combat producers, hauling/autonomous raids,
 autonomous special-zombie AI and broader
 CE/Multiplayer combinations. Existing compatibility evidence below does
 not establish elevated tower behavior. The tower remains experimental and
-has not been delivered to the tester or released publicly.
+has not been released publicly. The complete exact-pair native/pixel/package gate
+passes, including 364 independent tests. Two separate ZIPs are privately delivered;
+both remote downloads match their local hashes and the superseded download posts
+are removed. Windows playtesting and broader gameplay remain open.
 The first close/wide samples were rejected as fourth-speed proof because ordinary
 combat held the native rate at 1. A quiet native waiting control lets that timer
 expire normally and retains multiplier 15 for all ticks in four short samples.
 Ground/occupied throughput is 882–890 TPS at close and wide zoom. This is a
 bounded stationary-tower check; exact bytes and limits are in VALIDATION.md.
 
-## Current status: 10 October 2026
+## Earlier preliminary pair: 10 October 2026
 
 The latest preliminary Total Fog gameplay DLL is
 `10df84231ae2b812a909ecd35ac6cff61de771882bbd5f9ca349f1c71fc62df2`.
