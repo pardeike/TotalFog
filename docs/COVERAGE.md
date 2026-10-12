@@ -16,7 +16,7 @@ and pure tests, not Windows RimWorld gameplay.
 
 | Area | Current evidence and boundary |
 |---|---|
-| Versions | 1.6 and 1.7 load the same `Current/` payload. Development follows 1.7; future 1.6 backports require an explicit request. |
+| Versions | Only 1.6 is advertised and loads Current/. The active folder is a declared project exception; 1.7 support awaits renewed acceptance. |
 | Latest native check | Steam 1.7, all five DLCs, released Harmony and Total Fog: the paused section seam is fixed at maximum normal zoom. All 562,500 target and uploaded vertex alphas match native cell queries. |
 | Other 1.7 checks | Earlier shared-payload candidates pass three-pawn tower row dragging, timed/drafted watch behavior, blueprints, lookout facing, visible tower melee and all four native fog debug commands. Each retains its own tested hash. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
@@ -31,14 +31,13 @@ for present work; [VALIDATION.md](VALIDATION.md) owns the detailed evidence.
 
 ## Engine versions and maintenance
 
-The advertised versions are 1.6 and 1.7. Their explicit load-folder entries
-currently select the same Current/ DLL, definitions and shared assets. All five
-assemblies below 1.6 remain byte-identical to the upstream snapshot. Development
-follows 1.7; if the versions diverge, the complete last working 1.6 payload is
-retained in 1.6/ and active development stays in Current/. Later 1.6 backports require an
-explicit request.
+Only RimWorld 1.6 is advertised and mapped to Current/ with the shared assets.
+Current/ remains the active folder as a declared project exception to the shared
+mod standard. All five assemblies below 1.6 remain byte-identical to upstream.
+1.7 support is withdrawn pending an available reference package and renewed
+native acceptance. Dated experimental evidence remains below.
 
-Native 1.7 checks now extend beyond startup to tower orders, blueprint
+Earlier experimental native 1.7 checks extend beyond startup to tower orders, blueprint
 presentation, debug fog commands, lookout facing and paused fog rendering.
 Broader DLC behavior, save/lifecycle cases, performance, Zombieland, CE and
 Multiplayer acceptance on 1.7 remain open. All five DLCs were loaded in the

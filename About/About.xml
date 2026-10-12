@@ -6,7 +6,6 @@
   <author>Andreas Pardeike</author>
   <supportedVersions>
     <li>1.6</li>
-    <li>1.7</li>
   </supportedVersions>
   <modDependencies>
     <li>
@@ -21,7 +20,7 @@
     <li>CETeam.CombatExtended</li>
     <li>rwmt.Multiplayer</li>
   </loadAfter>
-  <description>Fog of war for RimWorld 1.6 and 1.7. Explore with colonists, animals, cameras and watchtowers. Configure vision, delayed unseen-event notifications, combat music, hidden-source audio and optional Silent Raids in the mod settings. Defaults: map fog and Combat/Anomaly music suppression are on. Hidden-source audio checks and delayed unseen-event notifications are off; the Wildlife tab remains available. Enable those information settings for stricter fog. Silent Raids, message discarding and hidden-source muting are optional and off by default. Existing saved settings are preserved.
+  <description>Fog of war for RimWorld 1.6. Explore with colonists, animals, cameras and watchtowers. Configure vision, delayed unseen-event notifications, combat music, hidden-source audio and optional Silent Raids in the mod settings. Defaults: map fog and Combat/Anomaly music suppression are on. Hidden-source audio checks and delayed unseen-event notifications are off; the Wildlife tab remains available. Enable those information settings for stricter fog. Silent Raids, message discarding and hidden-source muting are optional and off by default. Existing saved settings are preserved.
 
 Early version: broader compatibility is still being tested. Enable Harmony and use this instead of other Real Fog of War versions.
 

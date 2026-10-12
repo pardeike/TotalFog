@@ -786,3 +786,20 @@ that correction they would deploy/check the old tracked DLL even after a
 redirected build. The tracked DLL is still unchanged. The isolated GABS profile
 is temporarily pointed at offline 1.6 for these checks because ordinary Steam
 now launches 1.7; its original configuration is retained for restoration.
+
+### Step 8: withdraw 1.7 advertisement, retain Current/
+
+Verified the cited About/About.xml and LoadFolders.xml entries at 6207fc9.
+Removed 1.7 from supportedVersions and its load-folder mapping exactly as
+requested. Current/ remains active for 1.6, with a declared steam-mods folder
+exception in AGENTS.md. Player-facing support text and the source-publication
+metadata guard agree with the new advertisement. Historical validation remains.
+
+R2-4's assertion that no native 1.7 run exists does not reproduce: the dated
+VALIDATION.md entries record focused native Steam 1.7 tower, debug-command and
+paused-fog checks. Those checks do not establish broad integration/performance
+acceptance. The removal follows Andreas's explicit work order; it is not based
+on treating the retained experimental evidence as absent.
+Formatting and the redirected Release build pass all 407 tests without warnings
+or errors. The shared metadata validator reports zero errors and the two
+pre-existing workflow/art-dimension warnings. The tracked DLL is unchanged.

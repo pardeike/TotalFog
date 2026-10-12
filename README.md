@@ -9,7 +9,7 @@ When your colonists walk away, the area goes grey again, and you no longer know
 what happens there. A raid can come out of the dark. A sound in the night may be
 a wild boar or something much worse. To be safe, you have to look.
 
-> **Early version for RimWorld 1.6 and 1.7.** Testing is still going on. Feedback, bug
+> **Early version for RimWorld 1.6.** Testing is still going on. Feedback, bug
 > reports and saves that show problems are very welcome:
 > [Brrainz Discord](https://discord.gg/G4r84eN7w6) or
 > [GitHub issues](https://github.com/pardeike/TotalFog/issues).
@@ -123,7 +123,7 @@ too much.
 
 ## Good to know
 
-- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6 or 1.7. Use the released Steam Harmony for your game version.
+- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6. Use the released Steam Harmony for your game version.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a
   copy of your save first.
@@ -137,9 +137,9 @@ too much.
   on two local clients. Overall compatibility is still unverified; combined CE,
   cross-platform play and longer sessions need testing.
 
-Focused native 1.7 checks cover tower orders, blueprints, lookout facing, debug
-fog commands and paused fog drawing. Broader DLC and optional-mod compatibility
-on 1.7 remain unverified. Most native integration checks above use macOS 1.6;
+1.7 is not currently advertised or mapped to a payload. Earlier experimental
+checks cover tower orders, blueprints, lookout facing, debug fog commands and
+paused fog drawing; they do not establish supported 1.7 compatibility. Most native integration checks above use macOS 1.6;
 Windows gameplay and longer sessions still need confirmation.
 
 See [coverage](docs/COVERAGE.md#current-status) for the current
@@ -390,14 +390,12 @@ For a short wide-zoom comparison, prefix `runtime-compare` with
 map area at root size 100. This is a spot check; the normal performance gate
 still uses three pairs.
 
-Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 currently load the
-same DLL, definitions and assets from `Current/`. The older version folders stay for
-history. Development follows 1.7. If the versions need different code or content,
-we will freeze the last working payload in `1.6/` and keep new development in `Current/`;
-continued fixes or new features for 1.6 are not promised. The current 1.7 evidence
-includes clean startup and focused tower, blueprint, debug-command and paused-fog
-gameplay checks. Broader compatibility and performance acceptance are still open.
-Earlier integration and performance results retain their recorded 1.6 builds.
+Full logs are kept in `artifacts/logs/`. RimWorld 1.6 loads the active DLL,
+definitions and assets from `Current/`; the older version folders stay for
+history. This active folder is a declared exception to the shared mod standard.
+1.7 support awaits an available reference package and renewed native acceptance.
+Earlier experimental 1.7 checks retain their recorded hashes and limits, as do
+the dated 1.6 integration and performance results.
 More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),
 [validation](docs/VALIDATION.md) and [AGENTS.md](AGENTS.md).

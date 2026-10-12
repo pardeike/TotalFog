@@ -4,7 +4,7 @@
 
 Current source includes the production tower, timed/drafted orders, wall-link
 correction, front ladder placement, native-style blueprints and rotating
-undrafted lookouts. It is part of the shared `Current/` payload for 1.6 and 1.7.
+undrafted lookouts. It is part of the active `Current/` payload, advertised for 1.6 only.
 Focused native 1.7 controls cover the user's three-tower row drag, watch/draft
 transitions, blueprint presentation, all four lookout facings and a visible
 tower melee attack. The latest source build passes 405 independent tests.
