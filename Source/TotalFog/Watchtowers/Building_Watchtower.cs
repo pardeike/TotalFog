@@ -20,7 +20,9 @@ public static class WatchtowerDefOf
 public sealed class Building_Watchtower : WatchtowerGraphic
 {
     internal Pawn Occupant;
+    internal Pawn Rescuer;
     internal float Elevation;
+    internal float RescuerElevation;
     internal bool Watching;
     internal bool SightDirty = true;
     private bool collapsing;
@@ -28,6 +30,23 @@ public sealed class Building_Watchtower : WatchtowerGraphic
 
     public IntVec3 Approach => Position + Rotation.FacingCell * 2;
     internal Thing OccupantBody => Occupant?.Dead == true ? Occupant.Corpse : Occupant;
+    private Thing RescuerBody => Rescuer?.Dead == true ? Rescuer.Corpse : Rescuer;
+
+    internal bool HasActor(Pawn pawn) => Occupant == pawn || Rescuer == pawn;
+
+    internal float ElevationFor(Thing thing) =>
+        thing == OccupantBody ? Elevation
+        : thing == RescuerBody ? RescuerElevation
+        : 0;
+
+    internal void SetElevation(Pawn pawn, float elevation)
+    {
+        if (Occupant == pawn)
+            Elevation = elevation;
+        else if (Rescuer == pawn)
+            RescuerElevation = elevation;
+    }
+
     internal bool ProvidesSight =>
         Watching
         && Occupant?.Spawned == true
@@ -40,6 +59,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         && pawn?.Spawned == true
         && pawn.RaceProps.Humanlike
         && !pawn.Downed
+        && (Rescuer == null || Rescuer == pawn)
         && Approach.InBounds(Map)
         && Approach.Walkable(Map)
         && !this.IsForbidden(pawn)
@@ -48,29 +68,43 @@ public sealed class Building_Watchtower : WatchtowerGraphic
 
     internal void Claim(Pawn pawn)
     {
+        if (Rescuer == pawn)
+        {
+            Rescuer = null;
+            RescuerElevation = 0;
+        }
         Occupant = pawn;
         Watching = false;
         Map.GetComponent<MapComponent_Watchtowers>().Track(this);
         RefreshSight();
     }
 
+    internal void ClaimRescuer(Pawn pawn)
+    {
+        Rescuer = pawn;
+        RescuerElevation = 0;
+        Map.GetComponent<MapComponent_Watchtowers>().Track(this);
+    }
+
     internal void RefreshSight()
     {
         SightDirty = true;
         Occupant?.TryGetComp<CompFog>()?.FieldOfViewWatcher?.UpdateFoV(true);
+        Map?.GetVisibility().RaisedTargetChanged(Position);
     }
 
     internal Vector3 OffsetFor(Thing thing)
     {
-        if (thing != OccupantBody || Elevation <= 0)
+        float elevation = ElevationFor(thing);
+        if (elevation <= 0)
             return Vector3.zero;
         var ground = Approach.ToVector3Shifted();
         float projection =
-            thing is Corpse || Occupant?.Downed == true
+            thing is Corpse || thing is Pawn { Downed: true }
                 ? PlatformProjection - .18f
                 : Core.TowerGeometry.PawnProjection;
         var top = Position.ToVector3Shifted() + new Vector3(0, 0, projection);
-        return Vector3.Lerp(ground, top, Elevation) - thing.Position.ToVector3Shifted();
+        return Vector3.Lerp(ground, top, elevation) - thing.Position.ToVector3Shifted();
     }
 
     internal bool[] SightWindow(CellRect rect)
@@ -93,14 +127,22 @@ public sealed class Building_Watchtower : WatchtowerGraphic
 
     internal void Release(Pawn pawn)
     {
+        if (Rescuer == pawn)
+        {
+            Map?.GetComponent<MapComponent_Watchtowers>().Untrack(pawn);
+            Rescuer = null;
+            RescuerElevation = 0;
+            return;
+        }
         if (Occupant != pawn)
             return;
-        Map?.GetComponent<MapComponent_Watchtowers>().Untrack(this);
+        Map?.GetComponent<MapComponent_Watchtowers>().Untrack(pawn);
         Occupant = null;
         Elevation = 0;
         Watching = false;
         SightDirty = true;
         pawn.TryGetComp<CompFog>()?.FieldOfViewWatcher?.UpdateFoV(true);
+        Map?.GetVisibility().RaisedTargetChanged(Position);
     }
 
     internal static void Move(Pawn pawn, IntVec3 cell)
@@ -114,8 +156,10 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     {
         base.ExposeData();
         Scribe_References.Look(ref Occupant, "totalFogTowerOccupant");
+        Scribe_References.Look(ref Rescuer, "totalFogTowerRescuer");
         Scribe_Values.Look(ref Elevation, "totalFogTowerElevation");
         Scribe_Values.Look(ref Watching, "totalFogTowerWatching");
+        Scribe_Values.Look(ref RescuerElevation, "totalFogTowerRescuerElevation");
     }
 
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
@@ -123,7 +167,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         base.SpawnSetup(map, respawningAfterLoad);
         var component = map.GetComponent<MapComponent_Watchtowers>();
         component.Register(this);
-        if (Occupant != null)
+        if (Occupant != null || Rescuer != null)
             component.Track(this);
     }
 
@@ -139,7 +183,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     {
         foreach (var option in base.GetFloatMenuOptions(pawn))
             yield return option;
-        if (Occupant == pawn)
+        if (HasActor(pawn))
         {
             yield return new FloatMenuOption(
                 "TotalFog_TowerDescend".Translate(),
@@ -190,32 +234,14 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     // the native pawn/corpse exactly once, before the edifice grid is removed.
     public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
     {
-        if (mode == DestroyMode.Deconstruct && Occupant != null)
+        if (mode == DestroyMode.Deconstruct && (Occupant != null || Rescuer != null))
             return;
-        if (!collapsing && Spawned && OccupantBody?.Spawned == true)
+        if (!collapsing && Spawned)
         {
             collapsing = true;
-            var pawn = Occupant;
-            var body = OccupantBody;
-            var height = Elevation;
-            var cell = FindGroundCell();
-            Release(pawn);
-            if (body is Pawn living)
-            {
-                Move(living, cell);
-                living.jobs.EndCurrentJob(JobCondition.InterruptForced, startNewJob: false);
-                if (mode is DestroyMode.KillFinalize or DestroyMode.KillFinalizeLeavingsOnly)
-                    for (int i = 0; i < 3 && !living.Dead; i++)
-                        living.TakeDamage(
-                            new DamageInfo(
-                                DamageDefOf.Blunt,
-                                Rand.Range(20f, 35f) * height,
-                                instigator: this
-                            )
-                        );
-            }
-            else
-                body.Position = cell;
+            bool injury = mode is DestroyMode.KillFinalize or DestroyMode.KillFinalizeLeavingsOnly;
+            GroundActor(Occupant, injury);
+            GroundActor(Rescuer, injury);
         }
         base.Destroy(mode);
     }
@@ -231,20 +257,39 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         return Position;
     }
 
+    private void GroundActor(Pawn pawn, bool injury)
+    {
+        if (pawn == null)
+            return;
+        var body = pawn.Dead ? pawn.Corpse : (Thing)pawn;
+        float height = ElevationFor(body);
+        var cell = FindGroundCell();
+        Release(pawn);
+        if (body?.Spawned != true)
+            return;
+        if (body is not Pawn living)
+        {
+            body.Position = cell;
+            return;
+        }
+        Move(living, cell);
+        living.jobs.EndCurrentJob(JobCondition.InterruptForced, startNewJob: false);
+        if (injury)
+            for (int i = 0; i < 3 && !living.Dead; i++)
+                living.TakeDamage(
+                    new DamageInfo(
+                        DamageDefOf.Blunt,
+                        Rand.Range(20f, 35f) * height,
+                        instigator: this
+                    )
+                );
+    }
+
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
         var previous = Map;
-        if (OccupantBody?.Spawned == true)
-        {
-            var pawn = Occupant;
-            var body = OccupantBody;
-            var cell = FindGroundCell();
-            Release(pawn);
-            if (body is Pawn living)
-                Move(living, cell);
-            else
-                body.Position = cell;
-        }
+        GroundActor(Occupant, false);
+        GroundActor(Rescuer, false);
         previous.GetComponent<MapComponent_Watchtowers>().Unregister(this);
         base.DeSpawn(mode);
     }

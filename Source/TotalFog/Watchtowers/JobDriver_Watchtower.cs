@@ -16,15 +16,6 @@ public sealed class JobDriver_Watchtower : JobDriver
     private int duration;
     internal bool Climbing;
 
-    internal Vector3 VisualOffset =>
-        Tower == null
-            ? Vector3.zero
-            : Vector3.Lerp(
-                Tower.Approach.ToVector3Shifted(),
-                Tower.Position.ToVector3Shifted()
-                    + new Vector3(0, 0, Core.TowerGeometry.PawnProjection),
-                TransitionElevation
-            ) - pawn.Position.ToVector3Shifted();
     private float TransitionElevation =>
         goingDown ? Mathf.Lerp(startingElevation, 0, Progress) : Progress;
     private float Progress =>
@@ -33,7 +24,7 @@ public sealed class JobDriver_Watchtower : JobDriver
     public override bool TryMakePreToilReservations(bool errorOnFailed)
     {
         if (Descending)
-            return Tower?.Occupant == pawn;
+            return Tower?.HasActor(pawn) == true;
         if (Tower?.CanEnter(pawn, Retrieving ? job.targetC.Thing : null) != true)
             return false;
         return pawn.Reserve(Tower, job, 1, -1, null, errorOnFailed)
@@ -53,20 +44,27 @@ public sealed class JobDriver_Watchtower : JobDriver
     {
         this.FailOnDespawnedOrNull(TargetIndex.A);
         SetFinalizerJob(_ =>
-            Tower?.Occupant == pawn && Tower.Elevation > 0 && !pawn.Downed && !pawn.Dead
+            Tower?.HasActor(pawn) == true
+            && Tower.ElevationFor(pawn) > 0
+            && !pawn.Downed
+            && !pawn.Dead
                 ? JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerDescend, Tower)
                 : null
         );
         AddFinishAction(_ =>
         {
             var tower = Tower;
-            if (tower?.Spawned != true || tower.Occupant != pawn)
+            if (tower?.Spawned != true || !tower.HasActor(pawn))
                 return;
             tower.Watching = false;
             tower.RefreshSight();
-            if (tower.Elevation <= 0 || pawn.Downed && tower.Elevation < 1)
+            float elevation = tower.ElevationFor(pawn.Dead ? pawn.Corpse : pawn);
+            if (elevation <= 0 || (pawn.Downed || pawn.Dead) && elevation < 1)
             {
-                Building_Watchtower.Move(pawn, tower.Approach);
+                if (pawn.Spawned)
+                    Building_Watchtower.Move(pawn, tower.Approach);
+                else if (pawn.Corpse?.Spawned == true)
+                    pawn.Corpse.Position = tower.Approach;
                 tower.Release(pawn);
             }
             // A downed pawn or corpse at the top stays there for ladder retrieval.
@@ -80,6 +78,8 @@ public sealed class JobDriver_Watchtower : JobDriver
                     EndJobWith(JobCondition.Incompletable);
                 else if (!Retrieving)
                     Tower.Claim(pawn);
+                else
+                    Tower.ClaimRescuer(pawn);
             });
             yield return Climb(false);
             yield return Toils_General.Do(() =>
@@ -89,6 +89,7 @@ public sealed class JobDriver_Watchtower : JobDriver
                 if (Retrieving)
                 {
                     var body = job.targetC.Thing;
+                    var patient = Tower.Occupant;
                     if (
                         body != Tower.OccupantBody
                         || body?.Spawned != true
@@ -98,7 +99,7 @@ public sealed class JobDriver_Watchtower : JobDriver
                         EndJobWith(JobCondition.Incompletable);
                         return;
                     }
-                    Tower.Release(Tower.Occupant);
+                    Tower.Release(patient);
                     Tower.Claim(pawn);
                 }
                 Tower.Elevation = 1;
@@ -146,6 +147,16 @@ public sealed class JobDriver_Watchtower : JobDriver
         // Wait for a blocked ladder; no instantaneous teleport through a new wall.
         var clear = ToilMaker.MakeToil("Wait for clear ladder");
         clear.defaultCompleteMode = ToilCompleteMode.Never;
+        clear.initAction = () =>
+        {
+            if (!Tower.Approach.Walkable(pawn.Map))
+                Messages.Message(
+                    "TotalFog_TowerExitBlocked".Translate(),
+                    Tower,
+                    MessageTypeDefOf.RejectInput,
+                    false
+                );
+        };
         clear.tickAction = () =>
         {
             if (Tower.Approach.InBounds(pawn.Map) && Tower.Approach.Walkable(pawn.Map))
@@ -176,20 +187,20 @@ public sealed class JobDriver_Watchtower : JobDriver
     {
         var toil = ToilMaker.MakeToil(descend ? "Descend tower" : "Climb tower");
         toil.defaultCompleteMode = ToilCompleteMode.Delay;
-        toil.defaultDuration = Mathf.Max(
-            1,
-            descend
-                ? Mathf.CeilToInt(Tower.Elevation * FogSettings.TowerClimbTicks)
-                : FogSettings.TowerClimbTicks
-        );
+        toil.defaultDuration = FogSettings.TowerClimbTicks;
         toil.initAction = () =>
         {
             pawn.pather.StopDead();
             pawn.Drawer.tweener.Notify_Teleported();
             goingDown = descend;
             Climbing = true;
-            duration = toil.defaultDuration;
-            startingElevation = descend ? Tower.Elevation : 0;
+            startingElevation = descend ? Tower.ElevationFor(pawn) : 0;
+            // Toils are built before the ascent. Read elevation when descent
+            // starts, otherwise watch/rescue jobs incorrectly descend in one tick.
+            duration = descend
+                ? Mathf.Max(1, Mathf.CeilToInt(startingElevation * FogSettings.TowerClimbTicks))
+                : FogSettings.TowerClimbTicks;
+            ticksLeftThisToil = duration;
             if (Tower.Occupant == pawn)
             {
                 Tower.Watching = false;
@@ -199,8 +210,7 @@ public sealed class JobDriver_Watchtower : JobDriver
         toil.tickAction = () =>
         {
             pawn.Rotation = descend ? Tower.Rotation : Tower.Rotation.Opposite;
-            if (Tower.Occupant == pawn)
-                Tower.Elevation = TransitionElevation;
+            Tower.SetElevation(pawn, TransitionElevation);
         };
         return toil.WithProgressBar(TargetIndex.None, () => Progress, alwaysShow: true);
     }

@@ -297,8 +297,10 @@ material interception or drawing archives into gameplay to support that feature.
 Use `totalfog/watchtower_gameplay` in the paused `TotalFogRegression` fixture for
 the production tower access/sight/bullet/rescue/collapse slice. Its historical
 `watchtower_access` and `watchtower_visuals` tools remain prototype controls.
-The first production suite does not complete tower persistence, other combat,
-weather, optional mod or performance acceptance; track these in WATCHTOWER.md
+The expanded production suite checks climb/descent/flight/carrying persistence,
+blocked exits, interrupted rescue, recovery, death and projected corpse retrieval.
+It does not complete other combat, weather, optional mod or performance
+acceptance; track these in WATCHTOWER.md
 and VALIDATION.md. Never substitute the old test-only projection for production
 rendering or change native projectile ExactPosition to fit the artwork.
 

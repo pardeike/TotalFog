@@ -30,9 +30,23 @@ public class WatchtowerGraphic : Building
     internal bool HasNativeFront => nativeFront?.HasGeometry ?? false;
     internal float NativeFrontMappingError => nativeFront?.MappingError ?? 0;
 
+    internal static (Mesh body, Mesh foreground) BuildPreview(Rot4 rotation, Color color) =>
+        new Drawing(rotation, color, false, true, Array.Empty<IntVec3>(), false, true).Build();
+
     public override void SpawnSetup(Map map, bool respawningAfterLoad)
     {
         base.SpawnSetup(map, respawningAfterLoad);
+        // FinalizeLoading spawns edifices on the background long-event thread.
+        // Unity Mesh/Material creation belongs to the finished-event game thread.
+        LongEventHandler.ExecuteWhenFinished(() =>
+        {
+            if (Spawned)
+                InitializeDrawing();
+        });
+    }
+
+    private void InitializeDrawing()
+    {
         material = SolidColorMaterials.SimpleSolidColorMaterial(Color.white, true);
         var drawing = new Drawing(
             Rotation,
@@ -46,9 +60,21 @@ public class WatchtowerGraphic : Building
         (body, foreground) = drawing.Build();
     }
 
-    // The artwork fixture calls this after its walls have spawned. Production
-    // neighbour invalidation belongs to the later gameplay implementation.
+    // Rebuild only after native neighbour/material invalidation.
     internal void RebuildWallJoins()
+    {
+        Rand.PushState(thingIDNumber);
+        try
+        {
+            RebuildDrawing();
+        }
+        finally
+        {
+            Rand.PopState();
+        }
+    }
+
+    private void RebuildDrawing()
     {
         var next = new WatchtowerWallJoins(this);
         WatchtowerWallJoins nextFront = null;
@@ -95,6 +121,8 @@ public class WatchtowerGraphic : Building
 
     public override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
+        if (body == null || foreground == null)
+            return;
         drawLoc.y = AltitudeLayer.BuildingOnTop.AltitudeFor();
         Graphics.DrawMesh(body, drawLoc, Quaternion.identity, material, 0);
         nativeFront?.Draw();

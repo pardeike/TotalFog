@@ -44,6 +44,29 @@ internal static class WatchtowerPatches
             postfix: nameof(FinalizerEligibilityPostfix)
         );
         Patch(
+            typeof(JobDriver),
+            nameof(JobDriver.GetFinalizerJob),
+            postfix: nameof(FinalizerPostfix)
+        );
+        Patch(typeof(Thing), nameof(Thing.DeSpawn), nameof(ActorDespawnPrefix));
+        Patch(typeof(Pawn), nameof(Pawn.Kill), nameof(DeathPrefix), nameof(DeathPostfix));
+        Patch(
+            typeof(GenSpawn),
+            nameof(GenSpawn.SpawnBuildingAsPossible),
+            nameof(LoadedTowerPrefix),
+            finalizer: nameof(LoadedTowerFinalizer)
+        );
+        Patch(
+            typeof(Pawn_PathFollower),
+            nameof(Pawn_PathFollower.TryRecoverFromUnwalkablePosition),
+            nameof(PositionRecoveryPrefix)
+        );
+        Patch(
+            typeof(Pawn_JobTracker),
+            nameof(Pawn_JobTracker.TryOpportunisticJob),
+            nameof(DescentPriorityPrefix)
+        );
+        Patch(
             typeof(WorkGiver_Deconstruct),
             nameof(WorkGiver_Deconstruct.HasJobOnThing),
             nameof(DeconstructPrefix)
@@ -102,6 +125,7 @@ internal static class WatchtowerPatches
             typeof(GenUI),
             nameof(GenUI.ThingsUnderMouse),
             nameof(TowerPresentation.DrawingPrefix),
+            nameof(TowerPresentation.MouseTargetsPostfix),
             owner: typeof(TowerPresentation),
             finalizer: nameof(TowerPresentation.DrawingFinalizer)
         );
@@ -111,6 +135,33 @@ internal static class WatchtowerPatches
             nameof(TowerPresentation.DrawingPrefix),
             owner: typeof(TowerPresentation),
             finalizer: nameof(TowerPresentation.DrawingFinalizer)
+        );
+        Patch(
+            typeof(Mote),
+            "DrawAt",
+            nameof(TowerPresentation.DrawingPrefix),
+            owner: typeof(TowerPresentation),
+            finalizer: nameof(TowerPresentation.DrawingFinalizer)
+        );
+        Patch(
+            typeof(MoteBubble),
+            "DrawAt",
+            nameof(TowerPresentation.DrawingPrefix),
+            owner: typeof(TowerPresentation),
+            finalizer: nameof(TowerPresentation.DrawingFinalizer)
+        );
+        Patch(
+            typeof(Thing),
+            nameof(Thing.DynamicDrawPhaseAt),
+            nameof(TowerPresentation.AttachmentDrawingPrefix),
+            owner: typeof(TowerPresentation)
+        );
+        harmony.Patch(
+            AccessTools.PropertyGetter(typeof(Mote), nameof(Mote.DrawPos)),
+            postfix: new HarmonyMethod(
+                typeof(TowerPresentation),
+                nameof(TowerPresentation.MotePositionPostfix)
+            )
         );
         Patch(
             typeof(WorkGiver_RescueDowned),
@@ -128,6 +179,18 @@ internal static class WatchtowerPatches
             nameof(LightningPrefix)
         );
         TowerCombat.Install(harmony);
+        harmony.Patch(
+            AccessTools.Method(
+                typeof(FleckStatic),
+                nameof(FleckStatic.Draw),
+                new[] { typeof(float), typeof(DrawBatch) }
+            ),
+            transpiler: new HarmonyMethod(
+                typeof(TowerPresentation),
+                nameof(TowerPresentation.FleckTranspiler)
+            )
+        );
+        Patch(typeof(CompColorable), nameof(CompColorable.SetColor), postfix: nameof(ColorPostfix));
         harmony.Patch(
             AccessTools.Method(typeof(DynamicDrawManager), "ComputeCulledThings"),
             transpiler: new HarmonyMethod(
@@ -183,23 +246,176 @@ internal static class WatchtowerPatches
     internal static void RoofPostfix(IntVec3 c, Map ___map) =>
         ___map.GetComponent<MapComponent_Watchtowers>().CellChanged(c);
 
+    internal static void ColorPostfix(CompColorable __instance)
+    {
+        if (__instance.parent is Building { Spawned: true } building)
+            building.Map.GetVisibility().TowerComponent?.DrawingChanged(building.Position);
+    }
+
     internal static void FinalizerEligibilityPostfix(Pawn pawn, ref bool __result)
     {
         if (
             !__result
             && !pawn.Downed
             && !pawn.Dead
-            && TowerPresentation.TowerFor(pawn)?.Elevation > 0
+            && TowerPresentation.TowerFor(pawn)?.ElevationFor(pawn) > 0
         )
             __result = true;
     }
 
+    internal static void FinalizerPostfix(JobDriver __instance, ref Job __result)
+    {
+        var pawn = __instance.GetActor();
+        if (__result != null || pawn?.Spawned != true || pawn.Downed || pawn.Dead)
+            return;
+        var tower = TowerPresentation.TowerFor(pawn);
+        if (tower?.ElevationFor(pawn) > 0)
+            __result = JobMaker.MakeJob(WatchtowerDefOf.TotalFog_WatchtowerDescend, tower);
+    }
+
+    internal static bool DescentPriorityPrefix(
+        Job finalizerJob,
+        Job job,
+        Pawn ___pawn,
+        ref Job __result
+    )
+    {
+        if (
+            finalizerJob?.def != WatchtowerDefOf.TotalFog_WatchtowerDescend
+            || ___pawn.Downed
+            || ___pawn.Dead
+        )
+            return true;
+        var tower = TowerPresentation.TowerFor(___pawn);
+        if (tower == null)
+            return true;
+        bool shooting =
+            FogSettings.TowerShootingAllowed
+            && tower.ElevationFor(___pawn) == 1
+            && (job.def == JobDefOf.AttackStatic || job.def == JobDefOf.Wait_Combat);
+        if (shooting)
+        {
+            tower.Watching = true;
+            tower.RefreshSight();
+        }
+        // Native non-opportunistic jobs must still descend. A direct descend
+        // order must not enqueue a redundant second descent after the finalizer.
+        __result =
+            shooting || job.def == WatchtowerDefOf.TotalFog_WatchtowerDescend ? null : finalizerJob;
+        return false;
+    }
+
     internal static bool DeconstructPrefix(Thing t, ref bool __result)
     {
-        if (t is not Building_Watchtower { Occupant: not null })
+        if (t is not Building_Watchtower tower || tower.Occupant == null && tower.Rescuer == null)
             return true;
         __result = false;
         JobFailReason.Is("TotalFog_TowerEmptyFirst".Translate());
+        return false;
+    }
+
+    internal static void ActorDespawnPrefix(Thing __instance)
+    {
+        if (__instance is not (Pawn or Corpse))
+            return;
+        // Death creates a corpse after despawning the pawn. Keep that top slot
+        // until the corpse exists. All living external transfers relinquish it.
+        if (__instance is Pawn { Dead: true })
+            return;
+        var tower = TowerPresentation.TowerFor(__instance);
+        if (tower != null)
+            tower.Release(__instance as Pawn ?? ((Corpse)__instance).InnerPawn);
+    }
+
+    internal static void DeathPrefix(Pawn __instance, out Building_Watchtower __state) =>
+        __state = TowerPresentation.TowerFor(__instance);
+
+    internal static void DeathPostfix(Pawn __instance, Building_Watchtower __state)
+    {
+        if (__state?.Spawned != true || !__state.HasActor(__instance))
+            return;
+        var corpse = __instance.Corpse;
+        if (corpse?.Spawned == true && corpse.Map == __state.Map)
+        {
+            // Native corpse placement can move items out of an impassable
+            // edifice. This body's saved platform slot is intentionally valid.
+            corpse.Position = __state.Position;
+            corpse.TryGetComp<CompFog>()?.ComponentsPositionTracker?.updatePosition();
+            if (__state.Occupant == __instance)
+                __state.Watching = false;
+            __state.RefreshSight();
+        }
+        else
+            __state.Release(__instance); // Disintegration must not occupy the slot forever.
+    }
+
+    internal struct TowerLoadState
+    {
+        internal Thing Body,
+            Rescuer;
+        internal IntVec3 BodyCell,
+            RescuerCell;
+        internal Map Map;
+    }
+
+    internal static void LoadedTowerPrefix(
+        Building building,
+        Map map,
+        bool respawningAfterLoad,
+        out TowerLoadState __state
+    )
+    {
+        __state = default;
+        if (
+            !respawningAfterLoad
+            || building is not Building_Watchtower tower
+            || !tower.OccupiedRect().InBounds(map)
+        )
+            return;
+        __state.Map = map;
+        // Native map loading spawns pawns/items before buildings. Temporarily
+        // move only these saved actors outside the footprint while native
+        // SpawnBuildingAsPossible validates all other collisions and refunds.
+        // No despawn, job notification, simulation tick or Unity work occurs.
+        __state.Body = MoveAside(tower.OccupantBody, out __state.BodyCell);
+        __state.Rescuer = MoveAside(
+            tower.Rescuer?.Dead == true ? tower.Rescuer.Corpse : tower.Rescuer,
+            out __state.RescuerCell
+        );
+        Thing MoveAside(Thing body, out IntVec3 original)
+        {
+            original = IntVec3.Invalid;
+            if (body?.Map != map || !tower.OccupiedRect().Contains(body.Position))
+                return null;
+            original = body.Position;
+            body.Position = tower.Approach;
+            return body;
+        }
+    }
+
+    internal static Exception LoadedTowerFinalizer(TowerLoadState __state, Exception __exception)
+    {
+        Restore(__state.Body, __state.BodyCell);
+        Restore(__state.Rescuer, __state.RescuerCell);
+        return __exception;
+        void Restore(Thing body, IntVec3 cell)
+        {
+            if (body == null || body.Map != __state.Map || !cell.IsValid)
+                return;
+            body.Position = cell;
+            if (body is Pawn pawn)
+                pawn.Drawer.tweener.Notify_Teleported();
+        }
+    }
+
+    internal static bool PositionRecoveryPrefix(Pawn ___pawn, ref bool __result)
+    {
+        var tower = TowerPresentation.TowerFor(___pawn);
+        if (tower == null || !tower.OccupiedRect().Contains(___pawn.Position))
+            return true;
+        // The solid edifice is a valid occupied position only for its own
+        // ladder/platform actors. Everybody else's native recovery is unchanged.
+        __result = true;
         return false;
     }
 

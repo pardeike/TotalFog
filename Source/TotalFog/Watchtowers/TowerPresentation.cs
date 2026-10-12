@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -15,32 +16,59 @@ internal static class TowerPresentation
     internal static int DrawingDepth;
 
     internal static Building_Watchtower TowerFor(Thing thing) =>
-        thing?.MapHeld?.GetComponent<MapComponent_Watchtowers>().For(thing);
+        thing?.MapHeld?.GetVisibility().TowerComponent?.For(thing);
 
     internal static Vector3 Offset(Thing thing)
     {
-        if (thing is Pawn { jobs.curDriver: JobDriver_Watchtower driver } && driver.Climbing)
-            return driver.VisualOffset;
+        if (thing is AttachableThing attachment && attachment.parent != null)
+            thing = attachment.parent;
+        else if (thing is MoteAttached attached && attached.link1.Linked)
+            thing = attached.link1.Target.Thing;
         return TowerFor(thing)?.OffsetFor(thing) ?? Vector3.zero;
     }
 
-    internal static void PawnDrawingPrefix(Pawn __instance, ref Vector3 drawLoc)
+    internal static void AttachmentDrawingPrefix(Thing __instance, ref Vector3 drawLoc)
     {
-        drawLoc += Offset(__instance);
-        DrawingDepth++;
+        if (__instance is AttachableThing)
+            drawLoc += Offset(__instance);
     }
 
-    internal static void CorpseDrawingPrefix(Corpse __instance, ref Vector3 drawLoc)
+    internal static void MotePositionPostfix(Mote __instance, ref Vector3 __result)
     {
-        drawLoc += Offset(__instance);
-        DrawingDepth++;
+        if (DrawingDepth > 0 && __instance is MoteAttached && __instance is not MoteProgressBar)
+            __result += Offset(__instance);
     }
 
-    internal static void DrawingPrefix() => DrawingDepth++;
-
-    internal static Exception DrawingFinalizer(Exception __exception)
+    internal static void PawnDrawingPrefix(Pawn __instance, ref Vector3 drawLoc, out bool __state)
     {
-        DrawingDepth--;
+        __state = false;
+        drawLoc += Offset(__instance);
+        DrawingDepth++;
+        __state = true;
+    }
+
+    internal static void CorpseDrawingPrefix(
+        Corpse __instance,
+        ref Vector3 drawLoc,
+        out bool __state
+    )
+    {
+        __state = false;
+        drawLoc += Offset(__instance);
+        DrawingDepth++;
+        __state = true;
+    }
+
+    internal static void DrawingPrefix(out bool __state)
+    {
+        DrawingDepth++;
+        __state = true;
+    }
+
+    internal static Exception DrawingFinalizer(bool __state, Exception __exception)
+    {
+        if (__state)
+            DrawingDepth--;
         return __exception;
     }
 
@@ -48,6 +76,71 @@ internal static class TowerPresentation
     {
         if (DrawingDepth > 0)
             __result += Offset(__instance);
+    }
+
+    internal static void MouseTargetsPostfix(
+        Vector3 clickPos,
+        float pawnWideClickRadius,
+        TargetingParameters clickParams,
+        ITargetingSource source,
+        List<Thing> __result
+    )
+    {
+        var component = Find.CurrentMap?.GetVisibility().TowerComponent;
+        if (component == null || component.Towers.Count == 0 || __result == null)
+            return;
+        // Native cell-grid fallback must not select a raised body at its foot.
+        __result.RemoveAll(t =>
+            TowerFor(t) != null
+            && (t.DrawPos - clickPos).MagnitudeHorizontal() > Mathf.Max(.5f, pawnWideClickRadius)
+        );
+        // Corpses are found through the native cell grid rather than the pawn
+        // draw-position loop. Add only a visible, valid projected corpse.
+        foreach (var tower in component.Towers)
+            if (
+                tower.OccupantBody is Corpse corpse
+                && corpse.Spawned
+                && !__result.Contains(corpse)
+                && (corpse.DrawPos - clickPos).MagnitudeHorizontal() < .5f
+                && clickParams.CanTarget(corpse, source)
+                && Visibility.IsVisible(corpse)
+            )
+                __result.Insert(0, corpse);
+    }
+
+    internal static Vector3 FleckPosition(ref FleckStatic fleck)
+    {
+        var position = fleck.DrawPos;
+        var map = fleck.map ?? Presentation.FleckVisibility.DrawingMap;
+        if (
+            fleck.def == FleckDefOf.ShotFlash
+            && map != null
+            && fleck.spawnPosition.ToIntVec3().GetEdifice(map) is Building_Watchtower tower
+            && tower.ProvidesSight
+        )
+            position += tower.OffsetFor(tower.Occupant);
+        return position;
+    }
+
+    // The visibility prefix still tests native map coordinates. Only the
+    // particle's draw call uses its raised muzzle position.
+    internal static IEnumerable<CodeInstruction> FleckTranspiler(
+        IEnumerable<CodeInstruction> instructions
+    )
+    {
+        var body = instructions.ToList();
+        var native = AccessTools.PropertyGetter(typeof(FleckStatic), nameof(FleckStatic.DrawPos));
+        if (body.Count(c => c.Calls(native)) != 1)
+            throw new InvalidOperationException(
+                "Total Fog: native fleck drawing must have one draw-position call."
+            );
+        foreach (var code in body)
+            if (code.Calls(native))
+            {
+                code.opcode = OpCodes.Call;
+                code.operand = AccessTools.Method(typeof(TowerPresentation), nameof(FleckPosition));
+            }
+        return body;
     }
 
     internal static CellRect CullBounds(Thing thing)

@@ -11,6 +11,8 @@ internal static class FleckVisibility
     // batch's owner once so static and worker-drawn thrown flecks share it.
     private static MapVisibility drawingFog;
 
+    internal static Map DrawingMap => Volatile.Read(ref drawingFog)?.map;
+
     internal static void BeginDrawing(FleckManager __instance, out MapVisibility __state)
     {
         __state = Volatile.Read(ref drawingFog);

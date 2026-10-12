@@ -14,6 +14,7 @@
     <fillPercent>1</fillPercent>
     <blockLight>true</blockLight>
     <holdsRoof>false</holdsRoof>
+    <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
     <designationCategory>Security</designationCategory>
     <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
     <costStuffCount>150</costStuffCount>
@@ -36,6 +37,11 @@
       <Beauty>0</Beauty>
     </statBases>
     <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Linked/WallSmooth_MenuIcon</texPath>
+        <graphicClass>TotalFog.Watchtowers.Graphic_WatchtowerPreview</graphicClass>
+        <drawSize>(3,3)</drawSize>
+      </blueprintGraphicData>
       <isEdifice>true</isEdifice>
       <ai_chillDestination>false</ai_chillDestination>
       <canBuildNonEdificesUnder>false</canBuildNonEdificesUnder>

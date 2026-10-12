@@ -7257,3 +7257,46 @@ death/corpse and automatic rescue discovery, target acquisition, melee/tall
 obstacle/shield/other-projectile controls, muzzle/impact/camera-edge projection,
 natural breaching, lightning, optional mod/Multiplayer checks and a small normal
 versus wide performance sample. No Steam release or feedback ZIP is claimed.
+
+## 2026-10-12 — watchtower persistence and actor lifecycle
+
+Public Steam 1.6.4871, all DLCs, same isolated TotalFogRegression profile;
+`totalfog/watchtower_gameplay` passes all 54 checks. Receipt
+`artifacts/tower-gameplay-bed9-20261012.json`. The fresh climbing and occupied
+captures show all four native bodies, raised labels and progress bars. The
+root-size-35 capture also invokes actual native pawn drawing. Draw/cull probes
+retain the logical map cell; they do not inject a second body or change fog.
+
+Native save/reload preserves ascent, interrupted descent, bullet flight and
+carrying rescue. The native load callback's deliberate extra tick is matched
+against one uninterrupted reference tick. Partial-climb reversal, blocked-exit
+waiting/resumption, downed recovery, interrupted rescuer descent, native bed
+handoff, collapse injury, one native corpse, projected selection and corpse
+retrieval pass. Fixture saves are deleted and the unchanged base save reloaded;
+there is no open native attention item, and the game is stopped.
+
+Gameplay SHA-256 `b6c078af64b61cf647663578b73e06a55cce15a7b5ba0f628c50ae790ea5f778`;
+companion `3fdbb3d75e9dcdd56034d60e89605b059d73a8b910b8b0645948134bdfb71355`.
+The quiet deployment build passes 357 independent tests without warnings.
+
+Retained failures exposed real defects: Unity mesh creation during background
+map loading crashed the process; native building load refunded the occupied
+impassable tower; unwalkable-position recovery moved its actor; descent toils
+constructed before ascent calculated a one-tick duration; corpse placement
+could relocate the body. These now use post-load drawing initialization, narrowly
+scoped saved-actor load/recovery rules, duration calculated when descent starts,
+and native corpse repositioning. Earlier failed receipts remain separate.
+
+The render7/rescue8 runs returned no valid rescue bed. Added diagnostics in bed9
+show a spawned, usable, reachable, reservable medical bed and native rescue
+passes; no special bypass of native bed validation was added. The reason for
+that earlier intermittent native rejection is not established. Keep the
+failure evidence rather than treating additional diagnostics as a defect fix.
+Fresh capture timing now advances the existing tick-based fog fade after mesh
+rebuild; no production fog animation was changed.
+
+Remaining: actual weapon burst/target acquisition, melee, tall obstacles,
+shields and other projectiles, actual muzzle/attachment and camera-edge drawing,
+placement/construction, native lightning, optional mod/Multiplayer checks and a
+small normal/wide performance sample. This is a source checkpoint, not a player
+release or feedback delivery.

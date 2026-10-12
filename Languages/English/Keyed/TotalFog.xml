@@ -50,4 +50,5 @@
   <TotalFog_TowerBlockedLadder>The ladder needs a clear approach cell.</TotalFog_TowerBlockedLadder>
   <TotalFog_TowerNoRoof>A watchtower needs open sky.</TotalFog_TowerNoRoof>
   <TotalFog_TowerEmptyFirst>The watchtower must be empty before deconstruction.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>The watchtower ladder is blocked. Clear its approach so the pawn can climb down.</TotalFog_TowerExitBlocked>
 </LanguageData>

@@ -36,7 +36,7 @@ internal static class TowerCombat
 
     internal static float Height(Thing thing) =>
         TowerGeometry.GroundAimHeight
-        + (TowerPresentation.TowerFor(thing)?.Elevation ?? 0)
+        + (TowerPresentation.TowerFor(thing)?.ElevationFor(thing) ?? 0)
             * (TowerGeometry.PlatformAimHeight - TowerGeometry.GroundAimHeight);
 
     internal static void Install(Harmony harmony)
@@ -102,7 +102,11 @@ internal static class TowerCombat
         var tower = TowerPresentation.TowerFor(__instance.caster);
         if (tower == null || __instance.verbProps.IsMeleeAttack)
             return true;
-        if (tower.Watching && FogSettings.TowerShootingAllowed)
+        if (
+            tower.Watching
+            && tower.Occupant == __instance.caster
+            && FogSettings.TowerShootingAllowed
+        )
             return true;
         __result = false;
         return false;
@@ -128,7 +132,7 @@ internal static class TowerCombat
                 seer.Position,
                 target.Position,
                 source,
-                destination,
+                destination ?? target as Building_Watchtower,
                 Height(seer),
                 Height(target),
                 validator
@@ -190,7 +194,7 @@ internal static class TowerCombat
                 root,
                 targ.Cell,
                 source,
-                target,
+                target ?? targ.Thing as Building_Watchtower,
                 Height(caster),
                 Height(targ.Thing)
             );
@@ -205,7 +209,8 @@ internal static class TowerCombat
         Building_Watchtower target,
         float sourceHeight,
         float targetHeight,
-        Func<IntVec3, bool> validator = null
+        Func<IntVec3, bool> validator = null,
+        bool forSight = false
     )
     {
         foreach (var cell in GenSight.PointsOnLineOfSight(from, to))
@@ -220,6 +225,8 @@ internal static class TowerCombat
             )
                 continue;
             if (cell.Roofed(map))
+                return false;
+            if (forSight && map.GetVisibility().treeBlockerCells[map.cellIndices.CellToIndex(cell)])
                 return false;
             var building = cell.GetEdifice(map);
             if (building == null || building.CanBeSeenOver())
@@ -251,7 +258,7 @@ internal static class TowerCombat
     internal static bool ThingCoveredPrefix(Thing thing, ref bool __result)
     {
         if (
-            TowerPresentation.TowerFor(thing)?.Elevation < .999f
+            TowerPresentation.TowerFor(thing)?.ElevationFor(thing) < .999f
             || TowerPresentation.TowerFor(thing) == null
         )
             return true;
@@ -270,18 +277,22 @@ internal static class TowerCombat
         if (sourceTower == null && targetTower == null)
             return;
         coverChance(ref __result) = 0;
-        if (targetTower?.Elevation > .999f)
+        if (targetTower?.ElevationFor(target.Thing) > .999f)
             targetSize(ref __result) = Mathf.Min(2f, targetSize(ref __result) * 1.25f);
     }
 
     internal static void LaunchPostfix(
         Projectile __instance,
         Thing launcher,
-        LocalTargetInfo usedTarget
+        LocalTargetInfo usedTarget,
+        LocalTargetInfo intendedTarget
     )
     {
         var source = TowerPresentation.TowerFor(launcher);
-        var target = TowerPresentation.TowerFor(usedTarget.Thing);
+        // A native accuracy miss uses a cell as usedTarget. It still travels at
+        // the intended lookout's height, instead of instantly aiming at ground.
+        var aim = usedTarget.Thing ?? intendedTarget.Thing;
+        var target = TowerPresentation.TowerFor(aim);
         if (source == null && target == null)
             return;
         paths.Remove(__instance);
@@ -290,9 +301,9 @@ internal static class TowerCombat
             new ShotPath
             {
                 SourceHeight = Height(launcher),
-                TargetHeight = Height(usedTarget.Thing),
+                TargetHeight = Height(aim),
                 SourceProjection = TowerPresentation.Offset(launcher),
-                TargetProjection = TowerPresentation.Offset(usedTarget.Thing),
+                TargetProjection = TowerPresentation.Offset(aim),
                 SourceTower = source,
                 TargetTower = target,
             }

@@ -40,6 +40,9 @@ public class MapVisibility : MapComponent
     public bool[] knownCells;
     public bool Initialized { get; private set; }
     public VisibilityGrid Coverage => coverage;
+    private Watchtowers.MapComponent_Watchtowers towerComponent;
+    internal Watchtowers.MapComponent_Watchtowers TowerComponent =>
+        towerComponent ??= map.GetComponent<Watchtowers.MapComponent_Watchtowers>();
     public bool workingCameraConsole => HasWorkingCameraConsole(Faction.OfPlayer);
 
     internal bool HasWorkingCameraConsole(Faction faction)
@@ -243,7 +246,7 @@ public class MapVisibility : MapComponent
             wasTree = treeBlockerCells[index];
         treeBlockerCells[index] = treeBlockers[index] > 0;
         viewBlockerCells[index] = wallBlockers[index] > 0 || treeBlockerCells[index];
-        map.GetComponent<Watchtowers.MapComponent_Watchtowers>().CellChanged(cell);
+        TowerComponent?.CellChanged(cell);
         if (
             !Initialized
             || wasBlocked == viewBlockerCells[index] && wasTree == treeBlockerCells[index]
@@ -252,11 +255,11 @@ public class MapVisibility : MapComponent
         for (int i = 0; i < blockerSources.Count; i++)
         {
             var watcher = blockerSources[i];
+            if (!watcher.NeedsGroundBlockerRefresh)
+                continue;
             if (!watcher.parent.Position.InHorDistOf(cell, watcher.LastSightRange + 1))
                 continue;
-            var node = watcher.PendingRefresh ??= new LinkedListNode<CompSightSource>(watcher);
-            if (node.List == null)
-                dirtySources.AddLast(node);
+            QueueRefresh(watcher);
         }
     }
 
@@ -265,6 +268,25 @@ public class MapVisibility : MapComponent
         var node = source.PendingRefresh;
         if (node?.List == dirtySources)
             dirtySources.Remove(node);
+    }
+
+    internal void QueueRefresh(CompSightSource source)
+    {
+        var node = source.PendingRefresh ??= new LinkedListNode<CompSightSource>(source);
+        if (node.List == null)
+            dirtySources.AddLast(node);
+    }
+
+    internal void RaisedTargetChanged(IntVec3 cell)
+    {
+        // Occupation/height transitions are sparse events. Stationary observers
+        // otherwise have no movement or wall change that would refresh the deck.
+        foreach (var source in blockerSources)
+            if (
+                source.parent.Spawned
+                && source.parent.Position.InHorDistOf(cell, source.LastSightRange)
+            )
+                QueueRefresh(source);
     }
 
     internal void ChangeBlockerSourceRange(CompSightSource source, int range)

@@ -1,6 +1,6 @@
 # Watchtower design draft
 
-Status: first production gameplay checkpoint on 12 October 2026, following the
+Status: second production gameplay checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -8,8 +8,8 @@ default. Native-scale wall-front pieces remain a separate optional experiment.
 A separate
 non-shipping native access prototype is retained as a historical control. The
 new production definition, ladder jobs, elevated sight and ordinary bullet policy
-pass the first 28-check native suite. Persistence, further presentation/combat
-edges, weather, compatibility and performance acceptance remain outstanding.
+pass the expanded 54-check native suite. Further presentation/combat edges,
+weather, compatibility and performance acceptance remain outstanding.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
 The new definition and runtime types belong to Total Fog.
@@ -24,12 +24,27 @@ registration. The defaults are provisional until the bounded performance check.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
-28 checks, including four ladder rotations, timed descent after a drafted move,
+54 checks, including four ladder rotations, timed descent after a drafted move,
 opaque roofs, shooting disabled, native incoming/outgoing bullet damage across
 a freestanding wall, ladder rescue followed by native bed rescue, and collapse.
 Close and wider captures show raised pawn labels and selection brackets. The
 native bed search keeps its own preferences and validation, using the ladder
 approach as its reachability search root for an elevated patient.
+
+The expanded checkpoint reloads during ascent, descent, bullet flight and a
+carrying rescue. It also checks blocked exits, reversing a partial climb,
+recovery from downing, an interrupted rescuer, death, projected corpse selection
+and corpse retrieval. Occupant and temporary rescuer elevations are saved on
+the tower; drawing reads those values without moving simulation coordinates.
+Native loading briefly moves only the tower's saved actors out of its footprint
+during building collision checks, then restores their saved cells. Native
+unwalkable-position recovery accepts only the tower's own platform actors; the
+ordinary path grid stays impassable to everybody else.
+
+Mesh/material creation runs after loading finishes on the main thread. Native
+wall printing preserves the outer random stream. Muzzle flashes, attached
+ordinary motes and attached fire have projection hooks; their actual weapon and
+effect controls remain separate from the passing access/persistence suite.
 
 Rendering projects the native pawn only in drawing/UI calls. Projectile
 interception uses a separate height rule and keeps `ExactPosition` in native

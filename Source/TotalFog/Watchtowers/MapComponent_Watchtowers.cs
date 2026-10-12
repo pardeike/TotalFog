@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RimWorld;
 using TotalFog.Utils;
@@ -43,7 +44,10 @@ public sealed class MapComponent_Watchtowers : MapComponent
 
     internal void Unregister(Building_Watchtower tower)
     {
-        Untrack(tower);
+        if (tower.Occupant != null)
+            Untrack(tower.Occupant);
+        if (tower.Rescuer != null)
+            Untrack(tower.Rescuer);
         Towers.Remove(tower);
         dirtyDrawings.Remove(tower);
     }
@@ -52,13 +56,11 @@ public sealed class MapComponent_Watchtowers : MapComponent
     {
         if (tower.Occupant != null)
             occupants[tower.Occupant] = tower;
+        if (tower.Rescuer != null)
+            occupants[tower.Rescuer] = tower;
     }
 
-    internal void Untrack(Building_Watchtower tower)
-    {
-        if (tower.Occupant != null)
-            occupants.Remove(tower.Occupant);
-    }
+    internal void Untrack(Pawn pawn) => occupants.Remove(pawn);
 
     internal static bool LowWall(Building building) =>
         building != null
@@ -83,18 +85,37 @@ public sealed class MapComponent_Watchtowers : MapComponent
     {
         if (!cell.InBounds(map) || Towers.Count == 0)
             return;
+        DrawingChanged(cell);
+        bool changed = false;
         if (elevatedBlockers != null)
-            elevatedBlockers[map.cellIndices.CellToIndex(cell)] = IsTall(cell);
+        {
+            int index = map.cellIndices.CellToIndex(cell);
+            bool tall = IsTall(cell);
+            changed = elevatedBlockers[index] != tall;
+            elevatedBlockers[index] = tall;
+        }
+        if (!changed)
+            return;
         foreach (var tower in Towers)
         {
-            if (tower.Position.InHorDistOf(cell, 4))
-                dirtyDrawings.Add(tower);
             if (
                 tower.Occupant?.Spawned == true
                 && tower.Position.InHorDistOf(cell, FogSettings.TowerMaxSightRange + 1)
             )
+            {
                 tower.SightDirty = true;
+                var source = tower.Occupant.TryGetComp<CompFog>()?.FieldOfViewWatcher;
+                if (source != null)
+                    map.GetVisibility().QueueRefresh(source);
+            }
         }
+    }
+
+    internal void DrawingChanged(IntVec3 cell)
+    {
+        foreach (var tower in Towers)
+            if (tower.Position.InHorDistOf(cell, 4))
+                dirtyDrawings.Add(tower);
     }
 
     public override void MapComponentUpdate()
@@ -103,7 +124,16 @@ public sealed class MapComponent_Watchtowers : MapComponent
             return;
         foreach (var tower in dirtyDrawings)
             if (tower.Spawned)
-                tower.RebuildWallJoins();
+                try
+                {
+                    tower.RebuildWallJoins();
+                }
+                catch (Exception error)
+                {
+                    // Keep the previous drawing and retry only on a new native
+                    // neighbour invalidation, not every frame after a bad wall.
+                    Log.Error("Total Fog: watchtower wall drawing failed: " + error);
+                }
         dirtyDrawings.Clear();
     }
 }

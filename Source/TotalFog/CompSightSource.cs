@@ -29,6 +29,7 @@ public class CompSightSource : FogSubcomponent
         lastMovement;
     private bool setup;
     private Watchtowers.Building_Watchtower elevatedTower;
+    internal bool NeedsGroundBlockerRefresh => elevatedTower == null || elevatedTower.SightDirty;
     public int LastSightRange { get; private set; }
     internal LinkedListNode<CompSightSource> PendingRefresh;
 
@@ -153,7 +154,7 @@ public class CompSightSource : FogSubcomponent
             return;
         }
         var tower = pawn == null ? null : Watchtowers.TowerPresentation.TowerFor(pawn);
-        var elevated = tower?.ProvidesSight == true ? tower : null;
+        var elevated = tower?.Occupant == pawn && tower?.ProvidesSight == true ? tower : null;
         forceUpdate |= elevatedTower != elevated || elevated?.SightDirty == true;
         elevatedTower = elevated;
         int radius =
@@ -222,6 +223,28 @@ public class CompSightSource : FogSubcomponent
             }
             if (peeking != null)
                 CastPeeking(rect, radius, peeking);
+            // A ground observer can see a raised person without seeing the
+            // hidden terrain behind the wall below them. Publish only that
+            // platform's logical cell, keeping the rest of the ground cast.
+            foreach (var platform in fog.TowerComponent.Towers)
+                if (
+                    platform.OccupantBody?.Spawned == true
+                    && platform.Elevation > 0
+                    && position.InHorDistOf(platform.Position, radius)
+                    && Watchtowers.TowerCombat.ClearLine(
+                        map,
+                        position,
+                        platform.Position,
+                        elevated,
+                        platform,
+                        elevated == null
+                            ? TowerGeometry.GroundAimHeight
+                            : TowerGeometry.PlatformAimHeight,
+                        Watchtowers.TowerCombat.Height(platform.OccupantBody),
+                        forSight: true
+                    )
+                )
+                    next.Add(map.cellIndices.CellToIndex(platform.Position));
         }
         if (faction != null)
             VisibilityMask.ApplyDifference(current, next, change);
