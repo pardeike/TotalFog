@@ -43,8 +43,7 @@ public class Building_VisionConsole : Building
 
     public static bool NeedWatcher()
     {
-        //Turret need the console to work so just keep it like this
-        return true;
+        return FogSettings.NeedWatcher;
     }
 
     private void drawOverLay()

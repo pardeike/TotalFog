@@ -32,7 +32,8 @@ a wild boar or something much worse. To be safe, you have to look.
 
 ### Build your own eyes
 - Surveillance cameras: on posts, on walls, under roofs, hidden in bushes, or solar
-  powered. Watch them from a camera console.
+  powered. By default they need an operator at a working camera console. Turn off
+  the operator requirement to use cameras automatically without console jobs.
 - A watch telescope doubles the sight range of pawns standing on it.
 - An experimental 3x3 watchtower has a timed ladder and room for one lookout.
   Order a watch of 1, 2 or 4 game hours, or let a drafted lookout hold until

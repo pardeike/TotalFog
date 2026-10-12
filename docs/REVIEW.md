@@ -330,3 +330,16 @@ tests where they are pure:
   automatic/manual retrieval do not require a bed, and tending/feeding follows
   retrieval. Towers require Complex furniture; shooting out retains native
   target cover. These engine-bound changes still need native play checks.
+
+- Step 9, items 16 and 17: verified the cited camera helper, job giver,
+  job driver, settings serialization and translated descriptions. The helper
+  now reads NeedWatcher, so operator-free cameras skip console work and existing
+  monitor jobs end through their native failure condition. Removed the unused
+  memory setting and reset entry. German, French, Simplified Chinese and Korean
+  now have all current TotalFog keyed text and new tower Thing/Job/WorkGiver
+  translations, with matching placeholders. Retired towers, bells and inspector
+  ornaments no longer promise sight, weather exemption, light or food use.
+  The broader camera claim does not reproduce: surveillance cameras remain
+  active, so their descriptions were retained. English Keyed fallback was a
+  localization gap rather than a gameplay failure. These translations have
+  XML/placeholder checks but have not had native-speaker or in-game review.

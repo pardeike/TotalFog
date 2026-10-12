@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_Watchtower.label>감시탑</TotalFog_Watchtower.label>
+  <TotalFog_Watchtower.description>감시자 한 명을 위한 폭 3칸의 견고한 감시탑입니다. 정착민은 사다리를 올라 독립된 벽 너머를 볼 수 있습니다. 지붕이 있는 방, 산과 다른 탑은 시야를 막습니다. 노출된 감시자는 사격에 맞기 쉽습니다. 해체 전에 탑을 비워야 하며, 파괴되면 탑 위 인물이 다칠 수 있습니다.</TotalFog_Watchtower.description>
+</LanguageData>

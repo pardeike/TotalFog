@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_SuppressCombatMusic>Supprimer la musique de combat et d'Anomaly</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Utiliser la musique normale pendant les combats et les événements d'Anomaly pour éviter qu'un changement de musique révèle des menaces invisibles.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Couper les sons des sources cachées</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Couper entièrement les sources sonores cachées, y compris les boucles en cours. Ce réglage est prioritaire sur le filtrage selon l'ouïe.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Filtrer les sons selon l'ouïe</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Autoriser les sons étouffés de sources cachées proches que les personnages vivants contrôlés par le joueur peuvent entendre. Les sources hors de portée restent silencieuses.</TotalFog_FilterHiddenSoundsDesc>
+  <TotalFog_ShowHearingCues>Afficher les indicateurs sonores</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Afficher les mouvements cachés proches qu'un personnage contrôlé par le joueur peut entendre. Désactiver pour masquer ces indicateurs.</TotalFog_ShowHearingCuesDesc>
+  <TotalFog_PageAppearance>Apparence</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Vision</TotalFog_PageVision>
+  <TotalFog_PageInformation>Informations</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Audio</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Choisir l'apparence du terrain exploré hors du champ de vision actuel.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Définir qui fournit la vision et jusqu'à quelle distance.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Choisir quels messages et informations peuvent révéler une activité hors du champ de vision.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>La musique de combat, les sons cachés et les indicateurs sonores peuvent révéler une activité à travers le brouillard. Régler chaque option séparément.</TotalFog_IntroAudio>
+  <TotalFog_ResetDesc>Réinitialiser les réglages. Le blocage de la vision par les arbres reste inchangé tant qu'une partie est chargée.</TotalFog_ResetDesc>
+  <TotalFog_AdditionalObservers>Observateurs supplémentaires</TotalFog_AdditionalObservers>
+  <TotalFog_TerrainAndMaps>Terrain et cartes</TotalFog_TerrainAndMaps>
+  <TotalFog_DiscardEvents>Supprimer les messages et lettres non observés</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Supprimer les catégories choisies uniquement quand leurs cibles sont invisibles. Les événements de santé de la colonie, les événements visibles et les événements globaux sans cible restent immédiats. Utiliser le délai pour conserver les notifications jusqu'à l'observation de leurs cibles.</TotalFog_DiscardEventsDesc>
+  <TotalFog_InformationOptions>Autres informations</TotalFog_InformationOptions>
+  <TotalFog_SilentRaids>Raids et meutes de chasseurs d'hommes silencieux</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Supprimer les lettres d'arrivée et le ralentissement à l'arrivée des raids ennemis et des meutes de chasseurs d'hommes, même visibles. Aucune alerte d'arrivée différée n'est conservée. Leurs attaques et le ralentissement normal des combats restent inchangés. La musique de combat se règle séparément.</TotalFog_SilentRaidsDesc>
+  <TotalFog_HearingIndicators>Indicateurs sonores</TotalFog_HearingIndicators>
+  <TotalFog_TurretVisionDesc>Modifier la portée de vision des tourelles automatiques alimentées en énergie et en carburant.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVisionDesc>Modifier la vision des animaux dressés qui fournissent une vision.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Multiplicateur de vision des mécanoïdes de la colonie</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Modifier la portée de vision des mécanoïdes de la colonie. 1 conserve leur portée normale. Ne modifie ni la portée des armes ni les indicateurs sonores.</TotalFog_ColonyMechVisionDesc>
+  <TotalFog_AllyVisionDesc>Les personnages alliés et neutres fournissent une vision à la moitié de leur portée normale.</TotalFog_AllyVisionDesc>
+  <TotalFog_PrisonerVisionDesc>Les prisonniers de la colonie fournissent une vision au cinquième de leur portée normale.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_MapRevealDesc>Marquer le terrain comme exploré à l'initialisation d'une carte. Ne fournit pas de vision actuelle.</TotalFog_MapRevealDesc>
+  <TotalFog_HearingRangeDesc>Distance maximale en cases des indicateurs de mouvements cachés proches.</TotalFog_HearingRangeDesc>
+  <TotalFog_Watchtowers>Tours de guet</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Multiplicateur de vision du guetteur</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Multiplier la portée de vision normale du guetteur sur la plateforme. Les pièces couvertes, les montagnes et les autres tours bloquent cette vision.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Portée maximale du guetteur</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Limiter la vision du guetteur à ce nombre de cases.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Durée de montée en ticks</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Durée d'une montée ou descente complète. Soixante ticks correspondent à une seconde de jeu.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Autoriser les tirs depuis les tours</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Les guetteurs peuvent tirer par-dessus les murs isolés. Ils sont exposés aux tirs ennemis et ne peuvent pas attaquer au corps à corps des cibles au sol.</TotalFog_TowerShootingDesc>
+  <TotalFog_TowerOccupied>Occupant : {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Observer depuis la tour</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Observer depuis la tour jusqu'à la fin de la mobilisation</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Observer depuis la tour pendant {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Observe jusqu'à la fin de la mobilisation ou un ordre de départ</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Temps de guet restant : {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Monte sur {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Descend de {0}.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Descendre</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Récupérer l'occupant de la tour</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>occupée ou échelle inaccessible</TotalFog_TowerUnavailable>
+  <TotalFog_TowerBlockedLadder>La case d'accès à l'échelle doit être libre.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Une tour de guet doit être à ciel ouvert.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>La tour doit être vide avant sa déconstruction.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>L'échelle est bloquée. Libérez son accès pour permettre la descente.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Attend que l'échelle de {0} soit dégagée.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} saute d'une tour bloquée pour s'échapper. La chute peut causer des blessures.</TotalFog_TowerEmergencyExit>
+</LanguageData>

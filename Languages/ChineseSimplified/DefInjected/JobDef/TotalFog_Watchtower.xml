@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_WatchtowerWatch.reportString>正在 TargetA 上瞭望。</TotalFog_WatchtowerWatch.reportString>
+  <TotalFog_WatchtowerDescend.reportString>正在爬下 TargetA。</TotalFog_WatchtowerDescend.reportString>
+  <TotalFog_WatchtowerRetrieve.reportString>正在从 TargetA 取回 TargetC。</TotalFog_WatchtowerRetrieve.reportString>
+</LanguageData>

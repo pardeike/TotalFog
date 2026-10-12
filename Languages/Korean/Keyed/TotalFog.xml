@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_SuppressCombatMusic>전투 및 Anomaly 음악 억제</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>전투와 Anomaly 사건 중에도 일반 음악을 사용하여 음악 변화로 보이지 않는 위협이 드러나지 않게 합니다.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>숨겨진 소리의 발생원 음소거</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>지속되는 반복 소리를 포함하여 숨겨진 발생원의 소리를 완전히 끕니다. 청력 기반 필터보다 우선합니다.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>청력 기반 소리 필터 사용</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>플레이어가 조종하는 살아 있는 인물이 들을 수 있는 가까운 숨겨진 발생원의 소리는 작게 들립니다. 청력 범위 밖의 발생원은 들리지 않습니다.</TotalFog_FilterHiddenSoundsDesc>
+  <TotalFog_ShowHearingCues>청각 표시 보이기</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>플레이어가 조종하는 인물이 들을 수 있는 가까운 숨겨진 움직임을 표시합니다. 끄면 청각 표시를 숨깁니다.</TotalFog_ShowHearingCuesDesc>
+  <TotalFog_PageAppearance>외형</TotalFog_PageAppearance>
+  <TotalFog_PageVision>시야</TotalFog_PageVision>
+  <TotalFog_PageInformation>정보</TotalFog_PageInformation>
+  <TotalFog_PageAudio>소리</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>현재 시야 밖의 탐색한 지형이 어떻게 보일지 설정합니다.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>누가 시야를 제공하고 얼마나 멀리 볼지 설정합니다.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>시야 밖 활동을 드러낼 수 있는 메시지와 정보를 설정합니다.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>전투 음악, 숨겨진 소리와 청각 표시는 안개 속 활동을 드러낼 수 있습니다. 각각 따로 설정합니다.</TotalFog_IntroAudio>
+  <TotalFog_ResetDesc>조정 가능한 설정을 초기화합니다. 게임이 로드된 동안 나무의 시야 차단 설정은 바뀌지 않습니다.</TotalFog_ResetDesc>
+  <TotalFog_AdditionalObservers>추가 관찰자</TotalFog_AdditionalObservers>
+  <TotalFog_TerrainAndMaps>지형과 지도</TotalFog_TerrainAndMaps>
+  <TotalFog_DiscardEvents>보이지 않는 사건의 메시지와 편지 삭제</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>대상이 보이지 않을 때만 선택한 범주를 삭제합니다. 정착지 건강 사건, 보이는 사건과 대상 없는 전역 사건은 즉시 표시됩니다. 지연을 사용하면 대상이 관찰될 때까지 알림을 보관합니다.</TotalFog_DiscardEventsDesc>
+  <TotalFog_InformationOptions>기타 정보</TotalFog_InformationOptions>
+  <TotalFog_SilentRaids>조용한 습격과 식인 동물 무리</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>보이는 경우에도 적 습격과 식인 동물 무리의 도착 편지와 도착 시 속도 감소를 없앱니다. 지연된 도착 경고도 보관하지 않습니다. 공격과 일반 전투 속도 감소는 그대로입니다. 전투 음악은 별도로 설정합니다.</TotalFog_SilentRaidsDesc>
+  <TotalFog_HearingIndicators>청각 표시</TotalFog_HearingIndicators>
+  <TotalFog_TurretVisionDesc>전력과 연료를 공급받는 자동 포탑의 시야 범위를 조정합니다.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVisionDesc>시야를 제공하는 훈련된 동물의 시야를 조정합니다.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>정착지 메카노이드 시야 배율</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>정착지 메카노이드의 시야 범위를 조정합니다. 1은 기본 범위를 유지합니다. 무기 사거리나 청각 표시는 바뀌지 않습니다.</TotalFog_ColonyMechVisionDesc>
+  <TotalFog_AllyVisionDesc>우호 및 중립 인물은 기본 시야 범위의 절반으로 시야를 제공합니다.</TotalFog_AllyVisionDesc>
+  <TotalFog_PrisonerVisionDesc>정착지 포로는 기본 시야 범위의 5분의 1로 시야를 제공합니다.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_MapRevealDesc>지도 초기화 시 지형을 탐색한 것으로 표시합니다. 현재 시야를 제공하지는 않습니다.</TotalFog_MapRevealDesc>
+  <TotalFog_HearingRangeDesc>가까운 숨겨진 움직임의 표시가 나타나는 최대 거리입니다. 단위는 칸입니다.</TotalFog_HearingRangeDesc>
+  <TotalFog_Watchtowers>감시탑</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>감시자 시야 배율</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>플랫폼 위 감시자의 기본 시야 범위에 이 값을 곱합니다. 지붕이 있는 방, 산과 다른 감시탑은 시야를 막습니다.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>감시자 최대 시야 범위</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>감시자의 시야를 이 칸 수로 제한합니다.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>사다리 이동 시간, 틱 단위</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>완전히 올라가거나 내려오는 데 걸리는 시간입니다. 60틱은 게임 시간 1초입니다.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>감시탑에서 사격 허용</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>감시자는 독립된 벽 너머로 사격할 수 있습니다. 적의 사격에 노출되며 지상 대상을 근접 공격할 수 없습니다.</TotalFog_TowerShootingDesc>
+  <TotalFog_TowerOccupied>탑 위 인물: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>탑에서 감시</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>징집 해제까지 탑에서 감시</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>{0} 동안 탑에서 감시</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>징집 해제 또는 이동 명령까지 감시 중</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>남은 감시 시간: {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>{0}에 올라가는 중.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>{0}에서 내려오는 중.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>내려오기</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>탑 위 인물 구조</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>이미 사용 중이거나 사다리에 접근 불가</TotalFog_TowerUnavailable>
+  <TotalFog_TowerBlockedLadder>사다리 입구 칸이 비어 있어야 합니다.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>감시탑 위는 지붕이 없어야 합니다.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>해체 전에 감시탑을 비워야 합니다.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>감시탑 사다리가 막혔습니다. 인물이 내려올 수 있도록 입구를 치우세요.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>{0}의 사다리 입구가 비기를 기다리는 중.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0}이 막힌 감시탑에서 탈출하려고 뛰어내립니다. 추락으로 다칠 수 있습니다.</TotalFog_TowerEmergencyExit>
+</LanguageData>

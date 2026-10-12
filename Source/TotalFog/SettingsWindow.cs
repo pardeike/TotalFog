@@ -442,7 +442,6 @@ public partial class FogSettings
         AllyGiveVision = false;
         MapRevealAtStart = false;
         WildLifeTabVisible = true;
-        needMemoryStorage = true;
         OnlyOutsideColony = false;
         DoAudioCheck = false;
         SuppressCombatMusic = true;

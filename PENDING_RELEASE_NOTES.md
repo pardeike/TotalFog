@@ -96,3 +96,5 @@
 - Hidden looping sounds reuse hearing checks within a map tick. Delayed letters use the owning map clock and remain in History when their unseen targets disappear.
 
 - Watchtowers require Complex furniture, protect their ladder from blocking construction, show blocked-exit warnings and permit rescue without a bed from the pawn menu. Desperate blocked exits can cause fall injuries; outgoing shots keep the target's normal cover.
+
+- Disabling the camera operator requirement stops unnecessary console work. Update retired-feature descriptions and translate Total Fog settings and watchtower text into German, French, Simplified Chinese and Korean.

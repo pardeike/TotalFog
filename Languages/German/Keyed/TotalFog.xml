@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <TotalFog_SuppressCombatMusic>Kampf- und Anomaly-Musik unterdrücken</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Bei Kämpfen und Anomaly-Ereignissen normale Musik spielen, damit ein Musikwechsel keine ungesehenen Bedrohungen verrät.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Geräusche verborgener Quellen stummschalten</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Verborgene Geräuschquellen vollständig stummschalten, auch laufende Schleifen. Hat Vorrang vor der hörbasierten Filterung.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Geräusche nach Hörvermögen filtern</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Gedämpfte Geräusche naher verborgener Quellen zulassen, die lebende, vom Spieler kontrollierte Figuren hören können. Quellen außerhalb der Hörweite bleiben stumm.</TotalFog_FilterHiddenSoundsDesc>
+  <TotalFog_ShowHearingCues>Hörhinweise anzeigen</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Nahe verborgene Bewegungen anzeigen, die eine vom Spieler kontrollierte Figur hören kann. Deaktivieren, um Hörhinweise auszublenden.</TotalFog_ShowHearingCuesDesc>
+  <TotalFog_PageAppearance>Darstellung</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Sicht</TotalFog_PageVision>
+  <TotalFog_PageInformation>Informationen</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Audio</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Darstellung erkundeten Geländes außerhalb der aktuellen Sicht wählen.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Festlegen, wer Sicht liefert und wie weit diese reicht.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Festlegen, welche Meldungen Aktivitäten außerhalb der Sicht verraten dürfen.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Kampfmusik, verborgene Geräusche und Hörhinweise können Aktivitäten im Nebel verraten. Sie lassen sich getrennt einstellen.</TotalFog_IntroAudio>
+  <TotalFog_ResetDesc>Einstellbare Werte zurücksetzen. Solange ein Spiel geladen ist, bleibt die Sichtblockierung durch Bäume unverändert.</TotalFog_ResetDesc>
+  <TotalFog_AdditionalObservers>Weitere Beobachter</TotalFog_AdditionalObservers>
+  <TotalFog_TerrainAndMaps>Gelände und Karten</TotalFog_TerrainAndMaps>
+  <TotalFog_DiscardEvents>Ungesehene Meldungen und Briefe verwerfen</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Gewählte Kategorien nur verwerfen, solange ihre Ziele ungesehen sind. Gesundheitsmeldungen der Kolonie, sichtbare Ereignisse und globale Ereignisse ohne Ziel bleiben sofort sichtbar. Mit Verzögerung bleiben ungesehene Meldungen erhalten, bis ihre Ziele beobachtet werden.</TotalFog_DiscardEventsDesc>
+  <TotalFog_InformationOptions>Weitere Informationen</TotalFog_InformationOptions>
+  <TotalFog_SilentRaids>Stille Überfälle und menschenjagende Tiere</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Ankunftsbriefe und die Verlangsamung bei feindlichen Überfällen und menschenjagenden Tieren entfernen, auch wenn sie sichtbar sind. Keine verzögerte Ankunftswarnung aufbewahren. Angriffe und die normale Kampfverlangsamung bleiben erhalten. Kampfmusik wird getrennt eingestellt.</TotalFog_SilentRaidsDesc>
+  <TotalFog_HearingIndicators>Hörhinweise</TotalFog_HearingIndicators>
+  <TotalFog_TurretVisionDesc>Sichtweite automatischer Geschütze mit Strom und Brennstoff skalieren.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVisionDesc>Sichtweite trainierter Tiere skalieren, die Sicht liefern.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Sichtmultiplikator für Kolonie-Mechs</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Sichtweite von Kolonie-Mechs skalieren. 1 behält die normale Reichweite bei. Waffenreichweite und Hörhinweise bleiben unverändert.</TotalFog_ColonyMechVisionDesc>
+  <TotalFog_AllyVisionDesc>Verbündete und neutrale Figuren liefern Sicht mit halber normaler Reichweite.</TotalFog_AllyVisionDesc>
+  <TotalFog_PrisonerVisionDesc>Koloniegefangene liefern Sicht mit einem Fünftel ihrer normalen Reichweite.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_MapRevealDesc>Gelände bei Karteninitialisierung als erkundet markieren. Liefert keine aktuelle Sicht.</TotalFog_MapRevealDesc>
+  <TotalFog_HearingRangeDesc>Maximale Entfernung in Zellen für Hinweise auf nahe verborgene Bewegungen.</TotalFog_HearingRangeDesc>
+  <TotalFog_Watchtowers>Wachtürme</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Sichtmultiplikator des Ausgucks</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Normale Sichtweite des Ausgucks auf der Plattform multiplizieren. Überdachte Räume, Berge und andere Türme blockieren diese Sicht.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Maximale Sichtweite des Ausgucks</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Sicht des Ausgucks auf diese Anzahl Zellen begrenzen.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Leiterzeit in Ticks</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Dauer eines vollständigen Auf- oder Abstiegs. Sechzig Ticks entsprechen einer Spielsekunde.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Schießen von Wachtürmen erlauben</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Ausgucke können über freistehende Mauern schießen. Sie sind eingehendem Feuer ausgesetzt und können Bodenziele nicht im Nahkampf angreifen.</TotalFog_TowerShootingDesc>
+  <TotalFog_TowerOccupied>Besetzt von: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Vom Turm aus beobachten</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Vom Turm aus beobachten, bis nicht mehr einberufen</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Für {0} vom Turm aus beobachten</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Beobachtet, bis nicht mehr einberufen oder wegbefohlen</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Verbleibende Wachtzeit: {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Steigt auf {0} hinauf.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Steigt von {0} hinab.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Hinabsteigen</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Turmbesatzung bergen</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>besetzt oder Leiter unzugänglich</TotalFog_TowerUnavailable>
+  <TotalFog_TowerBlockedLadder>Die Leiter benötigt eine freie Zugangszelle.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Ein Wachturm benötigt freien Himmel.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Vor dem Rückbau muss der Wachturm leer sein.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Die Leiter ist blockiert. Zugang freiräumen, damit die Figur hinabsteigen kann.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Wartet darauf, dass die Leiter von {0} frei wird.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} springt zur Flucht von einem blockierten Wachturm. Der Sturz kann Verletzungen verursachen.</TotalFog_TowerEmergencyExit>
+</LanguageData>

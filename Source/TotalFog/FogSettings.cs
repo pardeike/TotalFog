@@ -45,7 +45,6 @@ public partial class FogSettings : ModSettings
     public static bool AllyGiveVision;
     public static bool MapRevealAtStart;
     public static bool WildLifeTabVisible = true;
-    private static bool needMemoryStorage = true;
     public static bool SuppressCombatMusic = true;
     public static bool MuteHiddenSounds;
     public static bool DoAudioCheck; // Whether the audio check should be performed for fogged sounds.
@@ -96,7 +95,6 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref MapRevealAtStart, "mapRevealAtStart");
         Scribe_Values.Look(ref AllyGiveVision, "allyGiveVision");
         Scribe_Values.Look(ref NeedWatcher, "needWatcher", true);
-        Scribe_Values.Look(ref needMemoryStorage, "needMemoryStorage", true);
         Scribe_Values.Look(ref HideEventNegative, "hideEventNegative");
         Scribe_Values.Look(ref OnlyOutsideColony, "onlyOutsideColony");
         Scribe_Values.Look(ref HideEventNeutral, "hideEventNeutral");
