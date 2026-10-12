@@ -266,6 +266,7 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         var body = pawn.Dead ? pawn.Corpse : (Thing)pawn;
         float height = ElevationFor(body);
         var cell = FindGroundCell();
+        DropCarriedActor(pawn, injury);
         Release(pawn);
         if (body?.Spawned != true)
             return;
@@ -277,14 +278,34 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         Move(living, cell);
         living.jobs.EndCurrentJob(JobCondition.InterruptForced, startNewJob: false);
         if (injury)
-            for (int i = 0; i < 3 && !living.Dead; i++)
-                living.TakeDamage(
-                    new DamageInfo(
-                        DamageDefOf.Blunt,
-                        Rand.Range(20f, 35f) * height,
-                        instigator: this
-                    )
-                );
+            InjureFall(living, height);
+    }
+
+    internal void DropCarriedActor(Pawn carrier, bool injury)
+    {
+        if (carrier.carryTracker?.CarriedThing is not (Pawn or Corpse))
+            return;
+        float height = ElevationFor(carrier);
+        // Drop through the native carry tracker before job/death cleanup can
+        // place the patient at the solid structure's ground cell.
+        if (
+            !carrier.carryTracker.TryDropCarriedThing(
+                FindGroundCell(),
+                ThingPlaceMode.Direct,
+                out var body
+            )
+        )
+            return;
+        if (injury && body is Pawn patient)
+            InjureFall(patient, height);
+    }
+
+    private void InjureFall(Pawn pawn, float height)
+    {
+        for (int i = 0; i < 3 && !pawn.Dead; i++)
+            pawn.TakeDamage(
+                new DamageInfo(DamageDefOf.Blunt, Rand.Range(20f, 35f) * height, instigator: this)
+            );
     }
 
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)

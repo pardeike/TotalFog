@@ -10,6 +10,38 @@ namespace TotalFog.Tests;
 public sealed class FleckVisibilityTests
 {
     [Fact]
+    public void RaisedParticleChecksNativeSightWithoutLosingMotionOrDefinitionOffset()
+    {
+        var map = new Map();
+        map.Fog.Initialized = true;
+        map.Fog.InSight[0] = true;
+        var particle = new FleckStatic
+        {
+            map = map,
+            def = new FleckDef { unattachedDrawOffset = new Vector3(.1f, 0, 0) },
+            position = new FleckDrawPosition { unattachedDrawOffset = new Vector3(.1f, 0, 1.65f) },
+            DrawPos = new Vector3(.6f, 9, 2.15f),
+        };
+        FleckVisibility.BeginDrawing(new FleckManager { parent = map }, out var prior);
+        try
+        {
+            Assert.True(FleckVisibility.DrawPrefix(ref particle));
+            particle.DrawPos.x += 1;
+            Assert.False(FleckVisibility.DrawPrefix(ref particle));
+            map.Fog.InSight[1] = true;
+            Assert.True(FleckVisibility.DrawPrefix(ref particle));
+            map.Fog.InSight[1] = false;
+            Assert.False(FleckVisibility.DrawPrefix(ref particle));
+            Assert.Equal(2.15f, particle.DrawPos.z);
+            Assert.Equal(1.65f, particle.position.unattachedDrawOffset.z);
+        }
+        finally
+        {
+            FleckVisibility.EndDrawing(prior);
+        }
+    }
+
+    [Fact]
     public async Task AParticleFollowsCurrentSightAndPositionOnTheBatchWorkers()
     {
         var map = new Map();

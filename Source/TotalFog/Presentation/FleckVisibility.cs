@@ -30,7 +30,15 @@ internal static class FleckVisibility
         // Direct foreign drawing outside the map manager retains its behavior.
         // ExactPosition includes moving, attached and arcing draw offsets;
         // Draw's subsequent altitude assignment only changes the Y component.
-        return fog == null
-            || CellVisibility.IsCurrent(fog.map, __instance.DrawPos.ToIntVec3(), fog);
+        if (fog == null)
+            return true;
+        var position = __instance.DrawPos;
+        // Tower effect producers fill the engine's otherwise unassigned owner
+        // map and add a bonus to native drawing storage. Exclude that bonus
+        // from sight checks while preserving movement, attachment and arc.
+        if (__instance.map != null)
+            position -=
+                __instance.position.unattachedDrawOffset - __instance.def.unattachedDrawOffset;
+        return CellVisibility.IsCurrent(fog.map, position.ToIntVec3(), fog);
     }
 }

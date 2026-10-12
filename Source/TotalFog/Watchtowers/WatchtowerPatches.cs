@@ -55,6 +55,11 @@ internal static class WatchtowerPatches
         );
         Patch(typeof(Pawn), nameof(Pawn.Kill), nameof(DeathPrefix), nameof(DeathPostfix));
         Patch(
+            typeof(Pawn),
+            nameof(Pawn.DropAndForbidEverything),
+            nameof(IncapacitatedCarrierPrefix)
+        );
+        Patch(
             typeof(GenSpawn),
             nameof(GenSpawn.SpawnBuildingAsPossible),
             nameof(LoadedTowerPrefix),
@@ -90,10 +95,10 @@ internal static class WatchtowerPatches
             finalizer: nameof(TowerPresentation.DrawingFinalizer)
         );
         harmony.Patch(
-            AccessTools.PropertyGetter(typeof(Pawn), nameof(Pawn.DrawPos)),
+            AccessTools.PropertyGetter(typeof(Pawn_DrawTracker), nameof(Pawn_DrawTracker.DrawPos)),
             postfix: new HarmonyMethod(
                 typeof(TowerPresentation),
-                nameof(TowerPresentation.DrawPosPostfix)
+                nameof(TowerPresentation.TrackerDrawPosPostfix)
             )
         );
         Patch(
@@ -189,6 +194,7 @@ internal static class WatchtowerPatches
             nameof(LightningPrefix)
         );
         TowerCombat.Install(harmony);
+        TowerEffects.Install(harmony);
         harmony.Patch(
             AccessTools.Method(
                 typeof(FleckStatic),
@@ -355,8 +361,19 @@ internal static class WatchtowerPatches
             tower.Release(__instance as Pawn ?? ((Corpse)__instance).InnerPawn);
     }
 
-    internal static void DeathPrefix(Pawn __instance, out Building_Watchtower __state) =>
+    internal static void DeathPrefix(Pawn __instance, out Building_Watchtower __state)
+    {
         __state = TowerPresentation.TowerFor(__instance);
+        // Native death cleanup can end the carrying job before SetDead and
+        // DropAndForbidEverything. Preserve the ladder height before that drop.
+        __state?.DropCarriedActor(__instance, true);
+    }
+
+    internal static void IncapacitatedCarrierPrefix(Pawn __instance)
+    {
+        if (__instance.Downed || __instance.Dead)
+            TowerPresentation.TowerFor(__instance)?.DropCarriedActor(__instance, true);
+    }
 
     internal static void DeathPostfix(Pawn __instance, Building_Watchtower __state)
     {

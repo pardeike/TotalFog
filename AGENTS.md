@@ -305,7 +305,14 @@ rotation, grenade ground shadows, blueprint/ghost graphics, attached effects,
 fire eligibility and lightning controls. Read native attention and preserve the
 Player.log after every run; reference-package accessibility can differ from the
 running game, and a probe exception must never be accepted as a mod result.
-These suites do not complete shields, camera-edge drawing, other effects,
+Use `totalfog/watchtower_safety` for carried patient/body drop and fall injury
+during carrier collapse, downing and death. The combat suite includes native
+shield absorption/drawing, moving particles and loose injury effects. The gameplay
+suite includes actual camera-edge drawing; optional `performanceSample=true`
+captures four short close/wide intervals and restores private speed boost.
+Inspect the actual tick-rate multipliers before treating an interval as fourth
+speed; native normal-speed limits can remain active despite Ultrafast selection.
+These suites do not complete partial-climb interception, other combat producers,
 natural construction/breaching, optional mod or performance
 acceptance; track these in WATCHTOWER.md
 and VALIDATION.md. Never substitute the old test-only projection for production

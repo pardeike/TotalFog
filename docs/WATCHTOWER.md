@@ -1,6 +1,6 @@
 # Watchtower design draft
 
-Status: third production gameplay checkpoint on 12 October 2026, following the
+Status: fourth production gameplay checkpoint on 12 October 2026, following the
 compact-deck artwork accepted by Andreas on 11 October 2026. Keep its
 shape, outlines, native wall joins and fitted occupant position. The later
 stretched texture experiment was rejected; the previous design is again the
@@ -8,8 +8,9 @@ default. Native-scale wall-front pieces remain a separate optional experiment.
 A separate
 non-shipping native access prototype is retained as a historical control. The
 new production definition, ladder jobs, elevated sight and ordinary bullet policy
-pass the expanded 61-check native suite. The separate native combat/weather
-suite passes 46 checks. Further presentation/combat edges, compatibility and
+pass the expanded 75-check native suite. The separate native combat/weather
+suite passes 75 checks, and 15 carrier-emergency checks pass. Further combat
+producers, compatibility and
 performance acceptance remain outstanding.
 This replaces the retired watchtower
 concept; existing legacy towers do not grow into a new 3x3 footprint on loading.
@@ -25,11 +26,20 @@ registration. The defaults are provisional until the bounded performance check.
 
 `totalfog/watchtower_gameplay` exercises the actual player definition and job,
 not injected prototype classes. Public Steam 1.6.4871 with all DLCs passes all
-61 checks, including four ladder rotations, timed descent after a drafted move,
+75 checks, including four ladder rotations, timed descent after a drafted move,
 opaque roofs, shooting disabled, native incoming/outgoing bullet damage across
 a freestanding wall, ladder rescue followed by native bed rescue, and collapse.
 Close and wider captures show raised pawn labels and selection brackets. The
-native bed search keeps its own preferences and validation, using the ladder
+actual camera-edge control excludes the pawn's native ground bounds while its
+raised bounds and native drawing remain active. Native shield drawing reads the
+same scoped pawn draw tracker as the body. Loose impact particles keep their
+native world position, velocity and definition offsets, with an additional
+presentation offset that survives motion. Visibility checks exclude that bonus.
+Shield absorption retains the native damage and energy behavior.
+The carrier-emergency suite covers collapse, downing and death during retrieval.
+Native drop handling retains one patient/body, releases carrier ownership and
+applies the same scaled fall injury to a living carried patient.
+The native bed search keeps its own preferences and validation, using the ladder
 approach as its reachability search root for an elevated patient.
 
 The expanded checkpoint reloads during ascent, descent, bullet flight and a
@@ -64,6 +74,12 @@ map space. Own-footprint exemptions use private sight windows. Native wall
 geometry is captured through an existing native layer object; no custom
 SectionLayer is registered in every map section. The original control artwork
 remains in the companion.
+
+Four small close/wide samples were captured, but all native ticks had multiplier
+1 despite Ultrafast selection and disabled private speed boost. Their tick CPU
+and frame timings are diagnostic only; they do not establish fourth-speed
+performance. Construction/breaching, partial-climb interception, further combat
+producers and tower-specific Zombieland/CE/Multiplayer acceptance remain open.
 
 This checkpoint is not a release or complete tower acceptance. Record remaining
 cases and their actual evidence below rather than inferring them from the first

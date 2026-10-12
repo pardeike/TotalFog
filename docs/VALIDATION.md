@@ -7354,3 +7354,64 @@ reserves the bed for the climb using the native sleeping-slot reservation count.
 
 Remaining acceptance is listed in COVERAGE.md and WATCHTOWER.md. No release,
 ZIP delivery, broad optional compatibility or performance acceptance is claimed.
+
+## 2026-10-12 — raised effects, shields, camera edges and carrier emergencies
+
+Public Steam 1.6.4871 with all DLCs passes 75 lifecycle checks in
+`artifacts/tower-gameplay-cold29-20261012.json`, 75 combat/effect/weather checks
+in `artifacts/tower-combat-effects27-20261012.json`, and 15 carrier-emergency
+checks in `artifacts/tower-safety-after26-20261012.json`. Each restores the
+unchanged paused TotalFogRegression save. Native attention is empty and the
+preserved Player.log files contain no recognized errors. The current installed
+gameplay SHA-256 is
+`c5a9fcaba562fb9ef447fa797fc28f60cd0ec5e08422f89973a0b78383ee73ab`,
+MVID `e21cdf05-1495-412b-b3fc-7e0436fe9023`. The lifecycle run's companion
+SHA-256 is `cdb220d238d16a7f7ca227baabe8832471ff349ec24dcebcd29ded651705971e`.
+The companion changed between the three runs; only instrumentation changed.
+The build passes 358 independent tests with zero warnings.
+
+The combat additions use real Damage_HitFlesh, Deflect_Metal, shield absorption,
+native injury production and moving AirPuff effects. Raised/ground comparisons
+reuse the same native effect parent and RNG seed. World X/Z motion, native
+particle altitude, definition offsets, shield energy and damage remain native;
+only a bonus presentation offset is added. FleckThrown's native position
+reconstruction now retains that bonus. Loose motes use weak lifetime ownership;
+no per-fleck dictionary, cloned effect definitions or physics coordinate changes
+are introduced. Shield rendering uses Pawn_DrawTracker.DrawPos directly, so
+scoping that tracker also covers it without double-projecting native TrueCenter.
+Native impact/fire captures were visually inspected.
+
+The actual camera-edge control places the ground pawn bounds outside the
+expanded camera rectangle while its raised bounds intersect. Native culling and
+actual pawn drawing remain active. The screenshot shows the exposed head sliver
+at the lower viewport edge, not an assertion that the whole body fits there.
+All previous ascent/descent, corpse, flight and rescue reload checks pass on
+this build.
+
+Carrier collapse previously dropped the patient with no fall injury. Native
+death can also end its carrying job before the ordinary DropAndForbidEverything
+call. Both paths now perform one native patient/body drop before cleanup and
+apply the same height-scaled fall injury to a living patient. Collapse, downing
+and death controls retain one body, no carry ownership and no patient tower
+ownership. Dead carriers retain their own rescuable native corpse on the deck.
+
+Rejected fixtures remain preserved. Effects14 had an ambiguous native overload;
+effects15–18 incorrectly assumed native particle altitude followed the pawn
+sprite and initially compared separately jittered native effect parents.
+Effects21/25 included the native mote's tiny altitude-fighting Y offset in a
+full-vector equality. Safety19 double-counted the scoped tracker projection in
+its baseline. Safety22 read a dead pawn's null carryTracker and produced a
+native probe error; its log was retained and that process stopped. Safety20 and
+Safety24 exposed the actual missing patient fall injury. Edge28 allowed its
+faction-switched enemy to wander during profiling; Cold29 restores its exact
+firing lane and native Wait job before the sight control, which passes.
+
+Four 4-second close/wide samples have no focus loss or overflowing buffers and
+private UltraSpeedBoost disabled. Nevertheless all actual tick multipliers are
+1, so no fourth-speed throughput claim is made. Close captures contain 1,014
+map cells and six pawn roots; wide captures contain 50,750 cells and 127 roots.
+Ground/occupied mean tick times are 2.95/2.55 ms close and 1.86/1.70 ms wide.
+These short sequential samples are diagnostic, not a paired performance floor
+or proof that occupation improves performance. Frame p99 is 20.65–26.96 ms.
+Partial-climb interception, other combat producers, natural construction and
+breaching, and tower-specific optional integrations remain open.

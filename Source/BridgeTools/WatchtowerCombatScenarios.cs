@@ -223,6 +223,7 @@ public sealed class WatchtowerCombatScenarios
                 rotatedDraws = groundedShadows = 0;
                 launches.Clear();
                 culls.Clear();
+                WatchtowerEffectProbe.Install(probe);
                 Find.Selector.ClearSelection();
                 Rand.PushState(874002);
                 try
@@ -495,6 +496,12 @@ public sealed class WatchtowerCombatScenarios
             });
             await Frame();
             await Capture("combat-and-blueprints");
+            await On(() => WatchtowerEffectProbe.CompareNativeEffects(lookout, enemy, Check));
+            await ctx.Game.FramesAsync(4, cancellationToken);
+            await Capture("native-impact-effects");
+            await Step(3);
+            await ctx.Game.FramesAsync(4, cancellationToken);
+            await On(() => WatchtowerEffectProbe.VerifyPlayback(Check));
             var visualProjectiles = new List<Projectile>();
             await On(() =>
             {
@@ -764,9 +771,11 @@ public sealed class WatchtowerCombatScenarios
                             weightedStrikes,
                             launches,
                             culls,
+                            effects = WatchtowerEffectProbe.Receipt,
                             camera = Find.CameraDriver.CurrentViewRect.ToString(),
                         };
                         probe.UnpatchAll(probe.Id);
+                        WatchtowerEffectProbe.Reset();
                         lookout = enemy = null;
                         attachment = mote = null;
                         FogSettings.TowerShootingAllowed = oldShooting;

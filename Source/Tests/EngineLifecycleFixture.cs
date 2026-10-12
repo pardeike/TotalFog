@@ -190,6 +190,19 @@ namespace Verse
     public struct FleckStatic
     {
         public UnityEngine.Vector3 DrawPos;
+        public Map map;
+        public FleckDrawPosition position;
+        public FleckDef def;
+    }
+
+    public struct FleckDrawPosition
+    {
+        public UnityEngine.Vector3 unattachedDrawOffset;
+    }
+
+    public class FleckDef
+    {
+        public UnityEngine.Vector3 unattachedDrawOffset;
     }
 
     public class Map
@@ -501,6 +514,9 @@ namespace UnityEngine
 
         public Verse.IntVec3 ToIntVec3() =>
             new((int)System.Math.Floor(x), (int)System.Math.Floor(z));
+
+        public static Vector3 operator -(Vector3 a, Vector3 b) =>
+            new(a.x - b.x, a.y - b.y, a.z - b.z);
     }
 
     public static class Mathf

@@ -79,7 +79,8 @@ public sealed class WatchtowerGameplayScenarios
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string saveName,
-        string evidenceLabel
+        string evidenceLabel,
+        bool performanceSample = false
     )
     {
         if (
@@ -95,6 +96,7 @@ public sealed class WatchtowerGameplayScenarios
         var towers = new List<Building_Watchtower>();
         var pawns = new List<Pawn>();
         var states = new List<object>();
+        var performance = new List<object>();
         var savedFixtures = new List<string>();
         var renderProbe = new Harmony("brrainz.totalfog.watchtower-gameplay-probe");
         Map map = null;
@@ -105,6 +107,7 @@ public sealed class WatchtowerGameplayScenarios
         var oldShooting = FogSettings.TowerShootingAllowed;
         var oldHighlight = Prefs.DotHighlightDisplayMode;
         bool oldPauseOnLoad = Prefs.PauseOnLoad;
+        bool? oldUltraSpeedBoost = null;
         bool staged = false;
         loadedTowers.Clear();
         try
@@ -209,8 +212,12 @@ public sealed class WatchtowerGameplayScenarios
                 var wall = AddWall(towers[0].Approach);
                 Check("blocked ladder refuses entry", !towers[0].CanEnter(pawns[0]));
                 wall.Destroy(DestroyMode.Vanish);
-                for (int i = 0; i < 4; i++)
-                    StartWatch(pawns[i], towers[i]);
+                if (performanceSample)
+                {
+                    enemy.SetFaction(Faction.OfPlayer);
+                    foreach (var pawn in pawns)
+                        pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
+                }
                 renderProbe.Patch(
                     AccessTools.Method(typeof(Pawn), nameof(Pawn.DynamicDrawPhaseAt)),
                     postfix: new HarmonyMethod(
@@ -228,6 +235,27 @@ public sealed class WatchtowerGameplayScenarios
                         priority = Priority.Last,
                     }
                 );
+            });
+            if (performanceSample)
+            {
+                var speedMode = await ctx.Tools.CallAsync(
+                    "rimworld/set_time_speed",
+                    new { speed = "Paused", ultraSpeedBoost = false },
+                    cancellationToken: cancellationToken
+                );
+                Check(
+                    "ordinary player speed mode",
+                    speedMode.Succeeded() && !speedMode.ReadResult<bool>("currentUltraSpeedBoost")
+                );
+                oldUltraSpeedBoost = speedMode.ReadResult<bool>("previousUltraSpeedBoost");
+                await Capture("ground-performance-camera", 12);
+                await Measure("ground-normal", false);
+                await Measure("ground-wide", true);
+            }
+            await On(() =>
+            {
+                for (int i = 0; i < 4; i++)
+                    StartWatch(pawns[i], towers[i]);
             });
             await Until(
                 "all four begin ascent",
@@ -292,6 +320,98 @@ public sealed class WatchtowerGameplayScenarios
             });
             await Capture("occupied", 12);
             await Capture("occupied-wide", 35);
+            if (performanceSample)
+            {
+                await Measure("occupied-wide", true);
+                await Capture("occupied-performance-camera", 12);
+                await Measure("occupied-normal", false);
+                await On(() =>
+                {
+                    enemy.SetFaction(Faction.OfAncientsHostile);
+                    Building_Watchtower.Move(enemy, towers[0].Position + IntVec3.North * 12);
+                    enemy.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 20000));
+                });
+            }
+            var cameraRoot = await ctx.MainThread.InvokeAsync(
+                () => Find.CameraDriver.MapPosition.ToVector3Shifted(),
+                cancellationToken
+            );
+            var cameraSize = await ctx.MainThread.InvokeAsync(
+                () => Find.CameraDriver.RootSize,
+                cancellationToken
+            );
+            try
+            {
+                var root = new Vector3(pawns[0].Position.x + .5f, 0, pawns[0].Position.z + 14);
+                for (int attempt = 0; attempt < 4; attempt++)
+                {
+                    await On(() => Find.CameraDriver.SetRootPosAndSize(root, 12f));
+                    await ctx.Game.FramesAsync(4, cancellationToken);
+                    int minZ = await ctx.MainThread.InvokeAsync(
+                        () => Find.CameraDriver.CurrentViewRect.minZ,
+                        cancellationToken
+                    );
+                    int delta = pawns[0].Position.z + 2 - minZ;
+                    if (delta == 0)
+                        break;
+                    root.z += delta;
+                }
+                await On(() =>
+                {
+                    var view = Find.CameraDriver.CurrentViewRect;
+                    var culling = view.ExpandedBy(1);
+                    Check(
+                        "camera edge excludes native pawn bounds",
+                        !pawns[0].OccupiedDrawRect().Overlaps(culling)
+                    );
+                    Check(
+                        "camera edge includes raised pawn bounds",
+                        TowerPresentation.CullBounds(pawns[0]).Overlaps(culling)
+                    );
+                    states.Add(
+                        new
+                        {
+                            phase = "camera-edge",
+                            view = view.ToString(),
+                            nativeBounds = pawns[0].OccupiedDrawRect().ToString(),
+                            raisedBounds = TowerPresentation.CullBounds(pawns[0]).ToString(),
+                        }
+                    );
+                    drawnPawns[pawns[0].ThingID] = 0;
+                });
+                await ctx.Game.FramesAsync(6, cancellationToken);
+                await On(() =>
+                    Check(
+                        "actual raised pawn draws beyond native camera bounds",
+                        drawnPawns[pawns[0].ThingID] > 0
+                    )
+                );
+                var edge = await ctx.Tools.CallAsync(
+                    "rimworld/take_screenshot",
+                    new { fileName = evidenceLabel + "-camera-edge", includeTargets = false },
+                    cancellationToken: cancellationToken
+                );
+                proof.assertions.Add(
+                    RimBridgeEvidence.ToolSucceeded("capture actual camera edge", edge)
+                );
+                proof.captures.Add(
+                    new RimBridgeEvidenceCapture
+                    {
+                        label = "camera-edge",
+                        kind = "native-window",
+                        path = edge.TryReadResult<string>(out var edgePath, "path") ? edgePath : "",
+                        success = edge.Succeeded(),
+                        details = edge.Result,
+                    }
+                );
+            }
+            finally
+            {
+                await ctx.MainThread.InvokeAsync(
+                    () => Find.CameraDriver.SetRootPosAndSize(cameraRoot, cameraSize),
+                    CancellationToken.None
+                );
+            }
             await On(() =>
             {
                 pawns[0]
@@ -393,6 +513,17 @@ public sealed class WatchtowerGameplayScenarios
             await On(() =>
             {
                 var source = pawns[0].TryGetComp<CompFog>().FieldOfViewWatcher;
+                states.Add(
+                    new
+                    {
+                        phase = "sight-control",
+                        target = enemy.Position.ToString(),
+                        watching = towers[0].Watching,
+                        occupant = towers[0].Occupant?.ThingID,
+                        enemyJob = enemy.CurJobDef?.defName,
+                        drawingDepth = TowerPresentation.DrawingDepth,
+                    }
+                );
                 for (int x = -2; x <= 2; x++)
                     AddWall(towers[0].Position + new IntVec3(x, 0, 5));
                 source.UpdateFoV(true);
@@ -634,6 +765,24 @@ public sealed class WatchtowerGameplayScenarios
                     p.drafter.Drafted = true;
                 return p;
             }
+            async Task Measure(string label, bool wide)
+            {
+                var result = await PerformanceScenarios.RuntimePerformance(
+                    ctx,
+                    cancellationToken,
+                    durationMs: 4000,
+                    speed: "Ultrafast",
+                    forceRequestedSpeed: false,
+                    profileFog: false,
+                    warmupTicks: 60,
+                    wideView: wide
+                );
+                performance.Add(new { label, result });
+                Check(
+                    "native performance sample " + label,
+                    (bool)result.GetType().GetProperty("success").GetValue(result)
+                );
+            }
             Thing AddWall(IntVec3 cell)
             {
                 var wall = ThingMaker.MakeThing(ThingDefOf.Wall, ThingDefOf.WoodLog);
@@ -679,6 +828,7 @@ public sealed class WatchtowerGameplayScenarios
                 );
                 proof.environment.details = new
                 {
+                    performance,
                     productionTower = true,
                     area = area.ToString(),
                     states,
@@ -936,7 +1086,29 @@ public sealed class WatchtowerGameplayScenarios
             }
             finally
             {
-                gate.Release();
+                try
+                {
+                    if (oldUltraSpeedBoost.HasValue)
+                    {
+                        var restored = await ctx.Tools.CallAsync(
+                            "rimworld/set_time_speed",
+                            new { speed = "Paused", ultraSpeedBoost = oldUltraSpeedBoost.Value },
+                            cancellationToken: CancellationToken.None
+                        );
+                        proof.assertions.Add(
+                            RimBridgeEvidence.IsTrue(
+                                "restore prior speed mode",
+                                restored.Succeeded()
+                                    && restored.ReadResult<bool>("currentUltraSpeedBoost")
+                                        == oldUltraSpeedBoost.Value
+                            )
+                        );
+                    }
+                }
+                finally
+                {
+                    gate.Release();
+                }
             }
         }
         RimBridgeEvidence.Complete(proof);

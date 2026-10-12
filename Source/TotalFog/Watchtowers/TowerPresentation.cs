@@ -35,8 +35,11 @@ internal static class TowerPresentation
 
     internal static void MotePositionPostfix(Mote __instance, ref Vector3 __result)
     {
-        if (DrawingDepth > 0 && __instance is MoteAttached && __instance is not MoteProgressBar)
-            __result += Offset(__instance);
+        if (DrawingDepth > 0)
+            __result +=
+                __instance is MoteAttached && __instance is not MoteProgressBar
+                    ? Offset(__instance)
+                    : TowerEffects.MoteOffset(__instance);
     }
 
     internal static void PawnDrawingPrefix(Pawn __instance, ref Vector3 drawLoc, out bool __state)
@@ -72,15 +75,16 @@ internal static class TowerPresentation
         return __exception;
     }
 
-    internal static void DrawPosPostfix(Thing __instance, ref Vector3 __result)
+    internal static void TrackerDrawPosPostfix(Pawn ___pawn, ref Vector3 __result)
     {
         if (DrawingDepth > 0)
-            __result += Offset(__instance);
+            __result += Offset(___pawn);
     }
 
     internal static void TrueCenterPostfix(Thing t, ref Vector3 __result)
     {
-        if (DrawingDepth > 0)
+        // Native pawn centers already read the scoped drawing tracker.
+        if (DrawingDepth > 0 && t is not Pawn)
             __result += Offset(t);
     }
 
@@ -145,6 +149,7 @@ internal static class TowerPresentation
         var map = fleck.map ?? Presentation.FleckVisibility.DrawingMap;
         if (
             fleck.def == FleckDefOf.ShotFlash
+            && fleck.map == null
             && map != null
             && fleck.spawnPosition.ToIntVec3().GetEdifice(map) is Building_Watchtower tower
             && tower.ProvidesSight
@@ -177,8 +182,9 @@ internal static class TowerPresentation
     internal static CellRect CullBounds(Thing thing)
     {
         var bounds = thing.OccupiedDrawRect();
-        var offset = thing is Projectile projectile
-            ? TowerCombat.DrawingOffset(projectile)
+        var offset =
+            thing is Projectile projectile ? TowerCombat.DrawingOffset(projectile)
+            : thing is Mote mote ? TowerEffects.MoteOffset(mote)
             : Offset(thing);
         if (offset == Vector3.zero)
             return bounds;
