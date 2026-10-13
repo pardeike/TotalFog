@@ -112,7 +112,7 @@
     "Source/TotalFog/Watchtowers/MapComponent_Watchtowers.cs": "7cf8f372726d57c7760fa17718d60e07d456f0c0440c16c507fad8c9b6f2d544",
     "Source/TotalFog/Watchtowers/PlaceWorker_Watchtower.cs": "f4484c30bb35bc7e0eaafeae19c23cb7e73615b61744547211410be2a81728b8",
     "Source/TotalFog/Watchtowers/TowerBedSearch.cs": "687e8be7588223bd7023d4f2673ce0fb8ac12cbaff0c4055694de5e7fdee848f",
-    "Source/TotalFog/Watchtowers/TowerCombat.cs": "3f8c3702cd4b6724e90302f174903417dde822db8b5dd6a259215a5058657d31",
+    "Source/TotalFog/Watchtowers/TowerCombat.cs": "f156d971edae01cd1816280d7b748df779eb48f3295b8dbb3c9c971afcf2a79b",
     "Source/TotalFog/Watchtowers/TowerEffects.cs": "8f362f4c2540891fb82d726e73195b0b6baaf40ae73e0a085ce903a01df9fdf8",
     "Source/TotalFog/Watchtowers/TowerMoveOrders.cs": "c6d973af91668d9eb2e99ca3f7fc54c747cb42c5f1b101b84292c6bbf41b4aa7",
     "Source/TotalFog/Watchtowers/TowerPresentation.cs": "a8fca6fbffbc0f1bfb5a6b7e392554cb76103c8941fbd5a1aae66b5ae5ca9887",
@@ -124,5 +124,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "63729e571bcb5107cd6858a47def425c1502ac23443721e6d18e44b7889d60d8"
+  "dllSha256": "9a490e5b8a043a519653e4fc5ec360d220174e7f109f64a2fa028fb0072e22d4"
 }

@@ -179,6 +179,14 @@ internal static class TowerCombat
             seer?.Map != null
             && target?.Map == seer.Map
             && Visibility.AllowsTarget(seer, target.Position)
+            && (
+                seer.Faction?.IsPlayer != true
+                || Presentation.CellVisibility.IsCurrent(
+                    seer.Map,
+                    target.Position,
+                    observerFaction: seer.Faction
+                )
+            )
             && ClearLine(
                 seer.Map,
                 seer.Position,
@@ -243,6 +251,17 @@ internal static class TowerCombat
                 || targ.Cell.Standable(caster.Map) && targ.Cell.GetFirstPawn(caster.Map) == null
             )
             && Visibility.AllowsTarget(caster, targ.Cell)
+            // The tower geometry replaces native hit-cell checks. Tracking a
+            // Thing still needs faction sight; deliberate blind cell fire does not.
+            && (
+                !targ.HasThing
+                || caster.Faction?.IsPlayer != true
+                || Presentation.CellVisibility.IsCurrent(
+                    caster.Map,
+                    targ.Cell,
+                    observerFaction: caster.Faction
+                )
+            )
             && ClearLine(
                 caster.Map,
                 root,

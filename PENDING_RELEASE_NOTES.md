@@ -50,6 +50,7 @@ local testing do not indicate that a new player build has been released.
 - Delay offscreen events even when their static target has been seen before.
 - Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision, while keeping their hidden effects and neighbouring things behind fog.
 - Apply Combat Extended's fog targeting to every player faction using its own sight, including automatic turrets and locked bursts in separate Multiplayer colonies.
+- Require current faction sight for watchtower target acquisition and Thing shots, while preserving deliberate blind fire at cells.
 - Require current sight for other live labels, tooltips, overlays and selection, including selection proxies.
 - Close an object's live inspection when sight is lost.
 - Hide live mouseover and environment details outside current sight, and limit beauty sampling to visible cells.
