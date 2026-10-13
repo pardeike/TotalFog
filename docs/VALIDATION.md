@@ -8295,3 +8295,111 @@ preserving other entries. Candidate main/companion pairs are installed for both
 engines through the guarded workflow. No player archive, public release or
 source push is made. The comparison proves Core-only non-combat wide throughput,
 not broad DLC/optional-mod, spike, long-session or 1.7 throughput acceptance.
+
+
+## Large subscribed-mod Steam 1.7 fixture, 13 October 2026
+
+On unchanged bcaf88d gameplay bytes, an isolated profile loads 118 entries:
+108 actual Workshop mods, four local mods (RimBridgeServer, Camera+, Achtung,
+Total Fog), Core and all five DLCs. Released Workshop Harmony is first and
+RimBridgeServer is immediately below it. The ordered installed loadout and
+source/version identity are retained in [large-mod-loadout.json](large-mod-loadout.json).
+The local GABS profile is `total-fog-large-17`; saves/settings are under
+`artifacts/LargeModUserData`, separate from the normal player profile. A newly
+registered GABS ID requires a refreshed MCP host for tool routing in this session;
+the temporary existing-ID workaround was removed after stopping the game.
+
+The selection covers Vanilla Expanded content/frameworks, Adaptive Storage,
+hauling, pawn control, medicine, menus, graphics, storage and other utilities.
+It excludes alternate fog mods, combat overhauls, MP/prepatchers, race/vehicle
+frameworks and tick optimizers. Zombieland and CE are not in this loadout.
+118 configured entries equal the 118 actually loaded entries; dependency,
+ordering and session mismatch counts are zero. There are 101 declared-version
+warnings, which are retained rather than treated as proof of API failure.
+
+The first 120-entry attempt reaches the main menu in roughly 26 seconds but
+logs three errors: Replace Stuff and Dubs Mint Menus reject incorrectly typed
+Harmony `__instance` bindings during initialization; Replace Stuff also throws
+in frame generation. Excluding those two mods yields a roughly 20-second bridge
+startup, a generated playable map, and zero native ERROR/FATAL entries through
+ordinary stress-map save/load/playback. Other warnings, including missing XML
+patch targets and key conflicts, remain. This is broad startup evidence, not
+acceptance of every loaded mod's features.
+
+Two populated 350x350 fixtures are retained. `TotalFogLargeMods350-118` has
+53 colonists and 357 animals (410 pawns), generated with the existing developer
+stress-map tool. Its initial save is retained separately. Native `Make colony
+(full)` then creates a separate colony fixture with 35 colonists, stocked
+resources, power and numerous modded buildings; this replaces the previous
+population rather than adding to it. Its pre-play save is
+`TotalFogLargeModsColony350-118`. The final played/reloaded save is
+`TotalFogLargeModsColony350-118-tested`, with 36 pawns at its last endpoint.
+Both stress and full-colony fixtures load to paused, visually ready play.
+
+Ordinary fourth-speed spot checks use native multiplier 15 throughout, with
+forced speed/private boost off and focus retained. Rendering is Vulkan at
+4592x2646 with native vSync and a target of 60 FPS. They are short independent
+samples, not repeated matched comparisons against the original fog mod.
+
+| Fixture/view | Duration | TPS | Mean frame interval | Frame p95 | Longest tick |
+|---|---:|---:|---:|---:|---:|
+| 410-pawn stress, middle zoom | 15.064 s | 804.434 | 20.527 ms | 51.666 ms | 72.163 ms |
+| 410-pawn stress, full-map zoom | 15.080 s | 827.785 | 30.083 ms | 45.809 ms | 14.459 ms |
+| 35-pawn populated colony, full map | 15.202 s | 645.639 | 36.928 ms | 68.330 ms | 555.452 ms |
+| Reloaded colony, 36 pawns, full map | 10.491 s | 385.092 | 75.042 ms | 102.538 ms | 562.030 ms |
+
+Full-map samples include all 122,500 cells and every pawn root. Middle zoom
+includes 9,525 cells and 33 pawn roots. The colony changes during playback and
+its debug log auto-opens; its measurements retain that UI overhead. They expose
+spikes and poor frame pacing in this combination, not a measured Total Fog
+regression or a reliable close/wide ratio. Startup, colony generation and initial
+job activation are not equivalent workloads. The final colony screenshot is
+`artifacts/large-mod-20261013/LargeModsColony-clean.png`.
+
+The final cold-process log has eight ERROR entries: five native colony-builder
+placement failures, one invalid VEF minified flower removed by native ticking,
+and one unique-weapon colour parse failure on each of two reloads. The latter
+parses `UniqueWeapon_Limestone` as a Unity colour; no cause is assigned to Total
+Fog. The loaded game remains playable and playback adds no new error storm.
+Reloading the final save repeats that one colour error, so it is not described
+as an error-free fixture. Normal player saves and mod settings were not edited.
+
+Dubs Performance Analyzer is available through RimBridgeServer, but tick and
+update captures produce zero method rows despite counters advancing. Resolved
+patch targets/status flags do not establish working timings. The native 1.7
+Frame profiler exports 1,600 CPU frames; most simulation is grouped under
+Unprofiled, and profiler capture itself is visible in the timings. Its CPU
+frame duration is not displayed FPS. After deeper profiler-control work the
+session logs repeated DynamicDrawManager culling exceptions. The first trace
+fails in CellRect.ClipInsideMap; Total Fog, Camera+, Reverse Commands and VE
+hooks appear in the patched path. The timing of this failure is retained, but
+neither an engine-profiler cause nor a specific mod cause is established.
+A cold restart and unchanged stress-save reload recover without that exception.
+This remains an unresolved profiling-session limitation, not a hidden pass.
+
+A separate five-second cold-process `profileFog=true` capture succeeds with the
+whole stress map visible. Inclusive instrumented totals include 813,609 CompFog
+CompTick calls (861.147 ms), 29,039 UpdateFoV calls (631.100 ms), 4,504
+ComputeMask calls (455.871 ms), 4,537 ApplyDifference calls (154.394 ms), and
+82 dynamic visibility adapter calls (19.518 ms). These rows overlap and must
+not be summed. Per-call instrumentation materially inflates the frequent small
+methods; its ~327 TPS is diagnostic, not an ordinary performance result. Sight
+casting/mask differences and frequent lifecycle dispatch are useful candidates
+for a focused follow-up, not evidence for a particular speedup yet.
+
+Gameplay SHA-256 remains
+7b783fc791a30a99b01e3e7d380337ae1055780e6ba065d955ca9a3415047a02;
+companion SHA-256 remains
+ca4fe032699c4bb77cbe26194c456875e68d634751f6dab68c48476fc09e3368.
+Actual engine: 1.7.4976 rev1043, MVID c81d9e22-b334-4602-9be7-27f86395fbe2.
+Full reports, all rejected/blocked attempts, phase-specific Player.log copies,
+loadout inventories, native profiler export and fixture hashes are retained in
+`artifacts/large-mod-20261013` (summary.json indexes measurements and saves).
+All task-owned game processes are stopped. The original GABS entry is restored
+while retaining the new isolated large-list profile. No DLL/source change,
+player archive, deployment, source push or public release is made by this pass.
+
+This establishes a usable large-list diagnostic setup on actual Steam 1.7,
+with ordinary startup and saved-game play. It does not establish original-mod
+performance parity in this loadout, long-session stability, all DLC feature
+behavior, optional-mod privacy coverage or Zombieland/CE/MP compatibility.

@@ -1,0 +1,1534 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-13",
+  "engine": "1.7.4976 rev1043",
+  "engineMvid": "c81d9e22-b334-4602-9be7-27f86395fbe2",
+  "gabsGameId": "total-fog-large-17",
+  "localProfile": "artifacts/LargeModUserData",
+  "activeCount": 118,
+  "actualSources": {
+    "SteamWorkshop": 108,
+    "ModsFolder": 4,
+    "OfficialModsFolder": 6
+  },
+  "gameplaySha256": "7b783fc791a30a99b01e3e7d380337ae1055780e6ba065d955ca9a3415047a02",
+  "companionSha256": "ca4fe032699c4bb77cbe26194c456875e68d634751f6dab68c48476fc09e3368",
+  "exclusions": {
+    "memegoddess.replacestuff": "Constructor patch has incorrect __instance type; later frame generation throws.",
+    "dubwise.dubsmintmenus": "Static initialization patch has incorrect __instance type."
+  },
+  "scope": [
+    "Released Workshop Harmony, immediately followed by RimBridgeServer.",
+    "Includes 1.6 content and utility mods on installed 1.7; metadata is not compatibility proof.",
+    "Excluded other fog mods, alternate combat overhauls, Multiplayer, prepatchers, race/vehicle frameworks and speed/tick optimizers."
+  ],
+  "activeMods": [
+    {
+      "activeLoadOrder": 0,
+      "packageId": "brrainz.harmony_steam",
+      "name": "Harmony",
+      "source": "SteamWorkshop",
+      "version": "3.0.0.0",
+      "workshopId": "2009463077",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 1,
+      "packageId": "brrainz.rimbridgeserver",
+      "name": "RimBridgeServer",
+      "source": "ModsFolder",
+      "version": "2.3.0",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 2,
+      "packageId": "ludeon.rimworld",
+      "name": "Core",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 3,
+      "packageId": "ludeon.rimworld.royalty",
+      "name": "Royalty",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 4,
+      "packageId": "ludeon.rimworld.ideology",
+      "name": "Ideology",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 5,
+      "packageId": "ludeon.rimworld.biotech",
+      "name": "Biotech",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 6,
+      "packageId": "ludeon.rimworld.anomaly",
+      "name": "Anomaly",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 7,
+      "packageId": "ludeon.rimworld.odyssey",
+      "name": "Odyssey",
+      "source": "OfficialModsFolder",
+      "declaredEngineVersions": []
+    },
+    {
+      "activeLoadOrder": 8,
+      "packageId": "dubwise.dubsperformanceanalyzer.steam",
+      "name": "Dubs Performance Analyzer",
+      "source": "SteamWorkshop",
+      "version": "1.6.10",
+      "workshopId": "2038874626",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 9,
+      "packageId": "unlimitedhugs.hugslib",
+      "name": "HugsLib",
+      "source": "SteamWorkshop",
+      "workshopId": "818773962",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 10,
+      "packageId": "adaptive.storage.framework",
+      "name": "Adaptive Storage Framework",
+      "source": "SteamWorkshop",
+      "workshopId": "3033901359",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 11,
+      "packageId": "vanillaexpanded.vhe",
+      "name": "Vanilla Hair Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1888705256",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 12,
+      "packageId": "vanillaexpanded.vanillatradingexpanded",
+      "name": "Vanilla Trading Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2785616901",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 13,
+      "packageId": "mehni.pickupandhaul",
+      "name": "Pick Up And Haul",
+      "source": "SteamWorkshop",
+      "workshopId": "1279012058",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 14,
+      "packageId": "brrainz.rangefinder",
+      "name": "Range Finder",
+      "source": "SteamWorkshop",
+      "version": "2.6.1.0",
+      "workshopId": "1332119637",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 15,
+      "packageId": "mehni.numbers",
+      "name": "Numbers",
+      "source": "SteamWorkshop",
+      "workshopId": "1414302321",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 16,
+      "packageId": "tiagocc0.colorblindminerals",
+      "name": "Colorblind Minerals",
+      "source": "SteamWorkshop",
+      "workshopId": "1424338139",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 17,
+      "packageId": "ogre.ogrestack",
+      "name": "OgreStack",
+      "source": "SteamWorkshop",
+      "workshopId": "1447140290",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 18,
+      "packageId": "frozensnowfox.filthvanisheswithrainandtime",
+      "name": "[FSF] Filth Vanishes With Rain And Time",
+      "source": "SteamWorkshop",
+      "workshopId": "1508341791",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 19,
+      "packageId": "jaxe.rimhud",
+      "name": "RimHUD",
+      "source": "SteamWorkshop",
+      "workshopId": "1508850027",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 20,
+      "packageId": "jaxe.bubbles",
+      "name": "Interaction Bubbles",
+      "source": "SteamWorkshop",
+      "workshopId": "1516158345",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 21,
+      "packageId": "dubwise.dubsmintminimap",
+      "name": "Dubs Mint Minimap",
+      "source": "SteamWorkshop",
+      "version": "1.3.800",
+      "workshopId": "1662119905",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 22,
+      "packageId": "automatic.bionicicons",
+      "name": "Bionic icons",
+      "source": "SteamWorkshop",
+      "workshopId": "1677616980",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 23,
+      "packageId": "crashm.colorcodedmoodbar.11",
+      "name": "CM Color Coded Mood Bar [1.1+]",
+      "source": "SteamWorkshop",
+      "workshopId": "2006605356",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 24,
+      "packageId": "ogliss.thewhitecrayon.quarry",
+      "name": "Quarry",
+      "source": "SteamWorkshop",
+      "workshopId": "2007576583",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 25,
+      "packageId": "caesarv6.damageindicators",
+      "name": "Damage Indicators [1.6]",
+      "source": "SteamWorkshop",
+      "workshopId": "2016331497",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 26,
+      "packageId": "automatic.traderships",
+      "name": "Trader ships",
+      "source": "SteamWorkshop",
+      "workshopId": "2046222331",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 27,
+      "packageId": "brrainz.sheephappens",
+      "name": "Sheep Happens",
+      "source": "SteamWorkshop",
+      "version": "1.7.0.0",
+      "workshopId": "2164203879",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 28,
+      "packageId": "dhultgren.smarterconstruction",
+      "name": "Smarter Construction",
+      "source": "SteamWorkshop",
+      "workshopId": "2202185773",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 29,
+      "packageId": "mlie.showmeyourhands",
+      "name": "Show Me Your Hands",
+      "source": "SteamWorkshop",
+      "version": "1.6.14",
+      "workshopId": "2475965842",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 30,
+      "packageId": "sandy.rpgstyleinventory.avilmask.revamped",
+      "name": "RPG Style Inventory Revamped",
+      "source": "SteamWorkshop",
+      "workshopId": "2478833213",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 31,
+      "packageId": "lucifer.realisticrooms",
+      "name": "Realistic Rooms Rewritten",
+      "source": "SteamWorkshop",
+      "workshopId": "2558042766",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 32,
+      "packageId": "visibleraidpoints.1trickpwnyta",
+      "name": "Visible Raid Points",
+      "source": "SteamWorkshop",
+      "version": "1.7.2",
+      "workshopId": "2562730174",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 33,
+      "packageId": "telardo.dragselect",
+      "name": "DragSelect",
+      "source": "SteamWorkshop",
+      "version": "1.6.0.2",
+      "workshopId": "2599942235",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 34,
+      "packageId": "kathanon.floatsubmenu",
+      "name": "Float Sub-Menus",
+      "source": "SteamWorkshop",
+      "workshopId": "2864015430",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.5",
+        "1.4",
+        "1.3"
+      ]
+    },
+    {
+      "activeLoadOrder": 35,
+      "packageId": "rimfridge.kv.rw",
+      "name": "RimFridge: Now with Shelves!",
+      "source": "SteamWorkshop",
+      "version": "2.0.7",
+      "workshopId": "2898411376",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.5",
+        "1.4"
+      ]
+    },
+    {
+      "activeLoadOrder": 36,
+      "packageId": "issaczhuang.muzzleflash",
+      "name": "Muzzle Flash",
+      "source": "SteamWorkshop",
+      "workshopId": "2917732219",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 37,
+      "packageId": "fuu.bloodanimations",
+      "name": "Blood Animations",
+      "source": "SteamWorkshop",
+      "workshopId": "3228047321",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 38,
+      "packageId": "sambucher.adogsaidanimalprosthetics2",
+      "name": "A Dog Said... Animal Prosthetics 2",
+      "source": "SteamWorkshop",
+      "version": "1.3.7",
+      "workshopId": "3238353862",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 39,
+      "packageId": "ponpeco.pphair",
+      "name": "Ponpeco Hair",
+      "source": "SteamWorkshop",
+      "version": "v1.11",
+      "workshopId": "3258157717",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 40,
+      "packageId": "mlie.smarterdeconstructionandmining",
+      "name": "Smarter Deconstruction and Mining (Continued)",
+      "source": "SteamWorkshop",
+      "version": "1.6.1",
+      "workshopId": "3261302741",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 41,
+      "packageId": "krelinos.socialexpfromtrade",
+      "name": "Social Experience from Trade",
+      "source": "SteamWorkshop",
+      "workshopId": "3400608063",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.5",
+        "1.4",
+        "1.3"
+      ]
+    },
+    {
+      "activeLoadOrder": 42,
+      "packageId": "linnun.keepconverting",
+      "name": "Keep Converting",
+      "source": "SteamWorkshop",
+      "workshopId": "3461478214",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 43,
+      "packageId": "dawnsglow.qualcolor",
+      "name": "Quality Colors (Continued)",
+      "source": "SteamWorkshop",
+      "workshopId": "3513846773",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 44,
+      "packageId": "defi.autocutblight",
+      "name": "Auto-Cut Blight - 1.6",
+      "source": "SteamWorkshop",
+      "workshopId": "3520167264",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 45,
+      "packageId": "redmattis.biggergravship",
+      "name": "Bigger Gravships (and other Odyssey spaceship related settings)",
+      "source": "SteamWorkshop",
+      "workshopId": "3522759531",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 46,
+      "packageId": "gt.sam.healthdisplay",
+      "name": "Health Display",
+      "source": "SteamWorkshop",
+      "workshopId": "3522897532",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 47,
+      "packageId": "memegoddess.smartmedicine",
+      "name": "Smart Medicine - Continued",
+      "source": "SteamWorkshop",
+      "workshopId": "3526251680",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 48,
+      "packageId": "memegoddess.buildfrominventory",
+      "name": "Build From Inventory - Continued",
+      "source": "SteamWorkshop",
+      "workshopId": "3534185281",
+      "declaredEngineVersions": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 49,
+      "packageId": "ninagoblin.nooneleftbehind",
+      "name": "No One Left Behind (1.6)",
+      "source": "SteamWorkshop",
+      "workshopId": "3536586707",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 50,
+      "packageId": "mitasamodel.outfitted.dev",
+      "name": "Outfitted 1.6",
+      "source": "SteamWorkshop",
+      "workshopId": "3561102989",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 51,
+      "packageId": "memegoddess.runandgun",
+      "name": "RunAndGun - Continued",
+      "source": "SteamWorkshop",
+      "workshopId": "3562365100",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 52,
+      "packageId": "amegakull.scvrole",
+      "name": "Ideology Scavenger Role",
+      "source": "SteamWorkshop",
+      "workshopId": "3565039115",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 53,
+      "packageId": "leo.cleanresearchsort",
+      "name": "Clean Research Sort",
+      "source": "SteamWorkshop",
+      "workshopId": "3566639513",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 54,
+      "packageId": "zhuma.xenotypesummary",
+      "name": "Xenotype Summary",
+      "source": "SteamWorkshop",
+      "workshopId": "3710012135",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 55,
+      "packageId": "lebek.workhistory",
+      "name": "Work History",
+      "source": "SteamWorkshop",
+      "workshopId": "3727287885",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 56,
+      "packageId": "haplo.miscellaneous.training",
+      "name": "Misc. Training",
+      "source": "SteamWorkshop",
+      "version": "1.6.6",
+      "workshopId": "717575199",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 57,
+      "packageId": "peppsen.pmusic",
+      "name": "P-Music",
+      "source": "SteamWorkshop",
+      "workshopId": "725130005",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 58,
+      "packageId": "brrainz.reversecommands",
+      "name": "Reverse Commands",
+      "source": "SteamWorkshop",
+      "version": "2.4.1.0",
+      "workshopId": "858744731",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 59,
+      "packageId": "brrainz.cameraplus",
+      "name": "Camera+",
+      "source": "ModsFolder",
+      "version": "3.4.7.0",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 60,
+      "packageId": "falconne.bwm",
+      "name": "Better Workbench Management",
+      "source": "SteamWorkshop",
+      "version": "1.6.1.3",
+      "workshopId": "935982361",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 61,
+      "packageId": "oskarpotocki.vanillafactionsexpanded.core",
+      "name": "Vanilla Expanded Framework",
+      "source": "SteamWorkshop",
+      "workshopId": "2023507013",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 62,
+      "packageId": "voult.betterpawncontrol",
+      "name": "Better Pawn Control",
+      "source": "SteamWorkshop",
+      "workshopId": "1541460369",
+      "declaredEngineVersions": [
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 63,
+      "packageId": "avilmask.commonsense",
+      "name": "Common Sense",
+      "source": "SteamWorkshop",
+      "workshopId": "1561769193",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 64,
+      "packageId": "void.charactereditor",
+      "name": "Character Editor",
+      "source": "SteamWorkshop",
+      "version": "1.6.1",
+      "workshopId": "1874644848",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 65,
+      "packageId": "kathanon.craftwithcolor",
+      "name": "Craft with Color",
+      "source": "SteamWorkshop",
+      "workshopId": "2795998250",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 66,
+      "packageId": "andromeda.nicehealthtab",
+      "name": "Nice Health Tab",
+      "source": "SteamWorkshop",
+      "workshopId": "3328729902",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 67,
+      "packageId": "andromeda.nicebilltab",
+      "name": "Nice Bill Tab",
+      "source": "SteamWorkshop",
+      "workshopId": "3520130671",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 68,
+      "packageId": "side1iner.possessionsplus",
+      "name": "Possessions Plus",
+      "source": "SteamWorkshop",
+      "workshopId": "3535813796",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 69,
+      "packageId": "andromeda.niceinventorytab",
+      "name": "Nice Inventory Tab",
+      "source": "SteamWorkshop",
+      "workshopId": "3609897594",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 70,
+      "packageId": "andromeda.niceplantsmenu",
+      "name": "Nice Plants Menu",
+      "source": "SteamWorkshop",
+      "workshopId": "3685058533",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 71,
+      "packageId": "unlimitedhugs.allowtool",
+      "name": "Allow Tool",
+      "source": "SteamWorkshop",
+      "workshopId": "761421485",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 72,
+      "packageId": "vanillaexpanded.vfecore",
+      "name": "Vanilla Furniture Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1718190143",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 73,
+      "packageId": "vanillaexpanded.vfemedical",
+      "name": "Vanilla Furniture Expanded - Medical Module",
+      "source": "SteamWorkshop",
+      "workshopId": "1718191613",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.4",
+        "1.5"
+      ]
+    },
+    {
+      "activeLoadOrder": 74,
+      "packageId": "vanillaexpanded.vwe",
+      "name": "Vanilla Weapons Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1814383360",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 75,
+      "packageId": "vanillaexpanded.vappe",
+      "name": "Vanilla Apparel Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1814987817",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 76,
+      "packageId": "vanillaexpanded.varme",
+      "name": "Vanilla Armour Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1814988282",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 77,
+      "packageId": "vanillaexpanded.vfesecurity",
+      "name": "Vanilla Furniture Expanded - Security",
+      "source": "SteamWorkshop",
+      "workshopId": "1845154007",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 78,
+      "packageId": "vanillaexpanded.vfeproduction",
+      "name": "Vanilla Furniture Expanded - Production",
+      "source": "SteamWorkshop",
+      "workshopId": "1880253632",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 79,
+      "packageId": "vanillaexpanded.vcef",
+      "name": "Vanilla Fishing Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1914064942",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.4",
+        "1.5"
+      ]
+    },
+    {
+      "activeLoadOrder": 80,
+      "packageId": "vanillaexpanded.vee",
+      "name": "Vanilla Events Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "1938420742",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 81,
+      "packageId": "vanillaexpanded.vfefarming",
+      "name": "Vanilla Furniture Expanded - Farming",
+      "source": "SteamWorkshop",
+      "workshopId": "1957158779",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 82,
+      "packageId": "vanillaexpanded.vfeart",
+      "name": "Vanilla Furniture Expanded - Art",
+      "source": "SteamWorkshop",
+      "workshopId": "1968134023",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 83,
+      "packageId": "vanillaexpanded.vwel",
+      "name": "Vanilla Weapons Expanded - Laser",
+      "source": "SteamWorkshop",
+      "workshopId": "1989352844",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 84,
+      "packageId": "vanillaexpanded.vtexe",
+      "name": "Vanilla Textures Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2016436324",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 85,
+      "packageId": "vanillaexpanded.vfespacer",
+      "name": "Vanilla Furniture Expanded - Spacer Module",
+      "source": "SteamWorkshop",
+      "workshopId": "2028381079",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 86,
+      "packageId": "vanillaexpanded.vfepower",
+      "name": "Vanilla Furniture Expanded - Power",
+      "source": "SteamWorkshop",
+      "workshopId": "2062943477",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 87,
+      "packageId": "vanillaexpanded.vfepropsanddecor",
+      "name": "Vanilla Furniture Expanded - Props and Decor",
+      "source": "SteamWorkshop",
+      "workshopId": "2102143149",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 88,
+      "packageId": "vanillaexpanded.vcooke",
+      "name": "Vanilla Cooking Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2134308519",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 89,
+      "packageId": "vanillaexpanded.vplantse",
+      "name": "Vanilla Plants Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2134308522",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 90,
+      "packageId": "vanillaexpanded.vbrewe",
+      "name": "Vanilla Brewing Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2186560858",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 91,
+      "packageId": "vanillaexpanded.vanillatraitsexpanded",
+      "name": "Vanilla Traits Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2296404655",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 92,
+      "packageId": "vanillaexpanded.vwems",
+      "name": "Vanilla Weapons Expanded - Makeshift",
+      "source": "SteamWorkshop",
+      "workshopId": "2419690698",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 93,
+      "packageId": "vanillaexpanded.vanillasocialinteractionsexpanded",
+      "name": "Vanilla Social Interactions Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2439736083",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 94,
+      "packageId": "vanillaexpanded.vwenl",
+      "name": "Vanilla Weapons Expanded - Non-Lethal",
+      "source": "SteamWorkshop",
+      "workshopId": "2454918354",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 95,
+      "packageId": "vanillaexpanded.vaeaccessories",
+      "name": "Vanilla Apparel Expanded \u2014 Accessories",
+      "source": "SteamWorkshop",
+      "workshopId": "2521176396",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 96,
+      "packageId": "vanillaexpanded.vfearchitect",
+      "name": "Vanilla Furniture Expanded - Architect",
+      "source": "SteamWorkshop",
+      "workshopId": "2608762624",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 97,
+      "packageId": "vanillaexpanded.vpersonaweaponse",
+      "name": "Vanilla Persona Weapons Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2826922787",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 98,
+      "packageId": "vanillaexpanded.vnutriente",
+      "name": "Vanilla Nutrient Paste Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "2920385763",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 99,
+      "packageId": "vanillaexpanded.recycling",
+      "name": "Vanilla Recycling Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "3155781848",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 100,
+      "packageId": "vanillaexpanded.vwebf",
+      "name": "Vanilla Weapons Expanded - Bioferrite",
+      "source": "SteamWorkshop",
+      "workshopId": "3287469135",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 101,
+      "packageId": "vanillaexpanded.skills",
+      "name": "Vanilla Skills Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "3400246558",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 102,
+      "packageId": "vanillaquestsexpanded.generator",
+      "name": "Vanilla Quests Expanded - The Generator",
+      "source": "SteamWorkshop",
+      "workshopId": "3411401573",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 103,
+      "packageId": "vanillaexpanded.gravship",
+      "name": "Vanilla Gravship Expanded - Chapter 1",
+      "source": "SteamWorkshop",
+      "workshopId": "3609835606",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 104,
+      "packageId": "vanillaexpanded.vexploratione",
+      "name": "Vanilla Landmarks Expanded",
+      "source": "SteamWorkshop",
+      "workshopId": "3656316229",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 105,
+      "packageId": "vanillaexpanded.vfefactory",
+      "name": "Vanilla Furniture Expanded - Factory",
+      "source": "SteamWorkshop",
+      "workshopId": "3686924415",
+      "declaredEngineVersions": [
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 106,
+      "packageId": "kikohi.coloreddeepresources",
+      "name": "Colored deep resources",
+      "source": "SteamWorkshop",
+      "workshopId": "3203269467",
+      "declaredEngineVersions": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 107,
+      "packageId": "brrainz.achtung",
+      "name": "Achtung!",
+      "source": "ModsFolder",
+      "version": "4.1.14",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 108,
+      "packageId": "vanillaexpanded.vbrewecandt",
+      "name": "Vanilla Brewing Expanded - Coffees and Teas",
+      "source": "SteamWorkshop",
+      "workshopId": "2275449762",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 109,
+      "packageId": "vanillaexpanded.vwehw",
+      "name": "Vanilla Weapons Expanded - Heavy Weapons",
+      "source": "SteamWorkshop",
+      "workshopId": "2329126791",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 110,
+      "packageId": "vanillaexpanded.vtexvariations",
+      "name": "Vanilla Textures Expanded - Variations",
+      "source": "SteamWorkshop",
+      "workshopId": "2493234474",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 111,
+      "packageId": "vanillaexpanded.vplantsemore",
+      "name": "Vanilla Plants Expanded - More Plants",
+      "source": "SteamWorkshop",
+      "workshopId": "2748889667",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 112,
+      "packageId": "reel.expanded.storage",
+      "name": "Reel's Expanded Storage",
+      "source": "SteamWorkshop",
+      "workshopId": "3237638097",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 113,
+      "packageId": "maeyanie.onebedtosleepwithall",
+      "name": "One bed to sleep with all - Polycule Edition",
+      "source": "SteamWorkshop",
+      "workshopId": "3244294636",
+      "declaredEngineVersions": [
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 114,
+      "packageId": "sirvan.hemogentexture",
+      "name": "Van's Retexture : Hemogen Vials",
+      "source": "SteamWorkshop",
+      "workshopId": "3453224032",
+      "declaredEngineVersions": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6"
+      ]
+    },
+    {
+      "activeLoadOrder": 115,
+      "packageId": "orion.hospitality",
+      "name": "Hospitality (Continued)",
+      "source": "SteamWorkshop",
+      "version": "1.1.6",
+      "workshopId": "3509486825",
+      "declaredEngineVersions": [
+        "1.5",
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 116,
+      "packageId": "frozensnowfox.betterexplorationloot",
+      "name": "[FSF] Better Exploration Loot",
+      "source": "SteamWorkshop",
+      "workshopId": "3526957922",
+      "declaredEngineVersions": [
+        "1.6",
+        "1.7"
+      ]
+    },
+    {
+      "activeLoadOrder": 117,
+      "packageId": "brrainz.totalfog",
+      "name": "Total Fog",
+      "source": "ModsFolder",
+      "version": "0.1.0",
+      "declaredEngineVersions": []
+    }
+  ]
+}
