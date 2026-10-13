@@ -17,11 +17,12 @@ replace an installed ZIP.
 This is not a public release.
 Keep the separate No Pause Challenge setup fix if you use that mod.
 
-Later 13 October source work extends construction access to blocking plants and
+The later 13 October work/search Total Fog update extends construction access to blocking plants and
 buildings, permits cleaning fresh dirt in known home areas, aligns storage
 hauling with those work rules, and restricts native map search while retaining
-remembered static items. Those fixes belong to a later candidate; they are not
-in the construction/Spitter pair unless the delivery message identifies it.
+remembered static items. It uses the same Zombieland ZIP and passed fresh paired
+native correctness checks. Use the archive named in its delivery message;
+the earlier construction/Spitter Total Fog archive does not include those fixes.
 
 Support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
 Source: [Total Fog](https://github.com/pardeike/TotalFog) and

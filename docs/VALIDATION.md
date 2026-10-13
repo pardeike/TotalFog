@@ -8724,3 +8724,24 @@ the storage-prefix correction does not change those implementations.
 This slice adds no Multiplayer work, new 1.7 campaign or performance comparison.
 Multiplayer remains unverified and deferred; performance keeps the accepted
 07d128b baseline. No CE gameplay defect requiring an upstream issue was established.
+
+The final 3e94f56d/777fce38 pair passes the existing exact-binary Core-only
+feedback gate: 12 native pixel cases, 54 manual target checks, 40 paused render
+diagnostic rows, five general-ambience controls, four silent arrival controls,
+seven area warnings, 21 Albino scream controls, 16 explosion-camera controls and
+14 contamination sight/refresh controls. Recognized native logs are clean, the
+unchanged base save is preserved, and the game is stopped. The accepted performance
+baseline is retained without a new speed comparison. Full evidence is under
+`artifacts/feedback-verification-train-work-search-20261013-a1yi1t_3`.
+Zombieland was rebuilt through its canonical Release workflow and is byte-identical
+to the already delivered 777fce38 build; no Zombieland gameplay change is included.
+
+The canonical feedback-package command verifies and creates separate complete
+archives. Only the changed Total Fog archive is sent as
+`TotalFog-0.1.0-work-search-20261013.zip` (1,321,254 bytes, SHA-256
+`85f1231a7480d76a9086846ea9a9306f1e98ddc3913c5781be5200f2aab546df`).
+The downloaded Discord attachment passes ZIP integrity and matches both archive
+hash and native-tested gameplay DLL. The old Total Fog post is removed only
+after that verification; the previous complete Zombieland post remains.
+The note is limited to work/search fixes and identifies the build as preliminary.
+No player release, Steam update or CE/Multiplayer announcement is made.
