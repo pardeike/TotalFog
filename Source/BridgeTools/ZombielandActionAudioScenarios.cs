@@ -18,13 +18,14 @@ public sealed partial class AudioScenarios
 {
     [Tool(
         "totalfog/zombieland_action_audio",
-        Description = "Run real tank armor, electric bullet absorption, dark-slimer damage and toxic-splasher death under fog audio options. Observes actual native one-shot samples over successive frames and checks damage/effect production while paused. Restores scoped options, destroys only created things and reloads the unchanged named fixture."
+        Description = "Run real tank armor, electric bullet absorption, dark-slimer damage and toxic-splasher death under fog audio options. Checks native positional/camera sound configuration against a vanilla impact control, with optional distant camera framing. Observes actual one-shot samples and damage/effect production while paused. Restores scoped options, destroys only created things and reloads the unchanged named fixture."
     )]
     public static async Task<object> ZombielandActionAudio(
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string saveName,
-        int frames = 15
+        int frames = 15,
+        bool farCamera = false
     )
     {
         if (frames < 12 || frames > 60)
@@ -49,6 +50,7 @@ public sealed partial class AudioScenarios
         var ownedSamples = new HashSet<SampleOneShot>();
         var createdThings = new HashSet<Thing>();
         var rows = new List<object>();
+        object vanillaControl = null;
         try
         {
             await ctx.MainThread.InvokeAsync(
@@ -86,11 +88,53 @@ public sealed partial class AudioScenarios
             );
             var camera = await ctx.Tools.CallAsync(
                 "rimworld/jump_camera_to_cell",
-                new { x = cell.x, z = cell.z },
+                new { x = farCamera ? Math.Min(cell.x + 100, map.Size.x - 1) : cell.x, z = cell.z },
                 cancellationToken: cancellationToken
             );
             if (!camera.Succeeded())
                 throw new InvalidOperationException("Action audio camera setup failed.");
+            await ctx.Game.FramesAsync(frames, cancellationToken);
+            await ctx.MainThread.InvokeAsync(
+                () =>
+                {
+                    FogSettings.MuteHiddenSounds = false;
+                    FogSettings.DoAudioCheck = false;
+                    var before = Find.SoundRoot.oneShotManager.PlayingOneShots.ToHashSet();
+                    DefDatabase<SoundDef>
+                        .GetNamed("BulletImpact_Ground")
+                        .PlayOneShot(SoundInfo.InMap(new TargetInfo(cell, map)));
+                    var samples = Find
+                        .SoundRoot.oneShotManager.PlayingOneShots.Where(s => !before.Contains(s))
+                        .ToArray();
+                    foreach (var sample in samples)
+                        ownedSamples.Add(sample);
+                    bool valid =
+                        samples.Length > 0
+                        && samples.All(s =>
+                            s.source.spatialBlend == 1f
+                            && s.source.rolloffMode == AudioRolloffMode.Linear
+                        );
+                    passed &= valid;
+                    vanillaControl = new
+                    {
+                        passed = valid,
+                        samples = samples
+                            .Select(s => new
+                            {
+                                s.source.spatialBlend,
+                                rolloff = s.source.rolloffMode.ToString(),
+                                s.source.minDistance,
+                                s.source.maxDistance,
+                                distance = Vector3.Distance(
+                                    Find.Camera.transform.position,
+                                    s.source.transform.position
+                                ),
+                            })
+                            .ToArray(),
+                    };
+                },
+                cancellationToken
+            );
             foreach (
                 string kind in new[] { "tank-armor", "electric-absorb", "tar-pop", "toxic-splash" }
             )
@@ -119,7 +163,17 @@ public sealed partial class AudioScenarios
                 var observed =
                     new Dictionary<
                         SampleOneShot,
-                        (float factor, float peak, bool played, bool makerHasMap)
+                        (
+                            float factor,
+                            float peak,
+                            bool played,
+                            bool makerHasMap,
+                            bool nativePlacementPassed,
+                            float spatialBlend,
+                            float distance,
+                            float minDistance,
+                            float maxDistance
+                        )
                     >();
                 string sound =
                     kind == "tank-armor" ? "TankyTink"
@@ -326,6 +380,12 @@ public sealed partial class AudioScenarios
                                         && observed.Values.All(s =>
                                             Math.Abs(s.factor - expectedFactor) < .001f
                                             && s.makerHasMap
+                                            && s.nativePlacementPassed
+                                            && (
+                                                !farCamera
+                                                || s.spatialBlend == 0f
+                                                || s.distance >= s.maxDistance
+                                            )
                                         )
                                         && observed.Values.Any(s => s.played && s.peak > 0)
                             );
@@ -355,6 +415,19 @@ public sealed partial class AudioScenarios
                                         s.peak,
                                         s.played,
                                         s.makerHasMap,
+                                        s.nativePlacementPassed,
+                                        s.spatialBlend,
+                                        s.distance,
+                                        s.minDistance,
+                                        s.maxDistance,
+                                        // This is the configured linear distance gain, not a
+                                        // waveform or physical-listening measurement.
+                                        configuredDistanceGain = s.spatialBlend == 0f
+                                            ? 1f
+                                            : Mathf.Clamp01(
+                                                (s.maxDistance - s.distance)
+                                                    / (s.maxDistance - s.minDistance)
+                                            ),
                                     })
                                     .ToArray(),
                             }
@@ -380,7 +453,31 @@ public sealed partial class AudioScenarios
                                 sample.source == null ? 0 : sample.source.volume
                             ),
                             previous.played || sample.source?.isPlaying == true,
-                            sample.info.Maker.Map != null
+                            sample.info.Maker.Map != null,
+                            sample.source != null
+                                && sample.source.spatialBlend == (sample.subDef.onCamera ? 0f : 1f)
+                                && sample.source.rolloffMode == AudioRolloffMode.Linear
+                                && (
+                                    sample.subDef.onCamera
+                                    || (
+                                        sample.source.minDistance == sample.subDef.distRange.TrueMin
+                                        && sample.source.maxDistance
+                                            == sample.subDef.distRange.TrueMax
+                                        && (
+                                            sample.source.transform.position
+                                            - sample.info.Maker.Cell.ToVector3Shifted()
+                                        ).MagnitudeHorizontalSquared() < .001f
+                                    )
+                                ),
+                            sample.source?.spatialBlend ?? -1f,
+                            sample.source == null
+                                ? 0f
+                                : Vector3.Distance(
+                                    Find.Camera.transform.position,
+                                    sample.source.transform.position
+                                ),
+                            sample.source?.minDistance ?? 0f,
+                            sample.source?.maxDistance ?? 0f
                         );
                     }
                 }
@@ -389,6 +486,8 @@ public sealed partial class AudioScenarios
             {
                 passed,
                 startTick,
+                farCamera,
+                vanillaControl,
                 rows,
             };
         }

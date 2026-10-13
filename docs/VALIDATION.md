@@ -8745,3 +8745,55 @@ hash and native-tested gameplay DLL. The old Total Fog post is removed only
 after that verification; the previous complete Zombieland post remains.
 The note is limited to work/search fixes and identifies the build as preliminary.
 No player release, Steam update or CE/Multiplayer announcement is made.
+
+### Camera-distance sound report, 2026-10-13
+
+Mortal identifies TarSmokePop as a sound that stays loud when the camera moves
+away. This does not yet establish a Total Fog regression. Zombieland introduced
+TarSmokePop with onCamera=true and a 1000..10000 distance range in 6b632197
+(2021-04-14). ToxicSplash has the same configuration from its introduction in
+d781d615 (2017-12-09). The current definitions retain both choices.
+
+The upstream-baseline FoW_AudioCache can nevertheless muffle these sounds. Its
+PlayOneShot prefix multiplies a real map maker's volume regardless of onCamera;
+the factor depends on distance to any explored cell. It does not measure camera
+distance. Total Fog's shared prefix likewise multiplies the original volume,
+but uses current sight and living player-pawn hearing. Camera playback and
+fog-based muffling are separate properties, so a camera sound previously being
+muffled is plausible without a change to its definition. Mortal's exact earlier
+configuration remains unknown; a short comparison question is sent in the DM.
+
+The existing action-audio companion now observes native spatialBlend, placement,
+distance ranges and rolloff without demanding that camera-wide cues become
+positional. It includes a vanilla BulletImpact_Ground control and optional
+distant framing. Both near and roughly 100-cell-away runs pass all 24 rows on
+the unchanged 3e94f56d/777fce38 gameplay pair, with original sound definitions.
+Tank armor/electric absorption retain spatialBlend=1 and native linear falloff;
+the distant source is 103.917885 units away, beyond their 50-unit maximum. The
+vanilla impact retains native linear falloff with a 70-unit maximum. Tar/toxic
+retain spatialBlend=0 and camera-parented sources. Their unfiltered source
+volume is 0.8 in both runs. The positive hearing control uses range 500 and
+muffling 0.5, yielding factor 0.846478 and source volume 0.6771824 in both runs.
+Hidden mute and disabled cues create no sample; revealing the source restores
+the original volume. Real tar damage/smoke, toxic death/goo, tank durability and
+electric absorption remain active. Native ticks stay at 2 and the unchanged
+fixture reloads after each run. The earlier sixteen-row ambient test also passes.
+
+These are native AudioSource configuration/volume observations, not waveform
+measurements or physical listening. The configured linear distance gain is
+reported separately from AudioSource.volume, which Unity does not reduce for
+spatial attenuation. This Core-only macOS check does not reproduce Mortal's
+exact Windows setup. The log retains bridge startup timings and the expected
+missing-zombie-faction repair when adding Zombieland to a Core save, with no
+gameplay exception from the audio controls. Startup also retains the two
+previously identified invalid window-position preference XML entries.
+
+Evidence is in artifacts/sound-distance-20261013: action-near.json,
+action-far.json, ambient-before.json, proof.json and the retained native log.
+The initial action-before.json failures reflect an incorrect test assumption
+that every action cue must be positional. The experimental positional XML is
+rejected and restored in source and installation; no player build is sent.
+Only companion instrumentation and this evidence record change. The game is
+stopped and temporary isolated-profile configuration is restored. Keep the
+tester report open until his comparison or another named sound establishes
+a concrete defect.
