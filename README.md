@@ -18,6 +18,7 @@ a wild boar or something much worse. To be safe, you have to look.
 
 ### See only what your people see
 
+- A new colony starts unexplored. The landing area becomes known when your colonists actually see it.
 - Colonists, colony mechs, trained animals and turrets each see a circle around them. Walls block their view.
   Trees can block it too, if you want.
 - Areas you explored stay on the map, but they are grey. You see the ground, not

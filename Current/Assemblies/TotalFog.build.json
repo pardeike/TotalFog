@@ -71,7 +71,7 @@
     "Source/TotalFog/Graphic_HearingCue.cs": "d790c0e0079bdc09e5cef4b7f1c30ad2dd82b5a3907a639f670c83f2dae4ff50",
     "Source/TotalFog/HarmonyPatches.cs": "7c874fe75b2b471bef5db572f2b0826e909ded77941c8278d5c218793ea5049d",
     "Source/TotalFog/JobDriver_MonitorVision.cs": "3c3d0dbda9a553fa1475125741355da521b50a17d272fe4d77317eae834b11f2",
-    "Source/TotalFog/MapVisibility.cs": "a5447abf22b48a0231109e279d3ea795e6220abeb245b6d7737ff13f01d4c69f",
+    "Source/TotalFog/MapVisibility.cs": "c5f16fe2f02471ab5644963334ea3ec751ebdd73ac77949f16f078ae4a46abd7",
     "Source/TotalFog/Mote_HearingCue.cs": "725752f083f2c05e2321c75bc935c9517c29df9a0bf8542310deb9af1e012b0e",
     "Source/TotalFog/Notifications/EntityDiscovery.cs": "05889f81142944d22fed6ead269c58d3c0dd8b7bc99758266028cdedadea482b",
     "Source/TotalFog/Notifications/NotificationHooks.cs": "d6dc8d7c157251a45454a3612a1896bb82b97c67de16dad784081951de1d9f11",
@@ -126,5 +126,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "3e94f56d76254532afbb7ccb9c7bbb0be9301544166fb737049ad0d6f1a8e465"
+  "dllSha256": "b7ab45819f676f28ce3d339499a6633f98c7a928674355c4dad53f3ee0909688"
 }

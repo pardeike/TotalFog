@@ -8797,3 +8797,43 @@ Only companion instrumentation and this evidence record change. The game is
 stopped and temporary isolated-profile configuration is restored. Keep the
 tester report open until his comparison or another named sound establishes
 a concrete defect.
+
+### Automatic landing-site discovery removed, 2026-10-14
+
+Andreas's current paused Steam 1.7.4977 rev1248 colony at tick 10 reproduces
+7,239 remembered cells, zero current player sight, no spawned colonists and
+zero positive-range sight sources on a 275x275 map. BaseViewRange is 60 and
+MapRevealAtStart is false. Its loaded DLL is the accepted performance baseline
+fcde178b, not the later work/search build. Decompilation of that exact installed
+DLL confirms the same landing-site seed still present in the current source.
+
+MapVisibility.Initialize seeds knowledge around MapGenerator.PlayerStartSpot
+whenever a home map has no spawned owner humanlikes. This was inherited from
+upstream-baseline. The seed uses the full base range without pawn sight,
+lighting or weather modifiers, making the remembered area larger than the
+colonist's later live view. The native arrival code holds starting pawns in
+incoming drop pods, so having no spawned colonists at this point is expected.
+
+At Andreas's request, the seed is deleted. No replacement seed, migration or
+new setting is added. Normal source registration/publication remains intact,
+as do loaded discovery and explicit MapRevealAtStart/OuterSpace revelation.
+Previously saved explored terrain is retained rather than guessing which
+cells came from legitimate exploration. The existing separate-colony startup
+evidence above predates this policy change and its seeded-cell expectation no
+longer describes the intended behavior. Multiplayer stays unverified/deferred.
+
+The read-only reproduction, installed identity, map snapshot and screenshot
+are retained under artifacts/startup-20261014. The user's map stays paused at
+tick 10; no save, mod configuration or live assembly is replaced. GABS cannot
+attach this manually launched process without a runtime claim, so the same
+live RimBridgeServer tools are reached directly through its authenticated
+standalone connection. A fresh-game native check of the corrected candidate
+is pending a restart; the reproduction alone is not acceptance of new bytes.
+
+The canonical format/build and binary-freshness gate pass with 447 C# tests,
+seven artifact tests and zero warnings/errors. Candidate gameplay SHA-256 is
+b7ab45819f676f28ce3d339499a6633f98c7a928674355c4dad53f3ee0909688.
+Decompilation of that built DLL confirms the landing-site cast is absent while
+real source initialization and explicit whole-map reveal remain. The matching
+DLL/build receipt are committed with the source; this candidate is not deployed
+over the running game or sent as a player build.

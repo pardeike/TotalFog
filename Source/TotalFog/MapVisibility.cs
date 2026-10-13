@@ -410,27 +410,6 @@ public class MapVisibility : MapComponent
         TotalFogMod.LogMessage(
             $"Fog sight sources initialized after {startup.ElapsedMilliseconds} ms."
         );
-        // IsPlayerHome and ColonistsSpawnedCount use the local player faction.
-        // Both clients must seed a newly generated colony's discovery for its owner.
-        if (
-            PrimaryPlayerFaction?.IsPlayer == true
-            && Presentation.ThingVisibility.IsHomeFor(map, PrimaryPlayerFaction)
-            && !map.mapPawns.AllPawnsSpawned.Any(pawn =>
-                pawn.Faction == PrimaryPlayerFaction && pawn.RaceProps.Humanlike && !pawn.IsPrisoner
-            )
-        )
-        {
-            var start = MapGenerator.PlayerStartSpot;
-            FieldOfView.Compute(
-                coverage.Width,
-                coverage.Height,
-                start.x,
-                start.z,
-                FogSettings.BaseViewRange,
-                viewBlockerCells,
-                RevealCell
-            );
-        }
         if (map.Biome.defName == OuterSpaceBiome || FogSettings.MapRevealAtStart)
             for (int i = 0; i < coverage.CellCount; i++)
                 RevealCell(i);

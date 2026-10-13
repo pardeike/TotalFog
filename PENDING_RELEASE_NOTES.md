@@ -5,6 +5,7 @@ local testing do not indicate that a new player build has been released.
 
 ## Vision and information
 
+- Keep new colonies unexplored until an actual sight source sees them; do not reveal the landing area before colonists arrive.
 - Support RimWorld 1.6 and 1.7 through the same Current/ payload.
 - Use native drawing for previously observed scenery, without expensive archives of its last appearance. Fresh objects stay hidden until observed.
 - Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision. Their presence does not reveal nearby things or hidden effects.
