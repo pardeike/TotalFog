@@ -24,6 +24,9 @@ is a declared exception to the shared version-numbered folder standard.
 Do not relax the shared validator. Folders below 1.6 stay frozen. Record native
 evidence by actual engine version; shared binaries do not transfer runtime
 acceptance between engines.
+Current scope: prioritize concrete Total Fog/Zombieland tester regressions and
+bounded CE checks. Multiplayer stays unverified and further development is
+deferred until demand or reports; do not restart it from older checklist items.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.
@@ -257,6 +260,13 @@ DPA setup changes configuration only and never redeploys a tracked release DLL.
 Use `./scripts/mod ce-setup` for `total-fog-ce-16`, the separate Steam profile
 under artifacts/CEUserData with installed Combat Extended and all DLCs. It
 preserves the core performance profile and existing CE settings/loadout.
+When archived 1.6 DLCs are unavailable, use `./scripts/mod ce-setup core16`
+with `RIMWORLD_MOD_DIR` set to the logical offline 1.6 app's Mods folder.
+This stages the complete installed Workshop CE payload and configures
+`total-fog-ce-core16` under `artifacts/CECore16UserData`, without replacing
+the normal Steam CE profile. It rejects a differing existing offline CE install.
+Core-only results do not renew DLC acceptance. Remove a task-owned dependency
+copy after testing; retain existing installs and the isolated fixture evidence.
 Use `./scripts/mod mp-setup` to configure isolated public Steam 1.6 host/client
 profiles `total-fog-mp-host-16` and `total-fog-mp-client-16` under
 artifacts/MPHostUserData and artifacts/MPClientUserData. It verifies installed

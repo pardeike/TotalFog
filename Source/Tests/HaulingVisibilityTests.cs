@@ -91,11 +91,23 @@ public sealed class HaulingVisibilityTests
         chunk.Map.Things.Add(plan);
 
         Assert.True(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
+        Assert.True(
+            TotalFog.Detours.HaulAIUtility.HaulToStorageJob_Prefix(
+                new Pawn { Faction = Faction.OfPlayer },
+                chunk
+            )
+        );
         Assert.False(ThingVisibility.IsVisible(chunk));
         Assert.False(Visibility.IsVisible(chunk));
 
         chunk.Map.Things.Remove(plan);
         Assert.False(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
+        Assert.False(
+            TotalFog.Detours.HaulAIUtility.HaulToStorageJob_Prefix(
+                new Pawn { Faction = Faction.OfPlayer },
+                chunk
+            )
+        );
     }
 
     [Theory]

@@ -25,7 +25,7 @@ public sealed class CombatExtendedTurretFixture
 
     [Tool(
         "totalfog/ce_turret_fixture",
-        Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup returns owned IDs; pass them for later actions. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional real security bell of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction. configure-enemy-fog applies the enemyFog test setting through normal refresh; restore it before cleanup. configure-fire-arc applies native angle/span fields and CE's adjustment callback; it does not test editor input. configure-aim-mode uses the weapon's native toggle and rejects unavailable modes. trace-start/trace-stop observe at most 128 actual burst-fallback results, base CE projectile impacts and applied-damage results each, without changing them. fallback-policy supplies false/true inputs to the loaded fog guard; it is a readonly contract check, not a native fallback reproduction. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. cleanup removes owned things and their active trace. Magazines are preloaded only during setup. Does not establish performance or all CE weapons."
+        Description = "Stage, inspect or configure an isolated native CE mini-turret, M240B or mortar with a charged battery and hostile waiting target. setup clears plants in its temporary lane and returns owned IDs; pass them for later actions and reload the unchanged base save after cleanup. enemyTurret stages an enemy mini-turret with a drafted player target. configure uses native hold-fire and an optional fixture sight source of the turret faction. add-alternate spawns one additional waiting target at targetDistance cells east, in the primary target's faction. configure-enemy-fog applies the enemyFog test setting through normal refresh; restore it before cleanup. configure-fire-arc applies native angle/span fields and CE's adjustment callback; it does not test editor input. configure-aim-mode uses the weapon's native toggle and rejects unavailable modes. trace-start/trace-stop observe at most 128 actual burst-fallback results, base CE projectile impacts and applied-damage results each, without changing them. fallback-policy supplies false/true inputs to the loaded fog guard; it is a readonly contract check, not a native fallback reproduction. supply-ammo places real ammunition beside the turret; reloading, manning and attacks use ordinary bridge tools. remove-power destroys only fixture power. cleanup removes owned things and their active trace. Magazines are preloaded only during setup. Does not establish performance or all CE weapons."
     )]
     public static async Task<object> Fixture(
         IRimBridgeContext ctx,
@@ -91,21 +91,39 @@ public sealed class CombatExtendedTurretFixture
                             );
                         if (targetDistance < 8 || targetDistance > 60)
                             throw new ArgumentOutOfRangeException(nameof(targetDistance));
-                        var source = map.AllCells.First(cell =>
-                            cell.x >= 6
-                            && cell.z >= 6
-                            && cell.x + targetDistance + 3 < map.Size.x
-                            && cell.z + 4 < map.Size.z
-                            && new CellRect(cell.x - 3, cell.z - 2, targetDistance + 7, 6).All(c =>
-                                c.Standable(map)
-                                && !c.GetThingList(map)
-                                    .Any(t => t is Pawn || t is Building || t.def.blockLight)
+                        var source = map
+                            .AllCells.Where(cell =>
+                                cell.x >= 6
+                                && cell.z >= 6
+                                && cell.x + targetDistance + 3 < map.Size.x
+                                && cell.z + 4 < map.Size.z
+                                && new CellRect(cell.x - 3, cell.z - 2, targetDistance + 7, 6).All(
+                                    c =>
+                                        c.GetTerrain(map)
+                                            .affordances.Contains(TerrainAffordanceDefOf.Heavy)
+                                        && !c.GetThingList(map).Any(t => t is Pawn || t is Building)
+                                )
+                                && !Visibility.IsVisible(map, cell + IntVec3.East * targetDistance)
+                                && !map.mapPawns.FreeColonistsSpawned.Any(p =>
+                                    p.Position.InHorDistOf(cell + IntVec3.East * targetDistance, 75)
+                                )
                             )
-                            && !Visibility.IsVisible(map, cell + IntVec3.East * targetDistance)
-                            && !map.mapPawns.FreeColonistsSpawned.Any(p =>
-                                p.Position.InHorDistOf(cell + IntVec3.East * targetDistance, 75)
+                            .DefaultIfEmpty(IntVec3.Invalid)
+                            .First();
+                        if (!source.IsValid)
+                            throw new InvalidOperationException(
+                                "No suitable isolated CE turret lane is available on this map."
+                            );
+                        foreach (
+                            var cell in new CellRect(
+                                source.x - 3,
+                                source.z - 2,
+                                targetDistance + 7,
+                                6
                             )
-                        );
+                        )
+                        foreach (var plant in cell.GetThingList(map).OfType<Plant>().ToArray())
+                            plant.Destroy(DestroyMode.Vanish);
                         Thing Spawn(string defName, IntVec3 cell)
                         {
                             var def = DefDatabase<ThingDef>.GetNamed(defName);
@@ -178,7 +196,11 @@ public sealed class CombatExtendedTurretFixture
 
                     var gunTurret = owned.OfType<Building_Turret>().Single();
                     // Preserve the first target's identity when an alternate is added.
-                    var targetThing = owned.First(t => t is Pawn || t is Corpse);
+                    var targetThing =
+                        owned.FirstOrDefault(t => t is Pawn || t is Corpse)
+                        ?? throw new InvalidOperationException(
+                            "The fixture target has left this map; reload the unchanged base save."
+                        );
                     var target = targetThing is Pawn pawn ? pawn : ((Corpse)targetThing).InnerPawn;
                     if (action == "add-alternate")
                     {
@@ -224,22 +246,22 @@ public sealed class CombatExtendedTurretFixture
                     if (action == "configure")
                     {
                         SetHoldFire(gunTurret, holdFire);
-                        var bell = owned.FirstOrDefault(t =>
+                        var sightSource = owned.FirstOrDefault(t =>
                             t.def.defName == FixtureSightSource.DefName
                         );
-                        if (reveal && bell == null)
+                        if (reveal && sightSource == null)
                         {
-                            bell = FixtureSightSource.Create();
-                            made.Add(bell);
-                            bell.SetFaction(gunTurret.Faction);
-                            GenSpawn.Spawn(bell, targetThing.Position + IntVec3.East, map);
-                            owned.Add(bell);
-                            ownedIds.Add(bell.ThingID);
+                            sightSource = FixtureSightSource.Create();
+                            made.Add(sightSource);
+                            sightSource.SetFaction(gunTurret.Faction);
+                            GenSpawn.Spawn(sightSource, targetThing.Position + IntVec3.East, map);
+                            owned.Add(sightSource);
+                            ownedIds.Add(sightSource.ThingID);
                         }
-                        else if (!reveal && bell != null)
+                        else if (!reveal && sightSource != null)
                         {
-                            bell.Destroy();
-                            ownedIds.Remove(bell.ThingID);
+                            sightSource.Destroy();
+                            ownedIds.Remove(sightSource.ThingID);
                         }
                     }
                     var verb = gunTurret.AttackVerb;

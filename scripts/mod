@@ -259,6 +259,10 @@ try:
         raise RuntimeError(
             "Use runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]"
         )
+    if mode == "ce-setup" and (
+        len(sys.argv) > 3 or (len(sys.argv) == 3 and sys.argv[2] != "core16")
+    ):
+        raise RuntimeError("Use ce-setup [core16]")
     with logpath.open("w") as log:
         if mode == "verify-binary":
             step = "tracked gameplay DLL"
@@ -588,8 +592,28 @@ try:
             ]:
                 raise RuntimeError("The installed Combat Extended must support RimWorld 1.6")
         if mode == "ce-setup":
+            core16 = len(sys.argv) == 3
+            offline = Path.home() / "Library/Application Support/OlderRimWorlds/RimWorldMac1.6.app"
+            if core16:
+                step = "offline CE dependency"
+                if (
+                    MODS != offline / "Mods"
+                    or not (offline / "Contents/MacOS/RimWorld by Ludeon Studios").is_file()
+                ):
+                    raise RuntimeError(
+                        "Set RIMWORLD_MOD_DIR to the installed offline 1.6 app's Mods folder"
+                    )
+                # Stage the complete released Workshop payload, never a private
+                # DLL or a symlink. Preserve any existing dependency install.
+                source = metadata.parents[1]
+                destination = MODS / "CombatExtended"
+                if not destination.exists():
+                    shutil.copytree(source, destination)
+                for name in ["About/About.xml", "Assemblies/CombatExtended.dll"]:
+                    if (source / name).read_bytes() != (destination / name).read_bytes():
+                        raise RuntimeError("Existing offline CE differs from Workshop: " + name)
             step = "isolated CE configuration"
-            data = ROOT / "artifacts/CEUserData"
+            data = ROOT / "artifacts" / ("CECore16UserData" if core16 else "CEUserData")
             (data / "Config").mkdir(parents=True, exist_ok=True)
             (data / "Logs").mkdir(exist_ok=True)
             config_path = data / "Config/ModsConfig.xml"
@@ -605,6 +629,8 @@ try:
                 "ceteam.combatextended",
                 "brrainz.totalfog",
             ]
+            if core16:
+                order = [m for m in order if not m.startswith("ludeon.rimworld.")]
             if config_path.exists():
                 active = [m.text.lower() for m in ET.parse(config_path).findall("activeMods/li")]
                 if active != order:
@@ -622,16 +648,19 @@ try:
                     shutil.copy2(source, data / "Config" / settings)
             cfg = Path.home() / ".gabs/config.json"
             config = json.loads(cfg.read_text())
-            game_id = "total-fog-ce-16"
+            game_id = "total-fog-ce-core16" if core16 else "total-fog-ce-16"
             entry = {
                 "id": game_id,
-                "name": "Total Fog CE 1.6",
-                "launchMode": "SteamManaged",
-                "target": "294100",
+                "name": "Total Fog CE Core 1.6" if core16 else "Total Fog CE 1.6",
+                "launchMode": "DirectPath" if core16 else "SteamManaged",
+                "target": str(offline / "Contents/MacOS/RimWorld by Ludeon Studios")
+                if core16
+                else "294100",
                 "args": ["-savedatafolder=" + str(data), "-logFile", str(data / "Logs/Player.log")],
                 "stopProcessName": "RimWorld by Ludeon Studios",
                 "gabpMode": "local",
-                "description": "Isolated Total Fog Combat Extended verification with all DLCs",
+                "description": "Isolated Total Fog Combat Extended verification "
+                + ("with Core-only offline 1.6" if core16 else "with all DLCs"),
             }
             if game_id in config["games"] and config["games"][game_id] != entry:
                 raise RuntimeError("Existing CE game registration differs; preserve it for review")

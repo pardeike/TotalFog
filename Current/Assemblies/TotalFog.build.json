@@ -53,7 +53,7 @@
     "Source/TotalFog/Detours/EnvironmentStatsDrawer.cs": "cdb428e1c2ae459ee92b8a9bb13ad19c90776e5a7d8d3e067198b34cc362d316",
     "Source/TotalFog/Detours/GenMapUI.cs": "123e72801eb9b01333fdb7a639ba172be8371f447fd693f219d918b8ebdba0b7",
     "Source/TotalFog/Detours/GenView.cs": "f8fa2cd97578636794cac32c304dd2a0a9c220b129070da6d6e0bd91c380e57b",
-    "Source/TotalFog/Detours/HaulAIUtility.cs": "24d90a342de18db68ed21eb1c9a6ce01d71cdc37da67ab759fcd69b00303b2ed",
+    "Source/TotalFog/Detours/HaulAIUtility.cs": "7e948feea123c5f2f233c47f4b1719c03d5c310275f9b08550b9510d517878c1",
     "Source/TotalFog/Detours/MainTabWindowWildlife.cs": "5210f67099afe7b9d88e0dce634fcdd503b76a623a8de842ca62fe52b3394ea4",
     "Source/TotalFog/Detours/MoteBubble.cs": "a17543f9f5f51990d014b8c8d1ace1387b541690d24e3d90c983c2c24adcbccd",
     "Source/TotalFog/Detours/MouseoverReadout.cs": "9e4e59141cb7a090a861c6c2cbaa01f67fb7aef015f7db3a2d19eec6d5a9d6b6",
@@ -126,5 +126,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "d05f0d97410bb1a17dc53f65ae53dbc1ebb0a3344e74f65bc39a8e05e9a0b77d"
+  "dllSha256": "3e94f56d76254532afbb7ccb9c7bbb0be9301544166fb737049ad0d6f1a8e465"
 }

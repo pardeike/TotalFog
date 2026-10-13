@@ -11,7 +11,7 @@ public sealed class HaulingScenarios
 {
     [Tool(
         "totalfog/hauling_fixture",
-        Description = "Stage a plain vanilla chunk, a colonist and a matching stockpile; lose actual pawn sight, probe native reservations/jobs, remove the haul order, or start the native haul job. Reload the unchanged fixture afterward."
+        Description = "Stage an owned construction or hauling order and test native reservation, obstruction-clearing, storage and cleaning jobs after actual sight loss. Supports fresh plant/building/item/filth replacements and map-search tests. Reload the unchanged fixture afterward."
     )]
     public static object Fixture(
         string operation = "setup",
@@ -219,7 +219,7 @@ public sealed class HaulingScenarios
             }
             else if (operation != "probe")
                 throw new ArgumentException(
-                    "Use setup, lose-sight, probe, remove-order, restore-order or start.",
+                    "Use setup, setup-construction, lose-sight, restore-sight, probe, replace-plant, replace-building, replace-filth, replace-item, remove-plan, remove-order, restore-order, start-construction or start.",
                     nameof(operation)
                 );
         }
@@ -237,6 +237,9 @@ public sealed class HaulingScenarios
             construction == null ? null : GenConstruct.HandleBlockingThingJob(construction, pawn);
         JobFailReason.Clear();
         var nextJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, target, true);
+        var storageJob = target.def.EverHaulable
+            ? Verse.AI.HaulAIUtility.HaulToStorageJob(pawn, target, false)
+            : null;
         return new
         {
             tick = Find.TickManager.TicksGame,
@@ -263,6 +266,8 @@ public sealed class HaulingScenarios
             canReserve = pawn.CanReserve(target),
             canReserveAndReach = pawn.CanReserveAndReach(target, PathEndMode.Touch, Danger.Deadly),
             job = nextJob?.def.defName,
+            storageJob = storageJob?.def.defName,
+            storageDestination = storageJob?.targetB.Cell.ToString(),
             destination = nextJob?.targetB.Cell.ToString(),
             currentJob = pawn.CurJob?.def.defName,
             storage = StoreUtility.CurrentStoragePriorityOf(target, false).ToString(),

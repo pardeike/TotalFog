@@ -212,14 +212,21 @@ public sealed class WatchtowerCEScenarios
                     AccessTools.Method(typeof(Thing), "Destroy"),
                     prefix: new HarmonyMethod(typeof(WatchtowerCEScenarios), nameof(DestroyPrefix))
                 );
-                var center = map.AllCells.First(c =>
-                    new CellRect(c.x - 5, c.z - 4, 26, 9).All(p =>
-                        p.InBounds(map)
-                        && p.Standable(map)
-                        && !p.Roofed(map)
-                        && p.GetThingList(map).All(t => t is not Pawn and not Building)
+                var center = map
+                    .AllCells.Where(c =>
+                        new CellRect(c.x - 5, c.z - 4, 26, 9).All(p =>
+                            p.InBounds(map)
+                            && p.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy)
+                            && !p.Roofed(map)
+                            && p.GetThingList(map).All(t => t is not Pawn and not Building)
+                        )
                     )
-                );
+                    .DefaultIfEmpty(IntVec3.Invalid)
+                    .First();
+                if (!center.IsValid)
+                    throw new InvalidOperationException(
+                        "No suitable isolated CE tower area is available on this map."
+                    );
                 area = new CellRect(center.x - 5, center.z - 4, 26, 9);
                 foreach (var p in area)
                 {
