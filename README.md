@@ -30,6 +30,9 @@ a wild boar or something much worse. To be safe, you have to look.
   vision. Their presence does not reveal nearby things or hidden effects.
 - Use the area Forbid/Allow tools for previously seen player doors outside sight.
   Their live inspector stays closed until someone can see them again.
+- Map search includes previously seen static things and your pawns' inventories.
+  Never-seen things and hidden enemies stay out of the results. Finding a
+  remembered thing does not open its live inspector through fog.
 - Allies and neutral visitors can share their view with you through one setting;
   prisoners have a separate sharing option.
 
@@ -113,6 +116,9 @@ muting hidden sounds are separate choices and default off. Existing saved
 settings are retained when updating. Player-owned things on known home-area cells,
 fire in that area and your own corpses on known cells remain available for work.
 Those work exceptions do not grant hidden effects or notifications current sight.
+An owned blueprint or frame also lets workers clear its hidden obstructions on
+known terrain, including hauling, plant cutting and removal. Cleaning can clear
+fresh dirt in a known home area. These permissions do not reveal the targets.
 
 Fog does not hide research availability, storyteller threat calculations,
 world-map information or the game's pathfinding and flee decisions. Combat can
@@ -142,6 +148,7 @@ too much.
   clocks, fog refresh, saved-session rejoin and bounded combat checks have passed
   on two local clients. Overall compatibility is still unverified; combined CE,
   cross-platform play and longer sessions need testing.
+  Further Multiplayer development is deferred until a concrete report needs it.
 
 RimWorld 1.6 and 1.7 load the same payload, compiled against the 1.6 API.
 Native 1.7 checks cover tower orders, blueprints, lookout facing, debug fog
@@ -381,6 +388,7 @@ installed game's `Mods` folder.
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
 | `./scripts/mod ce-setup` | Builds and deploys the mod and creates the separate Combat Extended test profile |
+| `./scripts/mod ce-setup core16` | Uses the offline 1.6 app with Core and the installed Workshop CE payload, in a separate profile; set its logical `Mods` path in `RIMWORLD_MOD_DIR` |
 | `./scripts/mod zombieland-setup` | Builds and deploys both mod/companion pairs into the Zombieland test profile |
 | `./scripts/mod ce-zombieland-setup` | Builds both mods and creates a separate test profile with Combat Extended, Zombieland and all DLCs |
 | `./scripts/mod mp-setup` | Configures separate Multiplayer host/client profiles without building or deploying |

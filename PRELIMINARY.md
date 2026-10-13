@@ -17,6 +17,12 @@ replace an installed ZIP.
 This is not a public release.
 Keep the separate No Pause Challenge setup fix if you use that mod.
 
+Later 13 October source work extends construction access to blocking plants and
+buildings, permits cleaning fresh dirt in known home areas, aligns storage
+hauling with those work rules, and restricts native map search while retaining
+remembered static items. Those fixes belong to a later candidate; they are not
+in the construction/Spitter pair unless the delivery message identifies it.
+
 Support: [Brrainz Discord](https://discord.gg/G4r84eN7w6).
 Source: [Total Fog](https://github.com/pardeike/TotalFog) and
 [Zombieland](https://github.com/pardeike/Zombieland).
@@ -107,14 +113,14 @@ Fleshmass Heart slowdown or reproduce the complete streamed mod list.
 
 ## What was checked
 
-The current source passes 429 C# tests and seven pure artifact-gate checks.
+The current source passes 447 C# tests and seven pure artifact-gate checks.
 The 13 October pair also passes native construction obstruction clearing,
 visible/hidden/off Spitter dots and silhouettes, and scheduled hearing rings
 on Core-only 1.6. Its exact binaries renew the paired Symbiant, interaction,
 audio, explosion and contamination gates. This run does not renew DLC-specific
 or native 1.7 acceptance for that pair. Earlier
-GitHub checks apply to their recorded commits; the expanded CI build is configured
-for Linux and Windows and does not run RimWorld. Focused native 1.7 follow-ups cover
+GitHub checks apply to their recorded commits; Linux and Windows CI check the
+source/binary receipt, tests and build, but do not run RimWorld. Focused native 1.7 follow-ups cover
 platform orders, blueprints, lookout facing, debug fog commands and paused fog
 seams. Their recorded hashes and limits are in docs/VALIDATION.md.
 

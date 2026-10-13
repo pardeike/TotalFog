@@ -3,132 +3,54 @@
 Player-visible changes for the unreleased 0.1.0 version. Source commits and
 local testing do not indicate that a new player build has been released.
 
-- Reduce sight-casting work across clear terrain while preserving sight boundaries and targeting.
+## Vision and information
+
 - Support RimWorld 1.6 and 1.7 through the same Current/ payload.
-- Add an experimental 3x3 watchtower with a timed ladder, configurable lookout sight and optional shooting, plus ladder rescue and collapse injury. Existing legacy towers remain retired.
-- Make tower blueprints and placement previews translucent, with the ladder facing the player by default.
-- Let undrafted lookouts slowly look around; idle drafted lookouts keep facing the player.
-- Apply Clear All Fog, Refog Map and rectangle fog debug commands to Total Fog too.
-- Fix persistent straight fog edges when scrolling while the game is paused.
-- Keep unsupported tower-order hooks from interrupting other mods' patches, and prevent one failed delayed notification from blocking later notifications.
-- Prevent failed visibility listeners from leaving cells permanently visible, including during source removal.
-- Give delayed letters with vanished targets their actual archive time instead of sorting them at the start of the colony.
-- Reduce overhead in colonies without watchtowers and when drawing tooltips, terrain, roof and fertility overlays.
-- Avoid rebuilding artificial-light meshes when sight changes on unlit cells, while retaining native light updates and correct fog boundaries.
-- Let other mods process shared targeting, sound and building orders before Total Fog applies its visibility restrictions.
-- Give camera consoles their own Cameras work priority, choose working consoles and release operators when a console stops working.
-- Set telescope sight independently of watchtower sight.
-- Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
-- Synchronize a drafted tower move before converting it into a climbing job during Multiplayer replay.
-- Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
-- Keep a lookout on the platform when drafted and prevent a rotation error after climbing.
-- Clear the ladder before an undrafted lookout resumes idle wandering, while preserving queued work.
-- Keep raised watchtower occupants vulnerable to fire, with their normal fire resistance preserved.
-- Preserve a watchtower and its occupant's corpse when saving and reloading after a death.
-- Keep splitting fleshbeasts hidden while they fly through unrevealed terrain.
-- Check walking pawns at their drawn position so crossing a sight boundary does not reveal a pawn still outside view.
-- Correct hidden-pawn visibility after landing, transport, or respawning.
-- Keep visibility updates working when game ticks advance in larger intervals.
-- Restore camera textures on macOS and load their portable PNG files directly.
-- Retire Chicken on a Stick and both watchtowers from construction and remove their sight bonuses, while retaining existing saved objects.
-- Retire the remaining inspector animals, both security bells and light beacons, retaining saved objects without their vision, light or fuel consumption.
-- Keep renderer registration under the game's ownership, including held and flying pawns.
-- Preserve deferred letters and messages across saves, including their original sounds and targets.
-- Apply unseen-event settings to refugee pod letters sent before their passenger enters the map.
-- Add settings to suppress combat music and mute hidden sound sources.
-- Include Anomaly music in combat music suppression, with normal music retained.
-- Delay Anomaly codex discovery and its notice until a player first sees the entity.
-- Keep existing haul orders for known vanilla chunks working after sight is lost.
-- Clear chunks and other haulable obstructions from ordered blueprints and frames even after sight is lost.
-- Permit native construction to remove blocking plants and buildings in known terrain, and let colonists clean fresh dirt in a known home area without revealing those targets through fog.
-- Filter map search by Total Fog visibility, retaining previously seen static items and your pawns' inventory while hiding never-seen objects and hidden enemies.
-- Add an optional Silent Raids setting for enemy raid and manhunter arrival letters and slowdown, while preserving their spawning and normal combat slowdown.
-- Apply audio settings to already-running loops and restore their volume when filtering is disabled.
-- Calculate nearby audio from living listeners rather than previously explored terrain.
-- Correct fog updates on rectangular maps and shared section borders.
-- Add an explicit option for hearing indicators.
-- Filter custom overlays, shot tooltips, and mouseover entities through the same visibility policy.
-- Keep rare-ticking sources and blockers up to date.
-- Make fog borders deterministic between adjacent sections.
-- Keep terrain, fertility, roof overlays, and placement rules consistent with discovery and colony visibility settings.
-- Keep newly spawned objects hidden in explored cells until someone observes them.
-- Delay offscreen events even when their static target has been seen before.
-- Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision, while keeping their hidden effects and neighbouring things behind fog.
-- Apply Combat Extended's fog targeting to every player faction using its own sight, including automatic turrets and locked bursts in separate Multiplayer colonies.
-- Require current faction sight for watchtower target acquisition and Thing shots, while preserving deliberate blind fire at cells.
-- Require current sight for other live labels, tooltips, overlays and selection, including selection proxies.
-- Close an object's live inspection when sight is lost.
-- Hide live mouseover and environment details outside current sight, and limit beauty sampling to visible cells.
-- Keep unobserved owned buildings and projectiles behind fog.
-- Stop walls and other buildings without active vision from revealing their own footprint.
-- Organize settings into Appearance, Vision, Information and Audio tabs with a fixed footer and a wider gap between controls and the scrollbar.
-- Clarify which notification, wildlife, hearing and gravship options can reveal unseen activity.
-- Keep tree-blocking controls disabled while a game is loaded, including after resetting adjustable settings.
-- Use native rendering for observed scenery instead of expensive visual snapshots and drawing archives.
-- Fix power-grid rendering errors caused by flying pawns during save loading.
-- Keep colony health and global notifications immediate; discard settings now apply only to unseen events.
-- Avoid rebuilding terrain and other section meshes when realtime pawns become hidden or visible.
-- Skip enemy sight calculations while enemy fog targeting is disabled, preserving the game's enemy targeting and other AI mods.
-- Apply vision and enemy-targeting setting changes within the normal sight-refresh interval.
-- Synchronize shared fog settings in Multiplayer and preserve them in saved sessions.
-- Keep sight and hearing updates responsive when caravans enter maps running on different Multiplayer clocks.
-- Keep sight, explored cells, observed objects, hearing cues and deferred notifications separate between player factions.
-- Keep gravship landing previews from permanently revealing objects, hidden notifications or sound sources.
-- Keep hidden pawns and objects out of right-click action and attack menus.
-- Reduce repeated map-component searches and duplicate fog-section cell sampling.
-- Skip cell-index rewrites when one-cell things turn in place; preserve immediate movement and larger footprint updates.
-- Skip unnecessary fog lookups when drawing owned pawns.
-- Apply fog targeting to Combat Extended weapons while preserving its ballistics and the enemy-fog setting.
-- Give powered Combat Extended turrets their configured sight and stop unmanned turrets firing at cells unseen by their faction.
-- Keep mortar crews at their normal sight range, and prevent Combat Extended turrets from automatically acquiring unseen targets.
-- Keep manual targeting from selecting unseen objects; blind fire aims at the chosen cell instead of tracking a hidden pawn.
-- Stop Combat Extended weapons following unseen targets during firing while preserving native blind fire at the last known cell.
-- Reduce sight-update work in open terrain while preserving blocked-cell visibility and combat targeting.
-- Reduce visibility-listener lookup work and index memory on populated maps.
-- Reduce fog memory use and recurring allocations as pawns move through populated maps.
-- Reduce work when walls and other sight blockers change near large colonies.
-- Avoid repeated sight calculations when movement or another update has already refreshed a pawn.
-- Keep fog updates requested by mod callbacks during a refresh.
-- Initialize sight using ready daylight and lamp lighting when loading a map.
-- Reduce repeated footprint construction for common single-cell visibility queries.
-- Refresh fog rendering when sight changes while the game is paused.
-- With the updated Zombieland, show only visible parts of a Symbiant body and its rotating core, including when the root is hidden.
-- With the updated Zombieland, allow inspection of a visible Symbiant core even when its root is hidden, and offer manual body targets only in visible cells. Hidden roots cannot show labels or overlays through a visible core.
-- With the updated Zombieland, apply hidden-sound and hearing settings to its electric/tank ambient loops and spitter/rising-wave sirens.
-- Hide live explosion flashes and smoke outside current sight while preserving their normal movement, lifetime and gameplay effects.
-- With the updated Zombieland, play electric combat sounds at the event and prevent hidden or rapid hits from accumulating flashes and repeated sounds.
-- With the updated Zombieland, enemy fog targeting checks each Symbiant body cell against the humanlike attacker's faction sight.
-- Let Combat Extended fire at visible logical body cells while their pawn position is hidden, and stop tracking when the selected cell leaves sight.
-- Apply unseen-event discard categories to ordinary white messages as well as letters, preserving health, global and visible notifications.
-- Keep artificial ground light outside current sight from revealing hidden fires and lamps.
-- Keep your blueprints visible on explored cells outside current sight.
-- Hide corpses when sight is lost so unseen zombie conversion does not reveal itself through a disappearing remembered corpse.
-- Allow Forbid/Allow area orders on previously observed player doors outside current sight without opening their live inspector.
-- Avoid a startup error when another mod bundles the Multiplayer API but Multiplayer itself is not loaded.
+- Use native drawing for previously observed scenery, without expensive archives of its last appearance. Fresh objects stay hidden until observed.
+- Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision. Their presence does not reveal nearby things or hidden effects.
+- Require current sight for other live labels, tooltips, overlays, selection, inspection, environment details and target information. Close live inspection when sight is lost.
+- Filter map search while retaining remembered static things and your pawns' inventories. Never-seen objects, hidden enemies and hidden enemy inventories remain excluded.
+- Preserve deferred letters and messages across saves, with their sounds, targets, recipient factions and map clocks. Vanished targets retain ordinary History/archive behavior.
+- Apply unseen-event settings to pre-arrival refugee pod letters, ordinary white messages and selected hidden-threat alerts and jump targets. Colony health, global events and visible notifications remain immediate.
+- Delay Anomaly codex discovery and its notice until the entity is first seen.
+- Add optional Silent Raids: suppress raid/manhunter arrival letters and arrival slowdown while retaining spawning and normal combat slowdown.
+- Keep gravship previews from permanently exploring cells or granting live effects, notification eligibility or sound-source sight.
+- Keep splitting fleshbeasts, held/flying pawns, projectiles, corpses, gas, explosions and artificial ground light behind their appropriate current-sight gates.
+- Retain owned blueprints, Forbid/Allow area orders for observed player doors, and known home-area work without opening hidden live inspection.
+- Preserve existing haul orders for known plain chunks. Let native construction clear hidden haulable items, plants and buildings blocking owned blueprints/frames on known terrain. Storage hauling uses that same work-permission rule; native construction still chooses its ordinary haul-aside job.
+- Allow cleaning fresh dirt in a known home area without revealing it.
 
-- Add a separate colony mech vision slider, preserving normal range by default.
+## Watchtowers and cameras
 
-- Keep colonists facing the ladder during descent.
-- Turn idle lookouts toward the player, retain their platform when drafted, and allow dragged formation orders across tower decks.
-- Offer explicit one-, two- and four-hour tower watches; drafted lookouts can hold until undrafted or ordered away. Show the remaining watch time and respect Fire at will.
-- Connect adjacent walls to the solid tower base without unwanted wall end caps.
-- Remove watchtower and blueprint startup configuration errors while preserving adjacent wall connections.
-- Check a lookout's ground route from the ladder entrance so normal move orders are available while on the platform.
+- Add an experimental 3x3 watchtower with one elevated lookout, a timed ladder, configurable sight, optional shooting, rescue and collapse injury.
+- Require Complex furniture and heavy ground support. Completed towers block all nine cells; previews remain walkable and use translucent native-style blueprints. New ladders face the player by default.
+- Offer one-, two- and four-hour watches counted from reaching the deck, or drafted holding until undrafted or ordered away. Preserve timers across saves and respect explicit orders, draft transitions and Fire at will.
+- Let drafted Go here and dragged formations use tower platforms, including Achtung's move orders. Ground routes begin at the ladder after descent; idle undrafted pawns step clear while retaining queued work.
+- Face the ladder in both directions. Undrafted lookouts turn through all four directions; idle drafted lookouts face the player while combat aiming retains priority.
+- Connect actual adjacent wall graphics to the solid base without unwanted end caps.
+- Keep raised bodies, labels, selection, effects and projectiles aligned. Preserve native trajectories, target cover, shield absorption and fire resistance; tall obstacles still block elevated shots.
+- Preserve occupied towers, downed occupants, corpses, rescue and carrying state through saves. Warn about blocked exits, protect ladder access and permit retrieval without requiring a bed. Desperate exits and collapse can cause fall injuries.
+- Give cameras a separate Cameras work priority. Choose working consoles, release operators when their console stops, and avoid console work when the operator requirement is disabled.
+- Set telescope sight independently of tower sight and restore portable camera textures on macOS.
+- Retire Chicken on a Stick, the other inspector animals, security bells, light beacons and old watchtowers. Saved objects remain loadable without their former sight, light or fuel consumption.
 
-- An unavailable patch or optional Multiplayer binding no longer prevents unrelated fog features from loading.
+## Audio and settings
 
-- Loading a save no longer explores through walls before those walls have spawned.
+- Suppress Combat and Anomaly music by default while retaining ordinary music.
+- Add optional hidden-source muting, hearing-distance filtering and hearing indicators. Living faction listeners supply hearing; general ambience stays native.
+- Apply audio choices to existing loops and restore normal volume when filtering is disabled. Reuse hearing checks within a map tick.
+- Organize Appearance, Vision, Information and Audio settings with a fixed footer, clear defaults and space beside the scrollbar. Preserve saved choices and explain intentional information cues.
+- Add a separate colony-mech vision multiplier, keeping normal range by default. Keep tree-blocking choices disabled while a game is loaded.
+- Apply native Clear All Fog, Refog Map and rectangle fog commands to Total Fog. Settle fog fades while paused so scrolling does not leave stale straight section edges.
+- Translate current settings and tower text into German, French, Simplified Chinese and Korean.
 
-- Player mortars and turrets stop automatically selecting hidden targets; manual mortar fire at a cell remains available.
+## Integrations and stability
 
-- Visibility changes avoid rebuilding unrelated terrain and overlay meshes. Hidden gas no longer draws outside current sight.
-
-- Delayed information also filters selected hidden threat alerts and their jump targets. Known home-area fires and your own known corpses remain available for colony work.
-
-- Hidden looping sounds reuse hearing checks within a map tick. Delayed letters use the owning map clock and remain in History when their unseen targets disappear.
-
-- Watchtowers require Complex furniture, protect their ladder from blocking construction, show blocked-exit warnings and permit rescue without a bed from the pawn menu. Desperate blocked exits can cause fall injuries; outgoing shots keep the target's normal cover.
-
-- Disabling the camera operator requirement stops unnecessary console work. Update retired-feature descriptions and translate Total Fog settings and watchtower text into German, French, Simplified Chinese and Korean.
-
-- Watchtowers and their blueprints no longer report wall-link configuration errors on startup.
+- Apply Combat Extended targeting to each observing faction while preserving native ballistics, failed checks, power/manning sight, mortar blind-cell fire and last-known-cell bursts. Do not track unseen Things during firing.
+- With the updated Zombieland, clip Symbiant bodies and their moving cores by visible cells, permit visible-core inspection with a hidden root, and restrict body-cell targeting by faction sight.
+- With the updated Zombieland, filter source-specific effects, readouts, highlights, warnings and sounds through the optional integration. Keep each mod usable on its own.
+- Retain Multiplayer synchronization for settings, player orders, faction knowledge, hearing, map clocks and saved sessions. Overall Multiplayer compatibility remains unverified.
+- Keep one unavailable optional hook, broken listener or failed delayed notification from preventing unrelated fog behavior. Avoid startup failures from an inactive bundled Multiplayer API.
+- Initialize sight after native blockers and lighting are ready. Preserve updates across larger tick intervals, movement, map/faction changes and callback refresh requests.
+- Reduce recurring sight, footprint, registration and mesh work. Discovery dirties terrain/roof/fertility meshes; ordinary sight changes avoid unrelated rebuilds. Skip enemy sight work when enemy fog is disabled.
+- Correct rectangular-map and shared-section boundaries, rare-ticking blockers and sources, power-grid rendering during flyer loading, and the renderer's ownership of held/flying things.

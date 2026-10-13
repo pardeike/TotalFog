@@ -12,7 +12,7 @@ Review round 2 is complete in ten ordered commits on 13 October 2026, followed
 by Andreas's accepted independent reassessment corrections. The independent
 player-stability review then corrects owned-pawn controls, tower fog targeting
 and CE targeting for other player factions. The current Release
-build passes 429 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+build passes 447 C# tests and seven pure artifact-gate tests with zero warnings/errors.
 The subsequent lighting-invalidation change passes native light-boundary checks
 on both engines and the Core-only wide performance floor below. The 14 earlier
 player-safety controls retain their own 9a490e5b checkpoint.
@@ -26,18 +26,22 @@ improvement, with one worse frame-tail sample retained. These checks do not
 renew full DLC/optional-mod feature gates. Andreas accepted commit 07d128b as
 the new performance baseline and closed the optimisation topic on 13 October.
 The upstream-original speed floor is retired. Private feedback verification now retains that accepted baseline and requires fresh exact-binary native correctness gates rather than a new upstream speed comparison. Earlier GitHub
-source checks passed for their recorded commits, not this local review batch.
+source checks passed for their recorded commits. The latest verified pre-task
+Linux/Windows CI run is [38412811156](https://github.com/pardeike/TotalFog/actions/runs/38412811156)
+at `06d0e9a`; local changes still need their own remote result after publication.
 
 | Area | Current evidence and boundary |
 |---|---|
 | Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |
+| Work and search follow-up | The 13 October audit corrects shared work permissions for hidden construction-blocking plants/buildings and fresh home-area filth, then aligns storage hauling with the same rule. Native job eligibility and negative plan-removal controls are recorded in VALIDATION.md. Native map search excludes never-seen/replacement items and hidden hostile inventories, while keeping remembered static things. Optional Improved Map Search remains unverified. |
 | Latest native check | Feedback DLL 5c657514 with Zombieland 777fce38 passes native hidden blueprint obstruction clearing through completed construction, six Spitter highlight controls and scheduled hearing rings on Core-only 1.6. The exact pair also renews the paired Symbiant, interaction, audio, explosion and contamination gates in VALIDATION.md. No fresh DLC-specific or 1.7 acceptance is claimed for that pair. Accepted baseline DLL fcde178b passes three staged corpse/blueprint/door/lighting controls on Core-only offline 1.6 and Steam 1.7.4976. The native objects remain spawned and gameplay glow is unchanged. Earlier DLL 9a490e5b passes 14 player-control, tower targeting and replacement-rescue controls on both engines. Native tower acquisition and Thing shoot lines reject hidden targets and retain visible targets and blind-cell fire. Those broader controls retain their own checkpoint; full five-DLC feature renewal remains open. |
 | Other 1.7 checks | Earlier DLL 9a490e5b passes all 14 player-safety controls on Steam 1.7.4976 rev1043 with released Workshop Harmony 3.0.0.0-rc.2. A vanilla 1.7 colony also loads with Total Fog added and advances 177 normal-speed ticks. No native errors or Total Fog patch warnings occur at that checkpoint. The previously claimed Steam-Harmony blocker was an old local-copy selection; ordinary profiles now pin Workshop Harmony. Earlier tower-order/presentation controls retain their recorded hashes; broad DLC/optional-mod renewal remains open. |
 | Zombieland delivery | Two complete, separate preliminary ZIPs were delivered on 13 October, including the construction-obstruction and Spitter-highlight fixes plus the intervening tower changes. Both Discord downloads match the tested local archives. The superseded 12 October attachment posts are removed. The fresh native correctness gates apply to the exact 5c657514/777fce38 gameplay pair; performance retains the accepted baseline. |
-| CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls on reassessment DLL b6cd058d. The later CE other-player-faction correction passes source-linked tests; combined native renewal is open. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
+| Combat Extended | The 13 October Core-only CE 16.7.3.0 follow-up passes native hidden/revealed hit checks, preserved ballistic failures, enemy-fog controls and all 26 tower collision/projectile/save-load controls on d05f0d97. Powered turret acquisition changes from hidden to revealed and fires; its later target exits the map, so that run does not renew the completed sight-loss gate. Earlier wider CE evidence retains its recorded hashes. Combined other-player-faction combat, broader weapons/loadouts, Windows and 1.7 integration remain unverified. |
+| Multiplayer | Deferred at Andreas's request until concrete demand or reports. Overall compatibility remains unverified. The retained Core-only two-client checkpoint passes 11 Goto capture/replay, matching tower/fog, telescope-setting and descent controls on b6cd058d; previous broader checks retain their own hashes. The loader issue, broader combinations, save/rejoin renewal, longer sessions and cross-platform acceptance remain open. |
 | Performance | Accepted and closed on commit 07d128b, DLL fcde178b. This build is the future Total Fog baseline, including correct fog behaviour. Recorded baseline medians are 565.823 TPS on the Core-only 1.6 wide map, 843.696 TPS on the 118-entry 1.7 stress map and 871.637 TPS on its colony. The retained stress outlier limits general frame/spike claims. Reopen only for a repeatable material player slowdown or a demonstrated performance defect. The original-mod speed floor is retired; unmeasured combinations remain evidence limits rather than an optimisation queue. See VALIDATION.md's accepted baseline for exact identity and matching conditions. |
 | Large mod list on 1.7 | 118 actually loaded entries, including all five DLCs and 108 Workshop mods, start and save/load/play on unchanged 7b783fc7 gameplay bytes. Replace Stuff and Dubs Mint Menus were excluded after reproducible startup failures. The developer full-colony fixture retains bounded placement/minified-item errors and a repeated unique-weapon colour reload error. DPA produces no timing rows; native/focused profiling evidence and the unresolved profiler-session culling exception are retained in VALIDATION.md. This is a reusable diagnostic loadout, not feature-by-feature compatibility acceptance. |
-| Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match this review source; expanded Linux/Windows CI is configured but has not run remotely for this batch. |
+| Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match current gameplay inputs. Linux/Windows CI checks the receipt, formatting, pure tests and clean builds; it does not run RimWorld. Source publication and private tester archives retain separate identities. |
 
 The sections below retain dated delivery and compatibility checkpoints. Their
 test counts, hashes, phrases such as "current pair", and remaining-check lists
@@ -270,8 +274,9 @@ bytes. Reuse unaffected evidence, repeat affected scenarios and explain rough
 edges. Do not send minor source-only updates. The C0..C5 contamination groups and
 other speculative mechanics remain follow-up coverage unless source or player
 evidence identifies a fog interaction. The current development priority is
-Mortal's concrete stream feedback in Total Fog and Zombieland. CE and Multiplayer
-can resume while tester feedback is pending; demonstrated stream regressions
+Mortal's concrete stream feedback in Total Fog and Zombieland. CE checks can
+continue while tester feedback is pending; Multiplayer is deferred until
+concrete demand or reports. Demonstrated stream regressions
 retain priority. Their earlier evidence keeps its own gameplay identities. Hidden wall
 destruction can change remembered native scenery while unseen; exact appearance
 snapshots remain deliberately excluded for performance. Mortal's Custom-difficulty
@@ -304,9 +309,10 @@ it is not a new performance-floor or Multiplayer acceptance pass.
 The 13 October pair is delivered. It includes the intervening watch-order,
 wall-link, shared-version loading, blueprint, lookout-rotation and paused-fog
 corrections, plus the new construction and Spitter fixes. Follow up on concrete tester
-regressions first, then continue the remaining
-Multiplayer checks below, starting with demonstrated
-failures and existing acceptance gaps. Core two-client queue, rifle, hearing,
+regressions first. The 13 October train-journey scope audits shared work access
+and native search, checks CE, and finishes code/documentation cleanup. No further
+1.7 campaign or Multiplayer work is requested for this slice. Retain Multiplayer
+as unverified until our own outstanding checks establish it. Core two-client queue, rifle, hearing,
 caravan and save/rejoin slices have passed; they are no longer general blockers.
 The reflection-only loading error also reproduces without Total Fog or
 Multiplayer. Its requester is the old game assembly, but the exact caller and
@@ -326,7 +332,7 @@ not supersede the already delivered preliminary pair.
 | Information outside sight | Source-linked and real-item scenarios prove fresh static objects stay hidden until observed and static-target messages require current sight. Ownership no longer reveals static objects or projectiles, and a native owned wall creates no sight. Live UI requires current sight; a native remembered-item/proxy scenario proves deselection, blocked reselection and zero live UI callbacks while unseen. Static objects use native rendering once observed, so appearance and terrain can change while unseen. Exact visual memory is intentionally excluded for performance. Player-observer/held-pawn exceptions and optional-mod inspection paths also remain to audit. |
 | Base-game sources | Movement, sleep, downing, death, faction changes, doors, trees, lighting, weather, turrets, cameras, watcher occupancy, allied/prisoner/animal vision and overlapping sources. |
 | Base-game information | Rendering and shadows, selection, labels, mouseover, inspection tabs, wildlife, alerts, threat indicators, targeting, hauling, reservations, designators, resource counts, beauty/room/environment readouts and sounds. |
-| Item search follow-up | Requested 11 October: audit native and Improved Map Search results for never-seen items versus previously seen items. Previously seen items may be searchable; check whether results also disclose hidden movement or freshly spawned items in explored cells. Source and native acceptance are outstanding. |
+| Item search | Native 1.6 result eligibility and population now exclude never-seen/replacement items and hidden hostile inventories, retain observed static things and player inventories, and use current registered inspection cores. Cached navigation uses that same policy; live inspection stays restricted. Improved Map Search is absent locally and remains unverified. |
 | Royalty | Psycasts, invisibility, shields, jump/teleport and held/flying pawns. |
 | Ideology | Rituals, roles, allied/slave/prisoner vision and event targets. |
 | Biotech | Mechs, remote control, gestation/held pawns, children, pollution and shield effects. |

@@ -63,6 +63,26 @@ cells outside sight. This expresses player intent without enabling hidden
 selection, inspection or live target information. Other things retain the
 normal current-sight designator gates.
 
+### Work permission and search
+
+`ThingVisibility.IsActionable` is the shared work-permission boundary for
+reservations, reachability and storage hauling. Native false results remain
+false. On known, native-unfogged terrain, an owned blueprint/frame authorizes
+clearing actual construction obstructions: haulable items, plants and buildings.
+The native construction system still chooses its ordinary haul-aside, cut,
+deconstruct or mine job and retains its work-capability and forbidden rules.
+The known home area similarly authorizes cleaning fresh filth. These exceptions
+never grant observation, remembered drawing or live information.
+
+`MapSearchVisibility` restricts native search eligibility and protects cached
+navigation using the same remembered-static policy as drawing. Observed static
+things can remain searchable at their native positions; unknown replacements,
+hidden mobile targets and hidden enemy inventories cannot. Player pawn contents
+and current registered inspection cores retain their corresponding access.
+Selection still requires current sight under the ordinary inspection policy.
+The native explicit debug restriction override remains available. Search does
+not mutate listers, simulation or saved state, and adds no location archive.
+
 ## Update and save rules
 
 ### Fog presentation
@@ -111,6 +131,8 @@ notification eligibility or audio sight.
 Two-client evidence and remaining acceptance are in
 [COVERAGE.md](COVERAGE.md#zetriths-multiplayer-unverified). The optional bridge
 commands are diagnostics, not dependencies of the player mod.
+Further Multiplayer work is deferred until concrete feedback justifies it;
+retaining the integration does not claim overall compatibility.
 
 ### Other mods
 
@@ -194,7 +216,8 @@ an unchanged periodic check leaves it pending. The FIFO drain detaches each node
 before refreshing it, so callbacks can request fresh work without losing that
 request or invalidating an enumerator. A pass processes at most its initial entry
 count. This is cancellation/coalescing, not the proposed per-tick quota or
-freshness-deadline scheduler; that experiment remains open. Pending nodes and the
+freshness-deadline scheduler; that experiment is deferred under the accepted
+performance baseline. Pending nodes and the
 active-source list are transient and reconstructed on load. Coverage changes
 are batched into dirty fog sections. Native terrain, roof and fertility drawers
 become dirty only when discovery changes. Idle frames must not cause fog work.
@@ -262,9 +285,10 @@ sources, reciprocal sight, radius, blockers, rectangular maps, footprints and
 lifecycle behavior. Engine tests must cover rendering, registration, save/load,
 UI, notifications and audio separately.
 
-Compare load time, actual tick progress, frame-time distribution and allocations
-against the inherited binary. Use stationary and moving colonies, crowded maps
-and combat. Preserve visibility correctness while improving measured hot paths.
+For a demonstrated regression, compare load time, actual tick progress,
+frame-time distribution and allocations against the accepted Total Fog baseline
+on the affected workload. The inherited binary retains historical comparisons.
+Preserve visibility correctness while improving measured hot paths.
 Windows and Mac results are separate evidence. A clean startup and unit tests do
 not establish runtime performance or compatibility with all mods.
 

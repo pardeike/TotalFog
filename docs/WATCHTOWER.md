@@ -7,17 +7,22 @@ correction, front ladder placement, native-style blueprints and rotating
 undrafted lookouts. It is part of the active `Current/` payload shared by 1.6
 and 1.7. Earlier native 1.7 controls cover the user's three-tower row drag, watch/draft
 transitions, blueprint presentation, all four lookout facings and a visible
-tower melee attack. The latest player-stability candidate passes 411 C# tests
+tower melee attack. Current source passes 447 C# tests
 and seven artifact-gate tests.
 A bounded native Core-only check on both 1.6 and 1.7 rejects hidden Thing acquisition and shots,
 retains visible targets and blind-cell fire, and completes replacement retrieval
 after an ascending rescuer dies. Earlier larger suites retain their recorded hashes.
-Broader 1.7 combat, optional-mod and performance acceptance remain open.
+The 13 October Core-only CE 16.7.3.0 slice renews all 26 collision, native
+incoming/outgoing arrow, low-wall/tall-obstacle, in-flight save/load and descent
+controls on DLL d05f0d97. Broader 1.7 combat and optional-mod acceptance remain
+open. Performance retains the accepted Total Fog baseline; further Multiplayer
+work is deferred until a concrete report needs it.
 
 The larger suites and performance numbers below belong to the earlier 1.6
-preliminary pair and its recorded candidates. Later local source fixes have
-not been delivered as a replacement ZIP and do not refresh those exact-byte
-proofs. [COVERAGE.md](COVERAGE.md#current-status) owns overall status;
+preliminary pair and its recorded candidates. The 13 October private pair
+includes the subsequent tower corrections, while retaining the earlier broader
+checks at their recorded hashes. Later source work is not automatically present
+in that archive. [COVERAGE.md](COVERAGE.md#current-status) owns overall status;
 [VALIDATION.md](VALIDATION.md) retains candidate hashes, failures and receipts.
 
 ## Recorded 1.6 production evidence

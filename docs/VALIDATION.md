@@ -8669,3 +8669,58 @@ corrected before accepting the relevant rows. The final native log has no
 gameplay exception; it retains two pre-existing invalid window-position
 preference XML entries. The unchanged base save was reloaded and the process
 stopped. Main Steam saves and settings were preserved.
+
+### CE follow-up and final storage-permission candidate
+
+CE 16.7.3.0 (MVID `2154499a-15df-4785-9832-e4d0c305b722`) runs in the
+separate Core-only offline 1.6 profile `total-fog-ce-core16`, created through
+`./scripts/mod ce-setup core16`. Its complete payload comes from the installed
+Workshop build. Released Workshop Harmony remains the first mod, with the
+bridge immediately below it. Existing Steam/DLC profiles are preserved.
+
+On d05f0d97, the actual native CE Vector3 hit method retains open/blocked
+ballistics, rejects hidden player targets, allows revealed targets, and respects
+both enemy-fog modes. The tower suite passes all 26 native controls: partial/full
+colliders, shooting off by default, low-wall fire, tall obstacles, real incoming
+and outgoing arrows, projected drawing, independent native physics, in-flight
+save/load and descent. Captures and manifests are retained in `artifacts/train-work`
+and `artifacts/CECore16UserData`. These renew a bounded CE weapon/height slice,
+not every CE weapon, DLC combination or other-player-faction combat.
+
+The powered mini-turret has sight range 34 and weapon range 48. A target 42
+cells away remains unacquirable with 100 rounds through 240 ticks after power
+settles. Adding a real fixture sight source makes it natively acquirable;
+ordinary playback consumes 20 rounds. CE's suppression then moves the target
+out of sight and eventually off-map. The final state lookup is rejected because
+the target has left, so this does not renew the completed sight-loss gate or
+establish damage. Earlier completed turret/fallback checks retain their hashes.
+The helper now reports a missing target explicitly. Initial terrain staging
+failures and vanilla-save conversion errors remain rejected evidence; the fresh
+CE colony avoids those converted weapon/apparel records. Plants can be cleared
+inside a temporary fixture lane while native buildings and pawns remain protected.
+The unchanged base save is restored after temporary scene changes.
+
+The final candidate is
+`3e94f56d76254532afbb7ccb9c7bbb0be9301544166fb737049ad0d6f1a8e465`.
+It aligns the storage-hauling prefix with the shared `IsActionable` work rule,
+removes that prefix's unused result binding/imports, and source-links it into
+the existing blueprint/frame tests. Both strengthened cases fail before the
+rule change and pass afterward. Native construction deliberately chooses
+HaulAsideJobFor; its nearby dropping behavior is not changed. The additional
+correction lets ordinary storage hauling use the already-authorized obstruction.
+
+All 447 C# tests and seven artifact tests pass with a zero-warning/error build.
+On these final bytes, native WorkGiver_HaulGeneral and HaulToStorageJob return
+HaulToCell for the hidden known chunk under an owned blueprint, at storage cell
+(10,5). Removing the plan removes reservation, reach and both job permissions.
+Plant cutting/building deconstruction and the complete six-row native search
+visibility/observation/inventory transition matrix are repeated successfully.
+The final CE hit matrix also passes on these bytes with no open attention.
+Its cold-process log has no runtime diagnostics; the Core work/search log retains
+only the two previously identified invalid window-position preferences.
+The earlier cleaning and tower suites retain d05f0d97 as their native identity;
+the storage-prefix correction does not change those implementations.
+
+This slice adds no Multiplayer work, new 1.7 campaign or performance comparison.
+Multiplayer remains unverified and deferred; performance keeps the accepted
+07d128b baseline. No CE gameplay defect requiring an upstream issue was established.
