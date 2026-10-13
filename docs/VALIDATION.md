@@ -63,6 +63,18 @@ The gate retains Andreas's accepted performance baseline and does not require
 or claim a renewed inherited-mod TPS comparison. DLC-specific scenarios,
 Windows and native 1.7 acceptance do not transfer from this Core-only 1.6 run.
 
+Both complete archives are delivered privately as separate attachments on
+13 October. `TotalFog-0.1.0-mortal-fixes-20261013.zip` is 1,320,310 bytes, SHA-256
+`50d6fd2f6da578f080c594b86b7be68a874b9d1fc19d588a0a2c5130585dac94`.
+`ZombieLand-5.6.3-mortal-fixes-20261013.zip` is 193,888,110 bytes, SHA-256
+`c34275aae031725555dd7cde1456163362cd0e0246510a23b0fd01e015f92619`.
+Both Discord downloads match those hashes and include the exact gameplay DLLs
+recorded above. Zombieland retains its complete music payload; neither archive
+includes companion tools or source. The two superseded 12 October attachment
+posts are deleted and their exact IDs no longer resolve. The private delivery
+receipt is retained in `artifacts/feedback-2026-10-13/delivery-receipt.json`.
+This is preliminary feedback delivery, not a public player release.
+
 ## Accepted performance baseline, 2026-10-13
 
 Andreas accepts the clear-column build as Total Fog's performance baseline and

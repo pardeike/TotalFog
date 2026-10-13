@@ -33,7 +33,7 @@ source checks passed for their recorded commits, not this local review batch.
 | Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |
 | Latest native check | Feedback DLL 5c657514 with Zombieland 777fce38 passes native hidden blueprint obstruction clearing through completed construction, six Spitter highlight controls and scheduled hearing rings on Core-only 1.6. The exact pair also renews the paired Symbiant, interaction, audio, explosion and contamination gates in VALIDATION.md. No fresh DLC-specific or 1.7 acceptance is claimed for that pair. Accepted baseline DLL fcde178b passes three staged corpse/blueprint/door/lighting controls on Core-only offline 1.6 and Steam 1.7.4976. The native objects remain spawned and gameplay glow is unchanged. Earlier DLL 9a490e5b passes 14 player-control, tower targeting and replacement-rescue controls on both engines. Native tower acquisition and Thing shoot lines reject hidden targets and retain visible targets and blind-cell fire. Those broader controls retain their own checkpoint; full five-DLC feature renewal remains open. |
 | Other 1.7 checks | Earlier DLL 9a490e5b passes all 14 player-safety controls on Steam 1.7.4976 rev1043 with released Workshop Harmony 3.0.0.0-rc.2. A vanilla 1.7 colony also loads with Total Fog added and advances 177 normal-speed ticks. No native errors or Total Fog patch warnings occur at that checkpoint. The previously claimed Steam-Harmony blocker was an old local-copy selection; ordinary profiles now pin Workshop Harmony. Earlier tower-order/presentation controls retain their recorded hashes; broad DLC/optional-mod renewal remains open. |
-| Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
+| Zombieland delivery | Two complete, separate preliminary ZIPs were delivered on 13 October, including the construction-obstruction and Spitter-highlight fixes plus the intervening tower changes. Both Discord downloads match the tested local archives. The superseded 12 October attachment posts are removed. The fresh native correctness gates apply to the exact 5c657514/777fce38 gameplay pair; performance retains the accepted baseline. |
 | CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls on reassessment DLL b6cd058d. The later CE other-player-faction correction passes source-linked tests; combined native renewal is open. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
 | Performance | Accepted and closed on commit 07d128b, DLL fcde178b. This build is the future Total Fog baseline, including correct fog behaviour. Recorded baseline medians are 565.823 TPS on the Core-only 1.6 wide map, 843.696 TPS on the 118-entry 1.7 stress map and 871.637 TPS on its colony. The retained stress outlier limits general frame/spike claims. Reopen only for a repeatable material player slowdown or a demonstrated performance defect. The original-mod speed floor is retired; unmeasured combinations remain evidence limits rather than an optimisation queue. See VALIDATION.md's accepted baseline for exact identity and matching conditions. |
 | Large mod list on 1.7 | 118 actually loaded entries, including all five DLCs and 108 Workshop mods, start and save/load/play on unchanged 7b783fc7 gameplay bytes. Replace Stuff and Dubs Mint Menus were excluded after reproducible startup failures. The developer full-colony fixture retains bounded placement/minified-item errors and a repeated unique-weapon colour reload error. DPA produces no timing rows; native/focused profiling evidence and the unresolved profiler-session culling exception are retained in VALIDATION.md. This is a reusable diagnostic loadout, not feature-by-feature compatibility acceptance. |
@@ -256,9 +256,10 @@ all block a preliminary tester build.
 
 ### Current delivery boundary
 
-The 12 October watchtower/Zombieland pair is the latest private delivery, with
-its exact-byte native/pixel/performance/package gates. It supersedes the earlier
-10 October archives. Contamination sight/refresh is among the
+The 13 October construction/Spitter pair is the latest private delivery, with
+fresh exact-byte native/pixel/package correctness gates and the accepted
+performance baseline. It supersedes the 12 October archives. The complete
+Zombieland ZIP includes music. Contamination sight/refresh is among the
 accepted bounded controls, rather than an unimplemented delivery blocker.
 Follow up on concrete tester feedback; do not send Mortal CE or Multiplayer
 progress. He is testing the Zombieland integration, not those release targets.
@@ -300,9 +301,9 @@ are covered. A dedicated all-arrivals or sound-only pod setting is not added.
 The new native result is scoped to the candidate recorded in VALIDATION.md;
 it is not a new performance-floor or Multiplayer acceptance pass.
 
-The 12 October pair is delivered. Later local work fixes watch-order behavior,
-wall links, shared-version loading, blueprints, lookout rotation and paused fog
-seams; those fixes are not a new tester ZIP. Follow up on concrete tester
+The 13 October pair is delivered. It includes the intervening watch-order,
+wall-link, shared-version loading, blueprint, lookout-rotation and paused-fog
+corrections, plus the new construction and Spitter fixes. Follow up on concrete tester
 regressions first, then continue the remaining
 Multiplayer checks below, starting with demonstrated
 failures and existing acceptance gaps. Core two-client queue, rifle, hearing,
