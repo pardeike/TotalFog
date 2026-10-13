@@ -503,9 +503,21 @@ try:
                 report["measuredFloorMet"] = (
                     report["medians"]["candidate"]["tps"] >= report["medians"]["original"]["tps"]
                 )
-                report["performanceFloorMet"] = pairs == 3 and report["measuredFloorMet"]
+                comparable_rate = speed != "Ultrafast" or report["unrestrictedPlayerUltrafast"]
+                report["performanceFloorMet"] = (
+                    pairs == 3 and report["measuredFloorMet"] and comparable_rate
+                )
                 report["complete"] = True
                 destination.write_text(json.dumps(report, indent=2) + "\n")
+                if (
+                    speed == "Ultrafast"
+                    and not report["identity"]["forceRequestedSpeed"]
+                    and not comparable_rate
+                ):
+                    raise RuntimeError(
+                        "Fourth-speed comparison includes native speed restrictions or debug speed; "
+                        "inspect " + str(destination)
+                    )
                 if not report["measuredFloorMet"]:
                     raise RuntimeError(
                         "Candidate TPS is below the original; inspect " + str(destination)

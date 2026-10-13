@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using RimBridgeServer.Sdk;
 using RimWorld;
+using TotalFog.Compatibility;
 using TotalFog.Watchtowers;
 using Verse;
 using Verse.AI;
@@ -19,7 +20,7 @@ public sealed class MultiplayerWatchtowerScenarios
 
     [Tool(
         "totalfog/multiplayer_watchtower",
-        Description = "Register this probe ALONE on BOTH main menus for a FRESH session; require equal appended IDs. Do not load older instrumented MP saves. Setup/collapse/cleanup use synchronized native world commands. Watch/descend invoke the tower's actual float-menu action outside simulation, exercising native MP ordered-job serialization. Status is read-only and resolves saved native objects by IDs, including after rejoin. Never steps ticks. Use a task-owned fresh save; excluded from player ZIPs."
+        Description = "Register this probe ALONE on BOTH main menus for a FRESH session; require equal appended IDs. Do not load older instrumented MP saves. Setup/collapse/cleanup use synchronized native world commands. Move submits a native drafted Goto to the tower center outside simulation, exercising MP capture before tower conversion. Watch/descend invoke the tower's actual float-menu action outside simulation. Status is read-only and resolves saved native objects by IDs, including after rejoin. Never steps ticks. Use a task-owned fresh save; excluded from player ZIPs."
     )]
     public static Task<object> Fixture(
         IRimBridgeContext context,
@@ -60,11 +61,29 @@ public sealed class MultiplayerWatchtowerScenarios
                 || AccessTools.Property(api, "IsReplay").GetValue(null) is not false
             )
                 throw new InvalidOperationException("Use a registered live non-desynced session.");
-            if (action is "watch" or "descend")
+            if (action is "move" or "watch" or "descend")
             {
                 var (tower, pawn) = Resolve(map, towerId, pawnId);
                 if (pawn.Faction != Faction.OfPlayer)
                     throw new InvalidOperationException("Use the local player's owned pawn.");
+                if (action == "move")
+                {
+                    if (!pawn.Drafted)
+                        throw new InvalidOperationException("Use a drafted pawn for Goto.");
+                    string beforeMove = pawn.CurJob?.def.defName;
+                    var job = JobMaker.MakeJob(JobDefOf.Goto, tower.Position);
+                    pawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
+                    return new
+                    {
+                        success = true,
+                        phase = "native-goto-submitted",
+                        action,
+                        before = beforeMove,
+                        immediateJob = pawn.CurJob?.def.defName,
+                        submittedJob = job.def.defName,
+                        deferredConversion = MultiplayerIntegration.DeferOrderedJobConversion,
+                    };
+                }
                 string label = (
                     action == "watch" ? "TotalFog_TowerWatch" : "TotalFog_TowerDescend"
                 ).Translate();
@@ -83,7 +102,9 @@ public sealed class MultiplayerWatchtowerScenarios
                 };
             }
             if (action is not ("setup" or "collapse" or "cleanup"))
-                throw new ArgumentException("Use setup/watch/descend/collapse/cleanup/status.");
+                throw new ArgumentException(
+                    "Use setup/move/watch/descend/collapse/cleanup/status."
+                );
             if (action != "setup")
                 Resolve(map, towerId, pawnId);
             return new

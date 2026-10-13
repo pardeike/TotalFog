@@ -40,6 +40,14 @@ Use `./scripts/mod metadata` for installed About/About.xml, LoadFolders.xml and
 README.md changes without rebuilding or replacing gameplay/companion DLLs.
 The target game must be stopped. Set RIMWORLD_MOD_DIR to the intended Mods root;
 both macOS executable names and the external Mods layout are guarded.
+For the offline 1.6 app, use its logical `RimWorldMac1.6.app/Mods` path,
+not the resolved UserData/Mods symlink target. RimBridgeServer discovers
+companions in the app's sibling BridgeTools directory. On 1.7, match the
+isolated ModsConfig version to that engine before launch; the native version
+change otherwise resets the active list. Its native Player.log is currently
+under ~/Library/Application Support/Ludeon Studios/RimWorld by Ludeon Studios/Logs,
+even when the old -logFile argument is supplied. Verify actual loaded mods
+and the actual log before interpreting a disconnected bridge as a mod failure.
 `./scripts/mod test` runs formatting checks and pure tests without a game install
 or gameplay/companion DLL changes. CI uses `python scripts/mod verify-binary`, then
 `python scripts/mod build` with output redirected to artifacts on Linux and Windows. Native deployment/runtime commands
@@ -141,6 +149,11 @@ Use `./scripts/mod runtime-compare <label> <save name> [Normal|Fast|Superfast|Ul
 to build once and alternate three original/candidate pairs in fresh processes.
 It checks matching fixture/settings/rendering evidence and exact DLL bytes,
 fails if candidate median TPS is lower, and leaves the candidate deployed.
+Ordinary Ultrafast comparisons also require native multiplier 15 throughout
+for acceptance. Retain native normal-speed restrictions as failed evidence;
+do not mistake an Ultrafast selection for unrestricted fourth-speed playback.
+Explicit forced-speed comparisons remain diagnostic and cannot satisfy the
+ordinary fourth-speed floor.
 The runner also verifies the actual camera rectangle and, when present,
 Zombieland's DLL bytes, scalar settings and configuration-file hashes. Camera
 zoom and public engine version/MVID must also match. Zombie population endpoints

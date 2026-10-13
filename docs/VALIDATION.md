@@ -8064,3 +8064,78 @@ before/after logs, native assertions, old installation backups and tested DLLs.
 The saved fixture and active mod list retain their original byte hashes. Steam
 RimWorld is left at the main menu. The tracked gameplay DLL remains the previous
 release snapshot for this ordinary source commit.
+
+## Independent reassessment corrections, 2026-10-13
+
+The Release gameplay DLL is
+`b6cd058d6596903d3a6307f9c42c2203361a91591f4e3f73d48c4107a37619b9`.
+Both 1.6 and 1.7 load Current/, intentionally compiled against the 1.6 package
+as Andreas confirmed. The clean build passes 409 C# tests and seven receipt
+tests without warnings/errors. The final native Multiplayer companion is
+`33e125036c7aee0cb4cd214e1ab3057912972504d2f32e916da019f0cf5b01ce`.
+Earlier proofs retain their own exact instrumentation and gameplay hashes.
+
+Core-only offline 1.6.4871 passes sixteen controls for native Cameras priority/
+work selection, continuous monitoring, power-loss/disabled-work exit, independent
+telescope/tower caps and explicit Harmony ordering. The colony initially has
+Cameras priority zero; enabling it selects monitoring and retains an operator
+for 300 ticks. Fixture power is scoped to the console, not a generated grid.
+Telescope range 90 survives tower-cap changes from 30 to 120; its own cap of
+30 reduces telescope sight while ordinary sight stays unchanged. A generic
+bool prefix retains native priority 400, and an ordinary music prefix runs
+before late fog cancellation. The unchanged save reloads and the log is clean.
+Evidence is artifacts/reassessment/vision16.json and vision16-Player.log.
+
+Two fresh Core-only offline clients with Prepatcher and Multiplayer 0.11.5,
+MVID `34169ac4-d99e-463c-b48c-0af3be9783f8`, pass eleven focused controls.
+The tower probe registers alone with ID 767 on both main menus. The client
+submits a native drafted Goto: its submitted job stays Goto, its immediate job
+stays Wait and conversion is deferred. At paused tick 681 both run
+TotalFog_WatchtowerWatch with job ID 263, logical center `(298, 0, 122)`, elevation
+1, projected offset 1.65 and range 96. Complete fog snapshots, including all
+1,021 source records, agree. Telescope cap 48 synchronizes independently while
+tower caps stay 96, then restores to 96. At paused tick 2252 both finish descent
+at ladder `(298, 0, 120)`, zero elevation/offset and Wait_Combat job ID 1546.
+Complete fog snapshots again agree; neither client reports desync. The known
+reflection-only InputLegacyModule exception remains in both logs. It was
+inspected alongside playable paused bridge state before acknowledgement.
+This does not complete clean-log compatibility, save/rejoin renewal, other
+factions or combined DLC/Zombieland/CE. Evidence is native-mp-goto.json and
+mp-{host,client}-Player.log under artifacts/reassessment.
+
+The current wide comparison alternates three original/candidate pairs in fresh
+processes on the unchanged 350x350 Core-only save with 409 pawns, root size 100,
+71,050 visible cells and 266 pawn roots in view. No DPA, forced speed or private
+debug boost is active. Median TPS is 487.140 candidate versus 535.292 original,
+about 9.0% lower. Median tick CPU is 1.14004 versus 1.15210 ms; frame p95 is
+70.142 versus 70.294 ms. One candidate interval also has a native normal-speed
+restriction. The raw floor fails and unrestricted fourth-speed acceptance is
+not established. Failed samples are retained, not filtered. The comparison
+gate now refuses fourth-speed acceptance when native multipliers are restricted;
+explicit forced-speed comparisons remain diagnostic only. Evidence is
+comparison-reassessment-wide-cold-350-20261013.json and its six native reports/logs.
+
+Two separate five-second instrumented profiles retain native multiplier 15.
+Candidate MapUpdate averages 11.49 ms/call versus 9.47 original, and dynamic
+drawing 2.92 versus 2.58 ms/call. Candidate fog DrawLayer averages about 0.39 ms
+per frame. These inclusive timings use different call counts, do not isolate
+the whole gap and are not uninstrumented performance acceptance. No speculative
+gameplay cache was added. The preceding 300-tick warmup attempt is retained
+separately: 1.7-only preference fields caused native XML errors and most ticks
+were restricted to normal speed. Saved-fixture SHA-256 remains
+`d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3`.
+
+Current 1.7.4976 testing is blocked before behavioral acceptance. Its first
+launch resets the isolated 1.6-labelled mod list. Correcting that temporary
+version marker loads the intended mods, but Steam Harmony 3.0.0 then fails
+with MonoMod's dyld_image_info/Span initialization exception. RimBridgeServer's
+essential patches and Total Fog hooks encounter the same dependency failure.
+This is not a demonstrated Total Fog API mismatch. The actual log uses the
+default Ludeon Studios logs folder despite the old -logFile argument. Both
+rejected logs remain under artifacts/reassessment. Historical 1.7 proofs keep
+their own hashes; shared metadata and the 1.6 reference strategy remain in place.
+
+All task-owned games are stopped. Temporary GABS profiles, Multiplayer configs/
+preferences and the main test profile are restored, and task-owned mod links/
+extra companion are removed. No original save was overwritten, source pushed,
+public release made or build sent. Performance and broader acceptance remain open.

@@ -907,5 +907,50 @@ limit, not an API correction. Existing-colony Cameras staffing is documented.
 Source inspection also found that HasJobOnThing accepted an unpowered console
 when another console was working, and the continuous job did not fail when
 its own console stopped working. Those concrete cases now check WorkingNow.
-The clean paired build passes 409 C# tests plus seven receipt tests; native
-staffing, range and patch-order controls are the next check.
+The clean paired build passes 409 C# tests plus seven receipt tests. The
+Core-only native 1.6 check passes sixteen staffing, range and patch-order
+controls on gameplay SHA-256 b6cd058d6596903d3a6307f9c42c2203361a91591f4e3f73d48c4107a37619b9.
+The existing colony initially has Cameras disabled. Enabling its separate
+priority puts monitoring into native work selection; the operator remains
+staffed for 300 ticks, and disabling work or losing power ends that job.
+The power supply is scoped to the fixture's console, not a generated power
+grid. Telescope caps change telescope sight independently of tower settings
+and leave ordinary sight unchanged. Native patch inspection reports priority
+400 for a generic bool prefix, while an ordinary music prefix executes before
+the explicit fog cancellation. The unchanged saved fixture is reloaded and
+its native log is clean. Evidence is artifacts/reassessment/vision16.json and
+vision16-Player.log.
+
+The same DLL's renewed native 1.7 check is blocked before behavioral testing.
+The first attempt resets the isolated 1.6-labelled mod list during the engine
+version change. Matching that temporary version marker enables the intended
+loadout on 1.7.4976 rev1043, but Steam Harmony 3.0.0 then fails initialization
+with MonoMod's dyld_image_info/Span exception. RimBridgeServer's essential
+patches and Total Fog hooks encounter the same dependency failure. The actual
+1.7 log path differs from the old -logFile argument. Neither attempt is clean
+runtime acceptance, and neither demonstrates an incompatible Total Fog API.
+The rejected logs remain under artifacts/reassessment. Shared 1.7 metadata and
+the intentional 1.6 reference strategy remain in place.
+
+Native two-client renewal now passes eleven focused Core-only controls on
+offline 1.6. A production interface Goto remains unchanged during MP capture,
+then both clients run the same tower watch job with native job ID 263, position,
+elevation, sight and complete fog state at paused tick 681. The independent
+telescope setting synchronizes and restores; both descend to the same ladder
+cell with job ID 1546 and matching fog state at tick 2252. Neither desyncs.
+The retained InputLegacyModule reflection-only loader exception prevents a
+clean-log overall compatibility claim. Rejoin and broader combined loadouts
+are not renewed by this narrow check. Full evidence is native-mp-goto.json
+under artifacts/reassessment; VALIDATION.md records its exact hashes and scope.
+
+The current six-process Core-only wide comparison fails: median 487.140 TPS
+versus 535.292 original, about 9.0% lower. One candidate interval also has a
+native normal-speed restriction, so unrestricted fourth-speed acceptance is
+not established. Tick CPU is slightly lower; two short instrumented profiles
+identify more map-update work without isolating the complete cause. These
+measurements do not prove that the review's gas/fade changes are responsible.
+The comparison gate now requires unrestricted native rates for fourth-speed
+acceptance; forced debug comparisons remain diagnostic. Failed samples are
+retained. No speculative gameplay cache was added. Current performance stays
+open rather than borrowing the earlier delivered pair's acceptance. Evidence
+is comparison-reassessment-wide-cold-350-20261013.json and the profile reports.
