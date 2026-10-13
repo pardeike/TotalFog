@@ -46,7 +46,32 @@ internal static class ThingVisibility
             || map.fogGrid.IsFogged(thing.PositionHeld)
         )
             return false;
-        return KnownActionable(thing, map.GetVisibility(), thing.PositionHeld, observerFaction);
+        var fog = map.GetVisibility();
+        var cell = thing.PositionHeld;
+        if (KnownActionable(thing, fog, cell, observerFaction))
+            return true;
+        if (
+            observerFaction == null
+            || !fog.IsKnown(observerFaction, map.cellIndices.CellToIndex(cell))
+            || thing.def.category != ThingCategory.Item
+            || !thing.def.EverHaulable
+        )
+            return false;
+        // An owned construction order also authorizes clearing its footprint.
+        // Keep this work permission separate from remembered rendering: no
+        // haul designation or observation is invented for the obstruction.
+        var things = cell.GetThingList(map);
+        for (int i = 0; i < things.Count; i++)
+        {
+            var plan = things[i];
+            if (
+                plan.Faction == observerFaction
+                && (plan.def.IsBlueprint || plan.def.IsFrame)
+                && GenConstruct.BlocksConstruction(plan, thing)
+            )
+                return true;
+        }
+        return false;
     }
 
     private static bool KnownActionable(

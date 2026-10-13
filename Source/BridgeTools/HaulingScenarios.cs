@@ -25,7 +25,7 @@ public sealed class HaulingScenarios
             throw new InvalidOperationException("Use a paused initialized map.");
         Thing target;
         Pawn pawn;
-        if (operation == "setup")
+        if (operation is "setup" or "setup-construction")
         {
             var cell = map.AllCells.First(c =>
                 c.x > 4
@@ -46,7 +46,19 @@ public sealed class HaulingScenarios
                 cell,
                 map
             );
-            pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+            for (int attempt = 0; ; attempt++)
+            {
+                pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                if (
+                    !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Construction)
+                    && !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Hauling)
+                )
+                    break;
+                if (attempt == 19)
+                    throw new InvalidOperationException(
+                        "Could not generate a capable construction/hauling fixture pawn."
+                    );
+            }
             GenSpawn.Spawn(pawn, cell + new IntVec3(2, 0, 0), map);
             var wait = JobMaker.MakeJob(JobDefOf.Wait);
             wait.expiryInterval = 3000;
@@ -61,7 +73,28 @@ public sealed class HaulingScenarios
             stockpile.settings.Priority = StoragePriority.Critical;
             map.zoneManager.RegisterZone(stockpile);
             stockpile.AddCell(cell + new IntVec3(4, 0, 0));
-            map.designationManager.AddDesignation(new Designation(target, DesignationDefOf.Haul));
+            if (operation == "setup-construction")
+            {
+                GenConstruct.PlaceBlueprintForBuild(
+                    ThingDefOf.Wall,
+                    cell,
+                    map,
+                    Rot4.North,
+                    Faction.OfPlayer,
+                    ThingDefOf.WoodLog
+                );
+                pawn.skills.GetSkill(SkillDefOf.Construction).Level = 10;
+                pawn.workSettings.EnableAndInitialize();
+                pawn.workSettings.SetPriority(WorkTypeDefOf.Construction, 1);
+                pawn.workSettings.SetPriority(WorkTypeDefOf.Hauling, 1);
+                var wood = ThingMaker.MakeThing(ThingDefOf.WoodLog);
+                wood.stackCount = 20;
+                GenSpawn.Spawn(wood, pawn.Position + new IntVec3(0, 0, 1), map);
+            }
+            else
+                map.designationManager.AddDesignation(
+                    new Designation(target, DesignationDefOf.Haul)
+                );
         }
         else
         {
@@ -88,6 +121,18 @@ public sealed class HaulingScenarios
                 map.designationManager.AddDesignation(
                     new Designation(target, DesignationDefOf.Haul)
                 );
+            else if (operation == "start-construction")
+            {
+                var plan = target
+                    .Position.GetThingList(map)
+                    .First(t => t.def.IsBlueprint && t.Faction == pawn.Faction);
+                var job =
+                    new WorkGiver_ConstructDeliverResourcesToBlueprints().JobOnThing(pawn, plan)
+                    ?? throw new InvalidOperationException(
+                        "The native construction job is unavailable."
+                    );
+                pawn.jobs.StartJob(job, JobCondition.InterruptForced);
+            }
             else if (operation == "start")
             {
                 var job =
@@ -101,6 +146,18 @@ public sealed class HaulingScenarios
                     nameof(operation)
                 );
         }
+        var construction = target
+            .Position.GetThingList(map)
+            .FirstOrDefault(t => t.def.IsBlueprint || t.def.IsFrame);
+        var constructionJob =
+            construction == null
+                ? null
+                : new WorkGiver_ConstructDeliverResourcesToBlueprints().JobOnThing(
+                    pawn,
+                    construction
+                );
+        var blockingJob =
+            construction == null ? null : GenConstruct.HandleBlockingThingJob(construction, pawn);
         JobFailReason.Clear();
         var nextJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, target, true);
         return new
@@ -109,6 +166,10 @@ public sealed class HaulingScenarios
             targetID = target.ThingID,
             pawnID = pawn.ThingID,
             chunkClass = target.GetType().FullName,
+            constructionID = construction?.ThingID,
+            constructionJob = constructionJob?.def.defName,
+            blockingJob = blockingJob?.def.defName,
+            blockingTarget = blockingJob?.targetA.Thing?.ThingID,
             chunkPosition = target.Position.ToString(),
             pawnPosition = pawn.Position.ToString(),
             visible = Visibility.IsVisible(target),

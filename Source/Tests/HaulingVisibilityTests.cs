@@ -69,4 +69,61 @@ public sealed class HaulingVisibilityTests
         Assert.False(ThingVisibility.IsVisible(chunk));
         Assert.Equal(0, chunk.Map.designationManager.Queries);
     }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void OwnedConstructionCanClearAHiddenKnownObstructionWithoutRevealingIt(bool frame)
+    {
+        var chunk = Chunk(ordered: false);
+        chunk.def.EverHaulable = true;
+        var plan = new Thing
+        {
+            Map = chunk.Map,
+            Faction = Faction.OfPlayer,
+            def = new ThingDef
+            {
+                IsBlueprint = !frame,
+                IsFrame = frame,
+                BlocksItems = true,
+            },
+        };
+        chunk.Map.Things.Add(plan);
+
+        Assert.True(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
+        Assert.False(ThingVisibility.IsVisible(chunk));
+        Assert.False(Visibility.IsVisible(chunk));
+
+        chunk.Map.Things.Remove(plan);
+        Assert.False(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
+    }
+
+    [Theory]
+    [InlineData(false, true, true, true, false)]
+    [InlineData(true, false, true, true, false)]
+    [InlineData(true, true, false, true, false)]
+    [InlineData(true, true, true, false, false)]
+    [InlineData(true, true, true, true, true)]
+    public void ConstructionDoesNotGrantUnrelatedHiddenWork(
+        bool known,
+        bool ownPlan,
+        bool haulable,
+        bool blocks,
+        bool vanillaFog
+    )
+    {
+        var chunk = Chunk(known, ordered: false);
+        chunk.def.EverHaulable = haulable;
+        chunk.Map.fogGrid.Fogged = vanillaFog;
+        chunk.Map.Things.Add(
+            new Thing
+            {
+                Map = chunk.Map,
+                Faction = ownPlan ? Faction.OfPlayer : new Faction { loadID = 2 },
+                def = new ThingDef { IsBlueprint = true, BlocksItems = blocks },
+            }
+        );
+
+        Assert.False(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
+    }
 }

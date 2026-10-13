@@ -58,6 +58,9 @@ namespace Verse
         public bool hasTooltip;
         public bool IsBlueprint;
         public bool designateHaulable;
+        public bool EverHaulable;
+        public bool IsFrame;
+        public bool BlocksItems;
         public ThingCategory category;
         public IntVec2 size = new(1, 1);
     }
@@ -618,6 +621,12 @@ namespace RimWorld
     public static class DesignationDefOf
     {
         public static readonly Verse.DesignationDef Haul = new();
+    }
+
+    public static class GenConstruct
+    {
+        public static bool BlocksConstruction(Verse.Thing plan, Verse.Thing thing) =>
+            plan.def.BlocksItems;
     }
 
     public static class GravshipUtility

@@ -8,6 +8,7 @@ using RimBridgeServer.Sdk;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace TotalFog.BridgeTools;
 
@@ -350,6 +351,272 @@ public sealed class StreamFeedbackScenarios
                     readiness = "visual",
                     pauseIfNeeded = true,
                     ignoreModCompatibility = true,
+                },
+                cancellationToken: CancellationToken.None
+            );
+            if (!reset.Succeeded())
+                throw new InvalidOperationException("Feedback fixture cleanup failed.");
+        }
+    }
+
+    [Tool(
+        "totalfog/stream_bug_presentation",
+        Description = "Check Spitter dots/silhouettes with visible/hidden/off controls and scheduled hearing rings from a hidden walking Spitter behind a real wall. Captures native pixels and reloads the unchanged fixture."
+    )]
+    public static async Task<object> BugPresentation(
+        IRimBridgeContext ctx,
+        CancellationToken cancellationToken,
+        string saveName,
+        string evidenceLabel
+    )
+    {
+        if (
+            string.IsNullOrEmpty(evidenceLabel)
+            || evidenceLabel.Any(c => !char.IsLetterOrDigit(c) && c != '-')
+        )
+            throw new ArgumentException("Use a plain evidence label.");
+        var oldStyle = Prefs.HighlightStyleMode;
+        var oldMode = Prefs.DotHighlightDisplayMode;
+        bool oldCues = FogSettings.ShowHearingCues,
+            oldBypass = FogSettings.OnlyOutsideColony;
+        float oldRange = FogSettings.BaseHearingRange;
+        var rows = new List<object>();
+        var pictures = new List<object>();
+        Map map = null;
+        MapVisibility fog = null;
+        CellRect area = default,
+            sightArea = default;
+        bool sightAdded = false;
+        Pawn listener = null,
+            spitter = null;
+        try
+        {
+            await ctx.MainThread.InvokeAsync(
+                () =>
+                {
+                    map =
+                        Find.CurrentMap
+                        ?? throw new InvalidOperationException("Load the named fixture.");
+                    fog = map.GetVisibility();
+                    if (!Find.TickManager.Paused || !fog.Initialized)
+                        throw new InvalidOperationException("Use a paused initialized fixture.");
+                    var cell = map.AllCells.First(c =>
+                        c.x > 10
+                        && c.z > 10
+                        && c.x < map.Size.x - 12
+                        && c.z < map.Size.z - 12
+                        && new CellRect(c.x, c.z, 10, 9).All(p =>
+                            p.InBounds(map)
+                            && p.Standable(map)
+                            && !fog.IsShown(Faction.OfPlayer, p)
+                            && p.GetThingList(map).All(t => t is Plant or Filth)
+                        )
+                    );
+                    area = new CellRect(cell.x, cell.z, 10, 9);
+                    foreach (var p in area)
+                        map.fogGrid.Unfog(p);
+                    for (int z = 0; z < 9; z++)
+                        GenSpawn.Spawn(
+                            ThingMaker.MakeThing(ThingDefOf.Wall, ThingDefOf.WoodLog),
+                            cell + new IntVec3(2, 0, z),
+                            map
+                        );
+                    listener = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                    GenSpawn.Spawn(listener, cell + new IntVec3(0, 0, 4), map);
+                    var wait = JobMaker.MakeJob(JobDefOf.Wait);
+                    wait.expiryInterval = 3000;
+                    listener.jobs.StartJob(wait, Verse.AI.JobCondition.InterruptForced);
+                    var spitterKind = DefDatabase<PawnKindDef>.GetNamed("ZombieSpitter");
+                    var zombieFaction = Find.FactionManager.FirstFactionOfDef(
+                        DefDatabase<FactionDef>.GetNamed("Zombies")
+                    );
+                    spitter = PawnGenerator.GeneratePawn(spitterKind, zombieFaction);
+                    GenSpawn.Spawn(spitter, cell + new IntVec3(4, 0, 4), map);
+                    FogSettings.OnlyOutsideColony = false;
+                    listener.TryGetComp<CompFog>().FieldOfViewWatcher.UpdateFoV(true);
+                    sightArea = new CellRect(cell.x + 3, cell.z + 2, 5, 5);
+                },
+                cancellationToken
+            );
+            var zoom = await ctx.Tools.CallAsync(
+                "rimworld/set_camera_zoom",
+                new { rootSize = 60 },
+                cancellationToken: cancellationToken
+            );
+            if (!zoom.Succeeded())
+                throw new InvalidOperationException("Highlight zoom setup failed.");
+            foreach (var style in new[] { HighlightStyleMode.Dots, HighlightStyleMode.Silhouettes })
+            foreach (string state in new[] { "visible", "hidden", "off" })
+            {
+                await ctx.MainThread.InvokeAsync(
+                    () =>
+                    {
+                        bool wantSight = state != "hidden";
+                        if (sightAdded != wantSight)
+                            foreach (var p in sightArea)
+                                if (wantSight)
+                                    fog.IncrementSeen(
+                                        Faction.OfPlayer,
+                                        map.cellIndices.CellToIndex(p)
+                                    );
+                                else
+                                    fog.DecrementSeen(
+                                        Faction.OfPlayer,
+                                        map.cellIndices.CellToIndex(p)
+                                    );
+                        sightAdded = wantSight;
+                        Prefs.HighlightStyleMode = style;
+                        Prefs.DotHighlightDisplayMode =
+                            state == "off"
+                                ? DotHighlightDisplayMode.None
+                                : DotHighlightDisplayMode.HighlightHostiles;
+                        spitter.shouldHighlightCachedTick = -1;
+                        rows.Add(
+                            new
+                            {
+                                style = style.ToString(),
+                                state,
+                                enabled = spitter.def.drawHighlight,
+                                visible = Visibility.IsVisible(spitter),
+                                overlayAllowed = Detours.Pawn.DrawGUIOverlay_Prefix(spitter),
+                                silhouette = SilhouetteUtility.ShouldDrawSilhouette(spitter),
+                                dotEligible = (bool)
+                                    AccessTools
+                                        .Method(
+                                            typeof(SilhouetteUtility),
+                                            "ShouldDrawPawnDotSilhouette"
+                                        )
+                                        .Invoke(null, new object[] { spitter }),
+                            }
+                        );
+                    },
+                    cancellationToken
+                );
+                var picture = await ctx.Tools.CallAsync(
+                    "rimworld/screenshot_cell_rect",
+                    new
+                    {
+                        fileName = evidenceLabel
+                            + "-spitter-"
+                            + style.ToString().ToLowerInvariant()
+                            + "-"
+                            + state,
+                        x = area.minX + 3,
+                        z = area.minZ + 2,
+                        width = 5,
+                        height = 5,
+                        paddingCells = 1,
+                        rootSize = 60,
+                        includeTargets = false,
+                        doNotResetCamera = true,
+                    },
+                    cancellationToken: cancellationToken
+                );
+                if (!picture.Succeeded())
+                    throw new InvalidOperationException("Spitter screenshot failed.");
+                pictures.Add(picture);
+            }
+            await ctx.MainThread.InvokeAsync(
+                () =>
+                {
+                    if (sightAdded)
+                        foreach (var p in sightArea)
+                            fog.DecrementSeen(Faction.OfPlayer, map.cellIndices.CellToIndex(p));
+                    sightAdded = false;
+                    Prefs.DotHighlightDisplayMode = DotHighlightDisplayMode.None;
+                    FogSettings.ShowHearingCues = true;
+                    FogSettings.BaseHearingRange = 10;
+                    spitter.jobs.StartJob(
+                        JobMaker.MakeJob(JobDefOf.Goto, spitter.Position + new IntVec3(4, 0, 0)),
+                        Verse.AI.JobCondition.InterruptForced
+                    );
+                },
+                cancellationToken
+            );
+            foreach (bool enabled in new[] { true, false })
+            {
+                await ctx.MainThread.InvokeAsync(
+                    () => FogSettings.ShowHearingCues = enabled,
+                    cancellationToken
+                );
+                var ticks = await ctx.Game.StepTicksAsync(
+                    110,
+                    cancellationToken: cancellationToken
+                );
+                if (!ticks.Success)
+                    throw new InvalidOperationException("Scheduled hearing ticks failed.");
+                rows.Add(
+                    await ctx.MainThread.InvokeAsync<object>(
+                        () =>
+                            new
+                            {
+                                hearingEnabled = enabled,
+                                listener = listener.Position.ToString(),
+                                source = spitter.Position.ToString(),
+                                moving = spitter.pather.Moving,
+                                hidden = !Visibility.IsVisible(spitter),
+                                range = FogSettings.BaseHearingRange
+                                    * listener.health.capacities.GetLevel(
+                                        PawnCapacityDefOf.Hearing
+                                    ),
+                                cues = map
+                                    .dynamicDrawManager.DrawThings.OfType<Mote_HearingCue>()
+                                    .Where(c => !c.Destroyed)
+                                    .Select(c => new
+                                    {
+                                        c.ObserverFactionId,
+                                        visible = Visibility.IsVisible(c),
+                                        c.Alpha,
+                                        scale = c.ExactScale.ToString(),
+                                        age = c.AgeSecs,
+                                        c.spawnTick,
+                                    })
+                                    .ToArray(),
+                            },
+                        cancellationToken
+                    )
+                );
+                var picture = await ctx.Tools.CallAsync(
+                    "rimworld/screenshot_cell_rect",
+                    new
+                    {
+                        fileName = evidenceLabel + (enabled ? "-hearing-on" : "-hearing-off"),
+                        x = area.minX + 3,
+                        z = area.minZ + 2,
+                        width = 6,
+                        height = 5,
+                        paddingCells = 1,
+                        rootSize = 12,
+                        includeTargets = false,
+                    },
+                    cancellationToken: cancellationToken
+                );
+                if (!picture.Succeeded())
+                    throw new InvalidOperationException("Hearing screenshot failed.");
+                pictures.Add(picture);
+            }
+            return new { rows, pictures };
+        }
+        finally
+        {
+            await ctx.MainThread.InvokeAsync(
+                () =>
+                {
+                    Prefs.HighlightStyleMode = oldStyle;
+                    Prefs.DotHighlightDisplayMode = oldMode;
+                    FogSettings.ShowHearingCues = oldCues;
+                    FogSettings.BaseHearingRange = oldRange;
+                    FogSettings.OnlyOutsideColony = oldBypass;
+                },
+                CancellationToken.None
+            );
+            var reset = await ctx.Tools.CallAsync(
+                "rimworld/load_game_ready",
+                new
+                {
+                    saveName,
+                    readiness = "visual",
+                    pauseIfNeeded = true,
                 },
                 cancellationToken: CancellationToken.None
             );
