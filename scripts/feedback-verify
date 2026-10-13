@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the paired native rendering gates for an already measured candidate."""
+"""Refresh the paired native correctness gates for a private feedback candidate."""
 
 from pathlib import Path
 import hashlib
@@ -14,23 +14,21 @@ import tempfile
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-GAME_ID = "total-fog-zombieland-16"
-DATA = ROOT / "artifacts/ZombielandUserData"
+if len(sys.argv) not in (2, 3) or len(sys.argv) == 3 and sys.argv[2] != "core16":
+    raise ValueError("Use feedback-verify <evidence label> [core16]")
+core16 = len(sys.argv) == 3
+GAME_ID = "total-fog-16" if core16 else "total-fog-zombieland-16"
+DATA = ROOT / "artifacts" / ("UserData" if core16 else "ZombielandUserData")
 label = sys.argv[1]
 if not re.fullmatch(r"[a-z0-9-]+", label):
-    raise ValueError("Use the completed comparison label")
-comparison_path = ROOT / "artifacts" / ("comparison-" + label + ".json")
-comparison = json.loads(comparison_path.read_text())
-if not (
-    comparison["complete"]
-    and comparison["performanceFloorMet"]
-    and comparison["unrestrictedPlayerUltrafast"]
-    and not comparison["diagnosticInstrumentation"]
-    and len(comparison["samples"]) == 6
-    and sum(sample["variant"] == "candidate" for sample in comparison["samples"]) == 3
-    and sum(sample["variant"] == "original" for sample in comparison["samples"]) == 3
-):
-    raise RuntimeError("Complete the uninstrumented ordinary fourth-speed comparison first")
+    raise ValueError("Use a plain evidence label")
+# Andreas accepted this Total Fog baseline and retired the upstream TPS floor.
+# Bug-fix delivery still requires fresh exact-binary native correctness proof.
+performance_baseline = {
+    "commit": "07d128b0f98350b9f8936b3c09b36df8d7907106",
+    "gameplaySha256": "fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576",
+    "policy": "accepted-baseline-not-remeasured",
+}
 mods = Path(
     os.environ.get(
         "RIMWORLD_MOD_DIR",
@@ -62,13 +60,7 @@ for name, repository, bundle in [
         pairs.append(
             {"built": str(built), "deployed": str(deployed), "sha256": digest, "identical": True}
         )
-if comparison["identity"]["zombieland"]["mainSha256"] != pairs[2]["sha256"] or any(
-    sample["mainSha256"] != pairs[0]["sha256"]
-    for sample in comparison["samples"]
-    if sample["variant"] == "candidate"
-):
-    raise RuntimeError("The measured gameplay pair changed")
-save_name = "TotalFog_Zombieland_Base"
+save_name = "TotalFogLightingCore16" if core16 else "TotalFog_Zombieland_Base"
 save = DATA / "Saves" / (save_name + ".rws")
 save_hash = hashlib.sha256(save.read_bytes()).hexdigest()
 attempt = Path(
@@ -391,10 +383,12 @@ try:
                 "contaminationControls": 14,
                 "buildPairs": pairs,
                 "recognizedNativeLogs": "clean",
-                "comparison": str(comparison_path),
-                "comparisonSha256": hashlib.sha256(comparison_path.read_bytes()).hexdigest(),
+                "performanceBaseline": performance_baseline,
+                "profile": GAME_ID,
+                "saveName": save_name,
+                "coreOnly": core16,
                 "nativeEvidence": str(attempt),
-                "scope": "Exact paired Mac native rendering/interaction, paused render diagnostics and matched ordinary fourth-speed performance. Broader gameplay and Windows remain open.",
+                "scope": "Exact paired Mac native rendering/interaction, paused render diagnostics. Accepted performance baseline is retained, not remeasured. Broader gameplay and Windows remain open.",
             },
             indent=2,
         )

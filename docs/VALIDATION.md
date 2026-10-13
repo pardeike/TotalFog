@@ -8,6 +8,61 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Construction and Spitter feedback fixes, 2026-10-13
+
+Candidate Total Fog gameplay SHA-256 is
+`5c657514e4338f0cb828e0b9ee9d5b37f11a008d0cd4d882913a079a106556c4`;
+paired Zombieland is
+`777fce386e57f0781b5d65be23439958470ebf8aed2aca0064e4e308e68ad858`.
+The native checks use offline RimWorld 1.6.4871 rev581, Core, released Workshop
+Harmony, RimBridgeServer and the two candidate mods. No DLC is loaded.
+
+Construction now distinguishes work permission from observation. A haulable
+item in known, vanilla-unfogged terrain can be reserved when it actually blocks
+an owned blueprint or frame according to native `GenConstruct.BlocksConstruction`.
+It gains no live sight, remembered rendering, haul designation or inspection
+information. Removing the plan removes this extra permission. Seven new
+source-linked tests cover blueprint/frame access and unknown terrain, another
+faction, unhaulable items, nonblocking plans and vanilla fog. The two positive
+cases fail before the fix; the full suite passes 429 C# tests and seven artifact
+checks afterward.
+
+The native fixture places a wooden wall blueprint over an undesignated plain
+marble chunk, then moves the capable builder out of sight. Both native reservation
+checks and the unforced construction work-giver return the haul-aside job while
+the chunk remains invisible. Starting that native job and advancing approximately
+3,600 ordinary Superfast ticks moves the chunk from (6,5) to (7,5), then native
+work completes the wooden wall at (6,5). The hidden relocated chunk loses its
+extra reservation access after completion. This tests the construction job chain;
+it does not establish every autonomous work-priority or modded storage combination.
+
+Spitter highlighting was disabled in its definition. Enabling it alone reproduces
+a native silhouette null-reference because its custom drawing bypasses the
+renderer call that supplies silhouette data. The fix supplies the existing native
+life-stage graphic and draw position while retaining the three-layer body.
+Six actual maximum-zoom controls show red dots and silhouettes when visible,
+neither through fog, and no highlight with the native option off. Clean screenshots
+and the native log verify the corrected result; the failed candidate is retained.
+
+The same fixture puts a walking Spitter behind a real wall, four cells from a
+healthy human listener. At the normal 100-tick hearing cadence a native ring is
+created and rendered; disabling indicators stops new rings and allows the old
+ring to expire. The hearing gameplay code is unchanged. The current candidate
+therefore does not reproduce the reported missing indicator in this controlled
+case; the reporter's installed archive/settings are not established by this check.
+
+`feedback-verify mortal-20261013 core16` renews the exact-binary paired gates:
+12 Symbiant pixel cases and 54 interaction checks, all four 400/4,000-cell
+render matrices (40 rows), four silent-arrival controls, seven area-warning
+controls, 21 Albino scream controls, 16 completed explosion-camera controls,
+five ambient controls and 14 contamination sight/refresh pixel controls. All
+pass with a clean recognized native log and unchanged base save. Evidence is
+under `artifacts/feedback-2026-10-13` and
+`artifacts/feedback-verification-mortal-20261013-34js1yo7`.
+The gate retains Andreas's accepted performance baseline and does not require
+or claim a renewed inherited-mod TPS comparison. DLC-specific scenarios,
+Windows and native 1.7 acceptance do not transfer from this Core-only 1.6 run.
+
 ## Accepted performance baseline, 2026-10-13
 
 Andreas accepts the clear-column build as Total Fog's performance baseline and

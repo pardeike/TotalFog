@@ -253,7 +253,7 @@ try:
         "source-publish",
     }:
         raise RuntimeError(
-            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, feedback-package, feedback-verify <comparison label>, setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, feedback-package, feedback-verify <evidence label> [core16], setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
         )
     if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
         raise RuntimeError(
@@ -322,10 +322,10 @@ try:
             run(["python3", str(ROOT / "scripts/runtime-benchmark"), *sys.argv[2:]], log)
         if mode == "feedback-verify":
             step = "paired native feedback verification"
-            if len(sys.argv) != 3:
-                raise RuntimeError("Use feedback-verify <completed comparison label>")
+            if len(sys.argv) not in {3, 4} or len(sys.argv) == 4 and sys.argv[3] != "core16":
+                raise RuntimeError("Use feedback-verify <evidence label> [core16]")
             stopped()
-            run(["python3", str(ROOT / "scripts/feedback-verify"), sys.argv[2]], log)
+            run(["python3", str(ROOT / "scripts/feedback-verify"), *sys.argv[2:]], log)
         if mode not in {
             "format",
             "format-check",
@@ -1040,17 +1040,12 @@ try:
             gates = json.loads(
                 (ROOT / "artifacts/zombieland-current-package-gates.json").read_text()
             )
-            comparison_path = Path(gates["comparison"])
-            comparison = json.loads(comparison_path.read_text())
-            if (
-                not gates["passed"]
-                or hashlib.sha256(comparison_path.read_bytes()).hexdigest()
-                != gates["comparisonSha256"]
-                or not comparison["performanceFloorMet"]
-            ):
-                raise RuntimeError(
-                    "Refresh exact paired native/performance gates with feedback-verify"
-                )
+            if not gates["passed"] or gates.get("performanceBaseline") != {
+                "commit": "07d128b0f98350b9f8936b3c09b36df8d7907106",
+                "gameplaySha256": "fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576",
+                "policy": "accepted-baseline-not-remeasured",
+            }:
+                raise RuntimeError("Refresh exact paired native gates with feedback-verify")
             arrivals = json.loads(
                 (Path(gates["nativeEvidence"]) / "silent-raid-arrivals.json").read_text()
             )

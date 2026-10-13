@@ -390,7 +390,7 @@ installed game's `Mods` folder.
 | `./scripts/mod benchmark` | Runs the sight-engine speed comparison |
 | `./scripts/mod runtime-benchmark <label> <save> [speed]` | Measures three fresh game processes on the named save; results go to `artifacts/` |
 | `./scripts/mod runtime-compare <label> <save> [speed]` | Alternates three baseline/candidate pairs; set `TOTALFOG_COMPARISON_BASELINE_ROOT` to the accepted Total Fog checkout |
-| `./scripts/mod feedback-verify <comparison label>` | Repeats the paired native feedback gates on the measured deployed bytes |
+| `./scripts/mod feedback-verify <label> [core16]` | Renews exact-binary paired native correctness gates; `core16` uses the isolated offline Core-only fixture |
 | `./scripts/mod feedback-package` | Verifies the existing paired gates and creates separate preliminary Total Fog and Zombieland ZIPs |
 | `./scripts/mod source-publish` | Pushes committed source and verifies GitHub; does not publish a player ZIP or update Steam |
 

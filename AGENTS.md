@@ -73,8 +73,8 @@ The public development branch is `public-main`, tracking `origin/main`.
 The earlier local `total-fog` branch retains the private development history;
 do not push it or other private branches/tags. The public `upstream-baseline`
 tag retains the original payload used by baseline comparisons.
-After a completed paired runtime comparison, use
-`./scripts/mod feedback-verify <comparison label>` to capture fresh native
+For private paired bug-fix delivery, use
+`./scripts/mod feedback-verify <evidence label>` to capture fresh native
 Symbiant pixels/interaction and all four 400/4,000-cell render-cost matrices.
 It also checks actual enemy raid/manhunter arrivals with Silent Raids off/on,
 ordinary slowdown and incident parameter restoration after failure/exception.
@@ -133,8 +133,15 @@ It temporarily disables the native lighting overlay for colour comparison,
 restores that setting and reloads the unchanged fixture. It cannot be combined
 with `nativeFrontPieces`. Inspect actual pixels and keep reference screenshots
 in ignored artifacts; this board does not test occupants or gameplay.
-It checks exact measured/deployed gameplay bytes, preserves superseded proof,
+It checks exact built/deployed gameplay bytes, preserves superseded proof,
 and refreshes the feedback package gates without rebuilding the candidate.
+It retains the accepted performance baseline; the retired upstream TPS floor
+is not a prerequisite for bug-fix delivery. These are native correctness gates.
+`feedback-verify <label> core16` uses the isolated Core-only 1.6 fixture when
+archived DLC content is unavailable. Configure `total-fog-16` to the offline 1.6
+executable for that run, then restore its prior configuration. This mode renews
+the same paired native controls and records its narrower Core-only scope; it
+cannot establish DLC-specific integration. Use the logical offline Mods root.
 Use `./scripts/mod feedback-package` for a private paired Total Fog/Zombieland
 test ZIP. It runs independent tests, verifies the preserved native pixel/targeting
 and render-cost matrices against the exact deployed gameplay DLLs, and packages only

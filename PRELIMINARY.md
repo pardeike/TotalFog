@@ -6,11 +6,14 @@ supports 1.6 and 1.7 through the shared Current/ payload compiled against
 the 1.6 API. Native checks retain their actual engine versions, hashes and
 limits; broader 1.7 integrations still need testing.
 
-The last private ZIP pair was delivered on 12 October before the later watch-order,
-wall-link, blueprint, lookout-facing and paused-fog corrections. This guide
-describes current source behavior, not a claim that those fixes are in an older
-archive. Build the source before installing it, or use the version identified
-in the delivery message. A source commit does not replace an installed ZIP.
+The 13 October feedback pair includes the later watch-order, wall-link,
+blueprint, lookout-facing and paused-fog corrections. It also lets builders clear
+haulable objects from an ordered blueprint or frame after sight is lost, and
+restores native Spitter dots and silhouettes without revealing hidden Spitters.
+Hearing rings were checked with a hidden walking Spitter at the default range
+and with indicators disabled; their gameplay code is unchanged.
+Use the archive identified in the delivery message. A source commit does not
+replace an installed ZIP.
 This is not a public release.
 Keep the separate No Pause Challenge setup fix if you use that mod.
 
@@ -104,7 +107,12 @@ Fleshmass Heart slowdown or reproduce the complete streamed mod list.
 
 ## What was checked
 
-The review source passes 407 C# tests plus pure artifact-gate checks. Earlier
+The current source passes 429 C# tests and seven pure artifact-gate checks.
+The 13 October pair also passes native construction obstruction clearing,
+visible/hidden/off Spitter dots and silhouettes, and scheduled hearing rings
+on Core-only 1.6. Its exact binaries renew the paired Symbiant, interaction,
+audio, explosion and contamination gates. This run does not renew DLC-specific
+or native 1.7 acceptance for that pair. Earlier
 GitHub checks apply to their recorded commits; the expanded CI build is configured
 for Linux and Windows and does not run RimWorld. Focused native 1.7 follow-ups cover
 platform orders, blueprints, lookout facing, debug fog commands and paused fog
