@@ -84,9 +84,12 @@ internal static class TowerMoveOrders
                 nameof(Pawn_JobTracker.TryTakeOrderedJob),
                 new[] { typeof(Job), typeof(JobTag?), typeof(bool) }
             ),
-            // Multiplayer serializes the original order first; conversion runs
-            // inside its replayed simulation command on every client.
-            prefix: new HarmonyMethod(owner, nameof(OrderedJobPrefix)) { priority = Priority.Last }
+            // MP assigns the synchronized job ID before replay conversion.
+            prefix: new HarmonyMethod(owner, nameof(OrderedJobPrefix))
+            {
+                priority = Priority.Last,
+                after = new[] { "multiplayer" },
+            }
         );
         LongEventHandler.ExecuteWhenFinished(() =>
             PatchSafety.Install("Achtung tower moves", () => InstallAchtung(harmony))
@@ -306,6 +309,8 @@ internal static class TowerMoveOrders
 
     internal static bool OrderedJobPrefix(ref Job job, Pawn ___pawn, ref bool __result)
     {
+        if (Compatibility.MultiplayerIntegration.DeferOrderedJobConversion)
+            return true;
         if (job?.def != JobDefOf.Goto || !___pawn.Drafted || job.targetA.HasThing)
             return true;
         var tower = At(job.targetA.Cell, ___pawn.Map);

@@ -148,6 +148,7 @@ internal static class TowerCombat
         );
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool CastPrefix(Verb __instance, ref bool __result)
     {
         var tower = TowerPresentation.TowerFor(__instance.caster);
@@ -191,6 +192,7 @@ internal static class TowerCombat
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool MeleePrefix(Verb_MeleeAttack __instance, ref bool __result)
     {
         if (Mathf.Abs(Height(__instance.caster) - Height(__instance.CurrentTarget.Thing)) < .5f)
@@ -199,6 +201,7 @@ internal static class TowerCombat
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool ShootLinePrefix(
         Verb __instance,
         IntVec3 root,

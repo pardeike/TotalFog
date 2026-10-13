@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld;
 using TotalFog.Presentation;
 using Verse;
@@ -6,6 +7,7 @@ namespace TotalFog.Notifications;
 
 internal static class EntityDiscovery
 {
+    [HarmonyPriority(Priority.Last)]
     public static bool DiscoverPrefix(EntityCodexEntryDef entry, Thing discoveredThing) =>
         entry.startDiscovered || CanDiscover(discoveredThing);
 

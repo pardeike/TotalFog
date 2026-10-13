@@ -237,7 +237,7 @@ public sealed class MultiplayerScenarios
 
     [Tool(
         "totalfog/multiplayer_settings",
-        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), ColonyMechVisionModifier (0.2..2), TowerVisionMultiplier (1..3), TowerMaxSightRange (30..120), TowerClimbTicks (60..300), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
+        Description = "Exercise the same native Multiplayer settings watcher as Total Fog's UI. Set BaseViewRange (10..100), BaseHearingRange (0..30), ColonyMechVisionModifier (0.2..2), TowerVisionMultiplier (1..3), TowerMaxSightRange (30..120), TelescopeMaxSightRange (30..120), TowerClimbTicks (60..300), or any public boolean FogSettings field (true/false), or save local settings without changing sight. Read names from multiplayer_snapshot. Returns command submission, not proof that the other client applied it."
     )]
     public static Task<object> Settings(
         IRimBridgeContext context,
@@ -277,6 +277,7 @@ public sealed class MultiplayerScenarios
                 && name != "ColonyMechVisionModifier"
                 && name != "TowerVisionMultiplier"
                 && name != "TowerMaxSightRange"
+                && name != "TelescopeMaxSightRange"
                 && name != "TowerClimbTicks"
                 && (
                     field == null
@@ -291,7 +292,13 @@ public sealed class MultiplayerScenarios
                     message = "Use a documented range setting or a public boolean FogSettings field from multiplayer_snapshot.",
                 };
             object parsed;
-            if (name is "BaseViewRange" or "TowerMaxSightRange" or "TowerClimbTicks")
+            if (
+                name
+                is "BaseViewRange"
+                    or "TowerMaxSightRange"
+                    or "TelescopeMaxSightRange"
+                    or "TowerClimbTicks"
+            )
             {
                 int minimum =
                     name == "BaseViewRange" ? 10

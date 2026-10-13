@@ -59,4 +59,6 @@
   <TotalFog_TowerExitBlocked>L'échelle est bloquée. Libérez son accès pour permettre la descente.</TotalFog_TowerExitBlocked>
   <TotalFog_TowerWaitingForExit>Attend que l'échelle de {0} soit dégagée.</TotalFog_TowerWaitingForExit>
   <TotalFog_TowerEmergencyExit>{0} saute d'une tour bloquée pour s'échapper. La chute peut causer des blessures.</TotalFog_TowerEmergencyExit>
+  <TotalFog_TelescopeRange>Portée maximale du télescope</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Limiter la vision au télescope à ce nombre de cases, indépendamment des tours de guet.</TotalFog_TelescopeRangeDesc>
 </LanguageData>

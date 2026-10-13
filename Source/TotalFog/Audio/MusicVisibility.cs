@@ -1,9 +1,11 @@
+using HarmonyLib;
 using RimWorld;
 
 namespace TotalFog.Audio;
 
 internal static class MusicVisibility
 {
+    [HarmonyPriority(Priority.Last)]
     public static bool DangerModePrefix(ref bool __result)
     {
         if (!FogSettings.SuppressCombatMusic)
@@ -12,6 +14,7 @@ internal static class MusicVisibility
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     public static bool TransitionPrefix(MusicTransition __instance, ref bool __result)
     {
         if (!FogSettings.SuppressCombatMusic || !IsAnomaly(__instance))
@@ -26,6 +29,7 @@ internal static class MusicVisibility
             __instance.ForceFadeoutAndSilenceFor(0f, 1f);
     }
 
+    [HarmonyPriority(Priority.Last)]
     public static bool ForceTransitionPrefix(MusicTransitionDef transition) =>
         !FogSettings.SuppressCombatMusic
         || transition == null

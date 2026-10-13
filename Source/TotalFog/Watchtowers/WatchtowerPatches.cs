@@ -259,6 +259,7 @@ internal static class WatchtowerPatches
             __state.Map.GetComponent<MapComponent_Watchtowers>().CellChanged(cell);
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool RoofPrefix(IntVec3 c, RoofDef def, Map ___map) =>
         def == null || c.GetEdifice(___map) is not Building_Watchtower;
 
@@ -368,6 +369,7 @@ internal static class WatchtowerPatches
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool DeconstructPrefix(Thing t, ref bool __result)
     {
         if (t is not Building_Watchtower tower || tower.Occupant == null && tower.Rescuer == null)
@@ -543,6 +545,7 @@ internal static class WatchtowerPatches
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool LadderPlacementPrefix(
         BuildableDef entDef,
         IntVec3 center,

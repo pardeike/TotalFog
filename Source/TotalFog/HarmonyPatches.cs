@@ -48,6 +48,7 @@ internal static class HarmonyPatches
 
     //Pawn will not target thing that is hidden by the fog
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.Last)]
     public static bool CanSeePreFix(
         ref bool __result,
         Thing seer,
@@ -71,6 +72,7 @@ internal static class HarmonyPatches
 
     //For overlays
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.Last)]
     public static bool DrawOverlayPrefix(Thing t)
     {
         return t.IsFogVisible();
@@ -78,6 +80,7 @@ internal static class HarmonyPatches
 
     //For Silhouette
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.Last)]
     public static bool ShouldDrawSilhouettePrefix(Thing thing)
     {
         return thing.IsFogVisible();
@@ -86,6 +89,7 @@ internal static class HarmonyPatches
     public static class Patch_PlayOneShot
     {
         [HarmonyPrefix]
+        [HarmonyPriority(Priority.Last)]
         public static bool Prefix(ref SoundInfo info)
         {
             if (

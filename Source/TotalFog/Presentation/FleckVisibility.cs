@@ -1,4 +1,5 @@
 using System.Threading;
+using HarmonyLib;
 using Verse;
 
 namespace TotalFog.Presentation;
@@ -24,6 +25,7 @@ internal static class FleckVisibility
     internal static void EndDrawing(MapVisibility __state) =>
         Volatile.Write(ref drawingFog, __state);
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool DrawPrefix(ref FleckStatic __instance)
     {
         var fog = Volatile.Read(ref drawingFog);

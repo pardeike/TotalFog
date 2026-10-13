@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld.Planet;
 using TotalFog.Utils;
 using Verse;
@@ -6,6 +7,7 @@ namespace TotalFog.Detours;
 
 public static class Selector
 {
+    [HarmonyPriority(Priority.Last)]
     public static bool SelectInternal_Prefix(object obj)
     {
         var thing = obj as Thing;

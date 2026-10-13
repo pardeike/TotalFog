@@ -903,6 +903,12 @@ namespace HarmonyLib
             Patched.Add(original);
     }
 
+    [System.AttributeUsage(System.AttributeTargets.Method)]
+    public sealed class HarmonyPriority : System.Attribute
+    {
+        public HarmonyPriority(int priority) { }
+    }
+
     public class HarmonyMethod
     {
         public int priority;

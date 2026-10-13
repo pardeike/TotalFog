@@ -1,3 +1,4 @@
+using HarmonyLib;
 using TotalFog.Presentation;
 using TotalFog.Utils;
 using Verse;
@@ -6,6 +7,7 @@ namespace TotalFog.Detours;
 
 public static class DesignatorPrefix
 {
+    [HarmonyPriority(Priority.Last)]
     public static bool CanDesignateCell_Prefix(
         IntVec3 c,
         Designator __instance,
@@ -23,6 +25,7 @@ public static class DesignatorPrefix
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     public static bool CanDesignateThing_Prefix(Thing t, ref AcceptanceReport __result)
     {
         if (t.IsFogVisible())

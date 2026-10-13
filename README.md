@@ -37,8 +37,10 @@ a wild boar or something much worse. To be safe, you have to look.
   powered. By default they need an operator at a working camera console. Turn off
   the operator requirement to use cameras automatically without console jobs.
   Set camera staffing through the separate Cameras priority in the Work tab.
+  After adding this work category to an existing save, assign it to an operator.
+  An operator leaves when their console stops working or Cameras work is disabled.
 - A watch telescope doubles the sight range of pawns standing on it, up to the
-  configured watchtower sight cap.
+  separately configurable telescope sight limit.
 - An experimental 3x3 watchtower has a timed ladder and room for one lookout.
   Order a watch of 1, 2 or 4 game hours, counted from reaching the deck, or let a
   drafted lookout hold until undrafted. Moving elsewhere or undrafting brings

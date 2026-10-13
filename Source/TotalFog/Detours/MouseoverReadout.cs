@@ -1,3 +1,4 @@
+using HarmonyLib;
 using TotalFog.Presentation;
 using UnityEngine;
 using Verse;
@@ -8,6 +9,7 @@ public static class MouseoverReadout
 {
     private static readonly Vector2 botLeft = new(15f, 65f);
 
+    [HarmonyPriority(Priority.Last)]
     public static bool MouseoverReadoutOnGUI_Prefix(Verse.MouseoverReadout __instance)
     {
         if (Event.current.type != EventType.Repaint || Find.MainTabsRoot.OpenTab != null)

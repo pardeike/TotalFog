@@ -34,7 +34,10 @@ public class WorkGiver_MonitorVision : WorkGiver_Scanner
 
     public override bool HasJobOnThing(Pawn pawn, Thing t, bool forced = false)
     {
-        if (!Building_VisionConsole.NeedWatcher())
+        if (
+            !Building_VisionConsole.NeedWatcher()
+            || t is not Building_VisionConsole { WorkingNow: true }
+        )
         {
             return false;
         }

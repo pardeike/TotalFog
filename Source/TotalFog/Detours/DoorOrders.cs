@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld;
 using TotalFog.Presentation;
 using Verse;
@@ -8,6 +9,7 @@ internal static class DoorOrders
 {
     // The area order is player intent. It does not open the live door inspector.
     // Only a previously observed player door can extend vanilla's item-only tool.
+    [HarmonyPriority(Priority.Last)]
     public static bool CanDesignateThing_Prefix(
         Designator __instance,
         Thing t,

@@ -183,6 +183,14 @@ public partial class FogSettings
             2f,
             "TotalFog_ColonyMechVisionDesc"
         );
+        Range(
+            row,
+            "TotalFog_TelescopeRange",
+            ref TelescopeMaxSightRange,
+            30,
+            120,
+            "TotalFog_TelescopeRangeDesc"
+        );
         Section(row, "TotalFog_Watchtowers");
         Range(
             row,
@@ -428,6 +436,7 @@ public partial class FogSettings
         ColonyMechVisionModifier = 1f;
         TowerVisionMultiplier = 2f;
         TowerMaxSightRange = 96;
+        TelescopeMaxSightRange = 96;
         TowerClimbTicks = 120;
         TowerShootingAllowed = false;
         HideSpeakBubble = false;

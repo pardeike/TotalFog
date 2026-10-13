@@ -30,6 +30,7 @@ internal static class MultiplayerIntegration
         )
         .ToArray();
     private static Func<bool> isActive = () => false;
+    private static Func<bool> shouldSync = () => false;
     private static Action watchBegin;
     private static Action watchEnd;
     private static Action<object, object>[] watches = Array.Empty<Action<object, object>>();
@@ -38,6 +39,10 @@ internal static class MultiplayerIntegration
     private static Func<Map, int?> mapTicks;
 
     internal static bool Active => isActive();
+
+    // MP captures synchronized calls inside the original method's transpiled
+    // body. Prefixes must leave the UI order untouched until simulation replay.
+    internal static bool DeferOrderedJobConversion => Active && shouldSync();
 
     // Tick callbacks already run under MP's map context. Deadline creation can
     // also run from world commands or interface work, so use the owning map.
@@ -49,6 +54,7 @@ internal static class MultiplayerIntegration
     internal static void Install()
     {
         isActive = () => false;
+        shouldSync = () => false;
         try
         {
             var api = AccessTools.TypeByName("Multiplayer.API.MP");
@@ -125,6 +131,13 @@ internal static class MultiplayerIntegration
                             factions.GetMethod("PopFaction", new[] { typeof(Map) })
                         );
             }
+            var syncGetter =
+                AccessTools
+                    .TypeByName("Multiplayer.Client.Multiplayer")
+                    ?.GetProperty("ShouldSync")
+                    ?.GetGetMethod()
+                ?? throw new MissingMethodException("Multiplayer command context is unavailable.");
+            shouldSync = (Func<bool>)Delegate.CreateDelegate(typeof(Func<bool>), syncGetter);
             isActive =
                 (Func<bool>)
                     Delegate.CreateDelegate(

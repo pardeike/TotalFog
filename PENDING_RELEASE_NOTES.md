@@ -14,8 +14,10 @@ local testing do not indicate that a new player build has been released.
 - Give delayed letters with vanished targets their actual archive time instead of sorting them at the start of the colony.
 - Reduce overhead in colonies without watchtowers and when drawing tooltips, terrain, roof and fertility overlays.
 - Let other mods process shared targeting, sound and building orders before Total Fog applies its visibility restrictions.
-- Give camera consoles their own Cameras work priority and cap telescope sight at the configured watchtower limit.
+- Give camera consoles their own Cameras work priority, choose working consoles and release operators when a console stops working.
+- Set telescope sight independently of watchtower sight.
 - Honor explicit timed and drafted watch orders even when the lookout starts hungry or tired.
+- Synchronize a drafted tower move before converting it into a climbing job during Multiplayer replay.
 - Let drafted Go here and dragged formation orders use watchtower platforms, including Achtung's move orders.
 - Keep a lookout on the platform when drafted and prevent a rotation error after climbing.
 - Clear the ladder before an undrafted lookout resumes idle wandering, while preserving queued work.

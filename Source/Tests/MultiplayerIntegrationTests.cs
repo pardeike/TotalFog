@@ -48,6 +48,7 @@ public class MultiplayerIntegrationTests
             typeof(FakeFactionContext)
         );
         AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
+        AccessTools.Types.Add("Multiplayer.Client.Multiplayer", typeof(FakeApi));
         FakeApi.Fields.Clear();
         FakeApi.Begins = FakeApi.Ends = 0;
         try
@@ -75,6 +76,7 @@ public class MultiplayerIntegrationTests
             AccessTools.Types.Remove("Multiplayer.API.MP");
             AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
             AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Multiplayer");
         }
     }
 
@@ -95,6 +97,7 @@ public class MultiplayerIntegrationTests
             typeof(FakeFactionContext)
         );
         AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
+        AccessTools.Types.Add("Multiplayer.Client.Multiplayer", typeof(FakeApi));
         FakeApi.Fields.Clear();
         FakeApi.Begins = FakeApi.Ends = 0;
         try
@@ -125,6 +128,7 @@ public class MultiplayerIntegrationTests
             AccessTools.Types.Remove("Multiplayer.API.MP");
             AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
             AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Multiplayer");
         }
     }
 
@@ -191,6 +195,7 @@ public class MultiplayerIntegrationTests
             typeof(FakeFactionContext)
         );
         AccessTools.Types.Add("Multiplayer.Client.Extensions", typeof(FakeClockExtensions));
+        AccessTools.Types.Add("Multiplayer.Client.Multiplayer", typeof(FakeApi));
         try
         {
             MultiplayerIntegration.Install();
@@ -242,16 +247,19 @@ public class MultiplayerIntegrationTests
             AccessTools.Types.Remove("Multiplayer.API.MP");
             AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
             AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Multiplayer");
         }
     }
 
     [Theory]
+    [InlineData("Multiplayer.Client.Multiplayer")]
     [InlineData("Multiplayer.Client.Extensions")]
     [InlineData("Multiplayer.Client.Factions.FactionExtensions")]
     public void Missing_optional_binding_disables_all_multiplayer_entry_points(string missing)
     {
         AccessTools.Types["Multiplayer.API.MP"] = typeof(FakeApi);
         AccessTools.Types["Multiplayer.Client.Extensions"] = typeof(FakeClockExtensions);
+        AccessTools.Types["Multiplayer.Client.Multiplayer"] = typeof(FakeApi);
         AccessTools.Types["Multiplayer.Client.Factions.FactionExtensions"] =
             typeof(FakeFactionContext);
         try
@@ -272,7 +280,45 @@ public class MultiplayerIntegrationTests
             FakeApi.Fields.Clear();
             AccessTools.Types.Remove("Multiplayer.API.MP");
             AccessTools.Types.Remove("Multiplayer.Client.Extensions");
+            AccessTools.Types.Remove("Multiplayer.Client.Multiplayer");
             AccessTools.Types.Remove("Multiplayer.Client.Factions.FactionExtensions");
+            MultiplayerIntegration.Install();
+        }
+    }
+
+    [Fact]
+    public void Interface_orders_wait_for_sync_capture_but_replay_and_single_player_do_not()
+    {
+        AccessTools.Types["Multiplayer.API.MP"] = typeof(FakeApi);
+        AccessTools.Types["Multiplayer.Client.Multiplayer"] = typeof(FakeApi);
+        AccessTools.Types["Multiplayer.Client.Extensions"] = typeof(FakeClockExtensions);
+        AccessTools.Types["Multiplayer.Client.Factions.FactionExtensions"] =
+            typeof(FakeFactionContext);
+        try
+        {
+            MultiplayerIntegration.Install();
+            FakeApi.IsInMultiplayer = false;
+            FakeApi.ShouldSync = true;
+            Assert.False(MultiplayerIntegration.DeferOrderedJobConversion);
+            FakeApi.IsInMultiplayer = true;
+            Assert.True(MultiplayerIntegration.DeferOrderedJobConversion);
+            FakeApi.ShouldSync = false;
+            Assert.False(MultiplayerIntegration.DeferOrderedJobConversion);
+        }
+        finally
+        {
+            FakeApi.ShouldSync = FakeApi.IsInMultiplayer = false;
+            FakeApi.Fields.Clear();
+            foreach (
+                var name in new[]
+                {
+                    "Multiplayer.API.MP",
+                    "Multiplayer.Client.Multiplayer",
+                    "Multiplayer.Client.Extensions",
+                    "Multiplayer.Client.Factions.FactionExtensions",
+                }
+            )
+                AccessTools.Types.Remove(name);
             MultiplayerIntegration.Install();
         }
     }
@@ -281,6 +327,7 @@ public class MultiplayerIntegrationTests
     {
         public static bool enabled = true;
         public static bool IsInMultiplayer { get; set; }
+        public static bool ShouldSync { get; set; }
         public static int Begins,
             Ends;
         public static readonly List<FakeField> Fields = new();

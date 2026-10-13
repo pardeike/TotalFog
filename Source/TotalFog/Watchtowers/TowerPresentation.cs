@@ -70,6 +70,7 @@ internal static class TowerPresentation
         __state = true;
     }
 
+    [HarmonyPriority(Priority.Last)]
     internal static bool BubbleDrawingPrefix(MoteBubble __instance, out bool __state)
     {
         __state = false;

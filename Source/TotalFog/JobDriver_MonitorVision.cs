@@ -18,6 +18,7 @@ internal class JobDriver_MonitorVision : JobDriver
         this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
         this.FailOnBurningImmobile(TargetIndex.A);
         this.FailOn(() => !Building_VisionConsole.NeedWatcher());
+        this.FailOn(() => job.targetA.Thing is not Building_VisionConsole { WorkingNow: true });
 
         yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
 

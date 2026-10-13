@@ -48,11 +48,14 @@ The pinned CSharpier and Ruff formatters own active C# and Python layout. Run
 `./scripts/mod format` after edits; build checks formatting before compiling.
 `./scripts/mod format-check` checks without changing files. Frozen historical
 payloads are excluded. Do not add an auto-modifying commit hook.
-Cancellation prefixes default to `Priority.Last` through `PatchSafety.Patch`,
-so other mods' ordinary prefixes run before Total Fog can skip the original.
-Specify a different priority only for a proven ordering contract. Shared fog/
-tower targets have one installation owner in `TotalFogMod`; keep that order
-explicit instead of adding another registration in an adapter.
+PatchSafety.Patch isolates installation failures without changing priority.
+Declare late visibility/safety cancellation on the individual hook with
+HarmonyPriority or its HarmonyMethod. Replacement/observer hooks keep native
+Harmony defaults unless a specific contract requires ordering. Last alone
+does not establish order against another Last hook. MP captures synchronized
+calls in a transpiler inside the original body; tower conversion must skip the
+interface capture and run in replay, after MP assigns the job ID. Shared fog/
+tower targets have one installation owner in TotalFogMod.
 Use `./scripts/mod source-publish` to push committed source to
 https://github.com/pardeike/TotalFog. It verifies the public repository and
 remote commit without building, tagging, releasing or updating Steam.

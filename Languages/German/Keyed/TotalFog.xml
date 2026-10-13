@@ -59,4 +59,6 @@
   <TotalFog_TowerExitBlocked>Die Leiter ist blockiert. Zugang freiräumen, damit die Figur hinabsteigen kann.</TotalFog_TowerExitBlocked>
   <TotalFog_TowerWaitingForExit>Wartet darauf, dass die Leiter von {0} frei wird.</TotalFog_TowerWaitingForExit>
   <TotalFog_TowerEmergencyExit>{0} springt zur Flucht von einem blockierten Wachturm. Der Sturz kann Verletzungen verursachen.</TotalFog_TowerEmergencyExit>
+  <TotalFog_TelescopeRange>Maximale Sichtweite am Teleskop</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Teleskopsicht unabhängig von Wachtürmen auf diese Anzahl Zellen begrenzen.</TotalFog_TelescopeRangeDesc>
 </LanguageData>

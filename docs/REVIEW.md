@@ -890,3 +890,22 @@ this metadata correction does not complete broader integration acceptance.
 
 Metadata validation confirms equal 1.6/1.7 folder lists and zero shared-validator
 errors. The tracked DLL receipt remains valid; no gameplay assembly changed.
+
+Patch ordering is now owned by the named visibility/safety hooks, rather than
+assigned to every bool prefix by PatchSafety. Observer and replacement hooks
+keep ordinary Harmony defaults unless their own contract requires otherwise.
+DecompilerServer shows that Multiplayer SyncUtil.PatchMethodForSync installs
+SyncTemplates.Transpiler, whose General call serializes interface orders inside
+the original method. A late prefix cannot run after that capture. Tower move
+conversion now skips ShouldSync interface calls and occurs in replay, after
+Multiplayer's job-ID prefix. Pure tests cover interface/replay/single-player
+contexts and missing optional bindings. Native two-client renewal is pending.
+
+Telescope sight has its own saved, synchronized limit rather than borrowing
+the watchtower limit. Its 96-cell default is a deliberate configurable balance
+limit, not an API correction. Existing-colony Cameras staffing is documented.
+Source inspection also found that HasJobOnThing accepted an unpowered console
+when another console was working, and the continuous job did not fail when
+its own console stopped working. Those concrete cases now check WorkingNow.
+The clean paired build passes 409 C# tests plus seven receipt tests; native
+staffing, range and patch-order controls are the next check.

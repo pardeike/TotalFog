@@ -391,7 +391,7 @@ public class CompSightSource : FogSubcomponent
         range = range < 1 ? hearing : range;
         if (pawn.IsColonyMech)
             range *= FogSettings.ColonyMechVisionModifier;
-        return onTelescope ? Math.Min(range, FogSettings.TowerMaxSightRange) : range;
+        return onTelescope ? Math.Min(range, FogSettings.TelescopeMaxSightRange) : range;
     }
 
     private void EmitHearingCues()

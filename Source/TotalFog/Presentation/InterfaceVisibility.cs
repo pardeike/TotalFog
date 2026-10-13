@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
@@ -16,6 +17,7 @@ internal static partial class InterfaceVisibility
         return target == null || ThingVisibility.IsVisible(target, allowMemory: false);
     }
 
+    [HarmonyPriority(Priority.Last)]
     public static bool PawnLabelPrefix(Pawn pawn) =>
         ThingVisibility.IsVisible(pawn, allowMemory: false, renderedCell: pawn?.PositionHeld);
 

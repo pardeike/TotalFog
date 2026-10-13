@@ -24,6 +24,7 @@ public partial class FogSettings : ModSettings
     public static float ColonyMechVisionModifier = 1f;
     public static float TowerVisionMultiplier = 2f;
     public static int TowerMaxSightRange = 96;
+    public static int TelescopeMaxSightRange = 96;
     public static int TowerClimbTicks = 120;
     public static bool TowerShootingAllowed;
 
@@ -86,6 +87,7 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref ColonyMechVisionModifier, "totalFogColonyMechVisionMod", 1f);
         Scribe_Values.Look(ref TowerVisionMultiplier, "totalFogTowerVisionMultiplier", 2f);
         Scribe_Values.Look(ref TowerMaxSightRange, "totalFogTowerMaxSightRange", 96);
+        Scribe_Values.Look(ref TelescopeMaxSightRange, "totalFogTelescopeMaxSightRange", 96);
         Scribe_Values.Look(ref TowerClimbTicks, "totalFogTowerClimbTicks", 120);
         Scribe_Values.Look(ref TowerShootingAllowed, "totalFogTowerShootingAllowed");
         Scribe_Values.Look(ref BaseHearingRange, "baseHearingRange", 10);

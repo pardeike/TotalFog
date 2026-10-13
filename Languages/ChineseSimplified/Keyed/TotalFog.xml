@@ -59,4 +59,6 @@
   <TotalFog_TowerExitBlocked>瞭望塔梯子被堵住了。清理入口，让角色能够下来。</TotalFog_TowerExitBlocked>
   <TotalFog_TowerWaitingForExit>等待 {0} 的梯子入口畅通。</TotalFog_TowerWaitingForExit>
   <TotalFog_TowerEmergencyExit>{0} 从被堵住的瞭望塔跳下逃生。坠落可能造成受伤。</TotalFog_TowerEmergencyExit>
+  <TotalFog_TelescopeRange>望远镜最大视野范围</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>将望远镜视野限制为此格数，与瞭望塔独立设置。</TotalFog_TelescopeRangeDesc>
 </LanguageData>

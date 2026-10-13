@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld;
 using TotalFog.Compatibility;
 using TotalFog.Core;
@@ -8,6 +9,7 @@ namespace TotalFog.Notifications;
 
 internal static class NotificationHooks
 {
+    [HarmonyPriority(Priority.Last)]
     public static bool MessagePrefix(Message msg, bool historical)
     {
         if (msg == null || DeferredNotifications.IsReplayingLetter)
@@ -38,6 +40,7 @@ internal static class NotificationHooks
         return false;
     }
 
+    [HarmonyPriority(Priority.Last)]
     public static bool LetterPrefix(Letter let, string debugInfo, int delayTicks, bool playSound)
     {
         if (let == null || DeferredNotifications.IsReplayingLetter)

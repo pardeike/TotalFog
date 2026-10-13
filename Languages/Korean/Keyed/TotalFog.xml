@@ -59,4 +59,6 @@
   <TotalFog_TowerExitBlocked>감시탑 사다리가 막혔습니다. 인물이 내려올 수 있도록 입구를 치우세요.</TotalFog_TowerExitBlocked>
   <TotalFog_TowerWaitingForExit>{0}의 사다리 입구가 비기를 기다리는 중.</TotalFog_TowerWaitingForExit>
   <TotalFog_TowerEmergencyExit>{0}이 막힌 감시탑에서 탈출하려고 뛰어내립니다. 추락으로 다칠 수 있습니다.</TotalFog_TowerEmergencyExit>
+  <TotalFog_TelescopeRange>망원경 최대 시야 범위</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>감시탑과 별개로 망원경 시야를 이 칸 수로 제한합니다.</TotalFog_TelescopeRangeDesc>
 </LanguageData>
