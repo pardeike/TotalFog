@@ -40,6 +40,8 @@ local testing do not indicate that a new player build has been released.
 - Delay Anomaly codex discovery and its notice until a player first sees the entity.
 - Keep existing haul orders for known vanilla chunks working after sight is lost.
 - Clear chunks and other haulable obstructions from ordered blueprints and frames even after sight is lost.
+- Permit native construction to remove blocking plants and buildings in known terrain, and let colonists clean fresh dirt in a known home area without revealing those targets through fog.
+- Filter map search by Total Fog visibility, retaining previously seen static items and your pawns' inventory while hiding never-seen objects and hidden enemies.
 - Add an optional Silent Raids setting for enemy raid and manhunter arrival letters and slowdown, while preserving their spawning and normal combat slowdown.
 - Apply audio settings to already-running loops and restore their volume when filtering is disabled.
 - Calculate nearby audio from living listeners rather than previously explored terrain.

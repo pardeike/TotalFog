@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 namespace Verse
 {
+    public static class DebugSettings
+    {
+        public static bool searchIgnoresRestrictions;
+    }
+
     public class TimeSlower
     {
         public int Signals;
@@ -47,6 +52,8 @@ namespace Verse
         Item,
         Pawn,
         Building,
+        Plant,
+        Filth,
         Projectile,
         Mote,
     }
@@ -75,6 +82,8 @@ namespace Verse
 
     public class Thing
     {
+        public Thing SpawnedParentOrMe => HeldBy ?? this;
+        public Thing HeldBy;
         public ThingDef def = new();
         public Map Map = new();
         public Map MapHeld => Map;

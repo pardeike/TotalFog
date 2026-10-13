@@ -53,11 +53,23 @@ internal static class ThingVisibility
         if (
             observerFaction == null
             || !fog.IsKnown(observerFaction, map.cellIndices.CellToIndex(cell))
-            || thing.def.category != ThingCategory.Item
-            || !thing.def.EverHaulable
         )
             return false;
+        // The home area is a standing cleaning order, including new dirt.
+        // Filth has no observation component; this grants work access only.
+        if (thing.def.category == ThingCategory.Filth && fog.HomeArea[cell])
+            return true;
+        bool removableObstruction = thing.def.category switch
+        {
+            ThingCategory.Item => thing.def.EverHaulable,
+            ThingCategory.Plant or ThingCategory.Building => true,
+            _ => false,
+        };
+        if (!removableObstruction)
+            return false;
         // An owned construction order also authorizes clearing its footprint.
+        // Native construction chooses hauling, plant cutting or removal and
+        // retains its capability, forbidden, deconstruction and mining rules.
         // Keep this work permission separate from remembered rendering: no
         // haul designation or observation is invented for the obstruction.
         var things = cell.GetThingList(map);

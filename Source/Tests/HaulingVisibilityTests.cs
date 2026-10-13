@@ -126,4 +126,50 @@ public sealed class HaulingVisibilityTests
 
         Assert.False(ThingVisibility.IsActionable(chunk, Faction.OfPlayer));
     }
+
+    [Theory]
+    [InlineData(ThingCategory.Plant)]
+    [InlineData(ThingCategory.Building)]
+    public void ConstructionCanClearOtherNativeObstructionsWithoutDiscoveringThem(
+        ThingCategory category
+    )
+    {
+        var obstruction = new ThingWithComps { def = new ThingDef { category = category } };
+        obstruction.Map.Fog.Initialized = true;
+        obstruction.Map.Fog.knownCells[0] = true;
+        obstruction.Map.Things.Add(
+            new Thing
+            {
+                Faction = Faction.OfPlayer,
+                def = new ThingDef { IsBlueprint = true, BlocksItems = true },
+            }
+        );
+
+        Assert.True(ThingVisibility.IsActionable(obstruction, Faction.OfPlayer));
+        Assert.False(ThingVisibility.IsVisible(obstruction));
+        Assert.False(Visibility.IsVisible(obstruction));
+
+        obstruction.Map.Things.Clear();
+        Assert.False(ThingVisibility.IsActionable(obstruction, Faction.OfPlayer));
+    }
+
+    [Theory]
+    [InlineData(ThingCategory.Pawn)]
+    [InlineData(ThingCategory.Projectile)]
+    [InlineData(ThingCategory.Mote)]
+    public void ConstructionDoesNotAuthorizeUnrelatedEntityKinds(ThingCategory category)
+    {
+        var target = new ThingWithComps { def = new ThingDef { category = category } };
+        target.Map.Fog.Initialized = true;
+        target.Map.Fog.knownCells[0] = true;
+        target.Map.Things.Add(
+            new Thing
+            {
+                Faction = Faction.OfPlayer,
+                def = new ThingDef { IsBlueprint = true, BlocksItems = true },
+            }
+        );
+
+        Assert.False(ThingVisibility.IsActionable(target, Faction.OfPlayer));
+    }
 }

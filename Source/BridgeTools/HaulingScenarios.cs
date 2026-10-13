@@ -52,6 +52,8 @@ public sealed class HaulingScenarios
                 if (
                     !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Construction)
                     && !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Hauling)
+                    && !pawn.WorkTypeIsDisabled(WorkTypeDefOf.PlantCutting)
+                    && !pawn.WorkTypeIsDisabled(WorkTypeDefOf.Cleaning)
                 )
                     break;
                 if (attempt == 19)
@@ -87,6 +89,8 @@ public sealed class HaulingScenarios
                 pawn.workSettings.EnableAndInitialize();
                 pawn.workSettings.SetPriority(WorkTypeDefOf.Construction, 1);
                 pawn.workSettings.SetPriority(WorkTypeDefOf.Hauling, 1);
+                pawn.workSettings.SetPriority(WorkTypeDefOf.PlantCutting, 1);
+                pawn.workSettings.SetPriority(WorkTypeDefOf.Cleaning, 1);
                 var wood = ThingMaker.MakeThing(ThingDefOf.WoodLog);
                 wood.stackCount = 20;
                 GenSpawn.Spawn(wood, pawn.Position + new IntVec3(0, 0, 1), map);
@@ -115,12 +119,85 @@ public sealed class HaulingScenarios
                 pawn.Position = destination;
                 source.UpdateFoV(true);
             }
+            else if (operation == "restore-sight")
+            {
+                pawn.pather.StopDead();
+                pawn.Position = GenRadial
+                    .RadialCellsAround(target.Position, 4f, true)
+                    .First(c => c.InBounds(map) && c.Standable(map));
+                map.fogGrid.Unfog(pawn.Position);
+                pawn.TryGetComp<CompFog>().FieldOfViewWatcher.UpdateFoV(true);
+                target.TryGetComp<CompFog>()?.HideFromPlayer.UpdateVisibility(true);
+            }
             else if (operation == "remove-order")
                 map.designationManager.TryRemoveDesignationOn(target, DesignationDefOf.Haul);
             else if (operation == "restore-order")
                 map.designationManager.AddDesignation(
                     new Designation(target, DesignationDefOf.Haul)
                 );
+            else if (
+                operation
+                is "replace-plant"
+                    or "replace-building"
+                    or "replace-filth"
+                    or "replace-item"
+            )
+            {
+                if (Visibility.IsVisible(target))
+                    throw new InvalidOperationException(
+                        "Lose sight before replacing the obstruction."
+                    );
+                var cell = target.Position;
+                foreach (
+                    var plan in cell.GetThingList(map)
+                        .Where(t => t.def.IsBlueprint || t.def.IsFrame)
+                        .ToArray()
+                )
+                    plan.Destroy();
+                target.Destroy();
+                if (operation == "replace-filth")
+                {
+                    map.terrainGrid.SetTerrain(cell, DefDatabase<TerrainDef>.GetNamed("Concrete"));
+                    FilthMaker.TryMakeFilth(cell, map, ThingDefOf.Filth_Dirt);
+                    target = cell.GetThingList(map).OfType<Filth>().Single();
+                    map.areaManager.Home[cell] = true;
+                }
+                else if (operation == "replace-item")
+                    target = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDefOf.Steel), cell, map);
+                else
+                {
+                    target = GenSpawn.Spawn(
+                        ThingMaker.MakeThing(
+                            operation == "replace-plant"
+                                ? DefDatabase<ThingDef>.GetNamed("Plant_TreeOak")
+                                : ThingDefOf.Wall,
+                            operation == "replace-building" ? ThingDefOf.WoodLog : null
+                        ),
+                        cell,
+                        map
+                    );
+                    if (target is Plant plant)
+                        plant.Growth = 1f;
+                    GenConstruct.PlaceBlueprintForBuild(
+                        operation == "replace-building" ? ThingDefOf.Door : ThingDefOf.Wall,
+                        cell,
+                        map,
+                        Rot4.North,
+                        pawn.Faction,
+                        ThingDefOf.WoodLog
+                    );
+                }
+            }
+            else if (operation == "remove-plan")
+            {
+                foreach (
+                    var plan in target
+                        .Position.GetThingList(map)
+                        .Where(t => t.def.IsBlueprint || t.def.IsFrame)
+                        .ToArray()
+                )
+                    plan.Destroy();
+            }
             else if (operation == "start-construction")
             {
                 var plan = target
@@ -174,6 +251,13 @@ public sealed class HaulingScenarios
             pawnPosition = pawn.Position.ToString(),
             visible = Visibility.IsVisible(target),
             known = fog.IsKnown(Faction.OfPlayer, map.cellIndices.CellToIndex(target.Position)),
+            observed = target.TryGetComp<CompFog>()?.HideFromPlayer.WasSeenBy(pawn.Faction),
+            cleaningJob = target is Filth
+                ? new WorkGiver_CleanFilth().JobOnThing(pawn, target)?.def.defName
+                : null,
+            cleaningEligible = target is Filth
+                && new WorkGiver_CleanFilth().HasJobOnThing(pawn, target),
+            filthAge = (target as Filth)?.TicksSinceThickened,
             designated = map.designationManager.DesignationOn(target, DesignationDefOf.Haul)
                 != null,
             canReserve = pawn.CanReserve(target),
@@ -183,6 +267,67 @@ public sealed class HaulingScenarios
             currentJob = pawn.CurJob?.def.defName,
             storage = StoreUtility.CurrentStoragePriorityOf(target, false).ToString(),
             reason = JobFailReason.HaveReason ? JobFailReason.Reason : null,
+        };
+    }
+
+    [Tool(
+        "totalfog/map_search_fixture",
+        Description = "Run the native map-search acceptance and population paths for a staged target, optionally move it into the fixture pawn's inventory or change that holder's faction. Reload the unchanged save afterward."
+    )]
+    public static object Search(string targetID, string pawnID, string operation = "probe")
+    {
+        var map = Find.CurrentMap ?? throw new InvalidOperationException("Load a fixture first.");
+        if (!Find.TickManager.Paused)
+            throw new InvalidOperationException("Pause before querying search.");
+        var pawn = map.mapPawns.AllPawnsSpawned.First(p => p.ThingID == pawnID);
+        var target = map
+            .listerThings.AllThings.Concat(pawn.inventory.innerContainer)
+            .First(t => t.ThingID == targetID);
+        if (operation == "hold")
+        {
+            target.DeSpawn();
+            if (!pawn.inventory.innerContainer.TryAdd(target))
+                throw new InvalidOperationException("Fixture inventory rejected the target.");
+        }
+        else if (operation == "hostile-holder")
+        {
+            pawn.SetFaction(Faction.OfAncientsHostile);
+            var wait = JobMaker.MakeJob(JobDefOf.Wait);
+            wait.expiryInterval = 3000;
+            pawn.jobs.StartJob(wait, JobCondition.InterruptForced);
+            pawn.TryGetComp<CompFog>().FieldOfViewWatcher.UpdateFoV(true);
+        }
+        else if (operation != "probe")
+            throw new ArgumentException("Use probe, hold or hostile-holder.", nameof(operation));
+        var dialog = new Dialog_MapSearch(map);
+        var quickSearch = (QuickSearchWidget)
+            HarmonyLib
+                .AccessTools.Field(typeof(Dialog_Search<Thing>), "quickSearchWidget")
+                .GetValue(dialog);
+        quickSearch.filter.Text = target.def.label;
+        bool eligible = (bool)
+            HarmonyLib
+                .AccessTools.Method(typeof(Dialog_MapSearch), "CanAddThing")
+                .Invoke(dialog, new object[] { target });
+        HarmonyLib
+            .AccessTools.Method(typeof(Dialog_MapSearch), "TryAddElement")
+            .Invoke(dialog, new object[] { target });
+        var results = (System.Collections.Generic.HashSet<Thing>)
+            HarmonyLib
+                .AccessTools.Field(typeof(Dialog_Search<Thing>), "searchResultsSet")
+                .GetValue(dialog);
+        return new
+        {
+            targetID,
+            pawnID,
+            nativeEligible = eligible,
+            nativeResultContainsTarget = results.Contains(target),
+            policyAllows = Presentation.MapSearchVisibility.AllowsResult(target),
+            canInspect = Presentation.ThingVisibility.CanInspect(target),
+            currentSight = Visibility.IsVisible(target),
+            observed = target.TryGetComp<CompFog>()?.HideFromPlayer.WasSeenBy(Faction.OfPlayer),
+            held = !target.Spawned,
+            holderFaction = pawn.Faction?.def.defName,
         };
     }
 

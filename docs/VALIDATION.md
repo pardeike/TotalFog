@@ -8627,3 +8627,45 @@ This establishes a usable large-list diagnostic setup on actual Steam 1.7,
 with ordinary startup and saved-game play. It does not establish original-mod
 performance parity in this loadout, long-session stability, all DLC feature
 behavior, optional-mod privacy coverage or Zombieland/CE/MP compatibility.
+
+## 2026-10-13: authorized hidden work and native map search
+
+Gameplay SHA-256 `d05f0d97410bb1a17dc53f65ae53dbc1ebb0a3344e74f65bc39a8e05e9a0b77d`
+passes 447 source-linked/core C# tests and the artifact tests. Three new work
+cases first failed against the old implementation: construction-blocking
+plants, construction-blocking buildings, and fresh filth in a known home area.
+The native work/search slice uses Core-only offline 1.6.4871 rev581, engine
+MVID `463a5d69-086c-4f2d-991b-b1488559b040`, released Workshop Harmony
+3.0.0.0, RimBridgeServer and Total Fog. No DLC renewal is claimed here.
+
+Native construction returns HaulToCell for a hidden chunk, CutPlant for a
+new unseen tree, and Deconstruct for a new unseen wall blocking an owned
+blueprint on known terrain. Removing each construction plan removes the
+extra reservation/reach permission. Fresh hidden dirt in the home area remains
+invisible and unsearchable; after 601 native ticks it becomes eligible for
+the ordinary Clean job. These checks prove native job eligibility, not
+completed cutting/deconstruction/cleaning. The preceding feedback checkpoint
+separately proves hidden chunk clearing through completed construction.
+Native forbidden, work-capability and false reservation results remain intact.
+
+The native Dialog_MapSearch result predicate and actual result population
+exclude a never-seen steel stack on explored terrain. Seeing it makes it
+searchable; losing sight preserves its ordinary remembered static result
+without permitting live inspection. Destroying/replacing it while hidden
+excludes the new unobserved stack. A colonist's held stack is searchable, but
+changing that holder to a hidden hostile pawn removes it. Registered current
+inspection cores, native restriction overrides and native false results have
+source-linked tests. Search navigation follows the same remembered static
+policy as drawing; no separate historical location cache is introduced.
+
+Representative native work callers were inspected: construction clearing,
+cleaning, bills, refueling and repairs. This is a bounded shared-permission
+audit, not acceptance of every work giver or optional search mod. Improved
+Map Search is absent from this installed loadout and remains unverified.
+Full evidence and retained rejected fixture attempts are under
+`artifacts/train-work`. Initial helper defects (wrong plant def name, dirt
+on unsuitable ground and a faction-switched pawn leaving the fixture) were
+corrected before accepting the relevant rows. The final native log has no
+gameplay exception; it retains two pre-existing invalid window-position
+preference XML entries. The unchanged base save was reloaded and the process
+stopped. Main Steam saves and settings were preserved.

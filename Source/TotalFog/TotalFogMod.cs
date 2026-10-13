@@ -409,6 +409,23 @@ public class TotalFogMod : Mod
             typeof(HaulAIUtility),
             nameof(Verse.AI.HaulAIUtility.HaulToStorageJob)
         );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(Dialog_MapSearch), "ThingIsVisibleToPlayer"),
+            postfix: new HarmonyMethod(
+                typeof(Presentation.MapSearchVisibility),
+                nameof(Presentation.MapSearchVisibility.VisibilityPostfix)
+            )
+        );
+        foreach (var method in new[] { "OnHighlightUpdate", "ClikedOnElement" })
+            PatchSafety.Patch(
+                harmony,
+                AccessTools.Method(typeof(Dialog_MapSearch), method),
+                prefix: new HarmonyMethod(
+                    typeof(Presentation.MapSearchVisibility),
+                    nameof(Presentation.MapSearchVisibility.LocationPrefix)
+                )
+            );
         patchMethod(
             typeof(Verse.EnvironmentStatsDrawer),
             typeof(EnvironmentStatsDrawer),

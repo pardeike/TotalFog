@@ -9,6 +9,55 @@ namespace TotalFog.Tests;
 
 public sealed class OwnedWorkVisibilityTests
 {
+    [Theory]
+    [InlineData(true, true, false, true)]
+    [InlineData(false, true, false, false)]
+    [InlineData(true, false, false, false)]
+    [InlineData(true, true, true, false)]
+    public void HomeCleaningUsesKnownTerrainWithoutDiscoveringHiddenFilth(
+        bool known,
+        bool home,
+        bool nativeFog,
+        bool expected
+    )
+    {
+        var filth = new Thing { def = new ThingDef { category = ThingCategory.Filth } };
+        filth.Map.Fog.Initialized = true;
+        filth.Map.Fog.knownCells[0] = known;
+        filth.Map.areaManager.Home.Active = home;
+        filth.Map.fogGrid.Fogged = nativeFog;
+
+        Assert.Equal(expected, ThingVisibility.IsActionable(filth, Faction.OfPlayer));
+        Assert.False(ThingVisibility.IsVisible(filth));
+        Assert.False(Visibility.IsVisible(filth));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void FogWorkPermissionsCannotOverrideNativeReservationFailure(bool reach)
+    {
+        var fire = new Fire();
+        fire.Map.Fog.Initialized = true;
+        fire.Map.Fog.knownCells[0] = true;
+        fire.Map.areaManager.Home.Active = true;
+        var worker = new Pawn { Faction = Faction.OfPlayer, Map = fire.Map };
+        bool result = false;
+        if (reach)
+            TotalFog.Detours.ReservationUtility.CanReserveAndReach_Postfix(
+                worker,
+                ref result,
+                new LocalTargetInfo(fire)
+            );
+        else
+            TotalFog.Detours.ReservationUtility.CanReserve_Postfix(
+                worker,
+                ref result,
+                new LocalTargetInfo(fire)
+            );
+        Assert.False(result);
+    }
+
     [Fact]
     public void Known_home_fire_is_actionable_without_granting_live_effect_sight()
     {
