@@ -8835,5 +8835,17 @@ seven artifact tests and zero warnings/errors. Candidate gameplay SHA-256 is
 b7ab45819f676f28ce3d339499a6633f98c7a928674355c4dad53f3ee0909688.
 Decompilation of that built DLL confirms the landing-site cast is absent while
 real source initialization and explicit whole-map reveal remain. The matching
-DLL/build receipt are committed with the source; this candidate is not deployed
-over the running game or sent as a player build.
+DLL/build receipt are committed with the source. It initially remains
+undeployed while Andreas's paused game is preserved. His subsequent restart
+still loads fcde178b, establishing a deployment mismatch rather than evidence
+that the correction fails.
+
+Once the manually relaunched game is at Entry with no colony loaded, it is
+stopped normally and the canonical deploy installs the b7ab4581 gameplay DLL
+and matching companion 496666f2 into the actual external Steam Mods/sibling
+BridgeTools roots. Both installed files match their build hashes. A fresh GABS
+launch loads Total Fog from that exact path and retains all ten active mods,
+including Workshop Harmony, the bridge, Core, five DLCs and Zombieland, with
+loadedSessionMatchesActive and no restart required. The game remains at Entry
+for Andreas's manual new-colony check. This accepts deployment/startup identity,
+not the pending fresh-colony fog transition. No player ZIP is sent.
