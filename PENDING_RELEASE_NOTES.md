@@ -13,6 +13,7 @@ local testing do not indicate that a new player build has been released.
 - Prevent failed visibility listeners from leaving cells permanently visible, including during source removal.
 - Give delayed letters with vanished targets their actual archive time instead of sorting them at the start of the colony.
 - Reduce overhead in colonies without watchtowers and when drawing tooltips, terrain, roof and fertility overlays.
+- Avoid rebuilding artificial-light meshes when sight changes on unlit cells, while retaining native light updates and correct fog boundaries.
 - Let other mods process shared targeting, sound and building orders before Total Fog applies its visibility restrictions.
 - Give camera consoles their own Cameras work priority, choose working consoles and release operators when a console stops working.
 - Set telescope sight independently of watchtower sight.

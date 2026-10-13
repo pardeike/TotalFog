@@ -12,7 +12,10 @@ Review round 2 is complete in ten ordered commits on 13 October 2026, followed
 by Andreas's accepted independent reassessment corrections. The independent
 player-stability review then corrects owned-pawn controls, tower fog targeting
 and CE targeting for other player factions. The current Release
-build passes 411 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+build passes 416 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+The subsequent lighting-invalidation change passes native light-boundary checks
+on both engines and the Core-only wide performance floor below. The 14 earlier
+player-safety controls retain their own 9a490e5b checkpoint.
 The bounded native checks below use Core-only offline 1.6 and Steam 1.7;
 full DLC/optional-mod gates remain open. Earlier GitHub source checks passed
 for their recorded commits, not this local review batch.
@@ -24,7 +27,7 @@ for their recorded commits, not this local review batch.
 | Other 1.7 checks | Current unchanged Release DLL 9a490e5b passes all 14 player-safety controls on Steam 1.7.4976 rev1043 with released Workshop Harmony 3.0.0.0-rc.2. A vanilla 1.7 colony also loads with Total Fog added and advances 177 normal-speed ticks. No native errors or Total Fog patch warnings occur. The previously claimed Steam-Harmony blocker was an old local-copy selection; ordinary profiles now pin Workshop Harmony. Earlier tower-order/presentation controls retain their recorded hashes; broad DLC/optional-mod renewal remains open. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
 | CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls on reassessment DLL b6cd058d. The later CE other-player-faction correction passes source-linked tests; combined native renewal is open. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
-| Performance | The most recent Core-only 350x350 wide three-pair comparison, on pre-player-safety DLL b6cd058d, fails: median 487.140 vs 535.292 TPS, about 9.0% lower. One candidate interval also has a native normal-speed restriction, so this is not unrestricted fourth-speed acceptance. Tick CPU is slightly lower and short instrumented profiles show more map-update work, without isolating the complete cause. The player-safety changes do not resolve or renew this result. The earlier delivered pair retains its old acceptance; current broad performance is unverified. |
+| Performance | Lighting changes avoid rebuilding unlit sections. On DLL 7b783fc7, a fresh Core-only 350x350 wide three-pair comparison passes: median 541.870 vs 538.253 TPS, a 0.67% lead, with 408 pawns and 71,050 cells in view. Every measured tick uses native multiplier 15 without forced speed or private boost. Frame p95 is 68.118 vs 68.483 ms. Treat this as parity, not a convincing general speed advantage; two of three candidate pairs are slower. A separate peaceful fixture removes one hostile mechanoid because native combat capped earlier comparisons. Those failures remain retained. Broad DLC, many-mod, combat-heavy, spike and 1.7 throughput acceptance remain open. |
 | Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match this review source; expanded Linux/Windows CI is configured but has not run remotely for this batch. |
 
 The sections below retain dated delivery and compatibility checkpoints. Their

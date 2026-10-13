@@ -45,6 +45,7 @@ public sealed class StreamFeedbackScenarios
             oldFade = SectionLayerFog.PrefEnableFade;
         var rows = new List<object>();
         var pictures = new List<object>();
+        var lightingMeshes = new List<Color32[]>();
         try
         {
             await ctx.MainThread.InvokeAsync(
@@ -180,6 +181,19 @@ public sealed class StreamFeedbackScenarios
                                         fog.GetFactionShownCells(Faction.OfPlayer),
                                     }
                                 );
+                            var lightingLayer = (
+                                (IEnumerable<SectionLayer>)
+                                    AccessTools
+                                        .Field(typeof(Section), "layers")
+                                        .GetValue(map.mapDrawer.SectionAt(lamp.Position))
+                            )
+                                .OfType<SectionLayer_LightingOverlay>()
+                                .Single();
+                            // Inspect uploaded native mesh colors as well as
+                            // the adapter. This catches a missed dirty flag.
+                            lightingMeshes.Add(
+                                lightingLayer.GetSubMesh(MatBases.LightOverlay).mesh.colors32
+                            );
                             bool doorOrders = true,
                                 rejectedSelection = true;
                             if (!visible)
@@ -216,6 +230,7 @@ public sealed class StreamFeedbackScenarios
                                 gameplayGlowUnchanged = native.Equals(
                                     map.glowGrid.VisualGlowAt(index)
                                 ),
+                                lightingMeshVertices = lightingMeshes.Last().Length,
                                 passed = plansShown
                                     && corpseShown == visible
                                     && doorOrders
@@ -295,6 +310,11 @@ public sealed class StreamFeedbackScenarios
             {
                 rows,
                 pictures,
+                lightingMeshChangesWithSight = lightingMeshes.Count == 3
+                    && lightingMeshes[0].Length > 0
+                    && !lightingMeshes[0].SequenceEqual(lightingMeshes[1]),
+                lightingMeshRestored = lightingMeshes.Count == 3
+                    && lightingMeshes[0].SequenceEqual(lightingMeshes[2]),
                 area = new
                 {
                     area.minX,

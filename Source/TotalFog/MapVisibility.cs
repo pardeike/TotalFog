@@ -21,7 +21,7 @@ public class MapVisibility : MapComponent
     private readonly Dictionary<(int faction, int cell), Designation> miningAt = new();
     private readonly List<Building_VisionConsole> consoles = new();
     private readonly List<Building_VisionCamera> cameras = new();
-    private readonly HashSet<int> dirtySections = new();
+    private readonly Dictionary<int, ulong> dirtySections = new();
     private readonly LinkedList<CompSightSource> dirtySources = new();
     private readonly List<CompSightSource> blockerSources = new();
     private int[] fullVisibility;
@@ -582,6 +582,9 @@ public class MapVisibility : MapComponent
     {
         int x = coverage.X(index),
             z = coverage.Z(index);
+        ulong flags = Initialized
+            ? Presentation.FogMeshInvalidation.FlagsForSightChange(map, index)
+            : FogDefOf.RealFogOfWar | MapMeshFlagDefOf.GroundGlow | MapMeshFlagDefOf.Gas;
         foreach (
             int section in GridGeometry.AffectedSections(
                 x,
@@ -591,7 +594,10 @@ public class MapVisibility : MapComponent
                 SectionSize
             )
         )
-            dirtySections.Add(section);
+        {
+            dirtySections.TryGetValue(section, out ulong pending);
+            dirtySections[section] = pending | flags;
+        }
         if (!Initialized)
             return;
         ref var listeners = ref hiddenAt[index];
@@ -606,11 +612,12 @@ public class MapVisibility : MapComponent
     private void FlushDirty()
     {
         int columns = (coverage.Width + SectionSize - 1) / SectionSize;
-        foreach (int section in dirtySections)
+        foreach (var dirty in dirtySections)
         {
+            int section = dirty.Key;
             map.mapDrawer.MapMeshDirty(
                 new IntVec3(section % columns * SectionSize, 0, section / columns * SectionSize),
-                FogDefOf.RealFogOfWar | MapMeshFlagDefOf.GroundGlow | MapMeshFlagDefOf.Gas
+                dirty.Value
             );
         }
         dirtySections.Clear();

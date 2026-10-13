@@ -265,6 +265,7 @@ namespace Verse
         }
 
         public FogGrid fogGrid = new();
+        public GlowGrid glowGrid = new();
         public DesignationManager designationManager = new();
         public CellIndices cellIndices = new();
         public DynamicDrawManager dynamicDrawManager = new();
@@ -300,6 +301,18 @@ namespace Verse
         {
             Reads++;
             return Present;
+        }
+    }
+
+    public class GlowGrid
+    {
+        public UnityEngine.Color32 Glow;
+        public int Reads;
+
+        public UnityEngine.Color32 VisualGlowAt(int index)
+        {
+            Reads++;
+            return Glow;
         }
     }
 
@@ -549,6 +562,14 @@ namespace Verse
 
 namespace UnityEngine
 {
+    public struct Color32(byte r, byte g, byte b, byte a)
+    {
+        public byte r = r,
+            g = g,
+            b = b,
+            a = a;
+    }
+
     public struct Vector3
     {
         public float x,
@@ -855,6 +876,7 @@ namespace TotalFog
 
     public static class FogDefOf
     {
+        public const ulong RealFogOfWar = 2048;
         public static readonly Verse.ThingDef Mote_SoundWave = new();
     }
 

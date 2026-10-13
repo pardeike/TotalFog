@@ -68,7 +68,7 @@ assumed every generated humanlike pawn had a drafter; foreign pawns do not.
 That probe exception is not a gameplay defect. The corrected probe was used for
 both the pre-fix reproduction and final pass.
 
-This review does **not** clear the release gate:
+At this player-safety checkpoint, the review does **not** clear the release gate:
 
 - The most recent wide 350x350 three-pair comparison, on pre-review gameplay
   b6cd058d, fails the original-mod floor, with median 487.140 versus 535.292 TPS.
@@ -122,6 +122,38 @@ on 1.7 without recompiling against that engine. It does not renew the original
 performance floor or broad DLC/CE/Multiplayer acceptance. Test processes are
 stopped, temporary preferences/version/loadout are restored, and the Workshop
 Harmony choice is retained as Andreas requested. Original fixtures are unchanged.
+
+### Performance follow-up, 13 October 2026
+
+Native slowdown tracing on the old stress fixture identifies combat AI at tick
+552 and weapon casting at tick 634. Selected Ultrafast is not sufficient proof
+of unrestricted fourth speed. Those rejected samples remain recorded. A derived
+original-mod save removes the one spawned hostile mechanoid, retaining 408
+pawns and the same 350x350 map. This changes the comparison's scope to ordinary
+non-combat throughput; it does not establish combat equivalence.
+
+The focused mesh profile finds unnecessary artificial-light regeneration.
+MapVisibility now unions dirty flags per section and requests GroundGlow only
+when the changed cell contributes a nonzero native glow channel. Neighboring
+sections still receive the request. Fog/gas refresh, native light/roof changes,
+coverage timing, saved data and public APIs stay unchanged. No new work
+deferral or light-state cache is introduced. Five source-linked pure controls
+cover zero glow and every individual color/alpha channel.
+
+The final gameplay DLL 7b783fc7 passes the six-process Core-only wide comparison:
+541.870 versus 538.253 median TPS, native multiplier 15 throughout, no forced
+speed or private boost. This 0.67% lead is bounded parity evidence, not a strong
+general speed claim. Two of three candidate pairs are slower; tick elapsed time is slightly
+higher and frame p95 slightly lower. Native observed/hidden/reobserved torch
+checks on offline 1.6 and Steam 1.7 verify actual uploaded lighting mesh changes,
+exact restoration and unchanged gameplay glow, with screenshots inspected.
+The full build passes 416 tests plus seven artifact tests with no warnings/errors.
+
+Detailed hashes, fixture identities, rejected probe attempts and evidence are
+in the later VALIDATION.md section. The old performance failure remains part of
+the history; this new non-combat result does not renew broad DLC/optional-mod,
+combat-heavy, spike or 1.7 throughput acceptance. All test games are stopped and
+temporary preferences/loadout/GABS changes are restored.
 
 ## Second review, 13 October 2026 (commit 6207fc9)
 

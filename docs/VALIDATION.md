@@ -8195,3 +8195,103 @@ The task-owned copy of the vanilla save is removed from the ordinary fixture
 folder and retained in the isolated control profile. GABS configuration and
 Andreas's personal mod list are unchanged. No source publication or player
 archive was sent.
+
+## Focused lighting optimization and wide throughput, 2026-10-13
+
+Starting gameplay DLL: 9a490e5b8a043a519653e4fc5ec360d220174e7f109f64a2fa028fb0072e22d4.
+The original/candidate wide spot check on TotalFogReview2CoreStress350 is
+rejected: the original uses multiplier 15 throughout, while the candidate has
+827 normal-rate ticks and 549 fourth-speed ticks. A separate diagnostic trace
+identifies native JobGiver_AIFightEnemy.UpdateEnemyTarget requesting slowdown
+at tick 552 and Verb.TryStartCastOn at 634. Its gas regeneration is only
+22.330 ms across 5,176 calls; lighting regeneration is 200.178 ms across 5,177
+calls. These inclusive, instrumented, restricted-clock timings are diagnostic,
+not performance acceptance. Evidence: comparison-perf-before-wide-350-20261013.json
+and artifacts/performance-20261013/profile-before-wide.json.
+
+The derived TotalFogPerfPeace350 fixture is saved by the original baseline
+binary after removing the one spawned hostile Mech_CentipedeBlaster7409.
+It retains 408 pawns, including the moving colony and wild animals, on the same
+350x350 map. SHA-256: 9fff65bb31b200966b48a421c940d2dc9a38ed2359262e290eb2c7e0c45772d5.
+The original combat fixture remains unchanged, SHA-256
+d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3.
+An initial derived save written by Total Fog cannot be read by the original's
+older class resolver. That rejected attempt, including abstract MapComponent
+loading errors, remains under runtime-perf-peace-before-wide-350-20261013-*.
+It is replaced with the original-authored fixture, not accepted or pooled.
+A failed dry-run call to the Zombieland cleanup companion with Zombieland
+inactive is also a diagnostic dependency error, not a Total Fog gameplay defect.
+The standalone native preparation helper avoids that dependency.
+
+The valid pre-optimization peaceful spot check, on 9a490e5b, measures 490.539
+versus 505.187 TPS, a 2.90% deficit. Both use native multiplier 15 throughout.
+This is one pair, not repeated floor acceptance. Evidence:
+comparison-perf-peace-base-wide-350-20261013.json and its reports/logs.
+
+The optimization retains per-section pending flags and adds GroundGlow only
+for cells whose native VisualGlowAt contribution has a nonzero color or alpha
+channel. Native section geometry samples individual cell glow; replacing zero
+with zero cannot alter its shared vertices. Affected neighboring sections still
+receive the union of flags. Fog and gas remain dirty on every sight transition;
+native light/roof producers retain their own invalidation. No gameplay lighting,
+coverage scheduling, deferred work, cache or persisted field changes.
+Native decompiler evidence: artifacts/performance-20261013/glow-calculation.json,
+glow-grid-array.json and mesh-flags-type.json. Five source-linked pure controls
+exercise zero and each independently nonzero channel.
+
+Final gameplay SHA-256:
+7b783fc791a30a99b01e3e7d380337ae1055780e6ba065d955ca9a3415047a02.
+The six-process native offline 1.6.4871 rev581 comparison alternates three
+original/candidate pairs on the unchanged peaceful fixture, Core, released
+Workshop Harmony, RimBridgeServer and the measured mod. Both use 4592x2646,
+Metal, native vSync, target 60 FPS, rootSize 100, 71,050 visible cells and 266
+pawn roots in view. All measured ticks use native multiplier 15; forced speed,
+private UltraSpeedBoost, DPA and optional work instrumentation are off.
+
+| Metric | Original median | Total Fog median |
+|---|---:|---:|
+| TPS | 538.253 | 541.870 |
+| Whole-tick elapsed ms | 1.118302 | 1.126185 |
+| Frame interval p95 ms | 68.4832 | 68.1176 |
+
+Individual TPS pairs in measurement order: 534.739/552.322,
+547.257/541.870 and 538.253/507.500, original/candidate. The configured median
+floor passes with a 0.67% lead. This small margin and the slower candidate pairs
+support bounded parity, not a convincing general speed advantage or a precise
+before/after percentage. Evidence:
+comparison-perf-lighting-wide-350-20261013.json and all six runtime reports/logs.
+The report records exact gameplay bytes. A later companion-only mesh probe
+build leaves that gameplay hash unchanged.
+
+The separate five-second optimized instrumented profile has multiplier 15
+throughout and no slowdown requests. It records 4,705 fog/gas regenerations but
+only 148 lighting regenerations, 5.845 ms inclusive. This confirms the narrower
+work path; the differing earlier fixture/clock forbids treating the two profile
+totals as a precise speedup. Evidence: profile-after-wide.json.
+
+Native observed/hidden/reobserved controls use a separate fresh Core-only 1.6
+quicktest save, TotalFogLightingCore16. On offline 1.6 and Steam 1.7.4976 rev1043,
+the same unmodified gameplay DLL passes all three rows: native glow stays
+RGBA(207,153,94,0), visual glow becomes zero while hidden, and actual uploaded
+613-vertex lighting colors change and restore exactly. Screenshots are inspected
+on both engines. The fixture crosses a section edge. Corpse, blueprint and
+known-door work/selection controls also pass in those rows. The stress fixture
+has no suitable unseen 8x6 staging rectangle near the probe's origin; that failed
+probe is retained in lighting16.json and is not acceptance evidence.
+
+Final companion SHA-256:
+ca4fe032699c4bb77cbe26194c456875e68d634751f6dab68c48476fc09e3368.
+Evidence: artifacts/performance-20261013/lighting-core16.json, lighting17.json,
+identity17.json, their screenshots and lighting16/17-Player.log. Actual 1.7
+configuration confirms SteamWorkshop/2009463077 Harmony immediately above
+RimBridgeServer, Core and Total Fog. Neither native log contains runtime errors
+or Total Fog patch failures. RimBridgeServer retains its 1.7 metadata warning.
+The Release build passes 416 C# and seven artifact tests with no warnings/errors;
+formatting and exact tracked binary receipt checks pass.
+
+All task-owned games are stopped. Temporary main-profile preferences and mod
+list are restored byte-for-byte, and the original GABS entry is restored while
+preserving other entries. Candidate main/companion pairs are installed for both
+engines through the guarded workflow. No player archive, public release or
+source push is made. The comparison proves Core-only non-combat wide throughput,
+not broad DLC/optional-mod, spike, long-session or 1.7 throughput acceptance.

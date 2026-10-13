@@ -71,7 +71,7 @@
     "Source/TotalFog/Graphic_HearingCue.cs": "d790c0e0079bdc09e5cef4b7f1c30ad2dd82b5a3907a639f670c83f2dae4ff50",
     "Source/TotalFog/HarmonyPatches.cs": "7c874fe75b2b471bef5db572f2b0826e909ded77941c8278d5c218793ea5049d",
     "Source/TotalFog/JobDriver_MonitorVision.cs": "3c3d0dbda9a553fa1475125741355da521b50a17d272fe4d77317eae834b11f2",
-    "Source/TotalFog/MapVisibility.cs": "5034887b5f7ff6195046d3b52b9c4a7ee996bee9c57ea3639855841374445b07",
+    "Source/TotalFog/MapVisibility.cs": "a5447abf22b48a0231109e279d3ea795e6220abeb245b6d7737ff13f01d4c69f",
     "Source/TotalFog/Mote_HearingCue.cs": "725752f083f2c05e2321c75bc935c9517c29df9a0bf8542310deb9af1e012b0e",
     "Source/TotalFog/Notifications/EntityDiscovery.cs": "05889f81142944d22fed6ead269c58d3c0dd8b7bc99758266028cdedadea482b",
     "Source/TotalFog/Notifications/NotificationHooks.cs": "d6dc8d7c157251a45454a3612a1896bb82b97c67de16dad784081951de1d9f11",
@@ -91,6 +91,7 @@
     "Source/TotalFog/Presentation/DynamicVisibility.cs": "996bbbfbd78986270ec3c4bf11e2560e1b23b9b4ee1972efd4619e9dce9ac259",
     "Source/TotalFog/Presentation/ExplosionVisibility.cs": "790dc8f627ca698caf850408530ab0a5b4c9ac03dfb437f012303aed0d523008",
     "Source/TotalFog/Presentation/FleckVisibility.cs": "b99a1eeed4551734df53b9896818778bf3ba26a2ba019a1aa9b9de9a151d6590",
+    "Source/TotalFog/Presentation/FogMeshInvalidation.cs": "cdfc269a703ec94039b1942a50c2b2ca918acee08c8242cd3438185b77b9d5f4",
     "Source/TotalFog/Presentation/GasVisibility.Patches.cs": "3d72fd7ee8b6d43c79d4783c43ab1bdd434f1240bcb69d4092b3e43a05c7ce03",
     "Source/TotalFog/Presentation/GasVisibility.cs": "352f6d12669280b3a937f900800f489e8fb52c432842429284ff0c82de4fbc06",
     "Source/TotalFog/Presentation/InterfaceVisibility.Patches.cs": "8029c6cd836ce428af95dad8c557a7c1d28004d5cc30e50a518eb7d641fd343d",
@@ -124,5 +125,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "9a490e5b8a043a519653e4fc5ec360d220174e7f109f64a2fa028fb0072e22d4"
+  "dllSha256": "7b783fc791a30a99b01e3e7d380337ae1055780e6ba065d955ca9a3415047a02"
 }
