@@ -8,6 +8,54 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Accepted performance baseline, 2026-10-13
+
+Andreas accepts the clear-column build as Total Fog's performance baseline and
+closes the optimisation topic. This decision supersedes earlier requirements to
+match or beat the inherited mod. Correct fog behaviour is part of the baseline;
+skipping required visibility or targeting work is not an acceptable optimisation.
+The inherited mod remains historical evidence, not a release performance gate.
+
+The immutable baseline is commit
+`07d128b0f98350b9f8936b3c09b36df8d7907106`, with gameplay SHA-256
+`fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576`
+and MVID `ded3f1aa-2b65-47bf-b061-69fa996f8a17`. Its matching DLL and build
+receipt are tracked in Current/Assemblies. It passes 422 C# tests, seven artifact
+checks and the bounded native visibility controls on both engines documented
+below. These are accepted baseline measurements, not universal speed promises:
+
+| Baseline workload | Median TPS | Mean tick CPU, ms | Frame p95, ms |
+|---|---:|---:|---:|
+| Core-only offline 1.6, peaceful 350x350, 408 pawns | 565.823 | 1.10897 | 67.570 |
+| Steam 1.7, 118 entries, 350x350 stress map, 410 pawns | 843.696 | 0.75660 | 43.973 |
+| Steam 1.7, 118 entries, 350x350 colony, 36 pawns | 871.637 | 0.57478 | 26.075 |
+
+The exact fixture hashes, camera, resolution, settings, native speed, process
+ordering, warmup and retained outlier are in the next section and its linked
+local reports. Accepted kernel medians are 77.923 ms for 5,000 open-terrain casts
+and 103.894 ms with 3% blockers on the recorded .NET 10 ARM64 workload. Kernel
+and whole-game measurements serve different purposes and are not interchangeable.
+
+Future performance work starts from this Total Fog commit, or a later explicitly
+accepted replacement. Use a matching clean checkout with
+`TOTALFOG_COMPARISON_BASELINE_ROOT` for native comparisons and
+`TOTALFOG_BENCHMARK_REF` for kernel comparisons. Preserve the compared DLL/receipt
+and use matching fixtures, fog behaviour, settings, camera, engine and hardware.
+Read whole-tick cost and frame tails alongside TPS. A strict comparator's small
+negative median is diagnostic evidence, not by itself a reason to reject a
+candidate or resume optimisation. Reopen this topic only for a repeatable,
+material player slowdown or a demonstrated performance defect. Use a small,
+affected workload sample and retain failures rather than chase noise.
+
+The previous frame-tail limits and unmeasured combinations remain evidence
+limits, not a standing performance work queue. Gameplay correctness, stability,
+compatibility and exact-byte native/package checks remain independent
+requirements. Historical tools still encode the old original-mod floor;
+adjust that prerequisite when a delivery workflow next needs it, preserving
+its native safety and artifact checks. Do not rerun the upstream campaign merely
+to satisfy the obsolete prerequisite. No gameplay or binary changes accompany
+this acceptance decision.
+
 ## Clear-column sight casting, 2026-10-13
 
 The accepted change extends the existing long-clear-row shortcut to vertical

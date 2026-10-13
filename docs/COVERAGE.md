@@ -23,7 +23,9 @@ fresh three-pair regression comparison against the previous Total Fog on 1.6
 and staged visibility controls on both engines. Three paired wide samples on
 the 118-entry 1.7 loadout show stress-map parity and a small colony tick-cost
 improvement, with one worse frame-tail sample retained. These checks do not
-renew the upstream-original floor or full DLC/optional-mod feature gates. Earlier GitHub
+renew full DLC/optional-mod feature gates. Andreas accepted commit 07d128b as
+the new performance baseline and closed the optimisation topic on 13 October.
+The upstream-original speed floor is retired. Earlier GitHub
 source checks passed for their recorded commits, not this local review batch.
 
 | Area | Current evidence and boundary |
@@ -33,7 +35,7 @@ source checks passed for their recorded commits, not this local review batch.
 | Other 1.7 checks | Earlier DLL 9a490e5b passes all 14 player-safety controls on Steam 1.7.4976 rev1043 with released Workshop Harmony 3.0.0.0-rc.2. A vanilla 1.7 colony also loads with Total Fog added and advances 177 normal-speed ticks. No native errors or Total Fog patch warnings occur at that checkpoint. The previously claimed Steam-Harmony blocker was an old local-copy selection; ordinary profiles now pin Workshop Harmony. Earlier tower-order/presentation controls retain their recorded hashes; broad DLC/optional-mod renewal remains open. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
 | CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls on reassessment DLL b6cd058d. The later CE other-player-faction correction passes source-linked tests; combined native renewal is open. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
-| Performance | Current DLL fcde178b reduces pure sight-casting time by about 28% on open terrain and 5% with sparse blockers, with unchanged geometry and zero allocations. A Core-only 1.6 wide three-pair regression check against previous Total Fog passes at 565.823 vs 553.250 median TPS, about 2.27% higher. On the 118-entry 1.7 loadout, matched wide stress samples measure 843.696 vs 845.721 TPS, while colony samples measure 871.637 vs 866.383 TPS with 2.66% lower mean tick CPU. One candidate stress sample has a worse frame tail; general frame/spike improvement is unproved. Every measured tick uses native multiplier 15 without forced speed or private boost. The earlier upstream-original floor belongs to 7b783fc7; renewal on current bytes is blocked by incompatible developer instrumentation, not a demonstrated player defect. Broad DLC feature, combat-heavy, controlled-spike and long-session acceptance remain open. |
+| Performance | Accepted and closed on commit 07d128b, DLL fcde178b. This build is the future Total Fog baseline, including correct fog behaviour. Recorded baseline medians are 565.823 TPS on the Core-only 1.6 wide map, 843.696 TPS on the 118-entry 1.7 stress map and 871.637 TPS on its colony. The retained stress outlier limits general frame/spike claims. Reopen only for a repeatable material player slowdown or a demonstrated performance defect. The original-mod speed floor is retired; unmeasured combinations remain evidence limits rather than an optimisation queue. See VALIDATION.md's accepted baseline for exact identity and matching conditions. |
 | Large mod list on 1.7 | 118 actually loaded entries, including all five DLCs and 108 Workshop mods, start and save/load/play on unchanged 7b783fc7 gameplay bytes. Replace Stuff and Dubs Mint Menus were excluded after reproducible startup failures. The developer full-colony fixture retains bounded placement/minified-item errors and a repeated unique-weapon colour reload error. DPA produces no timing rows; native/focused profiling evidence and the unresolved profiler-session culling exception are retained in VALIDATION.md. This is a reusable diagnostic loadout, not feature-by-feature compatibility acceptance. |
 | Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match this review source; expanded Linux/Windows CI is configured but has not run remotely for this batch. |
 
@@ -52,7 +54,7 @@ remain byte-identical to upstream. Native evidence remains version-specific.
 
 Earlier experimental native 1.7 checks extend beyond startup to tower orders, blueprint
 presentation, debug fog commands, lookout facing and paused fog rendering.
-Broader DLC behavior, save/lifecycle cases, performance, Zombieland, CE and
+Broader DLC behavior, save/lifecycle cases, Zombieland, CE and
 Multiplayer acceptance on 1.7 remain open. All five DLCs were loaded in the
 focused checks; that does not establish every DLC interaction.
 
@@ -310,10 +312,11 @@ Multiplayer. Its requester is the old game assembly, but the exact caller and
 player-only map-loading behavior remain unknown. Do not add a Total Fog resolver
 workaround or file an upstream issue from incomplete ownership evidence.
 
-Keep the wide-view sample small, as requested. The earlier CE wide spot check
-was slower and the later Zombieland wide sample had worse frame tails; neither
-is resolved by a normal-view TPS pass. Use bounded follow-up evidence rather
-than reopening every unchanged variant. Before a new tester ZIP, repeat affected
+Performance optimisation is closed on the accepted 07d128b baseline. Earlier CE
+and Zombieland wide samples retain their measured limits; they are not a standing
+request for more optimisation. Reopen only for a repeatable material player
+slowdown or a demonstrated performance defect, using a small affected sample.
+Before a new tester ZIP, repeat affected
 native/pixel/package gates against one frozen candidate. Source publication does
 not supersede the already delivered preliminary pair.
 
@@ -331,7 +334,7 @@ not supersede the already delivered preliminary pair.
 | Overhaul mods | Exact installed 1.6 versions of Combat Extended, Vehicle Framework, Zombieland and relevant Vanilla Expanded content. Inspect overrides and direct drawing paths, then test separate and combined supported loadouts. |
 | Zetrith's Multiplayer | **Unverified for Total Fog.** Establish deterministic simulation, synchronized gameplay settings/actions, fog refresh on both clients, combat targeting, save/rejoin and faction visibility. The reported upstream spreadsheet result does not close this target. See the evidence and acceptance checklist below. |
 | Fog of War parity | Compare original source/settings and gameplay responsibilities. Preserve useful exploration, vision sources, targeting, notification/audio options and integrations while correcting leaks. |
-| Performance | The delivered 1.6 pair passes its bounded single-player TPS floor. Wide frame tails, native allocation/memory evidence, controlled spikes, combat-heavy/many-mod loadouts, Windows and long sessions remain open. Kernel timings alone do not establish acceptance. |
+| Performance | Accepted and closed on 07d128b. Future regressions compare correct Total Fog behaviour against that build. Historical and unmeasured wide/combat/platform cases retain their limits without creating more optimisation tasks. Gameplay, compatibility and artifact checks remain separate. |
 | Settings | Four tabs, documented defaults, reset, live changes and persistence have source/pure-test evidence and bounded native controls. Broader setting combinations and layouts remain open. Privacy options explain intentional information cues. |
 | Translations | Current keyed/watchtower translations cover German, French, Simplified Chinese and Korean, with XML/placeholder checks but no native-speaker acceptance. Broader coverage still targets Achtung's language set: English, Simplified/Traditional Chinese, Dutch, French, German, Polish, Russian, Spanish, Latin American Spanish, Swedish and Turkish. |
 | Persistence and platform | Core-only and DLC loadouts, older saves, multiple maps, map removal/respawn, large-colony soak, exact deployed bytes and Windows render-error reproduction or confirmation. |

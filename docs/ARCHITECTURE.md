@@ -1,10 +1,14 @@
 # Total Fog architecture
 
-Performance takes priority over optional features. The inherited mod is the
-minimum runtime performance baseline; improvements must be measured on matching
-saves, settings, camera views and hardware. Kernel timings alone cannot establish
-whole-game performance. Do not add a feature that makes representative gameplay
-slower than the original mod.
+Performance takes priority over optional features, while required fog correctness
+is preserved. Andreas accepted Total Fog commit 07d128b as the performance
+baseline on 13 October 2026 and closed the optimisation topic. Future checks
+compare against that build on matching saves, settings, camera views, engine
+and hardware. Kernel timings alone cannot establish whole-game performance.
+The inherited mod is historical evidence, not a minimum speed requirement.
+Reopen performance work for a repeatable material player slowdown or a demonstrated
+defect; do not trade visibility correctness for a better timing number. See the
+[accepted baseline](VALIDATION.md#accepted-performance-baseline-2026-10-13).
 
 The replacement [watchtower](WATCHTOWER.md#production-checkpoint) is an implemented
 3x3 player building with ladder jobs, elevated sight and combat rules. Its pawn

@@ -148,16 +148,19 @@ for three native samples on the currently installed binary. Each sample starts
 in a fresh game process, reloads the unchanged fixture, verifies window focus,
 and preserves its Player.log. Leave other desktop apps idle during timing.
 Use `./scripts/mod runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]`
-to build once and alternate three original/candidate pairs in fresh processes.
+to build once and alternate three baseline/candidate pairs in fresh processes.
 Set `TOTALFOG_COMPARISON_BASELINE_ROOT` to a preserved clean checkout when
-comparing against a previous Total Fog build instead of upstream. That checkout
+comparing against the accepted Total Fog baseline. That checkout
 must contain its matching tracked DLL and receipt. The report labels it
-`previous-total-fog`; its floor is a regression check and cannot establish the
-upstream performance floor. Both variants still use the same companion tools.
-Set `TOTALFOG_BENCHMARK_REF` to a Git commit when comparing the pure caster
-with a specific prior version; the default retains the historical reference.
+`previous-total-fog`. Without this variable the command retains its historical
+upstream-original comparison; do not use that default for routine acceptance.
+Both variants still use the same companion tools. Set `TOTALFOG_BENCHMARK_REF`
+to the accepted baseline commit for pure caster comparisons; its default also
+retains the historical reference.
 It checks matching fixture/settings/rendering evidence and exact DLL bytes,
-fails if candidate median TPS is lower, and leaves the candidate deployed.
+reports failure if candidate median TPS is lower, and leaves the candidate
+deployed. That strict result is diagnostic; assess repeatability and material
+player impact under the accepted policy below rather than chasing small deltas.
 Ordinary Ultrafast comparisons also require native multiplier 15 throughout
 for acceptance. Retain native normal-speed restrictions as failed evidence;
 do not mistake an Ultrafast selection for unrestricted fourth-speed playback.
@@ -209,8 +212,9 @@ root size 100 through the session-only bridge zoom extension, records actual
 visible map cells and pawn root cells in view, and restores the prior camera
 and extension. Wide contamination input is centered in the map. Paused wide
 screenshots are captured before timing. One/two-pair results are spot checks:
-they cannot satisfy the three-pair feedback performance gate. Keep the default
-three pairs for the existing performance-floor acceptance.
+they cannot satisfy the historical three-pair feedback performance gate. Use
+three pairs when a repeatable regression needs confirmation, not for routine
+renewal of already accepted performance.
 Verify gameplay screenshots and semantic evidence with
 `./scripts/mod verify-rendered artifacts/<evidence-folder>`. This uses Pillow
 from artifacts/pixel-analysis-env when present, otherwise the current Python.
@@ -391,8 +395,19 @@ versions. Public source publication is separate from a mod release. There is no
 Steam release workflow or Workshop item yet; PublishedFileId 0 is the unpublished
 sentinel.
 
-Performance has priority over optional features. The original mod is the minimum
-runtime baseline; aim to improve it with matching save/settings/hardware evidence.
+Performance has priority over optional features, with required fog correctness
+preserved. Andreas accepted commit 07d128b0f98350b9f8936b3c09b36df8d7907106
+as the new baseline on 13 October 2026 and closed this optimisation topic.
+Its gameplay SHA-256 is fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576.
+Use docs/VALIDATION.md's accepted-baseline section for fixtures and measurements.
+The inherited mod is historical evidence and is no longer a release speed floor.
+Do not pursue more gains or repeat broad timing campaigns without a repeatable
+material player slowdown or a demonstrated performance defect. Future changes
+must retain fog correctness; small noisy timing differences alone do not reopen
+this topic. Adapt any historical delivery prerequisite that insists on the
+original-mod floor when that workflow next needs it, while preserving native
+gameplay/pixel checks and exact artifact identities. Performance acceptance does
+not complete separate stability, feature or compatibility requirements.
 Exact visual-memory snapshots are retired. Do not reintroduce GPU capture,
 material interception or drawing archives into gameplay to support that feature.
 
@@ -453,8 +468,7 @@ supplied; its Shoot, flight, impact and spawn remain native. Run the bomber in
 ordinary playback: Zombieland's scheduler/explosion queue is outside single-tick
 stepping. This does not establish autonomous spitter or tanky route selection.
 These suites do not complete other combat producers,
-hauling/autonomous raids, optional mod or original-baseline performance
-acceptance; track these in WATCHTOWER.md
+hauling/autonomous raids or optional-mod acceptance; track these in WATCHTOWER.md
 and VALIDATION.md. Never substitute the old test-only projection for production
 rendering or change native projectile ExactPosition to fit the artwork.
 

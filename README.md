@@ -389,15 +389,23 @@ installed game's `Mods` folder.
 | `./scripts/mod baseline` | Installs the original mod for comparison tests |
 | `./scripts/mod benchmark` | Runs the sight-engine speed comparison |
 | `./scripts/mod runtime-benchmark <label> <save> [speed]` | Measures three fresh game processes on the named save; results go to `artifacts/` |
-| `./scripts/mod runtime-compare <label> <save> [speed]` | Alternates three original/candidate pairs and checks the native performance floor |
+| `./scripts/mod runtime-compare <label> <save> [speed]` | Alternates three baseline/candidate pairs; set `TOTALFOG_COMPARISON_BASELINE_ROOT` to the accepted Total Fog checkout |
 | `./scripts/mod feedback-verify <comparison label>` | Repeats the paired native feedback gates on the measured deployed bytes |
 | `./scripts/mod feedback-package` | Verifies the existing paired gates and creates separate preliminary Total Fog and Zombieland ZIPs |
 | `./scripts/mod source-publish` | Pushes committed source and verifies GitHub; does not publish a player ZIP or update Steam |
 
 For a short wide-zoom comparison, prefix `runtime-compare` with
 `TOTALFOG_WIDE_VIEW=1 TOTALFOG_COMPARISON_PAIRS=1`. It records the actual visible
-map area at root size 100. This is a spot check; the normal performance gate
-still uses three pairs.
+map area at root size 100. This is a spot check; use three pairs when a suspected
+regression needs confirmation.
+
+The accepted performance baseline is Total Fog commit `07d128b`. The current
+optimisation work is complete. Future comparisons preserve correct fog behaviour
+and use that build, rather than requiring the same speed as the original mod.
+Set `TOTALFOG_BENCHMARK_REF=07d128b` for kernel comparisons. The comparison tools
+retain historical defaults when no baseline override is provided; those defaults
+are not release requirements. See the
+[baseline and measurement limits](docs/VALIDATION.md#accepted-performance-baseline-2026-10-13).
 
 Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 load the active
 DLL, definitions and assets from `Current/`; the older version folders stay
