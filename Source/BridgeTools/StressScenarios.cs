@@ -16,6 +16,41 @@ public sealed class StressScenarios
     private static int requestedSize;
 
     [Tool(
+        "totalfog/prepare_peaceful_comparison",
+        Description = "On a paused isolated stress map, remove spawned pawns hostile to the player so combat cannot cap a fourth-speed performance comparison. Returns removed identities and remaining population. Save under a new name; retain the combat fixture unchanged."
+    )]
+    public static Task<object> PreparePeacefulComparison(
+        IRimBridgeContext ctx,
+        CancellationToken cancellationToken
+    ) =>
+        ctx.MainThread.InvokeAsync<object>(
+            () =>
+            {
+                var map = Find.CurrentMap;
+                if (map == null || !Find.TickManager.Paused || map.Size.x != 350)
+                    throw new InvalidOperationException(
+                        "Use a paused isolated 350-cell stress map."
+                    );
+                var enemies = map
+                    .mapPawns.AllPawnsSpawned.Where(pawn => pawn.HostileTo(Faction.OfPlayer))
+                    .ToArray();
+                var removed = enemies
+                    .Select(pawn => new { pawn.ThingID, kind = pawn.kindDef.defName })
+                    .ToArray();
+                foreach (var pawn in enemies)
+                    pawn.Destroy();
+                return new
+                {
+                    success = true,
+                    removed,
+                    pawns = map.mapPawns.AllPawnsSpawned.Count,
+                    tick = Find.TickManager.TicksGame,
+                };
+            },
+            cancellationToken
+        );
+
+    [Tool(
         "totalfog/create_stress_map",
         Description = "From the main menu, generate a native 350x350 test map, add 50 moving colonists and 250 ordinary wild animals, then pause. Save this isolated fixture once for unchanged original/candidate comparisons. Works with either binary; diagnostic DLL only."
     )]

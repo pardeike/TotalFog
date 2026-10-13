@@ -1035,8 +1035,15 @@ public sealed class PerformanceScenarios
                             var target in new[]
                             {
                                 ("Verse.Map", "MapUpdate"),
+                                ("Verse.MapDrawer", "MapMeshDrawerUpdate_First"),
                                 ("Verse.MapDrawer", "DrawMapMesh"),
+                                ("Verse.SectionLayer_Gas", "Regenerate"),
+                                ("Verse.SectionLayer_LightingOverlay", "Regenerate"),
                                 ("Verse.DynamicDrawManager", "DrawDynamicThings"),
+                                (
+                                    "TotalFog.Presentation.DynamicVisibility",
+                                    "ComputeCulledThings_Postfix"
+                                ),
                                 ("TotalFog.CompFog", "CompTick"),
                                 ("TotalFog.CompSightSource", "UpdateFoV"),
                                 ("TotalFog.CompSightSource", "CalcPawnSightRange"),

@@ -156,6 +156,14 @@ for acceptance. Retain native normal-speed restrictions as failed evidence;
 do not mistake an Ultrafast selection for unrestricted fourth-speed playback.
 Explicit forced-speed comparisons remain diagnostic and cannot satisfy the
 ordinary fourth-speed floor.
+For a stress fixture that reaches combat, use `totalfog/runtime_performance`
+with `traceSlowdowns=true` to identify the native slowdown caller before
+interpreting TPS. `profileFog=true` also measures native mesh regeneration and
+the dynamic visibility adapter. On a paused original-baseline stress map,
+`totalfog/prepare_peaceful_comparison` removes spawned hostile pawns. Save the
+result under a new name using the original binary so both mods can read it;
+retain the combat fixture unchanged. The derived fixture proves ordinary
+non-combat throughput only, not combat behavior. Declare its population/hash.
 The runner also verifies the actual camera rectangle and, when present,
 Zombieland's DLL bytes, scalar settings and configuration-file hashes. Camera
 zoom and public engine version/MVID must also match. Zombie population endpoints
