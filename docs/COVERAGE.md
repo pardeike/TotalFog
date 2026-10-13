@@ -25,10 +25,12 @@ the 118-entry 1.7 loadout show stress-map parity and a small colony tick-cost
 improvement, with one worse frame-tail sample retained. These checks do not
 renew full DLC/optional-mod feature gates. Andreas accepted commit 07d128b as
 the new performance baseline and closed the optimisation topic on 13 October.
-The upstream-original speed floor is retired. Private feedback verification now retains that accepted baseline and requires fresh exact-binary native correctness gates rather than a new upstream speed comparison. Earlier GitHub
-source checks passed for their recorded commits. The latest verified pre-task
-Linux/Windows CI run is [38412811156](https://github.com/pardeike/TotalFog/actions/runs/38412811156)
-at `06d0e9a`; local changes still need their own remote result after publication.
+The upstream-original speed floor is retired. Private feedback verification now
+retains that accepted baseline and requires fresh exact-binary native correctness
+gates rather than a new upstream speed comparison. Source checks apply to their
+recorded commits. The work/search batch at `0f1a74f` passes
+[Linux and Windows CI](https://github.com/pardeike/TotalFog/actions/runs/38430782804),
+including tracked-binary validation, formatting, pure tests and clean builds.
 
 | Area | Current evidence and boundary |
 |---|---|
