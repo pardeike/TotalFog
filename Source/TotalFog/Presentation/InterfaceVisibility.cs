@@ -11,15 +11,15 @@ internal static partial class InterfaceVisibility
     // A visible proxy must not grant access to its unobserved target's live UI.
     private static bool CanRead(Thing thing, IntVec3? renderedCell = null)
     {
-        if (!ThingVisibility.IsVisible(thing, allowMemory: false, renderedCell: renderedCell))
+        if (!ThingVisibility.CanInspect(thing, renderedCell))
             return false;
         var target = thing?.TryGetComp<CompSelectProxy>()?.thingToSelect;
-        return target == null || ThingVisibility.IsVisible(target, allowMemory: false);
+        return target == null || ThingVisibility.CanInspect(target);
     }
 
     [HarmonyPriority(Priority.Last)]
     public static bool PawnLabelPrefix(Pawn pawn) =>
-        ThingVisibility.IsVisible(pawn, allowMemory: false, renderedCell: pawn?.PositionHeld);
+        ThingVisibility.CanInspect(pawn, pawn?.PositionHeld);
 
     public static void DrawOverlay(Thing thing)
     {

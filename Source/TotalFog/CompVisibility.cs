@@ -99,10 +99,7 @@ public class CompVisibility : FogSubcomponent
             visible = true;
         // Remembered geometry must not keep a live inspector open. Coverage
         // transitions call this immediately; periodic checks cover other changes.
-        if (
-            Find.Selector.IsSelected(parent)
-            && !ThingVisibility.IsVisible(parent, allowMemory: false)
-        )
+        if (Find.Selector.IsSelected(parent) && !ThingVisibility.CanInspect(parent))
             Find.Selector.Deselect(parent);
         // Before initialization, permissive rendering protects engine setup but
         // does not mean the player has observed every spawned object.

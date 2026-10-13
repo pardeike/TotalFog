@@ -48,7 +48,8 @@ local testing do not indicate that a new player build has been released.
 - Keep terrain, fertility, roof overlays, and placement rules consistent with discovery and colony visibility settings.
 - Keep newly spawned objects hidden in explored cells until someone observes them.
 - Delay offscreen events even when their static target has been seen before.
-- Require current sight for live labels, tooltips, overlays and selection, including selection proxies.
+- Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision, while keeping their hidden effects and neighbouring things behind fog.
+- Require current sight for other live labels, tooltips, overlays and selection, including selection proxies.
 - Close an object's live inspection when sight is lost.
 - Hide live mouseover and environment details outside current sight, and limit beauty sampling to visible cells.
 - Keep unobserved owned buildings and projectiles behind fog.

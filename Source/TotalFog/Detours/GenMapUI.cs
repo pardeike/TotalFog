@@ -9,6 +9,6 @@ public static class GenMapUI
     [HarmonyPriority(Priority.Last)]
     public static bool DrawThingLabel_Prefix(Thing thing)
     {
-        return Presentation.ThingVisibility.IsVisible(thing, allowMemory: false);
+        return Presentation.ThingVisibility.CanInspect(thing);
     }
 }

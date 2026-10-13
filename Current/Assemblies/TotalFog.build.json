@@ -29,7 +29,7 @@
     "Source/TotalFog/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
     "Source/TotalFog/CompSightSource.cs": "b2f29383ac27b8b42d437c72b28d487422508d4d92ea0d9b5ea29788de7fbc61",
     "Source/TotalFog/CompTreeOcclusion.cs": "a3996684c086232e2e3b202ee25155e7fb94f10c3fe68cb90de054998935d603",
-    "Source/TotalFog/CompVisibility.cs": "0fb8eea4e56ae74d1dc03518f41d4f3cd4c420aa215bf9d7b6f20b17c0ba6695",
+    "Source/TotalFog/CompVisibility.cs": "2fcc8cdf4c14287eb1784572898d8726f92db71a54c4832f08e2f1655915378d",
     "Source/TotalFog/CompWallOcclusion.cs": "e16e73826ddd696f418c0374708b9b617cc10080e2f907c5cf0177fd075a69f2",
     "Source/TotalFog/Compatibility/AnimalVision.cs": "e59f58efb05595fc0afa7ab4bcc905f719e12c836fed0b4b574a475249be7c76",
     "Source/TotalFog/Compatibility/BubbleIntegration.cs": "954e810cf9b70a7cdd049fd233096d7f52937632c0c911ab85ef1041af9eb87b",
@@ -51,7 +51,7 @@
     "Source/TotalFog/Detours/DesignatorPrefix.cs": "bfb4d3c8975dda7ed5881de790272ba0da695a95742861dc61a13e2c7c161361",
     "Source/TotalFog/Detours/DoorOrders.cs": "781c4efb43d0234e3beacc8da7358d1a50071baa6d4698b0a70336232ea06370",
     "Source/TotalFog/Detours/EnvironmentStatsDrawer.cs": "cdb428e1c2ae459ee92b8a9bb13ad19c90776e5a7d8d3e067198b34cc362d316",
-    "Source/TotalFog/Detours/GenMapUI.cs": "325217cff538628705798ecf523ce21dd29f8d1fe1a7e2d6c807ed33452e692a",
+    "Source/TotalFog/Detours/GenMapUI.cs": "123e72801eb9b01333fdb7a639ba172be8371f447fd693f219d918b8ebdba0b7",
     "Source/TotalFog/Detours/GenView.cs": "f8fa2cd97578636794cac32c304dd2a0a9c220b129070da6d6e0bd91c380e57b",
     "Source/TotalFog/Detours/HaulAIUtility.cs": "24d90a342de18db68ed21eb1c9a6ce01d71cdc37da67ab759fcd69b00303b2ed",
     "Source/TotalFog/Detours/MainTabWindowWildlife.cs": "5210f67099afe7b9d88e0dce634fcdd503b76a623a8de842ca62fe52b3394ea4",
@@ -61,7 +61,7 @@
     "Source/TotalFog/Detours/ReservationUtility.cs": "4da73b64fe1c563026e47b3a8b38c27777388e10d9a2fbfb52fd7d7ee8a98e4c",
     "Source/TotalFog/Detours/SectionLayerThingsGeneral.cs": "8c1a8646c415f837d4cf8d56776755f2061555dfd770600765c6af343fa2d9e2",
     "Source/TotalFog/Detours/SectionLayerThingsPowerGrid.cs": "3e5e6fbdb4bbd292fbdb674ff8b6707c76ff63393811ab84cc94eff5f7ef8ebb",
-    "Source/TotalFog/Detours/Selector.cs": "cd8afaf95f34894a2d9cfb10aaffb1971224a8cbe9d84d5d359641cb0a4c9245",
+    "Source/TotalFog/Detours/Selector.cs": "0fc875a7c25faa3cbf7ae3a3d1742c385f22c1b1e47733c0fa0643c3ee3ff9a2",
     "Source/TotalFog/Detours/Verb.cs": "1f1e36386746d0ab7c703b343da1241d0dc617119b67a8283d12449ecbc22d11",
     "Source/TotalFog/FogDefOf.cs": "4de079616c59dabcde78efd3e0b58b074e012664197dd8fd1a98ead832240190",
     "Source/TotalFog/FogDefaultsDef.cs": "bfbf6d2394c7c95bce4c8f431d0d6d0407ec3fbf9bd6805458b48daa8d3d1de4",
@@ -94,9 +94,9 @@
     "Source/TotalFog/Presentation/GasVisibility.Patches.cs": "3d72fd7ee8b6d43c79d4783c43ab1bdd434f1240bcb69d4092b3e43a05c7ce03",
     "Source/TotalFog/Presentation/GasVisibility.cs": "352f6d12669280b3a937f900800f489e8fb52c432842429284ff0c82de4fbc06",
     "Source/TotalFog/Presentation/InterfaceVisibility.Patches.cs": "8029c6cd836ce428af95dad8c557a7c1d28004d5cc30e50a518eb7d641fd343d",
-    "Source/TotalFog/Presentation/InterfaceVisibility.cs": "5181936f87dd80366137cb211a8f2ef3e9ade7ae81ee44ca89796bf7e1f9f6cd",
+    "Source/TotalFog/Presentation/InterfaceVisibility.cs": "9bf0255a7440fbfc273c46a649c34e6129d1cb2df774c0e270c263f51949ceec",
     "Source/TotalFog/Presentation/LightingVisibility.cs": "d64b4d3877820b9c8c37ee81762465d81d4af02d0ce22cffd8237ae058443817",
-    "Source/TotalFog/Presentation/ThingVisibility.cs": "80b9094c6a1cd656018329de65aa2a263e5c6bb3230471eea6dbafc6079d9fd6",
+    "Source/TotalFog/Presentation/ThingVisibility.cs": "d4e65be0c10a2265b119d5e29945ac0de7c6d58455c58f6ae20dc7350b29a972",
     "Source/TotalFog/Properties/AssemblyInfo.cs": "d02ea3dbe42de67e82a5c52cadcd42efcbb4d58c32fb592c9a5cf9b7e211d1c5",
     "Source/TotalFog/SectionLayerFog.cs": "f9061a76dc24cba48131affe6288941e36b4a5b00181872cde00de163b59ff75",
     "Source/TotalFog/SettingsWindow.cs": "6b031d0b14899f7cf12ffb61fc4b91a66c71ca5af7e626743f8fb82d9e6b37cc",
@@ -124,5 +124,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "b6cd058d6596903d3a6307f9c42c2203361a91591f4e3f73d48c4107a37619b9"
+  "dllSha256": "e0fb9f0bef0dda8c97fbf3c811c82f61730bc78c4cf3e1fde58120c278c92457"
 }

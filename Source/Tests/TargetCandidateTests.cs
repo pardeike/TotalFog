@@ -11,6 +11,40 @@ public sealed class TargetCandidateTests
     private static Thing At(Map map, int x) => new() { Map = map, PositionHeld = new(x, 0) };
 
     [Fact]
+    public void Owned_pawns_without_shared_sight_remain_controllable_but_do_not_reveal_effects()
+    {
+        var map = new Map();
+        map.Fog.Initialized = true;
+        var owned = new Pawn { Map = map, Faction = Faction.OfPlayer };
+        var foreign = new Pawn { Map = map, Faction = new Faction() };
+        var comp = new CompFog();
+        comp.HideFromPlayer = new CompVisibility { parent = owned, mainComponent = comp };
+        comp.Hiddenable = new CompPresentationState { parent = owned, mainComponent = comp };
+        owned.Component = comp;
+        comp.Hiddenable.PostSpawnSetup(false);
+        comp.HideFromPlayer.PostSpawnSetup(false);
+        try
+        {
+            Find.Selector.Selected.Add(owned);
+            comp.HideFromPlayer.UpdateVisibility(true);
+            Assert.True(Find.Selector.IsSelected(owned));
+            Assert.Equal(
+                new[] { owned },
+                InterfaceVisibility.FilterTargetThings(new() { owned, foreign }, owned.Position)
+            );
+            Assert.True(InterfaceVisibility.PawnLabelPrefix(owned));
+            Assert.False(Visibility.IsVisible(owned));
+            Assert.False(map.Fog.InSight[0]);
+            map.fogGrid.Fogged = true;
+            Assert.Empty(InterfaceVisibility.FilterTargetThings(new() { owned }, owned.Position));
+        }
+        finally
+        {
+            Find.Selector.Deselect(owned);
+        }
+    }
+
+    [Fact]
     public void VisibleCandidatesRetainTheirListAndOrder()
     {
         var map = new Map();

@@ -15,7 +15,7 @@ public static class Selector
         return !(
             thing is { Destroyed: false }
             && (pawn == null || !pawn.IsWorldPawn())
-            && !Presentation.ThingVisibility.IsVisible(thing, allowMemory: false)
+            && !Presentation.ThingVisibility.CanInspect(thing)
         );
     }
 }

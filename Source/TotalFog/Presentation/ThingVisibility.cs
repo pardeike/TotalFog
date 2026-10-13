@@ -6,6 +6,16 @@ namespace TotalFog.Presentation;
 /// <summary>The common information boundary for game and modded things, including held pawns.</summary>
 internal static class ThingVisibility
 {
+    // Owned pawns stay under the player's control even when they supply no
+    // sight, such as untrained animals. This UI exception never grants sight
+    // to effects, enemy targets, discovered entities or neighbouring cells.
+    internal static bool CanInspect(Thing thing, IntVec3? renderedCell = null) =>
+        IsVisible(
+            thing,
+            allowMemory: thing is Pawn pawn && pawn.Faction == Faction.OfPlayer,
+            renderedCell: renderedCell
+        );
+
     internal static bool Unrestricted(Map map, Faction observerFaction = null) =>
         FogSettings.OnlyOutsideColony && IsHomeFor(map, observerFaction);
 
