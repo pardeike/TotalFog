@@ -8125,11 +8125,13 @@ separately: 1.7-only preference fields caused native XML errors and most ticks
 were restricted to normal speed. Saved-fixture SHA-256 remains
 `d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3`.
 
-Current 1.7.4976 testing is blocked before behavioral acceptance. Its first
+The earlier 1.7.4976 attempt was blocked before behavioral acceptance. Its first
 launch resets the isolated 1.6-labelled mod list. Correcting that temporary
-version marker loads the intended mods, but Steam Harmony 3.0.0 then fails
-with MonoMod's dyld_image_info/Span initialization exception. RimBridgeServer's
-essential patches and Total Fog hooks encounter the same dependency failure.
+version marker loads the intended mods, but the selected Harmony then fails
+with MonoMod's dyld_image_info/Span initialization exception. That was incorrectly
+attributed to released Steam Harmony 3.0.0. The released-Workshop control below
+corrects the old local-copy selection and clears this startup blocker.
+RimBridgeServer's essential patches and Total Fog hooks encountered the same dependency failure.
 This is not a demonstrated Total Fog API mismatch. The actual log uses the
 default Ludeon Studios logs folder despite the old -logFile argument. Both
 rejected logs remain under artifacts/reassessment. Historical 1.7 proofs keep
@@ -8139,3 +8141,57 @@ All task-owned games are stopped. Temporary GABS profiles, Multiplayer configs/
 preferences and the main test profile are restored, and task-owned mod links/
 extra companion are removed. No original save was overwritten, source pushed,
 public release made or build sent. Performance and broader acceptance remain open.
+
+## Released Workshop Harmony and Total Fog on 1.7, 2026-10-13
+
+Andreas requested a Harmony-only vanilla control and required released Workshop
+Harmony as the default for all ordinary mod tests. The prior profile used
+brrainz.harmony, which selects the installed local Harmony 2.4.3 copy; it did
+not pin the Workshop identifier brrainz.harmony_steam. Native decompilation of
+ModsConfig.ActiveModsInLoadOrder, ModLister.GetModWithIdentifier and
+ModMetaData.PackageId confirms exact identifier lookup and the Workshop suffix.
+The prior claim that released Steam Harmony 3.0.0 failed was incorrect.
+
+Strict control: Steam RimWorld 1.7.4976 rev1043, released Workshop item 2009463077,
+Harmony mod 3.0.0.0/library 3.0.0.0-rc.2, Core only. A separate isolated profile
+excludes RimBridgeServer, Total Fog and all DLCs. The first launch automatically
+enabled newly discovered DLCs and is retained separately as rejected strict
+loadout evidence; after recording the known expansions, the strict second launch
+and recorded save contain exactly brrainz.harmony_steam and ludeon.rimworld.
+Harmony initializes cleanly. A native dev-quicktest colony runs through tick
+6521; paired saves demonstrate advancement from 2401 to 6521. No errors or
+managed-pointer/Span failure occur. Evidence: artifacts/harmony-only-17/result.json,
+Player.log, inputs.json and the isolated saves.
+
+Total Fog control: Workshop Harmony, RimBridgeServer immediately below it,
+Core and Total Fog. The actual bridge configuration report confirms Harmony's
+source/root as SteamWorkshop/2009463077, matching the loaded session. Gameplay
+SHA-256 9a490e5b8a043a519653e4fc5ec360d220174e7f109f64a2fa028fb0072e22d4 and
+companion d10fe5cbd89defaf4aa428069ed56ee1293fdf470bea95306a85069f0ab2b080 match
+built/deployed files; neither was recompiled for 1.7. The actual engine log
+confirms 1.7.4976 rev1043; the older GABS profile name is not engine evidence.
+The 1.6 TotalFogReview2CoreStress350 save loads and all 14 player_safety controls
+pass, including owned-animal control, hidden/seen tower acquisition and Thing
+shoot lines, deliberate cell shots, rescuer death and replacement retrieval.
+A further 181 normal-speed ticks advance after the fixture reload.
+
+The vanilla 1.7 control colony then loads with Total Fog added and advances
+177 normal-speed ticks, demonstrating initialization on an existing 1.7 save.
+Native screenshots at near and maximum ordinary zoom are retained. The final
+actual Player.log has no errors or Total Fog patch warnings. RimBridgeServer
+has one version metadata warning, but its essential patches and tools work.
+This is bounded native 1.7 evidence, not DLC, optional-mod or performance-floor
+acceptance. It clears the claimed Harmony startup blocker.
+
+Evidence: artifacts/harmony-only-17/TotalFog-mods.json, TotalFog-load.json,
+TotalFog-safety.json, TotalFog-play.json, TotalFog-added-colony.json,
+TotalFog-added-play.json, TotalFog-identity.json, TotalFog-final-checks.json,
+TotalFog-Player.log and TotalFog-released-Harmony-17-added-wide.png.
+All test processes are stopped. Temporary test preferences/version/loadout
+are restored; seven ordinary isolated profiles retain the requested Workshop
+Harmony pin. The original 1.6 fixture remains byte-identical, SHA-256
+d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3.
+The task-owned copy of the vanilla save is removed from the ordinary fixture
+folder and retained in the isolated control profile. GABS configuration and
+Andreas's personal mod list are unchanged. No source publication or player
+archive was sent.

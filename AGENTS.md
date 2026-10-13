@@ -48,6 +48,8 @@ change otherwise resets the active list. Its native Player.log is currently
 under ~/Library/Application Support/Ludeon Studios/RimWorld by Ludeon Studios/Logs,
 even when the old -logFile argument is supplied. Verify actual loaded mods
 and the actual log before interpreting a disconnected bridge as a mod failure.
+Use released Workshop Harmony, explicitly pinned as `brrainz.harmony_steam`,
+for normal test profiles. Local Harmony requires a specific investigation reason.
 `./scripts/mod test` runs formatting checks and pure tests without a game install
 or gameplay/companion DLL changes. CI uses `python scripts/mod verify-binary`, then
 `python scripts/mod build` with output redirected to artifacts on Linux and Windows. Native deployment/runtime commands

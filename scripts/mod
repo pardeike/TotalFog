@@ -531,6 +531,21 @@ try:
                         raise
                     print("Candidate restore also failed: " + str(cleanup_error), file=log)
         if mode in {
+            "setup",
+            "ce-setup",
+            "ce-zombieland-setup",
+            "zombieland-setup",
+            "zombieland-fallback-setup",
+            "mp-setup",
+        }:
+            step = "released Harmony Steam installation"
+            metadata = GAME.parents[2] / "workshop/content/294100/2009463077/About/About.xml"
+            harmony = ET.parse(metadata).getroot()
+            if harmony.findtext("packageId", "").lower() != "brrainz.harmony" or "1.6" not in [
+                v.text for v in harmony.findall("supportedVersions/li")
+            ]:
+                raise RuntimeError("The installed Steam Harmony must support RimWorld 1.6")
+        if mode in {
             "deploy",
             "deploy-built",
             "setup",
@@ -556,7 +571,7 @@ try:
             (data / "Logs").mkdir(exist_ok=True)
             config_path = data / "Config/ModsConfig.xml"
             order = [
-                "brrainz.harmony",
+                "brrainz.harmony_steam",
                 "brrainz.rimbridgeserver",
                 "ludeon.rimworld",
                 "ludeon.rimworld.royalty",
@@ -669,7 +684,7 @@ try:
                 shutil.copy2(source_prefs, prefs)
             config_path = data / "Config/ModsConfig.xml"
             order = [
-                "brrainz.harmony",
+                "brrainz.harmony_steam",
                 "brrainz.rimbridgeserver",
                 "ludeon.rimworld",
                 "ludeon.rimworld.royalty",
@@ -815,7 +830,7 @@ try:
                     )
             order = [
                 "zetrith.prepatcher",
-                "brrainz.harmony",
+                "brrainz.harmony_steam",
                 "brrainz.rimbridgeserver",
                 "ludeon.rimworld",
                 "ludeon.rimworld.royalty",
@@ -937,7 +952,6 @@ try:
         if mode == "setup":
             step = "test dependencies"
             for name, source in [
-                ("HarmonyMod", Path.home() / "Projects/HarmonyRimWorld"),
                 ("RimBridgeServer", Path.home() / "Projects/RimBridgeServer"),
             ]:
                 destination = MODS / name
@@ -958,7 +972,7 @@ try:
             (data / "Config").mkdir(parents=True, exist_ok=True)
             (data / "Logs").mkdir(exist_ok=True)
             order = [
-                "brrainz.harmony",
+                "brrainz.harmony_steam",
                 "brrainz.rimbridgeserver",
                 "ludeon.rimworld",
                 "ludeon.rimworld.royalty",

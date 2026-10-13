@@ -9,7 +9,7 @@ and 1.7. Earlier native 1.7 controls cover the user's three-tower row drag, watc
 transitions, blueprint presentation, all four lookout facings and a visible
 tower melee attack. The latest player-stability candidate passes 411 C# tests
 and seven artifact-gate tests.
-A bounded native Core-only 1.6 check rejects hidden Thing acquisition and shots,
+A bounded native Core-only check on both 1.6 and 1.7 rejects hidden Thing acquisition and shots,
 retains visible targets and blind-cell fire, and completes replacement retrieval
 after an ascending rescuer dies. Earlier larger suites retain their recorded hashes.
 Broader 1.7 combat, optional-mod and performance acceptance remain open.

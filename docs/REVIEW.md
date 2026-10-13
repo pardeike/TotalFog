@@ -77,9 +77,10 @@ This review does **not** clear the release gate:
   profiles do not establish a single cause. These player-safety fixes do not
   claim to resolve it. Diagnose the wide-frame cost, then renew the floor on
   the final bytes before release.
-- The latest native 1.7 attempt remains blocked by the installed Steam Harmony
-  initialization failure. Fix/verify that dependency path before accepting a
-  1.7 release candidate. Keep the intended 1.6 reference strategy and 1.7 metadata.
+- The claimed Harmony 1.7 blocker was cleared by the later released-Workshop
+  control below. Current unmodified Total Fog passes the same 14 native controls
+  on 1.7.4976 with released Harmony. Broader DLC/optional-mod checks still need
+  renewal; retain the intended 1.6 reference strategy and 1.7 metadata.
 - Restore a proper native 1.6 DLC fixture and renew a small representative DLC/
   Zombieland/CE/Multiplayer selection on the final bytes. Earlier successful
   archives and narrow controls remain useful evidence, but are not current
@@ -89,6 +90,38 @@ This review does **not** clear the release gate:
 All review-owned processes are stopped and the temporary GABS profile, mod list
 and preferences are restored. No build was sent, public release made or source
 pushed. The three source fixes and this review are local commits.
+
+### Released Harmony correction and native 1.7 control
+
+Andreas challenged the claimed Harmony blocker. The earlier profile selected
+`brrainz.harmony`, while an older local Harmony 2.4.3 copy remained installed.
+Calling that failure a released Steam Harmony 3.0.0 failure was incorrect.
+The engine resolves active mods by their exact package identifier; the Workshop
+copy has `brrainz.harmony_steam` when both copies are installed.
+
+With only Workshop Harmony and Core, native Steam 1.7.4976 rev1043 initializes
+Harmony 3.0.0.0-rc.2 cleanly, creates a vanilla colony and runs through tick 6521.
+The recorded save has exactly those two mods. With Workshop Harmony,
+RimBridgeServer, Core and the unchanged Total Fog DLL 9a490e5b, the same engine
+loads the 1.6 fixture and passes all 14 player-safety controls. A vanilla 1.7
+colony also loads with Total Fog added and advances 177 normal-speed ticks.
+The final native log has no errors or Total Fog patch warnings. Near and wide
+screenshots are retained. RimBridgeServer has one supported-version metadata
+warning; its essential patches and tools work.
+
+Evidence is in ignored artifacts/harmony-only-17, especially result.json,
+TotalFog-mods.json, TotalFog-safety.json, TotalFog-added-colony.json and
+TotalFog-Player.log. Native decompilation of ModsConfig.ActiveModsInLoadOrder,
+ModLister.GetModWithIdentifier and ModMetaData.PackageId confirms the selection
+mechanism. All ordinary isolated profiles now pin Workshop Harmony; setup no
+longer copies local Harmony. Shared mod instructions require a specific reason
+for any future local-Harmony test.
+
+This clears the claimed startup blocker and proves bounded Total Fog behavior
+on 1.7 without recompiling against that engine. It does not renew the original
+performance floor or broad DLC/CE/Multiplayer acceptance. Test processes are
+stopped, temporary preferences/version/loadout are restored, and the Workshop
+Harmony choice is retained as Andreas requested. Original fixtures are unchanged.
 
 ## Second review, 13 October 2026 (commit 6207fc9)
 
@@ -1003,12 +1036,14 @@ the explicit fog cancellation. The unchanged saved fixture is reloaded and
 its native log is clean. Evidence is artifacts/reassessment/vision16.json and
 vision16-Player.log.
 
-The same DLL's renewed native 1.7 check is blocked before behavioral testing.
+That DLL's earlier native 1.7 check was blocked before behavioral testing.
 The first attempt resets the isolated 1.6-labelled mod list during the engine
 version change. Matching that temporary version marker enables the intended
-loadout on 1.7.4976 rev1043, but Steam Harmony 3.0.0 then fails initialization
-with MonoMod's dyld_image_info/Span exception. RimBridgeServer's essential
-patches and Total Fog hooks encounter the same dependency failure. The actual
+loadout on 1.7.4976 rev1043, but the selected Harmony then fails initialization
+with MonoMod's dyld_image_info/Span exception. The released-Harmony control above
+later establishes that the unsuffixed identifier selected the old local copy;
+the earlier attribution to Steam Harmony 3.0.0 was incorrect. RimBridgeServer's
+essential patches and Total Fog hooks encountered the same dependency failure. The actual
 1.7 log path differs from the old -logFile argument. Neither attempt is clean
 runtime acceptance, and neither demonstrates an incompatible Total Fog API.
 The rejected logs remain under artifacts/reassessment. Shared 1.7 metadata and
