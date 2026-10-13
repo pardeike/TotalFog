@@ -5,7 +5,7 @@ import json, os, subprocess, tempfile
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-reference = "e1b07e9"
+reference = os.environ.get("TOTALFOG_BENCHMARK_REF", "e1b07e9")
 with tempfile.TemporaryDirectory(prefix="totalfog-benchmark-") as name:
     work = Path(name)
     inherited = subprocess.check_output(

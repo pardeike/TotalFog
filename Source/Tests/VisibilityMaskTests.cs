@@ -103,6 +103,47 @@ public class VisibilityMaskTests
         Assert.Equal(expected.OrderBy(i => i), changes);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(63)]
+    [InlineData(64)]
+    [InlineData(65)]
+    [InlineData(129)]
+    public void VerticalRunsClipPreserveOtherColumnsAndNeverSetPadding(int width)
+    {
+        var mask = new VisibilityMask();
+        mask.Reset(13, 7, width, 5, 500);
+        var expected = new HashSet<int>();
+        if (width > 0)
+        {
+            mask.AddCell(13 + width - 1, 9);
+            expected.Add(9 * 500 + 13 + width - 1);
+        }
+        foreach (int x in new[] { 12, 13, 14, 75, 76, 77, 141, 13 + width - 1, 13 + width })
+        foreach (var run in new[] { (-20, -1), (6, 7), (9, 8), (9, 10), (11, 50) })
+        {
+            mask.AddVerticalRun(run.Item1, run.Item2, x);
+            for (int z = run.Item1; z <= run.Item2; z++)
+                if (x >= 13 && x < 13 + width && z >= 7 && z < 12)
+                    expected.Add(z * 500 + x);
+        }
+        for (int z = 6; z <= 12; z++)
+        for (int x = 0; x < 500; x++)
+            Assert.Equal(expected.Contains(z * 500 + x), mask.Contains(z * 500 + x));
+        var changes = new List<int>();
+        VisibilityMask.ApplyDifference(
+            new VisibilityMask(),
+            mask,
+            (i, visible) =>
+            {
+                Assert.True(visible);
+                changes.Add(i);
+            }
+        );
+        Assert.Equal(expected.OrderBy(i => i), changes);
+    }
+
     [Fact]
     public void ShiftedFootprintsOnlyReportChangedCells()
     {

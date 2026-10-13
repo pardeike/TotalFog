@@ -149,6 +149,13 @@ in a fresh game process, reloads the unchanged fixture, verifies window focus,
 and preserves its Player.log. Leave other desktop apps idle during timing.
 Use `./scripts/mod runtime-compare <label> <save name> [Normal|Fast|Superfast|Ultrafast]`
 to build once and alternate three original/candidate pairs in fresh processes.
+Set `TOTALFOG_COMPARISON_BASELINE_ROOT` to a preserved clean checkout when
+comparing against a previous Total Fog build instead of upstream. That checkout
+must contain its matching tracked DLL and receipt. The report labels it
+`previous-total-fog`; its floor is a regression check and cannot establish the
+upstream performance floor. Both variants still use the same companion tools.
+Set `TOTALFOG_BENCHMARK_REF` to a Git commit when comparing the pure caster
+with a specific prior version; the default retains the historical reference.
 It checks matching fixture/settings/rendering evidence and exact DLL bytes,
 fails if candidate median TPS is lower, and leaves the candidate deployed.
 Ordinary Ultrafast comparisons also require native multiplier 15 throughout

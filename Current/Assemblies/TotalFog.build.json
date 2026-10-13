@@ -4,7 +4,7 @@
   "inputs": {
     "Directory.Build.props": "6b02b8e0e91a4ebd7e96b67842c2062dfdcd6d278fe7cb3bdbe8b39428cc8db2",
     "Source/Core/FeatureInstallation.cs": "ba225d3d475d06b52dc3803d9aea2612ec4c971b56a11fc1563a5d74bee8b50b",
-    "Source/Core/FieldOfView.cs": "b1e3b033130661ea1cd2766544b8d566664bc530117940258cbcac5347af258c",
+    "Source/Core/FieldOfView.cs": "b8496e69335c51e108aaeae2fe5a7fc2b6046a0c7230f5a07ec117173143ec9b",
     "Source/Core/FogAppearance.cs": "d4f83beeed464e62a3403f631fdc6d5e7c73d28e35907c77180d3d3997fbed4e",
     "Source/Core/GridGeometry.cs": "66584b00516ef2e10fe05ec414d9273643d48fc0a3356a2df018f4fb80c2723b",
     "Source/Core/ListenerCell.cs": "deaec35f7107ec6b4a33deb91dc5f2c6633315c23b178b6d66041ce10db169d2",
@@ -13,7 +13,7 @@
     "Source/Core/PendingQueue.cs": "1b36eebc4cbe2eadce3a59848847b7150bd67d00f411e1a5f614c5ad3356e824",
     "Source/Core/TowerGeometry.cs": "2f86128e7487e1527403bba6e75a15cb9c7b6981f8b1ae149472e0d96fbb13a8",
     "Source/Core/VisibilityGrid.cs": "07e9f1f3e43fc1b6af304603b610e2c9db9693ce805c5ddc5cad8133f217741d",
-    "Source/Core/VisibilityMask.cs": "c59929e9eee45803fc8bf99a0549a67f3072d0d425dc231981b473925f666896",
+    "Source/Core/VisibilityMask.cs": "245637731c70b5f416643e4603f70dba45829ee8843fc756c0e4e1602566c1cb",
     "Source/Core/VisibilityPolicy.cs": "403c64f1c5536ab25fd35b52e5c2e331dc5531efb7f3d01b219e5fe30f10c123",
     "Source/TotalFog/Audio/MusicVisibility.cs": "0b679f72aafb05a5bfed4d41795daba24e9406bd2273b447997314702550289b",
     "Source/TotalFog/Audio/SustainerVisibility.cs": "9d5da6c6f9803b091bc59f9e715e4a6b86b793f38d822e34053c166e4a078411",
@@ -125,5 +125,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "7b783fc791a30a99b01e3e7d380337ae1055780e6ba065d955ca9a3415047a02"
+  "dllSha256": "fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576"
 }

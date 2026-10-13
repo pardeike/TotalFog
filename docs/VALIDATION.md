@@ -8,6 +8,115 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Clear-column sight casting, 2026-10-13
+
+The accepted change extends the existing long-clear-row shortcut to vertical
+columns. It proves the complete column is inside the map and circular range,
+then stops at the first blocker before writing any cells. Blocked columns keep
+the existing shadow transitions. Clipping and the exact slope tests are retained.
+Observer timing, targeting policy, save data and point queries are unchanged.
+No cache, deferred update or additional allocation is introduced.
+
+Final Release gameplay SHA-256 is
+`fcde178b44a9af5bfe9c090581c8d459bd41e169fa3b271f3f158290e5b33576`,
+MVID `ded3f1aa-2b65-47bf-b061-69fa996f8a17`. The matching tracked receipt and
+quiet Release build pass 422 C# tests and seven artifact-gate tests with zero
+warnings/errors. Six new vertical-run cases cover empty and word-boundary widths,
+clipping, overlaps, other columns and padding. Existing differential caster tests
+compare the mask with the unchanged callback caster over exhaustive small maps,
+random/clipped maps, large radii and peeks. Allocation controls also pass.
+The unchanged developer companion is
+`ca4fe032699c4bb77cbe26194c456875e68d634751f6dab68c48476fc09e3368`.
+
+### Pure caster comparison
+
+Against dcd52ec, five samples of 5,000 casts each produce these median footprint
+times on .NET 10 ARM64. Callback and point-query code remain unchanged.
+
+| Blocker density | Previous, ms | Candidate, ms | Change |
+|---|---:|---:|---:|
+| 0% | 107.951 | 77.923 | -27.82% |
+| 3% | 108.983 | 103.894 | -4.67% |
+| 15% | 16.056 | 15.989 | -0.42% |
+| 35% | 3.904 | 3.571 | -8.52% |
+
+The dense cases are short and do not establish a general dense-map gain. Two
+broader batching/coordinate experiments slowed blocked maps by roughly 9-16%
+and were rejected. Their measurements remain alongside the accepted report in
+artifacts/performance-targets-20261013. No rejected implementation is retained.
+
+### Matched native playback
+
+All samples compare previous gameplay `7b783fc7` with final gameplay `fcde178b`,
+without DPA, fog profiling, forced speed or private speed boost. Native fourth
+speed remains multiplier 15 throughout. Each engine uses three fresh-process
+pairs; candidate/previous ordering alternates. Fixtures, camera, effective
+settings, renderer and loaded gameplay hashes are checked.
+
+| Fixture and engine | Previous TPS | Candidate TPS | Mean tick CPU, previous / candidate, ms | Frame p95, previous / candidate, ms |
+|---|---:|---:|---:|---:|
+| Core-only peaceful 350x350, offline 1.6 | 553.250 | 565.823 | 1.11420 / 1.10897 | 67.649 / 67.570 |
+| 118 entries, 410-pawn stress map, Steam 1.7 | 845.721 | 843.696 | 0.75529 / 0.75660 | 45.113 / 43.973 |
+| 118 entries, 36-pawn colony, Steam 1.7 | 866.383 | 871.637 | 0.59050 / 0.57478 | 26.930 / 26.075 |
+
+The 1.6 regression gate passes at +2.27% TPS. It has 408 pawns, 71,050 cells
+and 266 pawn roots in view at root size 100, using Metal at 4592x2646.
+The accepted run starts from the same paused save with zero warmup. A prior
+300-tick warmup attempt failed the exact camera/population guard because one
+moving pawn crossed the partial viewport boundary. That failure is retained;
+the guard was not loosened. All six accepted native process logs are clean.
+The report is artifacts/comparison-sight-clear-columns-previous-16-20261013.json.
+
+The 1.7 samples use Vulkan at the same resolution, root size 100 and all
+122,500 map cells in view. Every process plays both unchanged fixtures after
+exactly 300 native warmup ticks, with 15-second samples. Stress median TPS is
+-0.24%, consistent with broad parity rather than a speed win. The second
+candidate stress sample falls to 749.607 TPS with a 71.295 ms frame p95.
+It remains in the result and limits any frame/spike improvement claim. Colony
+median TPS is +0.61% and mean tick CPU is -2.66%. These short results do not
+establish long-session or combat-heavy acceptance. Each colony reload retains
+one known UniqueWeapon_Limestone colour-parsing error; no new gameplay exception
+is observed. Earlier 385-TPS colony playback included startup/UI effects and
+does not describe this controlled steady workload.
+
+The 1.7 summary, exact sample identities and raw process logs are in
+artifacts/performance-targets-20261013/large-comparison-summary.json.
+Stress fixture SHA-256 remains
+`739013e6cbe32ee75f66d54a1559849551f801284f784e1010c2459fd0d955fb`;
+colony fixture SHA-256 remains
+`81b05d940cd4c8ec07a2c17e94c4865a566401a9155586526982515bf8fa1efc`.
+
+This is a regression comparison against previous Total Fog. It does not renew
+the upstream-original floor on current bytes. That attempted renewal is rejected
+because the current developer companion refers to tower/access-attribute types
+absent from the original mod. An earlier temporary 1.6 profile also retained
+1.7-only window-position preferences and was rejected for native XML errors.
+Both failures and their logs are preserved. The optional previous-checkout
+comparison mode labels reports `previous-total-fog`; the original default and
+feedback gate's requirement for three original samples remain unchanged.
+
+### Native visibility controls and closeout
+
+Core-only native 1.6 and 1.7 each pass the three staged observed/hidden/reobserved
+stream-feedback rows on final bytes. Corpse presentation and visual light follow
+sight while the native corpse remains spawned and undestroyed, and native glow
+remains unchanged. Owned plans remain shown; known-door area orders and hidden
+selection rejection pass. Uploaded lighting geometry changes and restores.
+Native screenshots are captured for all six rows. The inspected 1.7 observed
+and hidden pixels show the expected corpse and light changes. These are staged
+presentation controls, not a natural corpse-resurrection or full DLC gate.
+The 1.7 run retains warnings for saved think-node keys while loading the older
+fixture, without native errors. An initial probe before loading the named fixture
+was rejected and retained; the subsequent named-fixture run succeeds.
+JSON and logs are in artifacts/performance-targets-20261013/visibility16* and
+visibility17*, with screenshots under artifacts/UserData/Screenshots/
+sight-clear-columns16-* and sight-clear-columns17-*.
+
+Both test games are stopped. The isolated profile's ModsConfig and Prefs are
+restored byte-for-byte and the GABS configuration matches its pre-test snapshot.
+The normal player profile and source saves are untouched. The temporary clean
+comparison worktree is removed. No ZIP, public push or release is made.
+
 ## Review round 2 final artifact, 2026-10-13
 
 Final Release gameplay SHA-256 is `0af94ae95748d5b373720e803a8e4a8b070e8b4607aa84206559425eda8b451a`. Its tracked

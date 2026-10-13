@@ -75,6 +75,23 @@ public sealed class VisibilityMask
         }
     }
 
+    /// <summary>Union an inclusive vertical run, clipped to this footprint.</summary>
+    public void AddVerticalRun(int firstZ, int lastZ, int x)
+    {
+        x -= minX;
+        if ((uint)x >= width || firstZ > lastZ || height == 0)
+            return;
+        int first = Math.Max(firstZ, minZ) - minZ;
+        int last = Math.Min(lastZ, minZ + height - 1) - minZ;
+        if (first > last)
+            return;
+        ulong bit = 1UL << (x & 63);
+        int start = first * wordsPerRow + (x >> 6);
+        int end = last * wordsPerRow + (x >> 6);
+        for (int word = start; word <= end; word += wordsPerRow)
+            words[word] |= bit;
+    }
+
     public bool Contains(int index)
     {
         if (mapWidth == 0)

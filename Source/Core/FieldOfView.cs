@@ -244,15 +244,26 @@ public static class FieldOfView
                 // Short rows cost less to cast directly than to prove clear.
                 if (
                     last - first >= 15
-                    && (quadrant & 1) == 0
-                    && WriteOpenHorizontalRow(
-                        depth,
-                        depthSquared,
-                        first,
-                        last,
-                        start,
-                        end,
-                        quadrant
+                    && (
+                        (quadrant & 1) == 0
+                            ? WriteOpenHorizontalRow(
+                                depth,
+                                depthSquared,
+                                first,
+                                last,
+                                start,
+                                end,
+                                quadrant
+                            )
+                            : WriteOpenVerticalRow(
+                                depth,
+                                depthSquared,
+                                first,
+                                last,
+                                start,
+                                end,
+                                quadrant
+                            )
                     )
                 )
                 {
@@ -316,6 +327,41 @@ public static class FieldOfView
                     return;
                 depth++;
             }
+        }
+
+        private bool WriteOpenVerticalRow(
+            int depth,
+            long depthSquared,
+            int first,
+            int last,
+            Slope start,
+            Slope end,
+            int quadrant
+        )
+        {
+            int x = quadrant == 1 ? originX + depth : originX - depth;
+            int firstZ = originZ + first,
+                lastZ = originZ + last;
+            if (
+                first > last
+                || (uint)x >= width
+                || (uint)firstZ >= height
+                || (uint)lastZ >= height
+                || depthSquared + Math.Max((long)first * first, (long)last * last) > rangeSquared
+            )
+                return false;
+            // Only an entirely clear, in-range column may skip the normal
+            // shadow transitions. Stop at its first blocker before writing.
+            int endIndex = lastZ * width + x;
+            for (int index = firstZ * width + x; index <= endIndex; index += width)
+                if (opaque[index])
+                    return false;
+            int visibleFirst =
+                first + ((long)first * start.Denominator < (long)depth * start.Numerator ? 1 : 0);
+            int visibleLast =
+                last - ((long)last * end.Denominator > (long)depth * end.Numerator ? 1 : 0);
+            destination!.AddVerticalRun(originZ + visibleFirst, originZ + visibleLast, x);
+            return true;
         }
 
         private bool WriteOpenHorizontalRow(
