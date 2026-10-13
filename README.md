@@ -123,7 +123,7 @@ too much.
 
 ## Good to know
 
-- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6. Use the released Steam Harmony for your game version.
+- **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6 or 1.7. Use the released Steam Harmony for your game version.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a
   copy of your save first.
@@ -137,10 +137,11 @@ too much.
   on two local clients. Overall compatibility is still unverified; combined CE,
   cross-platform play and longer sessions need testing.
 
-1.7 is not currently advertised or mapped to a payload. Earlier experimental
-checks cover tower orders, blueprints, lookout facing, debug fog commands and
-paused fog drawing; they do not establish supported 1.7 compatibility. Most native integration checks above use macOS 1.6;
-Windows gameplay and longer sessions still need confirmation.
+RimWorld 1.6 and 1.7 load the same payload, compiled against the 1.6 API.
+Native 1.7 checks cover tower orders, blueprints, lookout facing, debug fog
+commands and paused fog drawing. Most broader integration checks above use
+macOS 1.6; broader 1.7 loadouts, Windows gameplay and longer sessions still
+need confirmation.
 
 See [coverage](docs/COVERAGE.md#current-status) for the current
 evidence and remaining checks. No public player release or Workshop item exists yet.
@@ -392,12 +393,13 @@ For a short wide-zoom comparison, prefix `runtime-compare` with
 map area at root size 100. This is a spot check; the normal performance gate
 still uses three pairs.
 
-Full logs are kept in `artifacts/logs/`. RimWorld 1.6 loads the active DLL,
-definitions and assets from `Current/`; the older version folders stay for
-history. This active folder is a declared exception to the shared mod standard.
-1.7 support awaits an available reference package and renewed native acceptance.
-Earlier experimental 1.7 checks retain their recorded hashes and limits, as do
-the dated 1.6 integration and performance results.
+Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 load the active
+DLL, definitions and assets from `Current/`; the older version folders stay
+for history. This active folder is a declared exception to the shared mod
+standard. The shared DLL intentionally compiles against the 1.6 reference
+package, following the engine developers' compatibility strategy. We will
+adopt a specific 1.7 reference when available. Native results retain their
+recorded engine versions, hashes and limits.
 More details:
 [architecture](docs/ARCHITECTURE.md), [coverage](docs/COVERAGE.md),
 [validation](docs/VALIDATION.md) and [AGENTS.md](AGENTS.md).

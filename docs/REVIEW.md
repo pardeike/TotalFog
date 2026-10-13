@@ -877,3 +877,16 @@ smoke-test bytes match. This does not refresh step 9's failed performance
 result or wider DLC, Zombieland, CE or Multiplayer acceptance. All processes
 are stopped, temporary profile/config changes restored, D1-D11 untouched, and
 no build sent, public release made or source pushed.
+
+## Independent reassessment corrections, 13 October 2026
+
+Andreas accepted the independent reassessment and confirmed that compiling
+against 1.6 for both 1.6 and 1.7 is the engine developers' intended strategy.
+Both versions now load Current/ again. A specific 1.7 reference will be adopted
+when available; its absence alone is not grounds to withdraw support. The
+second review's claim that no native 1.7 evidence existed was already rejected
+in step 8. Historical native results retain their exact versions and hashes;
+this metadata correction does not complete broader integration acceptance.
+
+Metadata validation confirms equal 1.6/1.7 folder lists and zero shared-validator
+errors. The tracked DLL receipt remains valid; no gameplay assembly changed.

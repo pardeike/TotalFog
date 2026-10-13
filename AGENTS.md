@@ -14,14 +14,16 @@ companion reuses the main DLL's internal access-check attribute through its
 existing InternalsVisibleTo contract. Canonical workflows default NuGet output
 to artifacts/nuget so another project's publicised cache files cannot change our
 reference resolution; an explicit NUGET_PACKAGES overrides this for CI/probes.
-About/About.xml advertises only RimWorld 1.6. Its LoadFolders.xml entry loads
-Current/ and LegacyAssets. Current/ is a declared project exception to the
-steam-mods standard's version-numbered active folder: keep this folder, the
-1.6 reference package and .steam-mods.json rimworldVersion together. Do not
-relax the shared validator. Folders below 1.6 stay frozen.
-1.7 support is withdrawn pending an available reference package and renewed
-native acceptance. Preserve dated experimental evidence without treating it
-as current support. A future 1.7 support decision belongs to Andreas.
+About/About.xml supports RimWorld 1.6 and 1.7; both LoadFolders.xml entries
+load the same Current/ and LegacyAssets payload. Compile against the 1.6
+reference package for both engines, as Andreas confirmed is the engine
+developers' intended compatibility strategy. Adopt a specific 1.7 reference
+when available; its absence is not a reason to withdraw 1.7 support. Current/
+is a declared exception to the shared version-numbered folder standard.
+.steam-mods.json rimworldVersion remains the 1.6 compilation/baseline target.
+Do not relax the shared validator. Folders below 1.6 stay frozen. Record native
+evidence by actual engine version; shared binaries do not transfer runtime
+acceptance between engines.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.

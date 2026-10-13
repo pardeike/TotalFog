@@ -16,7 +16,7 @@ for their recorded commits, not this local review batch.
 
 | Area | Current evidence and boundary |
 |---|---|
-| Versions | Only 1.6 is advertised and loads Current/. The active folder is a declared project exception; 1.7 support awaits renewed acceptance. |
+| Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |
 | Latest native check | Core-only offline 1.6 on the final Release DLL: clean startup, native gas mesh 0/36/0 across sight changes, and zero paused target/drawn-alpha mismatches across 1,102,500 vertices. Five-DLC setup needs repair before renewed acceptance. |
 | Other 1.7 checks | Earlier shared-payload candidates pass three-pawn tower row dragging, timed/drafted watch behavior, blueprints, lookout facing, visible tower melee and all four native fog debug commands. Each retains its own tested hash. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
@@ -31,11 +31,11 @@ for present work; [VALIDATION.md](VALIDATION.md) owns the detailed evidence.
 
 ## Engine versions and maintenance
 
-Only RimWorld 1.6 is advertised and mapped to Current/ with the shared assets.
-Current/ remains the active folder as a declared project exception to the shared
-mod standard. All five assemblies below 1.6 remain byte-identical to upstream.
-1.7 support is withdrawn pending an available reference package and renewed
-native acceptance. Dated experimental evidence remains below.
+RimWorld 1.6 and 1.7 are advertised and mapped to the same Current/ payload
+and shared assets. Compiling against the 1.6 API is intentional; a specific
+1.7 reference will be adopted when available. Current/ remains a declared
+project exception to the shared mod standard. All five assemblies below 1.6
+remain byte-identical to upstream. Native evidence remains version-specific.
 
 Earlier experimental native 1.7 checks extend beyond startup to tower orders, blueprint
 presentation, debug fog commands, lookout facing and paused fog rendering.

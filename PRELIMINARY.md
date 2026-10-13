@@ -1,9 +1,10 @@
 # Total Fog and Zombieland preliminary build guide
 
 Updated 13 October 2026 for the current source. Paired Zombieland feedback
-testing uses RimWorld 1.6 and two separate, complete mod ZIPs. Only 1.6 is
-advertised. The active payload stays in Current/; earlier experimental 1.7
-checks retain their recorded hashes and limits and do not establish support.
+testing uses RimWorld 1.6 and two separate, complete mod ZIPs. Total Fog
+supports 1.6 and 1.7 through the shared Current/ payload compiled against
+the 1.6 API. Native checks retain their actual engine versions, hashes and
+limits; broader 1.7 integrations still need testing.
 
 The last private ZIP pair was delivered on 12 October before the later watch-order,
 wall-link, blueprint, lookout-facing and paused-fog corrections. This guide
