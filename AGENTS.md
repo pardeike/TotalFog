@@ -381,6 +381,15 @@ material interception or drawing archives into gameplay to support that feature.
 
 ## Production watchtower tools
 
+Use `totalfog/player_safety` for the bounded player-control release regressions:
+an owned animal with no shared sight, tower native acquisition and Thing/cell
+shoot lines, and death of an ascending rescuer followed by replacement retrieval.
+Its paired sight controls temporarily alter one or two coverage cells without
+advancing simulation and restore them before native ticks resume. It restores
+settings and reloads the unchanged paused single-player save. A probe failure
+is rejected evidence; read the returned assertions/errors and Player.log.
+This is not a new broad combat, save/rejoin or performance acceptance gate.
+
 Use `totalfog/watchtower_gameplay` in the paused `TotalFogRegression` fixture for
 the production tower access/sight/bullet/rescue/collapse slice. Its historical
 `watchtower_access` and `watchtower_visuals` tools remain prototype controls.

@@ -9,7 +9,7 @@ When your colonists walk away, the area goes grey again, and you no longer know
 what happens there. A raid can come out of the dark. A sound in the night may be
 a wild boar or something much worse. To be safe, you have to look.
 
-> **Early version for RimWorld 1.6.** Testing is still going on. Feedback, bug
+> **Early version for RimWorld 1.6 and 1.7.** Testing is still going on. Feedback, bug
 > reports and saves that show problems are very welcome:
 > [Brrainz Discord](https://discord.gg/G4r84eN7w6) or
 > [GitHub issues](https://github.com/pardeike/TotalFog/issues).
@@ -26,6 +26,8 @@ a wild boar or something much worse. To be safe, you have to look.
   can change while unseen; Total Fog does not preserve a picture of their last appearance.
 - Your construction blueprints remain drawn outside current sight. Foreign corpses and
   artificial light require current sight. Your own corpses on known cells can be recovered.
+- Your own pawns remain selectable and controllable, even animals that provide no
+  vision. Their presence does not reveal nearby things or hidden effects.
 - Use the area Forbid/Allow tools for previously seen player doors outside sight.
   Their live inspector stays closed until someone can see them again.
 - Allies and neutral visitors can share their view with you through one setting;
@@ -58,6 +60,8 @@ a wild boar or something much worse. To be safe, you have to look.
 - The new tower needs Complex furniture research. Better cameras and the telescope also need research.
 - Keep tower ladders clear. A trapped lookout waits, with a persistent warning. Critical needs, burning or a mental state can force a jump with fall injuries if there is free ground nearby. Retrieve a downed lookout from the tower or pawn menu before tending or feeding them; a bed is optional.
 - Shooting from a tower keeps the target's normal cover. A lookout on the deck is exposed to incoming fire.
+  Acquiring or tracking an enemy still needs current faction sight. Deliberate
+  shots at cells retain blind fire.
 
 Inspector animals, security bells, light beacons and the old watchtowers are
 retired. Existing buildings, blueprints and frames remain loadable, but these

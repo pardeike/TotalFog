@@ -1,12 +1,94 @@
 # Total Fog 0.1.0 review
 
-Two independent review rounds of the first version. The second round
-(13 October 2026, commit 6207fc9) is first; it verifies the fixes made in
-response to the first round and adds new findings. The first round
-(12 October 2026, commit 12e30f6) and its point-by-point response follow,
-unchanged, so the responses can be audited. For current implementation and
-open native checks, use [COVERAGE.md](COVERAGE.md#current-status).
-Severity is judged for a first public version: small stuff is left out.
+Three independent reviews of the first version. The player-stability review
+below starts from 8839592, after both earlier work orders and the reassessment
+corrections. Historical findings and responses remain below so they can be
+audited. [COVERAGE.md](COVERAGE.md#current-status) owns current acceptance.
+Severity is judged for a first public version: polish and optional additions
+are out of scope.
+
+## Player-stability review, 13 October 2026 (starting at 8839592)
+
+Purpose: find serious implementation failures a player can encounter before the
+first release. This pass independently follows ownership/control, target
+acquisition and firing, sight initialization/counts, saving and legacy loading,
+notifications/audio, tower orders/reservations/recovery/destruction, optional
+bindings, startup and packaged-artifact evidence. It uses the older reviews as
+prompts, rather than treating their recommendations as established defects.
+This is a focused failure-path audit, not exhaustive gameplay validation.
+D1-D11, new features, balance defaults, artwork and naming polish are unchanged.
+
+### Confirmed findings and fixes
+
+Line numbers below refer to the starting commit. Each finding was checked
+against that source before changing it.
+
+| Finding | Player impact | Correction and evidence |
+|---|---|---|
+| S1, high: control gates ignore the owned-pawn presentation exception. Selector.cs:18, CompVisibility.cs:104 and InterfaceVisibility.cs:13 require current sight for every pawn. Untrained animals can supply no sight while still being drawn as owned pawns. | An animal is visible but cannot be selected or used in control menus; a periodic update also closes an existing selection. | 5762e6a adds one internal UI policy for owned pawns and uses it for selection, selection retention, labels, tooltips and menu candidates. Effects and the public visibility API still require sight; foreign pawns and native undiscovered fog remain gated. A regression test fails before the fix and passes afterward. Native selection/retention and label checks pass with the animal's coverage deliberately zero. |
+| S2, high: tower geometry bypasses player sight. TowerCombat.cs:181,245 calls AllowsTarget, whose documented player branch is unrestricted, then replaces the native acquisition/shoot-line path. | A lookout can acquire and track an enemy still hidden by fog, giving away its location and firing at it. | 4ece39c checks current sight of the observing player faction in both paths. The shot check applies to Thing targets, preserving deliberate blind-cell fire and the existing optional enemy-fog policy. Before the fix, native CanSee and the native weapon shoot-line both return true for the hidden enemy. Afterward both return false; seen-target checks and the blind-cell control remain true. |
+| S3, medium: CE tracking treats other player factions as unrestricted enemies when enemy fog is off. CombatExtendedIntegration.cs:179 compares the observer to the local Faction.OfPlayer. | A separate Multiplayer colony can acquire or continue tracking a hidden target through CE's turret, shoot-line or burst fallback, independently of its own sight. | b9ce155 checks IsPlayer rather than local viewer identity, then uses the actual observer's faction grid. A source-linked regression fails on the old turret result; it passes the fixed acquisition, shoot-line and burst controls with conflicting local/observer sight. Native combined CE plus separate-faction MP renewal is still outstanding. |
+
+The fixes do not change saved keys or public integration signatures. Scenery
+memory, ownership exceptions for work, defaults and the intended shared 1.6/1.7
+payload are retained.
+
+### Rejected findings
+
+- A rescuer killed before picking up the downed lookout appeared capable of
+  occupying the temporary rescue slot permanently at WatchtowerPatches.cs:409-425.
+  The actual native sequence disproves that candidate at ladder elevation
+  0.4083333: the slot clears, the corpse is on walkable ground, the original
+  lookout remains on the deck, and a replacement rescuer completes retrieval.
+  Existing partial-height job cleanup already handles it. No rescue change was
+  made. This does not extend the result to every possible modded death producer.
+- Dirty gas sections are a plausible contributor to wide-view map-update cost,
+  but source/decompiler inspection alone does not establish their share of the
+  failed performance floor. Native Gas regeneration scans its section cells;
+  the retained whole-map profiles do not isolate that layer. No speculative
+  cache or behavior change was added.
+
+### Verification and release boundary
+
+The final Release build passes 411 C# tests and seven artifact-receipt tests with
+zero warnings/errors. Formatting, binary freshness and built/deployed identity
+checks pass. Native offline 1.6.4871 rev581 with Harmony, RimBridgeServer, Core
+and Total Fog passes all 14 bounded player-safety assertions. The actual native
+Player.log has no Total Fog patch failures, config errors or runtime exceptions.
+The suite restores scoped coverage/settings and reloads the unchanged fixture;
+its save SHA-256 remains d798a4d1d9eaafed98697528fce65c07b93ebd00df0e3347bee154cd55f472c3.
+Gameplay SHA-256 is 9a490e5b8a043a519653e4fc5ec360d220174e7f109f64a2fa028fb0072e22d4;
+companion SHA-256 is d10fe5cbd89defaf4aa428069ed56ee1293fdf470bea95306a85069f0ab2b080.
+The companion is excluded from player packages.
+
+Evidence is retained in ignored artifacts/release-review: before-tower-fixes.json,
+after-tower-fix.json, the corresponding native logs, identity.json and native
+assembly contracts. The first probe attempt is rejected because the probe
+assumed every generated humanlike pawn had a drafter; foreign pawns do not.
+That probe exception is not a gameplay defect. The corrected probe was used for
+both the pre-fix reproduction and final pass.
+
+This review does **not** clear the release gate:
+
+- The most recent wide 350x350 three-pair comparison, on pre-review gameplay
+  b6cd058d, fails the original-mod floor, with median 487.140 versus 535.292 TPS.
+  One candidate interval also has a native normal-speed restriction. The result
+  is not a clean unrestricted fourth-speed comparison, and the remaining
+  profiles do not establish a single cause. These player-safety fixes do not
+  claim to resolve it. Diagnose the wide-frame cost, then renew the floor on
+  the final bytes before release.
+- The latest native 1.7 attempt remains blocked by the installed Steam Harmony
+  initialization failure. Fix/verify that dependency path before accepting a
+  1.7 release candidate. Keep the intended 1.6 reference strategy and 1.7 metadata.
+- Restore a proper native 1.6 DLC fixture and renew a small representative DLC/
+  Zombieland/CE/Multiplayer selection on the final bytes. Earlier successful
+  archives and narrow controls remain useful evidence, but are not current
+  full-loadout acceptance. In particular, this review's CE faction fix is proved
+  in source-linked tests, not a live combined-loadout session.
+
+All review-owned processes are stopped and the temporary GABS profile, mod list
+and preferences are restored. No build was sent, public release made or source
+pushed. The three source fixes and this review are local commits.
 
 ## Second review, 13 October 2026 (commit 6207fc9)
 

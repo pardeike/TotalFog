@@ -28,8 +28,10 @@ primary faction retains the original `seenByPlayer` save value; extra factions
 have separate observation identities. A new object in an explored cell stays
 hidden until observed. Pawns, flyers, projectiles, corpses and
 ordinary motes require current sight. Player pawn observers and owned blueprints
-on explored cells retain presentation exceptions. Ownership never grants
-live information or visibility through native undiscovered fog.
+on explored cells retain presentation exceptions. Owned pawns also retain
+selection, labels, inspection and control menus when they supply no sight.
+That exception never grants current sight to effects, notifications, other
+targets or neighbouring cells. Native undiscovered fog still takes precedence.
 
 - `Source/Core` owns coverage, discovery, geometry, sight casting and information
   policies. It has no Verse, Unity, Harmony, DLC or optional-mod references.
@@ -37,8 +39,8 @@ live information or visibility through native undiscovered fog.
   settings into sight. Footprint differences change coverage only where needed.
 - Presentation gates print eligibility and the engine's completed culling flags.
   All pawn draw phases use the same decision and native interpolated drawing cell.
-  Labels, overlays, tooltips, selection and inspection require current sight even
-  when an observed static object remains eligible for native rendering.
+  Other labels, overlays, tooltips, selection and inspection require current
+  sight even when an observed static object remains eligible for native rendering.
 - Notifications retain original payloads until their targets are observed, survive
   saves and replay once. Audio has independent settings for combat music, hidden
   sources, hearing filtering and hearing indicators.

@@ -9,8 +9,10 @@ and a result applies only to its recorded gameplay bytes and loadout.
 ## Current status
 
 Review round 2 is complete in ten ordered commits on 13 October 2026, followed
-by Andreas's accepted independent reassessment corrections. The current Release
-build passes 409 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+by Andreas's accepted independent reassessment corrections. The independent
+player-stability review then corrects owned-pawn controls, tower fog targeting
+and CE targeting for other player factions. The current Release
+build passes 411 C# tests and seven pure artifact-gate tests with zero warnings/errors.
 The bounded native checks below use Core-only offline 1.6;
 full DLC/optional-mod gates remain open. Earlier GitHub source checks passed
 for their recorded commits, not this local review batch.
@@ -18,11 +20,11 @@ for their recorded commits, not this local review batch.
 | Area | Current evidence and boundary |
 |---|---|
 | Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |
-| Latest native check | Current Release DLL on Core-only offline 1.6 passes 16 camera staffing, telescope range and explicit patch-order controls. Existing-colony Cameras priority, native work selection, work disablement and power loss are checked. Earlier gas/fade checks retain their exact prior hash. Five-DLC setup needs repair before renewed acceptance. |
+| Latest native check | Current Release DLL 9a490e5b on Core-only offline 1.6 passes 14 player-control, tower targeting and replacement-rescue controls. Native tower acquisition and Thing shoot lines reject hidden targets and retain visible targets and blind-cell fire. Earlier camera/telescope/order and gas/fade checks retain their recorded prior hashes. Five-DLC setup needs repair before renewed acceptance. |
 | Other 1.7 checks | Earlier shared-payload candidates pass tower orders, presentation and debug fog controls at their recorded hashes. The current 1.7.4976 retry is blocked by Steam Harmony's MonoMod dyld_image_info/Span initialization failure, which also prevents RimBridgeServer's essential patches. This does not demonstrate a Total Fog API mismatch or justify withdrawing 1.7 metadata. |
 | Zombieland delivery | Two separate preliminary 1.6 ZIPs were delivered on 12 October. Their native rendering, interaction, audio and performance gates apply to those archives. Later source fixes are not automatically delivered. |
-| CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
-| Performance | Current Core-only 350x350 wide three-pair comparison fails: median 487.140 vs 535.292 TPS, about 9.0% lower. One candidate interval also has a native normal-speed restriction, so this is not unrestricted fourth-speed acceptance. Tick CPU is slightly lower and short instrumented profiles show more map-update work, without isolating the complete cause. The earlier delivered pair retains its old acceptance; current broad performance is unverified. |
+| CE and Multiplayer | Current Core-only two-client check passes 11 native Goto capture/replay, matching tower/fog state, independent telescope-setting synchronization and descent controls on reassessment DLL b6cd058d. The later CE other-player-faction correction passes source-linked tests; combined native renewal is open. Broader combinations, save/rejoin renewal, longer sessions, Windows and 1.7 integration remain unverified. Multiplayer's retained loader issue also prevents overall acceptance. Earlier CE checks retain their recorded hashes. |
+| Performance | The most recent Core-only 350x350 wide three-pair comparison, on pre-player-safety DLL b6cd058d, fails: median 487.140 vs 535.292 TPS, about 9.0% lower. One candidate interval also has a native normal-speed restriction, so this is not unrestricted fourth-speed acceptance. Tick CPU is slightly lower and short instrumented profiles show more map-update work, without isolating the complete cause. The player-safety changes do not resolve or renew this result. The earlier delivered pair retains its old acceptance; current broad performance is unverified. |
 | Release | No public player release or Workshop item exists. The tracked Release DLL and receipt match this review source; expanded Linux/Windows CI is configured but has not run remotely for this batch. |
 
 The sections below retain dated delivery and compatibility checkpoints. Their

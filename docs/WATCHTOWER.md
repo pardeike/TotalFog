@@ -4,10 +4,14 @@
 
 Current source includes the production tower, timed/drafted orders, wall-link
 correction, front ladder placement, native-style blueprints and rotating
-undrafted lookouts. It is part of the active `Current/` payload, advertised for 1.6 only.
-Focused native 1.7 controls cover the user's three-tower row drag, watch/draft
+undrafted lookouts. It is part of the active `Current/` payload shared by 1.6
+and 1.7. Earlier native 1.7 controls cover the user's three-tower row drag, watch/draft
 transitions, blueprint presentation, all four lookout facings and a visible
-tower melee attack. Review round 2 passes 407 C# tests and seven artifact-gate tests.
+tower melee attack. The latest player-stability candidate passes 411 C# tests
+and seven artifact-gate tests.
+A bounded native Core-only 1.6 check rejects hidden Thing acquisition and shots,
+retains visible targets and blind-cell fire, and completes replacement retrieval
+after an ascending rescuer dies. Earlier larger suites retain their recorded hashes.
 Broader 1.7 combat, optional-mod and performance acceptance remain open.
 
 The larger suites and performance numbers below belong to the earlier 1.6
