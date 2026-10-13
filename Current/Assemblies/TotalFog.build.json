@@ -33,7 +33,7 @@
     "Source/TotalFog/CompWallOcclusion.cs": "e16e73826ddd696f418c0374708b9b617cc10080e2f907c5cf0177fd075a69f2",
     "Source/TotalFog/Compatibility/AnimalVision.cs": "e59f58efb05595fc0afa7ab4bcc905f719e12c836fed0b4b574a475249be7c76",
     "Source/TotalFog/Compatibility/BubbleIntegration.cs": "954e810cf9b70a7cdd049fd233096d7f52937632c0c911ab85ef1041af9eb87b",
-    "Source/TotalFog/Compatibility/CombatExtendedIntegration.cs": "4b960947ed23f987bd4bc330f9f0b4c636d57141c2a7062bc12814b7333aa895",
+    "Source/TotalFog/Compatibility/CombatExtendedIntegration.cs": "0118937d25a5f1d223f2deda55d8b611489c2269de77040540b7f44299b7858f",
     "Source/TotalFog/Compatibility/CombatExtendedProjectileDrawing.cs": "f2e505fe7f1361673a1aa36dfd0c0f324ed4d0c8c31325052cbea34c333f7e17",
     "Source/TotalFog/Compatibility/CombatExtendedTowers.cs": "0a2bd07b0c7cef3839a660a7cf28dd9f7ee4fd718981f4e9fa0172bb20a5e1ad",
     "Source/TotalFog/Compatibility/GravshipVisibility.cs": "d7f7aa08ad11ab9728a5f94fcd316bc6832f7ded1d11745c946ee41fc6b580ee",
@@ -124,5 +124,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "e0fb9f0bef0dda8c97fbf3c811c82f61730bc78c4cf3e1fde58120c278c92457"
+  "dllSha256": "63729e571bcb5107cd6858a47def425c1502ac23443721e6d18e44b7889d60d8"
 }

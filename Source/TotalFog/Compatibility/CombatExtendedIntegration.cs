@@ -176,7 +176,7 @@ internal static class CombatExtendedIntegration
             observer?.Map == null
             || observer.Faction == null
             || target.MapHeld != observer.Map
-            || observer.Faction != Faction.OfPlayer && !FogSettings.AISmart
+            || !observer.Faction.IsPlayer && !FogSettings.AISmart
         )
             return true;
         var fog = observer.Map.GetVisibility();

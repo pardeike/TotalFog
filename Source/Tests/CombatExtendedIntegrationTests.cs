@@ -278,6 +278,37 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
         Assert.False(result);
     }
 
+    [Fact]
+    public void Other_player_factions_cannot_track_targets_using_the_local_players_sight()
+    {
+        var faction = new Faction { IsPlayer = true, loadID = 2 };
+        var turret = new CeTurret { Faction = faction };
+        turret.Map.Fog.Initialized = true;
+        turret.Map.Fog.InSight[1] = true;
+        turret.Map.Fog.FactionSight[faction] = new bool[4];
+        var target = new Thing { Map = turret.Map, PositionHeld = new(1, 0) };
+        bool result = true;
+        CombatExtendedIntegration.TurretTargetPostfix(turret, target, ref result);
+        Assert.False(result);
+        var verb = new CeVerb { caster = turret, CurrentTarget = new LocalTargetInfo(target) };
+        result = true;
+        CombatExtendedIntegration.ShootLinePostfix(
+            verb,
+            verb.CurrentTarget,
+            ref result,
+            new ShootLine(default, target.Position)
+        );
+        Assert.False(result);
+        turret.Map.Fog.FactionSight[faction][1] = true;
+        result = true;
+        CombatExtendedIntegration.BurstFallbackPostfix(
+            verb,
+            ref result,
+            new ShootLine(default, target.Position)
+        );
+        Assert.True(result);
+    }
+
     [Theory]
     [InlineData(false, true)]
     [InlineData(true, false)]
