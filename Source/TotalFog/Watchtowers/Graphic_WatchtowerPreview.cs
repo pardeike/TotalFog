@@ -10,8 +10,8 @@ public sealed class Graphic_WatchtowerPreview : Graphic_Single
     private readonly Mesh[] foregrounds = new Mesh[4];
     private Material material;
 
-    // Native blueprint generation inherits the tower's drawer and wall flags.
-    // Its preview geometry is drawn in DrawWorker, without a placeholder plane.
+    // WatchtowerPatches selects RealtimeOnly for the generated blueprint.
+    // DrawWorker owns its geometry; no placeholder plane belongs in the map mesh.
     public override void Print(SectionLayer layer, Thing thing, float extraRotation) { }
 
     public override Graphic GetColoredVersion(

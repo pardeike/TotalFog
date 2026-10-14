@@ -11,6 +11,14 @@ internal static class WatchtowerPatches
 {
     internal static void Install(Harmony harmony)
     {
+        // Mod construction can precede the final generated definitions. Resolve
+        // the actual blueprint after loading; native Thing.DrawAt only draws
+        // its Graphic with RealtimeOnly, while the building needs map-mesh links.
+        LongEventHandler.ExecuteWhenFinished(() =>
+            DefDatabase<ThingDef>.GetNamed("Blueprint_TotalFog_Watchtower").drawerType =
+                DrawerType.RealtimeOnly
+        );
+
         void Patch(
             Type type,
             string method,

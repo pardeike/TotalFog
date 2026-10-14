@@ -73,6 +73,13 @@ and a visible translucent fill. Preview geometry omits the wooden cross-braces.
 Completed tower artwork retains its materials and detail. The four-rotation
 preview mesh cache and two drawing passes remain unchanged.
 
+The generated blueprint uses `RealtimeOnly`, applied after final definition
+loading, so native blueprint drawing invokes the custom preview graphic.
+Completed towers retain `MapMeshAndRealTime` for their wall-link registration.
+Planning follows native resource rules: an insufficient stock warning does not
+prevent placement. The 14 October Steam 1.7 check verifies saved and fresh
+blueprints with that warning still present; see VALIDATION.md for exact bytes.
+
 Completed towers block all nine footprint cells. Native blueprints remain
 walkable until construction, like other unbuilt structures. The tower requires
 Heavy terrain support across its footprint; unlike walls whose support can vary

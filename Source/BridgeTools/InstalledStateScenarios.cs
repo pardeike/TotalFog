@@ -23,6 +23,9 @@ public sealed class InstalledStateScenarios
         var fog = Find.CurrentMap?.components.FirstOrDefault(c =>
             c.GetType().FullName == "TotalFog.MapVisibility"
         );
+        var blueprintDef = DefDatabase<ThingDef>.GetNamedSilentFail(
+            "Blueprint_TotalFog_Watchtower"
+        );
         object mod = null;
         var errors = new List<object>();
         bool? initializerSucceeded = null;
@@ -71,6 +74,29 @@ public sealed class InstalledStateScenarios
             recheckStaticInitializer,
             initializerSucceeded,
             initializerErrors = errors,
+            watchtowerBlueprint = blueprintDef == null
+                ? null
+                : new
+                {
+                    drawerType = blueprintDef.drawerType.ToString(),
+                    graphicClass = blueprintDef.graphicData?.graphicClass?.FullName,
+                    instances = Find
+                        .CurrentMap?.listerThings.AllThings.Where(t => t.def == blueprintDef)
+                        .Select(t => new
+                        {
+                            t.ThingID,
+                            position = t.Position.ToString(),
+                            drawPosition = t.DrawPos.ToString(),
+                            graphic = t.Graphic?.GetType().FullName,
+                            drawColor = t.DrawColor.ToString(),
+                            registered = Find.CurrentMap.dynamicDrawManager.DrawThings.Contains(t),
+                            fogVisible = Presentation.ThingVisibility.IsVisible(
+                                t,
+                                allowMemory: true
+                            ),
+                        })
+                        .ToArray(),
+                },
         };
     }
 }

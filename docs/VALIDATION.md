@@ -8849,3 +8849,54 @@ including Workshop Harmony, the bridge, Core, five DLCs and Zombieland, with
 loadedSessionMatchesActive and no restart required. The game remains at Entry
 for Andreas's manual new-colony check. This accepts deployment/startup identity,
 not the pending fresh-colony fog transition. No player ZIP is sent.
+
+### Invisible watchtower planning corrected, 2026-10-14
+
+On Andreas's paused Steam 1.7.4977 rev1248 colony, normal Architect material
+menus offer the same four available materials for walls and watchtowers.
+Native wall and wooden-tower placement both accept the test cell. A real left
+mouse click at (145,140), with god mode off and `150 (not enough stored)` shown,
+creates a native Blueprint_Build without a rejection message. After deselecting
+the designator, its custom tower preview is absent from actual native pixels.
+Four of Andreas's earlier placed tower blueprints are also present in the map.
+This reproduces invisible successful placement, not a resource affordability gate.
+
+The generated blueprint inherits MapMeshAndRealTime from the completed tower.
+Its custom Graphic.Print is deliberately empty, while native Thing.DrawAt only
+draws the graphic of a spawned RealtimeOnly thing. DecompilerServer confirms
+identical blueprint generation and Thing.DrawAt source on installed 1.6 and
+Steam 1.7. Setting the DefOf-linked blueprint early in mod initialization fails
+to survive final loading: rejected DLL 777fc877 still reports the final definition
+as MapMeshAndRealTime and remains invisible. Its native diagnostic/log is retained.
+
+The accepted correction resolves the final generated blueprint after the long
+loading event and selects RealtimeOnly. The completed building retains its
+existing drawer and wall links; resources, costs, placement checks, geometry,
+native blueprint/frame classes and construction behavior are unchanged. The
+installed-state companion now reports the actual blueprint drawer, graphic,
+registration and fog eligibility rather than accepting a source-only assumption.
+
+Canonical format/build/deploy passes all 447 C# tests, seven artifact checks and
+zero build warnings/errors. Gameplay SHA-256 is
+`d736e1fb8930f50cac18a4de42612930554f3061840ae2d4bfd3a168621a8c93`;
+companion SHA-256 is
+`7e622c8111cfff6b1ceab1093627e505bef60a23811a813f514078d328182c9d`.
+Both installed files match their build files in the real external Steam Mods
+and sibling BridgeTools roots. Deployment occurs only after verified process
+termination, followed by a fresh launch of the same ten-mod profile.
+
+The uniquely named captured colony reloads paused at tick 304 from tick 303.
+The final definition reports RealtimeOnly. Native screenshots show the saved
+blueprint, and a fresh mouse click creates another visible wooden blueprint
+while the native `150 (not enough stored)` warning remains. Its original tree
+remains. Native Cancel removes only the diagnostic plan; Andreas's four existing
+plans remain registered and visible. The test save is refreshed without that
+diagnostic plan, and the prior camera position/zoom is restored. The recognized
+native log contains no errors/exceptions. Evidence is under ignored
+`artifacts/tower-planning-20261014`, including before/after cell state, actual
+pixels, the rejected early-setting candidate and exact deployed hashes.
+
+This is native 1.7 planning/rendering acceptance with Core, five DLCs, released
+Workshop Harmony, RimBridgeServer, Total Fog and Zombieland. Identical relevant
+1.6 source is inspected, but no new 1.6 runtime result, construction sequence,
+performance comparison or broad integration gate is claimed. No player ZIP is sent.

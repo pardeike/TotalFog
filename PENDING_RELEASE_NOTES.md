@@ -25,6 +25,7 @@ local testing do not indicate that a new player build has been released.
 
 - Add an experimental 3x3 watchtower with one elevated lookout, a timed ladder, configurable sight, optional shooting, rescue and collapse injury.
 - Require Complex furniture and heavy ground support. Completed towers block all nine cells; previews remain walkable and use translucent native-style blueprints. New ladders face the player by default.
+- Render placed watchtower blueprints even before construction materials are available.
 - Offer one-, two- and four-hour watches counted from reaching the deck, or drafted holding until undrafted or ordered away. Preserve timers across saves and respect explicit orders, draft transitions and Fire at will.
 - Let drafted Go here and dragged formations use tower platforms, including Achtung's move orders. Ground routes begin at the ladder after descent; idle undrafted pawns step clear while retaining queued work.
 - Face the ladder in both directions. Undrafted lookouts turn through all four directions; idle drafted lookouts face the player while combat aiming retains priority.
