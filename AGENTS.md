@@ -95,6 +95,14 @@ blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
+For construction-control diagnostics, `totalfog/installed_state` with
+`observeNextDrag=true` records one native rectangle selection's input and
+candidates. Calling it again without that flag removes the observer and returns
+the retained trace. Use a paused single-player fixture. Optional
+`hideConstructionForDrag=true` temporarily zeros player coverage over owned
+plans/frames only inside the native selection call; its finalizer restores the
+counts. It neither advances ticks nor changes discovery or the thing grid.
+This is companion instrumentation, not player behavior or natural sight-loss proof.
 The following artwork/access tools retain historical prototype controls; use the
 production watchtower tools below for current gameplay acceptance.
 Use `totalfog/watchtower_access` for the separate non-shipping footprint/ladder

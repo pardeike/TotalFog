@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -7,6 +8,19 @@ namespace TotalFog.Presentation;
 
 internal static partial class InterfaceVisibility
 {
+    // Native rectangle selection prioritizes resources and pawns before
+    // buildings. Remove hidden candidates before that choice, rather than
+    // rejecting the chosen category only when SelectInternal is reached.
+    [HarmonyPriority(Priority.Last)]
+    public static void MultiSelectCandidatesPostfix(ref IEnumerable<Thing> __result) =>
+        __result = __result.Where(thing => CanRead(thing));
+
+    // Click cycling and double-click matching also choose a candidate before
+    // SelectInternal. Preserve native zones/plans while filtering hidden Things.
+    [HarmonyPriority(Priority.Last)]
+    public static void MouseSelectionCandidatesPostfix(ref IEnumerable<object> __result) =>
+        __result = __result.Where(obj => obj is not Thing thing || CanRead(thing));
+
     // Mouseover dispatch follows one CompSelectProxy before reading the label.
     // A visible proxy must not grant access to its unobserved target's live UI.
     private static bool CanRead(Thing thing, IntVec3? renderedCell = null)

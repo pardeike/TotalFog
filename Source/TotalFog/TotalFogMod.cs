@@ -251,6 +251,25 @@ public class TotalFogMod : Mod
         // Selection proxies recurse directly into SelectInternal. Guard the
         // actual target as well as the initial public Select request.
         patchMethod(typeof(RimWorld.Selector), typeof(Selector), "SelectInternal");
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(typeof(RimWorld.Selector), "SelectableObjectsUnderMouse"),
+            postfix: new HarmonyMethod(
+                typeof(Presentation.InterfaceVisibility),
+                nameof(Presentation.InterfaceVisibility.MouseSelectionCandidatesPostfix)
+            )
+        );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(ThingSelectionUtility),
+                nameof(ThingSelectionUtility.MultiSelectableThingsInScreenRectDistinct)
+            ),
+            postfix: new HarmonyMethod(
+                typeof(Presentation.InterfaceVisibility),
+                nameof(Presentation.InterfaceVisibility.MultiSelectCandidatesPostfix)
+            )
+        );
         patchMethod(
             typeof(RimWorld.BeautyUtility),
             typeof(BeautyUtility),

@@ -18,6 +18,8 @@ local testing do not indicate that a new player build has been released.
 - Keep gravship previews from permanently exploring cells or granting live effects, notification eligibility or sound-source sight.
 - Keep splitting fleshbeasts, held/flying pawns, projectiles, corpses, gas, explosions and artificial ground light behind their appropriate current-sight gates.
 - Retain owned blueprints, Forbid/Allow area orders for observed player doors, and known home-area work without opening hidden live inspection.
+- Keep owned blueprints and construction frames selectable and editable outside current sight, including drag selection and ordinary construction commands.
+- Prevent hidden resources and pawns from taking selection priority away from visible things and your construction plans, including click cycling, double-click and drag selection.
 - Preserve existing haul orders for known plain chunks. Let native construction clear hidden haulable items, plants and buildings blocking owned blueprints/frames on known terrain. Storage hauling uses that same work-permission rule; native construction still chooses its ordinary haul-aside job.
 - Allow cleaning fresh dirt in a known home area without revealing it.
 

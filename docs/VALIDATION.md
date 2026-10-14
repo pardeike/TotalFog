@@ -8900,3 +8900,67 @@ This is native 1.7 planning/rendering acceptance with Core, five DLCs, released
 Workshop Harmony, RimBridgeServer, Total Fog and Zombieland. Identical relevant
 1.6 source is inspected, but no new 1.6 runtime result, construction sequence,
 performance comparison or broad integration gate is claimed. No player ZIP is sent.
+
+### Construction selection and native control audit, 2026-10-14
+
+Two shared fog boundaries need correction. `CanInspect` previously retained
+control of owned pawns outside current sight but rejected owned blueprints and
+frames. Four new source-linked tests fail before the correction. Construction
+orders now retain inspection/control and remembered rendering, while strict
+live-effect queries, foreign objects, completed buildings and native fog keep
+their existing sight rules. Fifteen new cases cover both construction stages,
+sight loss, hidden neighbours, foreign ownership, native fog, candidate ordering
+and non-Thing selection targets; all 462 C# and seven artifact tests pass.
+
+Native rectangle selection prioritizes resources and pawns before buildings.
+Rejecting a hidden candidate only in SelectInternal is too late: native code
+marks the resource category selected and stops, even if every Select call was
+blocked. In a captured paused Steam 1.7.4977 rev1248 colony, one real wood item
+is staged under a tower plan. Companion instrumentation zeros current coverage
+over owned plans only for the synchronous native selection call, restores the
+exact counts in a finalizer and never changes discovery. On ca2f2102, the native
+candidate list contains two inspectable tower blueprints and hidden wood; the
+actual mouse rectangle selects nothing. On 97b6eede, early candidate filtering
+removes the hidden wood and the same rectangle selects both plans. Vanilla wall
+plans pass the corresponding staged case. Visible wood retains native resource
+priority and is selected instead of the plans.
+
+The audit extends the same early filtering to native SelectableObjectsUnderMouse,
+covering click cycling and double-click matching before their candidate choice.
+Native non-Thing targets are retained. No selector, blueprint, frame, cost,
+construction job, ordering or command implementation is replaced. Both towers
+and vanilla walls still use Blueprint_Build; wall-only related-build shortcuts
+to doors, coolers and vents are native definition differences.
+
+Final gameplay SHA-256 is
+`637b1569b7c336128e2ff6db3c4cff8ecf337c81d26dcd335f14a7cdd02429f0`;
+companion SHA-256 is
+`7bd73ee95c643c16d153e3551252bebdbe92f2ab74f1b008881da5ffb076f599`.
+Canonical format/build, binary receipt and guarded deploy-built succeed with
+zero build warnings/errors. Fresh-process native checks repeat the hidden-wood
+two-plan selection and visible-wood priority on the final gameplay bytes.
+Actual double-click selects all four matching tower blueprints. Group Cancel
+removes both selected plans on 97b6eede; grouped Forbid/Allow and Build copy
+also pass in this source batch, with copy selecting the native wooden-tower
+designator. Those command results are their own earlier gameplay checkpoint.
+No recognized native errors/exceptions occur on the final process.
+
+Initial synthetic selection failures are not accepted mod reproductions.
+The bridge's mouse-up reaches HandleMapClicks with rawType=layout rather than
+MouseUp, so that native completion branch never executes. Computer Use drag
+produces down/up at the same destination with no intervening drag event. A real
+BrrainzTools window drag supplies native MouseDrag/MouseUp and establishes the
+selection results above. Both input limitations are retained in the artifacts;
+neither is a player-facing Total Fog defect. The generic frame-spawn probe also
+logs its missing-stuff/default-wood fallback and is excluded from clean native
+acceptance. Frames retain the source-linked control tests; this slice does not
+renew their construction-job or broader tower gates.
+
+The uniquely named original colony is reloaded unchanged at tick 305 from saved
+tick 304. All four original blueprint IDs remain; temporary wood, walls, frame
+and cancellations are absent. Camera, loadout and developer palette are restored.
+No original save or mod settings are overwritten, and no simulation playback is
+requested. Exact hashes, before/after native candidates, input traces, command
+readback and build/native logs are under ignored `artifacts/blueprint-controls-20261014`.
+There is no renewed 1.6 runtime, optional-mod or performance acceptance, and no
+player ZIP is sent. The selection filters add work only during player selection.

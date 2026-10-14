@@ -7,7 +7,7 @@ correction, front ladder placement, native-style blueprints and rotating
 undrafted lookouts. It is part of the active `Current/` payload shared by 1.6
 and 1.7. Earlier native 1.7 controls cover the user's three-tower row drag, watch/draft
 transitions, blueprint presentation, all four lookout facings and a visible
-tower melee attack. Current source passes 447 C# tests
+tower melee attack. Current source passes 462 C# tests
 and seven artifact-gate tests.
 A bounded native Core-only check on both 1.6 and 1.7 rejects hidden Thing acquisition and shots,
 retains visible targets and blind-cell fire, and completes replacement retrieval
@@ -79,6 +79,14 @@ Completed towers retain `MapMeshAndRealTime` for their wall-link registration.
 Planning follows native resource rules: an insufficient stock warning does not
 prevent placement. The 14 October Steam 1.7 check verifies saved and fresh
 blueprints with that warning still present; see VALIDATION.md for exact bytes.
+
+Blueprints remain native `Blueprint_Build` instances and construction uses native
+`Frame` instances. Owned plans and frames keep their ordinary control commands
+outside current sight. Fog filters unavailable Things before native click cycling,
+double-click matching and rectangle category priority, so a hidden resource or
+pawn cannot preempt the plans. The 14 October native slice verifies tower and
+vanilla wall drag selection, grouped cancellation, Forbid/Allow, Build copy and
+four-plan double-click matching. It does not renew the construction job sequence.
 
 Completed towers block all nine footprint cells. Native blueprints remain
 walkable until construction, like other unbuilt structures. The tower requires

@@ -32,8 +32,9 @@ primary faction retains the original `seenByPlayer` save value; extra factions
 have separate observation identities. A new object in an explored cell stays
 hidden until observed. Pawns, flyers, projectiles, corpses and
 ordinary motes require current sight. Player pawn observers and owned blueprints
-on explored cells retain presentation exceptions. Owned pawns also retain
-selection, labels, inspection and control menus when they supply no sight.
+and construction frames retain presentation exceptions. Owned pawns and those
+construction orders also retain selection, labels, inspection and control menus
+outside current sight.
 That exception never grants current sight to effects, notifications, other
 targets or neighbouring cells. Native undiscovered fog still takes precedence.
 
@@ -80,6 +81,12 @@ things can remain searchable at their native positions; unknown replacements,
 hidden mobile targets and hidden enemy inventories cannot. Player pawn contents
 and current registered inspection cores retain their corresponding access.
 Selection still requires current sight under the ordinary inspection policy.
+Owned pawns, blueprints and frames retain their explicit control exceptions.
+Click and double-click selection filter hidden Things from the native mixed
+object sequence while retaining zones and plans. Rectangle selection filters
+hidden candidates before native category priority, so a hidden resource or pawn
+cannot preempt eligible construction orders. The engine still owns ordering,
+matching, selection limits and the commands themselves.
 The native explicit debug restriction override remains available. Search does
 not mutate listers, simulation or saved state, and adds no location archive.
 

@@ -25,7 +25,9 @@ a wild boar or something much worse. To be safe, you have to look.
   who walks on it right now.
 - Previously observed scenery uses the game's normal drawing. Trees and buildings
   can change while unseen; Total Fog does not preserve a picture of their last appearance.
-- Your construction blueprints remain drawn outside current sight. Foreign corpses and
+- Your construction blueprints and frames remain drawn and controllable outside
+  current sight, with normal selection, Cancel, Forbid/Allow and Build copy commands.
+  Foreign corpses and
   artificial light require current sight. Your own corpses on known cells can be recovered.
 - Your own pawns remain selectable and controllable, even animals that provide no
   vision. Their presence does not reveal nearby things or hidden effects.

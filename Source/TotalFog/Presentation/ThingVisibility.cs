@@ -6,13 +6,15 @@ namespace TotalFog.Presentation;
 /// <summary>The common information boundary for game and modded things, including held pawns.</summary>
 internal static class ThingVisibility
 {
-    // Owned pawns stay under the player's control even when they supply no
-    // sight, such as untrained animals. This UI exception never grants sight
-    // to effects, enemy targets, discovered entities or neighbouring cells.
+    // Owned pawns and construction orders remain under the player's control
+    // outside current sight. This UI exception never grants sight to effects,
+    // enemy targets, discovered entities or neighbouring cells.
     internal static bool CanInspect(Thing thing, IntVec3? renderedCell = null) =>
         IsVisible(
             thing,
-            allowMemory: thing is Pawn pawn && pawn.Faction == Faction.OfPlayer,
+            allowMemory: thing != null
+                && thing.Faction == Faction.OfPlayer
+                && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame),
             renderedCell: renderedCell
         );
 
@@ -150,9 +152,10 @@ internal static class ThingVisibility
         bool ownObserver =
             thing is Pawn pawn && pawn.Faction == observerFaction
             || thing is PawnFlyer ownedFlyer && ownedFlyer.FlyingPawn?.Faction == observerFaction;
-        // Ownership only grants the pawn presentation exception. Live UI and
-        // events require current sight; vanilla fog precedes every exception.
-        bool ownPlan = thing.def.IsBlueprint && thing.Faction == observerFaction;
+        // Pawns and construction orders retain ownership-based presentation.
+        // Live events still require sight; native fog precedes every exception.
+        bool ownPlan =
+            (thing.def.IsBlueprint || thing.def.IsFrame) && thing.Faction == observerFaction;
         if (allowMemory && (ownObserver || ownPlan))
             return true;
         var fog = registeredVisibility ?? map.GetVisibility();
