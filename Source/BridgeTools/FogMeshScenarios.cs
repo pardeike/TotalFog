@@ -51,7 +51,8 @@ public sealed class FogMeshScenarios
                 int sections = 0,
                     vertices = 0,
                     mismatches = 0,
-                    drawnMismatches = 0;
+                    drawnMismatches = 0,
+                    heightMismatches = 0;
                 object firstMismatch = null;
                 object firstDrawnMismatch = null;
                 byte Cell(int x, int z)
@@ -85,6 +86,27 @@ public sealed class FogMeshScenarios
                         sections++;
                         fogLayer.Regenerate();
                         var actual = (byte[])targetsField.GetValue(fogLayer);
+                        var geometry = fogLayer.GetSubMesh(MatBases.FogOfWar).mesh.vertices;
+                        foreach (var vertex in geometry)
+                        {
+                            bool atTower = false;
+                            foreach (var tower in fog.TowerComponent.Towers)
+                                if (
+                                    vertex.x >= tower.Position.x - 1.5f
+                                    && vertex.x <= tower.Position.x + 2.5f
+                                    && vertex.z >= tower.Position.z - 1.5f
+                                    && vertex.z <= tower.Position.z + 3.5f
+                                )
+                                {
+                                    atTower = true;
+                                    break;
+                                }
+                            float expectedHeight = atTower
+                                ? AltitudeLayer.BuildingOnTop.AltitudeFor() - Altitudes.AltInc
+                                : AltitudeLayer.FogOfWar.AltitudeFor();
+                            if (Math.Abs(vertex.y - expectedHeight) > .0001f)
+                                heightMismatches++;
+                        }
                         UnityEngine.Color32[] drawn = null;
                         if (verifyDrawn)
                         {
@@ -155,6 +177,7 @@ public sealed class FogMeshScenarios
                 {
                     success = mismatches == 0
                         && drawnMismatches == 0
+                        && heightMismatches == 0
                         && vertices == map.Size.x * map.Size.z * 9,
                     sections,
                     vertices,
@@ -163,6 +186,7 @@ public sealed class FogMeshScenarios
                     verifyDrawn,
                     drawnMismatches,
                     firstDrawnMismatch,
+                    heightMismatches,
                 };
             },
             cancellationToken

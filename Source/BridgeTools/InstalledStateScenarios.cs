@@ -107,6 +107,15 @@ public sealed class InstalledStateScenarios
                 .ToArray(),
             mapFogComponentPresent = fog != null,
             fogInitialized = fog?.GetType().GetProperty("Initialized")?.GetValue(fog),
+            towerMaterials = new
+            {
+                cutout = ShaderDatabase.Cutout.name,
+                fog = MatBases.FogOfWar.shader.name,
+                fogQueue = MatBases.FogOfWar.renderQueue,
+                towerQueue = MaterialPool
+                    .MatFrom(new MaterialRequest(BaseContent.WhiteTex, ShaderDatabase.Cutout))
+                    .renderQueue,
+            },
             recheckStaticInitializer,
             initializerSucceeded,
             initializerErrors = errors,

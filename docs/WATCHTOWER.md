@@ -197,7 +197,13 @@ of its physical footprint cells. It leaves discovery, current sight, combat
 queries and neighbouring ground unchanged. Whole-footprint section invalidation
 follows sight changes and native spawn/despawn. The 14 October Steam 1.7 Refog
 reproduction and independent target/uploaded mesh checks pass on DLL a43afaf6;
-section seams, map corners and short edge buffers have pure controls.
+section seams, map corners and short edge buffers have pure controls. A follow-up
+on DLL 9635b448 extends depth protection to the raised deck and lookout, whose
+artwork reaches beyond the physical footprint. Native occupied-tower Refog
+restores exploration fog for actual current sight even when the native flood
+fill starts inside the solid tower. Unknown background remains shaded. The
+focused check includes a native sandstone blueprint; broader 1.6 rendering and
+remembered wall-material pixel checks are not renewed by this follow-up.
 
 The solid base protects a partly climbed actor from incoming fire on the opposite
 side; the open ladder side remains exposed. A completed platform is exempt from

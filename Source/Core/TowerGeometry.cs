@@ -27,6 +27,13 @@ public static class TowerGeometry
     public static int SightRadius(float ordinaryRange, float multiplier, int maximum) =>
         Math.Max(0, Math.Min(maximum, (int)Math.Round(ordinaryRange * multiplier)));
 
+    // Includes all ladder rotations, raised railings and an ordinary lookout.
+    // Coordinates are relative to the logical cell, not its shifted center.
+    public static bool FogDrawingContains(float x, float z, int towerX, int towerZ) =>
+        x >= towerX - 1.5f && x <= towerX + 2.5f && z >= towerZ - 1.5f && z <= towerZ + 3.5f;
+
+    public static float RememberedBrightness(byte alpha) => 1f - alpha / 255f;
+
     /// <summary>Shade only the solid 3x3 base, without changing discovery or sight.</summary>
     public static void FillFogFootprint(
         byte[] samples,

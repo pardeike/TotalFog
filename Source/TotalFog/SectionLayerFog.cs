@@ -18,6 +18,8 @@ public class SectionLayerFog : SectionLayer
     private bool fading;
     private int lastFadeTick;
     private MapVisibility fog;
+    private int towerGeometryRevision = -1;
+    private bool loweredForTowers;
 
     public SectionLayerFog(Section section)
         : base(section) => relevantChangeTypes = FogDefOf.RealFogOfWar | MapMeshFlagDefOf.FogOfWar;
@@ -104,6 +106,7 @@ public class SectionLayerFog : SectionLayer
             targetAlphas = new byte[mesh.mesh.vertexCount];
             colors = new Color32[targetAlphas.Length];
         }
+        UpdateTowerFogHeight(mesh);
         bool wasFading = fading;
         var rect = section.CellRect;
         var counts = fog.GetFactionShownCells(Faction.OfPlayer);
@@ -179,6 +182,53 @@ public class SectionLayerFog : SectionLayer
         }
         if (first || !wasFading && fading)
             lastFadeTick = Find.TickManager.TicksGame;
+    }
+
+    private void UpdateTowerFogHeight(LayerSubMesh mesh)
+    {
+        var towers = fog.TowerComponent;
+        if (towerGeometryRevision == towers.FogGeometryRevision)
+            return;
+        towerGeometryRevision = towers.FogGeometryRevision;
+        bool overlaps = false;
+        foreach (var tower in towers.Towers)
+            if (
+                new CellRect(tower.Position.x - 2, tower.Position.z - 2, 5, 6).Overlaps(
+                    section.CellRect.ExpandedBy(1)
+                )
+            )
+            {
+                overlaps = true;
+                break;
+            }
+        if (!overlaps && !loweredForTowers)
+            return;
+        loweredForTowers = false;
+        float ordinary = AltitudeLayer.FogOfWar.AltitudeFor();
+        float belowTower = AltitudeLayer.BuildingOnTop.AltitudeFor() - Altitudes.AltInc;
+        for (int i = 0; i < mesh.verts.Count; i++)
+        {
+            var vertex = mesh.verts[i];
+            vertex.y = ordinary;
+            foreach (var tower in towers.Towers)
+                if (
+                    TowerGeometry.FogDrawingContains(
+                        vertex.x,
+                        vertex.z,
+                        tower.Position.x,
+                        tower.Position.z
+                    )
+                )
+                {
+                    vertex.y = belowTower;
+                    loweredForTowers = true;
+                    break;
+                }
+            mesh.verts[i] = vertex;
+        }
+        // Preserve triangles/colors; FinalizeMesh clears an existing mesh.
+        mesh.mesh.SetVertices(mesh.verts);
+        mesh.mesh.RecalculateBounds();
     }
 
     private void Upload(LayerSubMesh mesh)

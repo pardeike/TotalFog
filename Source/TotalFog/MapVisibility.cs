@@ -537,6 +537,10 @@ public class MapVisibility : MapComponent
             coverage.SetDebugVisible(key, index, !fogged);
             bool discovered = !fogged || restoreSight && counts[index] > 0;
             known[index] = discovered;
+            // Native Refog starts its flood at a colonist's ground cell. A
+            // lookout stands inside an opaque edifice, so that flood can fail.
+            if (restoreSight && discovered && map.fogGrid.IsFogged(cell))
+                map.fogGrid.Unfog(cell);
             if (wasKnown != discovered)
             {
                 DiscoveryChanged(index, faction);
@@ -601,7 +605,9 @@ public class MapVisibility : MapComponent
     {
         // One observed face shades the solid footprint as a whole. Include
         // its far section/border on sight changes and native spawn/despawn.
-        var footprint = tower.OccupiedRect().ExpandedBy(1).ClipInsideMap(map);
+        var footprint = new CellRect(tower.Position.x - 2, tower.Position.z - 2, 5, 6)
+            .ExpandedBy(1)
+            .ClipInsideMap(map);
         foreach (
             int section in new SectionRange(
                 footprint.minX / SectionSize,

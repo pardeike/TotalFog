@@ -12,6 +12,7 @@ public sealed class MapComponent_Watchtowers : MapComponent
     private readonly Game ownerGame;
     internal static int SpawnedTowerCount { get; private set; }
     internal readonly List<Building_Watchtower> Towers = new();
+    internal int FogGeometryRevision { get; private set; }
     private readonly HashSet<Building_Watchtower> dirtyDrawings = new();
     private readonly Dictionary<Pawn, Building_Watchtower> occupants = new();
     private bool[] elevatedBlockers;
@@ -59,6 +60,7 @@ public sealed class MapComponent_Watchtowers : MapComponent
         {
             Towers.Add(tower);
             SpawnedTowerCount++;
+            FogGeometryRevision++;
         }
         dirtyDrawings.Add(tower);
         map.GetVisibility().DirtyTowerFog(tower);
@@ -70,8 +72,12 @@ public sealed class MapComponent_Watchtowers : MapComponent
             Untrack(tower.Occupant);
         if (tower.Rescuer != null)
             Untrack(tower.Rescuer);
-        if (Towers.Remove(tower) && countedGame.TryGetTarget(out var game) && game == ownerGame)
-            SpawnedTowerCount--;
+        if (Towers.Remove(tower))
+        {
+            FogGeometryRevision++;
+            if (countedGame.TryGetTarget(out var game) && game == ownerGame)
+                SpawnedTowerCount--;
+        }
         dirtyDrawings.Remove(tower);
         map.GetVisibility().DirtyTowerFog(tower);
     }

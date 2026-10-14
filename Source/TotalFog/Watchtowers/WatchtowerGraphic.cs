@@ -19,6 +19,7 @@ public class WatchtowerGraphic : Building
     private Mesh body;
     private Mesh foreground;
     private Material material;
+    private MaterialPropertyBlock fogTint;
     private WatchtowerWallJoins wallJoins;
     private WatchtowerWallJoins nativeFront;
     internal Thing NativeFrontSource { get; set; }
@@ -57,7 +58,12 @@ public class WatchtowerGraphic : Building
 
     private void InitializeDrawing()
     {
-        material = SolidColorMaterials.SimpleSolidColorMaterial(Color.white, true);
+        // Native cutout writes opaque depth. Local fog below this artwork then
+        // shades the background without painting across the raised tower.
+        material = MaterialPool.MatFrom(
+            new MaterialRequest(BaseContent.WhiteTex, ShaderDatabase.Cutout)
+        );
+        fogTint = new MaterialPropertyBlock();
         var drawing = new Drawing(
             Rotation,
             DrawColor,
@@ -137,12 +143,46 @@ public class WatchtowerGraphic : Building
     {
         if (body == null || foreground == null)
             return;
+        float brightness = FogBrightness();
+        fogTint.SetColor("_Color", new Color(brightness, brightness, brightness, 1));
         drawLoc.y = AltitudeLayer.BuildingOnTop.AltitudeFor();
-        Graphics.DrawMesh(body, drawLoc, Quaternion.identity, material, 0);
-        nativeFront?.Draw();
-        wallJoins?.Draw();
+        Graphics.DrawMesh(body, drawLoc, Quaternion.identity, material, 0, null, 0, fogTint);
+        nativeFront?.Draw(brightness);
+        wallJoins?.Draw(brightness);
         drawLoc.y = AltitudeLayer.PawnState.AltitudeFor();
-        Graphics.DrawMesh(foreground, drawLoc, Quaternion.identity, material, 0);
+        Graphics.DrawMesh(foreground, drawLoc, Quaternion.identity, material, 0, null, 0, fogTint);
+    }
+
+    private float FogBrightness()
+    {
+        if (
+            this is not Building_Watchtower
+            || !DebugViewSettings.drawFog
+            || Presentation.ThingVisibility.Bypass(Map)
+        )
+            return 1;
+        var fog = Map.GetVisibility();
+        if (!fog.Initialized)
+            return 1;
+        var counts = fog.GetFactionShownCells(Faction.OfPlayer);
+        var known = fog.GetFactionKnownCells(Faction.OfPlayer);
+        byte alpha = byte.MaxValue;
+        foreach (var cell in this.OccupiedRect())
+        {
+            int index = Map.cellIndices.CellToIndex(cell);
+            alpha = Math.Min(
+                alpha,
+                Core.FogAppearance.CellAlpha(
+                    Map.fogGrid.IsFogged(index),
+                    known != null && known[index],
+                    counts[index],
+                    SectionLayerFog.PrefFogAlpha
+                )
+            );
+            if (alpha == 0)
+                break;
+        }
+        return Core.TowerGeometry.RememberedBrightness(alpha);
     }
 
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)

@@ -7,6 +7,29 @@ namespace TotalFog.Tests;
 public sealed class TowerFogTests
 {
     [Theory]
+    [InlineData(-1.15f, .5f)]
+    [InlineData(2.15f, .5f)]
+    [InlineData(.5f, -1.15f)]
+    [InlineData(.5f, 2.15f)]
+    [InlineData(.5f, 3.25f)]
+    public void DrawingBoundsIncludeEveryLadderAndRaisedLookout(float x, float z) =>
+        Assert.True(TowerGeometry.FogDrawingContains(100 + x, 100 + z, 100, 100));
+
+    [Theory]
+    [InlineData(-1.51f, 0)]
+    [InlineData(2.51f, 0)]
+    [InlineData(0, -1.51f)]
+    [InlineData(0, 3.51f)]
+    public void UnrelatedGroundKeepsOrdinaryFogDepth(float x, float z) =>
+        Assert.False(TowerGeometry.FogDrawingContains(100 + x, 100 + z, 100, 100));
+
+    [Theory]
+    [InlineData(0, 1f)]
+    [InlineData(255, 0f)]
+    public void RememberedShadeDoesNotChangeOpaqueDepth(byte alpha, float expected) =>
+        Assert.Equal(expected, TowerGeometry.RememberedBrightness(alpha));
+
+    [Theory]
     [InlineData(0)]
     [InlineData(86)]
     [InlineData(255)]

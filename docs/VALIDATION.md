@@ -9015,3 +9015,32 @@ developer palette are retained. The original `total-fog-bug` save is not written
 Native logs have no recognized errors/exceptions or open attention. Evidence is
 under ignored `artifacts/refog-20261014`. This is a focused 1.7 result, not a new
 1.6 runtime, DLC integration or performance gate. No player ZIP is sent.
+
+### Raised tower fog follow-up, 2026-10-14
+
+Andreas's later screenshot reproduces clipping above the physical 3x3 footprint.
+The deck extends north into opaque unknown fog. Gameplay DLL
+`9635b448c9f837409150111e75f892361203a4c69540a50afe68a2f46492ae8d`
+uses native Cutout depth and a local fog-height mask to protect the actual opaque
+artwork while preserving background fog alpha. Canonical format/build and
+binary verification pass with 482 C# and seven artifact tests. The guarded
+deployment and fresh Steam 1.7.4977 rev1248 process load the same ten-mod profile.
+Companion SHA-256 is
+`520c0f679a0e521ebbf56f3342f214409decfd978b9b214a3d4e7a484b36bce5`.
+
+Tight pixels show the complete base/deck with a ground observer and unknown
+background still dark. Jade then climbs through a real drafted float-menu order
+and 360 Normal ticks. At paused tick 4494, native Refog preserves her native
+watch job, current sight and clear native fog under the tower and nearby ground.
+Actual lookout pixels retain the body, railing and selection marker. Independent
+checks accept 289 sections and 680,625 vertices with zero target-alpha,
+uploaded-alpha or height mismatches. A native sandstone blueprint placed with
+God Mode off has its outline/fill and RealtimeOnly registration. It is not
+Mortal's installed Windows build; his latest posted ZIP predates the blueprint
+fix. No durability/balance change is made in Zombieland.
+
+The unchanged preserved scene reloads at tick 4132, removing the temporary
+sandstone plan and restoring Jade's ground position and original plans. Evidence
+is under ignored `artifacts/tower-projection-fog-20261014`. Remembered shade has
+pure endpoint controls; this bounded follow-up does not renew native remembered
+wall-material pixels, 1.6 rendering, every projectile/effect or performance.

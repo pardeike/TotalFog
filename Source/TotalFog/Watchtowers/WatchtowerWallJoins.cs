@@ -13,6 +13,7 @@ internal sealed class WatchtowerWallJoins
     private const float SideCutSlope = .32f;
     private const float EndInnerExtent = 1.05f;
     private readonly CaptureLayer layer;
+    private MaterialPropertyBlock fogTint;
     internal readonly List<IntVec3> Directions = new();
     internal int DrawCalls => layer.subMeshes.Count;
     internal bool HasGeometry => VertexCount() > 0;
@@ -222,7 +223,34 @@ internal sealed class WatchtowerWallJoins
         }
     }
 
-    internal void Draw() => layer.DrawLayer();
+    internal void Draw(float brightness = 1)
+    {
+        if (brightness == 1)
+        {
+            layer.DrawLayer();
+            return;
+        }
+        fogTint ??= new MaterialPropertyBlock();
+        foreach (var subMesh in layer.subMeshes)
+            if (!subMesh.disabled)
+            {
+                var color = subMesh.material.color;
+                color.r *= brightness;
+                color.g *= brightness;
+                color.b *= brightness;
+                fogTint.SetColor("_Color", color);
+                Graphics.DrawMesh(
+                    subMesh.mesh,
+                    Vector3.zero,
+                    Quaternion.identity,
+                    subMesh.material,
+                    subMesh.renderLayer,
+                    null,
+                    0,
+                    fogTint
+                );
+            }
+    }
 
     internal void Dispose() => layer.Dispose();
 

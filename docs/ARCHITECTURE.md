@@ -105,6 +105,13 @@ only, never discovery, observer counts or targeting. Neighbouring ground retains
 its own fog. Sight changes and tower spawn/despawn dirty the whole footprint and
 its section borders; clipped map-edge samples retain native edge repetition.
 
+The raised artwork extends beyond that physical base. Fog vertices within its
+drawing bounds sit below the native opaque tower material, so the deck and
+lookout write depth before fog shades the background. Alpha and logical sight
+remain unchanged there. Spawn/despawn revises this local height mask; ordinary
+sight updates still upload colors only. Remembered towers and native wall joins
+receive the remembered shade through reused material property blocks.
+
 ### Debug fog commands
 
 The native Clear All Fog, Refog Map, Fog (rect) and Unfog (rect) debug commands
