@@ -51,12 +51,15 @@ targets or neighbouring cells. Native undiscovered fog still takes precedence.
 - Presentation gates print eligibility and the engine's completed culling flags.
   All pawn draw phases use the same decision and native interpolated drawing cell.
   Labels, overlays, tooltips, selection and inspection of stationary remembered
-  objects follow Select remembered objects, enabled by default. Turning it off
+  objects follow Interact with remembered objects, enabled by default. Turning it off
   requires current sight and immediately reconciles existing selection, even
   while paused. Native panels may expose current state when this option is on.
   Unseen replacements, moved objects, hostile pawns and registered moving
   inspection cores retain their current-sight boundary. Combat targets, audio
   and notifications always retain their independent current-sight checks.
+  Ordinary right-click candidates use this interaction preference. Active
+  target pickers and the native drafted attack provider retain the strict target
+  gate, so work access does not grant an unseen melee or ranged attack option.
 - Notifications retain original payloads until their targets are observed, survive
   saves and replay once. Audio has independent settings for combat music, hidden
   sources, hearing filtering and hearing indicators.
@@ -91,7 +94,8 @@ navigation using the same remembered-static policy as drawing. Observed static
 things can remain searchable at their native positions; unknown replacements,
 hidden mobile targets and hidden enemy inventories cannot. Player pawn contents
 and current registered inspection cores retain their corresponding access.
-Selection follows the remembered-object preference and recorded location;
+Selection and ordinary context-menu interaction follow the remembered-object
+preference and recorded location;
 strict mode still requires current sight.
 Owned pawns, blueprints and frames retain their explicit control exceptions.
 Click and double-click selection filter hidden Things from the native mixed

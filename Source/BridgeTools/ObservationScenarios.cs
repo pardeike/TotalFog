@@ -30,7 +30,7 @@ public sealed class ObservationScenarios
         MapVisibility fog = null;
         int index = -1;
         bool addedSight = false;
-        bool previousSelection = FogSettings.SelectRememberedObjects;
+        bool previousSelection = FogSettings.InteractWithRememberedObjects;
         object observed = null,
             hidden = null,
             revealed = null;
@@ -45,7 +45,7 @@ public sealed class ObservationScenarios
                     var map =
                         Find.CurrentMap
                         ?? throw new InvalidOperationException("Load a test map first.");
-                    FogSettings.SelectRememberedObjects = selectRememberedObjects;
+                    FogSettings.InteractWithRememberedObjects = selectRememberedObjects;
                     fog = map.GetComponent<MapVisibility>();
                     var cell = map.AllCells.First(c =>
                         !map.fogGrid.IsFogged(c)
@@ -235,7 +235,7 @@ public sealed class ObservationScenarios
                         probe.Destroy();
                     if (proxy != null && !proxy.Destroyed)
                         proxy.Destroy();
-                    FogSettings.SelectRememberedObjects = previousSelection;
+                    FogSettings.InteractWithRememberedObjects = previousSelection;
                     Presentation.InterfaceVisibility.ReconcileSelection();
                 },
                 CancellationToken.None

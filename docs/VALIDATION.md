@@ -9099,3 +9099,61 @@ Evidence and bounded logs are under ignored
 `artifacts/remembered-selection-20261014`. The README, current architecture/coverage
 and all five maintained UI languages describe the preference. This is focused
 1.7 evidence; it does not renew 1.6 native, broad optional-mod or performance gates.
+
+### Remembered interaction and Vision scrolling, 2026-10-14
+
+The loaded Steam 1.7.4977 rev1248 scene reproduces missing undrafted work
+menus for an observed oak at (145,121), wooden wall at (157,120) and watchtower
+at (156,126). Their work designations remain, but the FloatMenuContext filter
+rejects them without current sight even when remembered selection is enabled.
+Ordinary context candidates now follow the renamed Interact with remembered
+objects preference. Its initializer, saved fallback and Reset defaults remain
+enabled. The saved key `totalFogSelectRememberedObjects` stays unchanged so
+earlier private choices survive. All five maintained UI languages, README and
+current architecture/coverage describe selection, inspection and ordinary work
+interaction together. Active target pickers and the native drafted attack
+provider retain a separate current-sight gate. Zombieland and RimBridgeServer
+need no source changes for this regression.
+
+The Vision layout has a separate native cause: Listing_Standard starts a new
+column when content exceeds its initial height. That resets CurHeight and
+prevents the surrounding scroll view from measuring the complete content.
+Native declarations in both installed engines confirm the same behavior.
+Setting maxOneColumn keeps the existing scroll view and fixed footer while
+letting its measured content grow. Actual native screenshots show the scrollbar
+and reachable lower controls, including camera staffing and tree blocking.
+
+Canonical format/build and binary verification pass with 505 C# and seven
+artifact tests, zero build warnings/errors. Seven new source-linked interaction
+cases cover remembered buildings/plants/items, strict mode, unknown/native fog,
+moved/replacement identities and hidden enemy pawns. Gameplay SHA-256 is
+`26fba604fd74c7037f35d33000340090b8fe498ab729f1622a9d8b18d09b937f`;
+companion SHA-256 is
+`a98b66a22668fbdb9bcbdd4571a0e1fb61a5a05dc6fe3d7f96d8321bb8fb4e7d`.
+Guarded deployment after verified game termination installs the matching pair.
+A fresh Steam process loads the unchanged ten-mod profile with released
+Workshop Harmony, RimBridgeServer, all five DLCs, Total Fog and Zombieland.
+
+At paused tick 15534, native right-click with Jade undrafted offers enabled
+prioritized harvesting, wall deconstruction and tower deconstruction on those
+remembered targets. The tower also retains its three timed watch orders.
+Turning the actual native checkbox off removes the remembered oak/wall menus;
+supplying current sight restores the wall's deconstruction option in strict
+mode. Checkbox readback confirms both transitions and the final enabled state.
+No work option is executed. A first visible control made while a settings
+dialog was open, and coordinate clicks that failed to change the checkbox,
+are excluded from acceptance. Semantic native clicks provide the actual
+preference transitions.
+
+Friendly walls and natural rocks are ineligible for the native drafted attack
+provider even in sight; their empty menus are not positive combat controls.
+The new gate has source-linked current/hidden checks and its native binding is
+verified in both engines, but this slice does not renew a hostile attack
+scenario, 1.6 runtime, broad DLC integration or performance acceptance.
+Native logs contain no recognized errors/exceptions or open attention. With
+Andreas's explicit restore choice, the unchanged pre-test scene reloads paused
+at tick 15534 from saved tick 15533, with Jade undrafted in her original CutPlant
+job, the original towers/plans and camera, and interaction enabled. Temporary
+debug sight and draft changes are removed. No original save is overwritten and
+no player ZIP is sent. Evidence is under ignored
+`artifacts/right-click-20261014`.

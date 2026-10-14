@@ -26,7 +26,7 @@ public partial class FogSettings
         var color = GUI.color;
         var contentColor = GUI.contentColor;
         bool enabled = GUI.enabled;
-        bool rememberedSelection = SelectRememberedObjects;
+        bool rememberedSelection = InteractWithRememberedObjects;
         bool watching = Compatibility.MultiplayerIntegration.BeginSettingsWatch();
         try
         {
@@ -61,7 +61,7 @@ public partial class FogSettings
                 Math.Max(viewport.height, contentHeights[(int)settingsPage])
             );
             Widgets.BeginScrollView(viewport, ref scrollPosition, view);
-            var listing = new Listing_Standard { ColumnWidth = view.width };
+            var listing = new Listing_Standard { ColumnWidth = view.width, maxOneColumn = true };
             listing.Begin(view);
             try
             {
@@ -117,7 +117,7 @@ public partial class FogSettings
         finally
         {
             Compatibility.MultiplayerIntegration.EndSettingsWatch(watching);
-            if (rememberedSelection != SelectRememberedObjects)
+            if (rememberedSelection != InteractWithRememberedObjects)
                 Presentation.InterfaceVisibility.ReconcileSelection();
             Text.Font = font;
             Text.Anchor = anchor;
@@ -247,9 +247,9 @@ public partial class FogSettings
         Section(row, "TotalFog_InformationOptions");
         Check(
             row,
-            "TotalFog_SelectRememberedObjects",
-            ref SelectRememberedObjects,
-            "TotalFog_SelectRememberedObjectsDesc"
+            "TotalFog_InteractWithRememberedObjects",
+            ref InteractWithRememberedObjects,
+            "TotalFog_InteractWithRememberedObjectsDesc"
         );
         Check(row, "wildLifeTabVisible", ref WildLifeTabVisible, "wildLifeTabVisibleDesc");
         Check(row, "hideSpeakBubble", ref HideSpeakBubble, "hideSpeakBubbleDesc");
@@ -460,7 +460,7 @@ public partial class FogSettings
         AllyGiveVision = false;
         MapRevealAtStart = false;
         WildLifeTabVisible = true;
-        SelectRememberedObjects = true;
+        InteractWithRememberedObjects = true;
         OnlyOutsideColony = false;
         DoAudioCheck = false;
         SuppressCombatMusic = true;

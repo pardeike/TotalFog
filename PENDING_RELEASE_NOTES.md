@@ -41,7 +41,8 @@ local testing do not indicate that a new player build has been released.
 
 ## Audio and settings
 
-- Allow selecting remembered buildings and objects by default while they remain in their last observed location. Turn off Select remembered objects to require current sight. Unknown objects and hidden pawns stay unavailable.
+- Allow interacting with remembered buildings and objects by default while they remain in their last observed location, including selection, inspection and right-click work orders. Turn off Interact with remembered objects to require current sight. Unknown objects, hidden pawns and combat targets stay unavailable.
+- Keep the Vision settings in one scrolling column so lower controls remain accessible.
 - Keep hidden tooltips blocked on engines that treat invalid map cells as unfogged.
 - Suppress Combat and Anomaly music by default while retaining ordinary music.
 - Add optional hidden-source muting, hearing-distance filtering and hearing indicators. Living faction listeners supply hearing; general ambience stays native.

@@ -9,11 +9,11 @@ namespace TotalFog.Tests;
 public sealed class ObservationTests : System.IDisposable
 {
     // Retain the original strict-information contracts as explicit option A.
-    private readonly bool oldSelection = FogSettings.SelectRememberedObjects;
+    private readonly bool oldSelection = FogSettings.InteractWithRememberedObjects;
 
-    public ObservationTests() => FogSettings.SelectRememberedObjects = false;
+    public ObservationTests() => FogSettings.InteractWithRememberedObjects = false;
 
-    public void Dispose() => FogSettings.SelectRememberedObjects = oldSelection;
+    public void Dispose() => FogSettings.InteractWithRememberedObjects = oldSelection;
 
     [Fact]
     public void OwnedBlueprintRendersOutsideSightWithoutRevealingLiveInformation()

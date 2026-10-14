@@ -11,6 +11,21 @@ namespace TotalFog.Presentation;
 
 internal static partial class InterfaceVisibility
 {
+    // Ordinary work menus can use remembered objects. Attack menus retain the
+    // targeting boundary before native providers evaluate or build an option.
+    [HarmonyPriority(Priority.Last)]
+    public static bool DraftedAttackOptionsPrefix(
+        Thing clickedThing,
+        FloatMenuContext context,
+        ref IEnumerable<FloatMenuOption> __result
+    )
+    {
+        if (CanReadMenuTarget(clickedThing, context.ClickedCell))
+            return true;
+        __result = Array.Empty<FloatMenuOption>();
+        return false;
+    }
+
     public static IEnumerable<CodeInstruction> TargetCandidatesTranspiler(
         IEnumerable<CodeInstruction> instructions
     )

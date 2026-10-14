@@ -881,7 +881,7 @@ namespace TotalFog
         public static int AudioSourceRange = 30;
         public static bool OnlyOutsideColony;
         public static bool ClearFogDuringTargeting = true;
-        public static bool SelectRememberedObjects = true;
+        public static bool InteractWithRememberedObjects = true;
         public static bool AISmart;
         public static bool SilentRaids;
         public static bool HideEventNegative,

@@ -89,14 +89,38 @@ internal static partial class InterfaceVisibility
     // authoritative grid and native cell fallback alone.
     public static void ContextMenuPostfix(FloatMenuContext __instance)
     {
-        FilterTargets(__instance.ClickedThings, __instance.ClickedCell);
-        FilterTargets(__instance.ClickedPawns, __instance.ClickedCell);
+        FilterTargets(
+            __instance.ClickedThings,
+            __instance.ClickedCell,
+            allowRememberedInteraction: true
+        );
+        FilterTargets(
+            __instance.ClickedPawns,
+            __instance.ClickedCell,
+            allowRememberedInteraction: true
+        );
     }
 
     public static List<Thing> FilterTargetThings(List<Thing> things, IntVec3 clickCell) =>
         FilterTargets(things, clickCell);
 
-    private static List<T> FilterTargets<T>(List<T> things, IntVec3 clickCell)
+    internal static bool CanReadMenuTarget(
+        Thing thing,
+        IntVec3 clickCell,
+        bool allowRememberedInteraction = false
+    ) =>
+        thing != null
+        && (
+            CustomInspectionCell.TryGetCell(thing, out _)
+                ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
+                : CanRead(thing, allowRememberedSelection: allowRememberedInteraction)
+        );
+
+    private static List<T> FilterTargets<T>(
+        List<T> things,
+        IntVec3 clickCell,
+        bool allowRememberedInteraction = false
+    )
         where T : Thing
     {
         int write = 0;
@@ -106,10 +130,7 @@ internal static partial class InterfaceVisibility
             // A registered inspection core is independent of manual body
             // targeting. Its native adapter supplies shape-valid candidates;
             // current sight at the clicked cell still gates every body target.
-            bool visible =
-                thing != null && CustomInspectionCell.TryGetCell(thing, out _)
-                    ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
-                    : CanRead(thing, allowRememberedSelection: false);
+            bool visible = CanReadMenuTarget(thing, clickCell, allowRememberedInteraction);
             if (!visible)
                 continue;
             if (write != read)

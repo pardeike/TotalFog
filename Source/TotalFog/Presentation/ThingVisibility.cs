@@ -21,7 +21,7 @@ internal static class ThingVisibility
                     thing.Faction == Faction.OfPlayer
                         && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame)
                     || allowRememberedSelection
-                        && FogSettings.SelectRememberedObjects
+                        && FogSettings.InteractWithRememberedObjects
                         && thing.Spawned
                         && thing is not (Pawn or PawnFlyer or Corpse)
                         && thing

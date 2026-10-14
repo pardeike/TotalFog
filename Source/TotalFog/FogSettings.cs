@@ -46,7 +46,7 @@ public partial class FogSettings : ModSettings
     public static bool AllyGiveVision;
     public static bool MapRevealAtStart;
     public static bool WildLifeTabVisible = true;
-    public static bool SelectRememberedObjects = true;
+    public static bool InteractWithRememberedObjects = true;
     public static bool SuppressCombatMusic = true;
     public static bool MuteHiddenSounds;
     public static bool DoAudioCheck; // Whether the audio check should be performed for fogged sounds.
@@ -97,7 +97,12 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref BaseHearingRange, "baseHearingRange", 10);
         Scribe_Values.Look(ref ShowHearingCues, "totalFogShowHearingCues", true);
         Scribe_Values.Look(ref WildLifeTabVisible, "wildLifeTabVisible", true);
-        Scribe_Values.Look(ref SelectRememberedObjects, "totalFogSelectRememberedObjects", true);
+        // Preserve choices from the first private build of this preference.
+        Scribe_Values.Look(
+            ref InteractWithRememberedObjects,
+            "totalFogSelectRememberedObjects",
+            true
+        );
         Scribe_Values.Look(ref PrisonerGiveVision, "prisonerGiveVision");
         Scribe_Values.Look(ref MapRevealAtStart, "mapRevealAtStart");
         Scribe_Values.Look(ref AllyGiveVision, "allyGiveVision");

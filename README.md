@@ -36,10 +36,11 @@ a wild boar or something much worse. To be safe, you have to look.
   can see them again.
 - Map search includes previously seen static things and your pawns' inventories.
   Never-seen things and hidden enemies stay out of the results.
-- Remembered buildings and objects can be selected at their last observed
-  location by default. Disable **Select remembered objects** under Information
-  to require current sight instead. Hidden pawns and undiscovered objects stay
-  unavailable. This setting grants no combat sight or event information.
+- Remembered buildings and objects can be selected, inspected and given ordinary
+  right-click work orders at their last observed location by default. Disable
+  **Interact with remembered objects** under Information to require current sight
+  instead. Hidden pawns and undiscovered objects stay unavailable. This setting
+  grants no combat sight or event information.
   Objects remembered in older saves need one fresh observation to record their
   location. No appearance snapshots are saved.
 - Allies and neutral visitors can share their view with you through one setting;

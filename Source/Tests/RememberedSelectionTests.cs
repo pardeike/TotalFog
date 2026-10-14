@@ -11,11 +11,11 @@ public sealed class RememberedSelectionTests : IDisposable
 {
     private sealed class RegisteredBench : ThingWithComps { }
 
-    private readonly bool previousSetting = FogSettings.SelectRememberedObjects;
+    private readonly bool previousSetting = FogSettings.InteractWithRememberedObjects;
 
-    public RememberedSelectionTests() => FogSettings.SelectRememberedObjects = true;
+    public RememberedSelectionTests() => FogSettings.InteractWithRememberedObjects = true;
 
-    public void Dispose() => FogSettings.SelectRememberedObjects = previousSetting;
+    public void Dispose() => FogSettings.InteractWithRememberedObjects = previousSetting;
 
     [Theory]
     [InlineData(false)]
@@ -35,7 +35,7 @@ public sealed class RememberedSelectionTests : IDisposable
     public void StrictOptionRequiresCurrentSightWhileLeavingRememberedDrawing()
     {
         var thing = ObservedThing();
-        FogSettings.SelectRememberedObjects = false;
+        FogSettings.InteractWithRememberedObjects = false;
         Assert.False(ThingVisibility.CanInspect(thing));
         Assert.True(ThingVisibility.IsVisible(thing));
         thing.Map.Fog.InSight[0] = true;
@@ -46,12 +46,12 @@ public sealed class RememberedSelectionTests : IDisposable
     public void RejectedTooltipDoesNotDependOnTheEngineTreatingInvalidCellsAsFogged()
     {
         var thing = ObservedThing();
-        FogSettings.SelectRememberedObjects = false;
+        FogSettings.InteractWithRememberedObjects = false;
         Assert.False(thing.Map.fogGrid.IsFogged(IntVec3.Invalid));
         Assert.True(
             InterfaceVisibility.TooltipFogged(InterfaceVisibility.TooltipPosition(thing), thing.Map)
         );
-        FogSettings.SelectRememberedObjects = true;
+        FogSettings.InteractWithRememberedObjects = true;
         Assert.False(
             InterfaceVisibility.TooltipFogged(InterfaceVisibility.TooltipPosition(thing), thing.Map)
         );
@@ -183,7 +183,7 @@ public sealed class RememberedSelectionTests : IDisposable
         {
             thing.TryGetComp<CompFog>().HideFromPlayer.UpdateVisibility(true);
             Assert.True(Find.Selector.IsSelected(thing));
-            FogSettings.SelectRememberedObjects = false;
+            FogSettings.InteractWithRememberedObjects = false;
             thing.TryGetComp<CompFog>().HideFromPlayer.UpdateVisibility(true);
             Assert.False(Find.Selector.IsSelected(thing));
         }
@@ -202,7 +202,7 @@ public sealed class RememberedSelectionTests : IDisposable
         {
             InterfaceVisibility.ReconcileSelection();
             Assert.True(Find.Selector.IsSelected(thing));
-            FogSettings.SelectRememberedObjects = false;
+            FogSettings.InteractWithRememberedObjects = false;
             InterfaceVisibility.ReconcileSelection();
             Assert.False(Find.Selector.IsSelected(thing));
         }
@@ -248,7 +248,7 @@ public sealed class RememberedSelectionTests : IDisposable
         IEnumerable<object> click = new object[] { hiddenPawn, thing };
         InterfaceVisibility.MouseSelectionCandidatesPostfix(ref click);
         Assert.Equal(new[] { thing }, click.Cast<Thing>());
-        FogSettings.SelectRememberedObjects = false;
+        FogSettings.InteractWithRememberedObjects = false;
         InterfaceVisibility.MultiSelectCandidatesPostfix(ref rectangle);
         Assert.Empty(rectangle);
     }

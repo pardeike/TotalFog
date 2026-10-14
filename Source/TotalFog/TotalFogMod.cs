@@ -381,6 +381,18 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.ContextMenuPostfix)
             )
         );
+        PatchSafety.Patch(
+            harmony,
+            AccessTools.Method(
+                typeof(FloatMenuOptionProvider_DraftedAttack),
+                nameof(FloatMenuOptionProvider_DraftedAttack.GetOptionsFor),
+                [typeof(Thing), typeof(FloatMenuContext)]
+            ),
+            prefix: new HarmonyMethod(
+                typeof(Presentation.InterfaceVisibility),
+                nameof(Presentation.InterfaceVisibility.DraftedAttackOptionsPrefix)
+            )
+        );
         foreach (
             var method in typeof(Verse.GenMapUI)
                 .GetMethods()

@@ -22,8 +22,8 @@
   <TotalFog_DiscardEvents>Discard unseen messages and letters</TotalFog_DiscardEvents>
   <TotalFog_DiscardEventsDesc>Discard the selected categories only while their targets are unseen. Colony health events, visible events and global events without targets remain immediate. Use delay to keep unseen notifications until their targets are observed.</TotalFog_DiscardEventsDesc>
   <TotalFog_InformationOptions>Other information</TotalFog_InformationOptions>
-  <TotalFog_SelectRememberedObjects>Select remembered objects</TotalFog_SelectRememberedObjects>
-  <TotalFog_SelectRememberedObjectsDesc>Allow selecting previously seen buildings and objects while they remain in the same place on explored terrain. Their current inspection panels remain available. Disable to require current sight. Hidden pawns and undiscovered objects remain unavailable. Your pawns and construction plans keep their normal controls.</TotalFog_SelectRememberedObjectsDesc>
+  <TotalFog_InteractWithRememberedObjects>Interact with remembered objects</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Allow selecting, inspecting and using ordinary commands on previously seen buildings and objects while they remain in the same place on explored terrain. This includes right-click work orders. Disable to require current sight. Combat targets, hidden pawns and undiscovered objects still require current sight. Your pawns and construction plans keep their normal controls.</TotalFog_InteractWithRememberedObjectsDesc>
   <TotalFog_SilentRaids>Silent raids and manhunter packs</TotalFog_SilentRaids>
   <TotalFog_SilentRaidsDesc>Remove arrival letters and arrival slowdown for enemy raids and manhunter packs, even when they are visible. No delayed arrival warning is kept. Their attacks and normal combat slowdown remain. Combat music is controlled separately.</TotalFog_SilentRaidsDesc>
   <TotalFog_HearingIndicators>Hearing indicators</TotalFog_HearingIndicators>
