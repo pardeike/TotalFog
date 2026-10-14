@@ -34,7 +34,7 @@ public class CompTreeOcclusion : FogSubcomponent
         Refresh();
     }
 
-    private void Refresh()
+    internal void Refresh()
     {
         if (plant?.Spawned == true && (map != parent.Map || position != parent.Position))
         {

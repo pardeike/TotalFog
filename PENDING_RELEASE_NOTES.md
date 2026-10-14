@@ -32,6 +32,7 @@ local testing do not indicate that a new player build has been released.
 - Let drafted Go here and dragged formations use tower platforms, including Achtung's move orders. Ground routes begin at the ladder after descent; idle undrafted pawns step clear while retaining queued work.
 - Face the ladder in both directions. Undrafted lookouts turn through all four directions; idle drafted lookouts face the player while combat aiming retains priority.
 - Connect actual adjacent wall graphics to the solid base without unwanted end caps.
+- Shade a watchtower's solid base consistently when only one face is seen; keep the ground behind it hidden.
 - Keep raised bodies, labels, selection, effects and projectiles aligned. Preserve native trajectories, target cover, shield absorption and fire resistance; tall obstacles still block elevated shots.
 - Preserve occupied towers, downed occupants, corpses, rescue and carrying state through saves. Warn about blocked exits, protect ladder access and permit retrieval without requiring a bed. Desperate exits and collapse can cause fall injuries.
 - Give cameras a separate Cameras work priority. Choose working consoles, release operators when their console stops, and avoid console work when the operator requirement is disabled.
@@ -46,6 +47,7 @@ local testing do not indicate that a new player build has been released.
 - Organize Appearance, Vision, Information and Audio settings with a fixed footer, clear defaults and space beside the scrollbar. Preserve saved choices and explain intentional information cues.
 - Add a separate colony-mech vision multiplier, keeping normal range by default. Keep tree-blocking choices disabled while a game is loaded.
 - Apply native Clear All Fog, Refog Map and rectangle fog commands to Total Fog. Settle fog fades while paused so scrolling does not leave stale straight section edges.
+- Refresh sight blockers and observers immediately for debug fog commands, including walls placed while paused.
 - Translate current settings and tower text into German, French, Simplified Chinese and Korean.
 
 ## Integrations and stability

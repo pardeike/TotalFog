@@ -31,7 +31,7 @@ public class CompWallOcclusion : FogSubcomponent
         Refresh();
     }
 
-    private void Refresh()
+    internal void Refresh()
     {
         if (!parent.Spawned || parent is not Building building)
             return;

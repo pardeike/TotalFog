@@ -99,6 +99,12 @@ finishes any outstanding fade at its target, including a section returning from
 outside the camera view. This changes presentation only and prevents neighboring
 sections from retaining different stale shades indefinitely while paused.
 
+A watchtower's solid 3x3 base takes the least fog opacity among its footprint
+cells, matching the building's whole-object drawing. This changes section samples
+only, never discovery, observer counts or targeting. Neighbouring ground retains
+its own fog. Sight changes and tower spawn/despawn dirty the whole footprint and
+its section borders; clipped map-edge samples retain native edge repetition.
+
 ### Debug fog commands
 
 The native Clear All Fog, Refog Map, Fog (rect) and Unfog (rect) debug commands
@@ -109,6 +115,11 @@ commands, and is not saved. Discovery changes still use the usual saved grids.
 Rectangle hooks wrap the native rectangle action; ordinary native unfogging is
 unchanged. Debug commands reconcile registered presentation immediately and
 regenerate with fading temporarily disabled so edits work while paused.
+Before applying a debug fog edit, refresh native wall/door/tree blocker comps,
+invalidate the elevated blocker snapshot and force every registered sight source
+to recast. Refog therefore restores actual current sight after paused map edits,
+instead of copying stale observer counts. This full refresh runs only on explicit
+debug commands; ordinary source scheduling is unchanged.
 
 ### Multiplayer context
 

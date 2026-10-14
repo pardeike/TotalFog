@@ -8964,3 +8964,54 @@ requested. Exact hashes, before/after native candidates, input traces, command
 readback and build/native logs are under ignored `artifacts/blueprint-controls-20261014`.
 There is no renewed 1.6 runtime, optional-mod or performance acceptance, and no
 player ZIP is sent. The selection filters add work only during player selection.
+
+### Tower footprint fog and paused Refog, 2026-10-14
+
+The loaded Steam 1.7.4977 rev1248 reproduction has one wooden tower at
+(138,110), five blueprint plans and one colonist at (143,123). After native
+Refog, four tower footprint cells are currently visible and five are unknown,
+although native exploration fog is clear throughout the footprint. The
+whole-building tower drawing is therefore cut through by opaque per-cell fog.
+Baseline DLL 637b1569 also reproduces stale paused sight: nine native wooden
+walls placed at x=145, z=119..127 register as blockers, but native Refog leaves
+the cell at (147,123) visible at the unchanged tick 2247.
+
+Corrected gameplay SHA-256 is
+`a43afaf6846a027b878afa75b2145edac734a145da4d1723398527bcd7289be8`;
+companion SHA-256 is
+`e66ae57d0069f9a17f2e4efd2641def282a542e71c9f9c63637ab25dc947d810`.
+Canonical format/build and binary verification pass, with 471 C# and seven
+artifact tests and zero build warnings/errors. Guarded deploy-built places the
+matching pair after verified termination, then a fresh Steam process loads the
+preserved save with the same ten-mod profile, including five DLCs and Zombieland.
+
+The corrected tight screenshot has no opaque holes inside the tower's base or
+ladder. All nine logical cell results remain identical to the reproduction:
+the five unknown cells still provide no sight, and all nine remain blockers.
+The presentation fix changes only fog samples within the opaque footprint.
+Nine new pure cases cover current/remembered/unknown shades, adjacent ground,
+section seams, all four map corners and unused short-section buffer rows.
+Sight changes and spawn/despawn also dirty the entire footprint and its border.
+The independent companion oracle follows the same contract through separate
+native cell/edifice queries; all 680,625 target and drawn alphas in 289 sections
+match both on the original scene and with the test walls present.
+
+At tick 2248, native paused wall placement leaves the distant cell temporarily
+visible. Refog immediately changes it to unknown/not visible; removing those
+walls and refogging restores sight. No tick or observer movement occurs during
+either sequence. Clear All Fog reveals a distant control at (220,220), and
+Refog removes that debug sight while retaining the colonist's real coverage.
+The first post-restart wall attempt creates blueprints because God Mode resets
+on restart; it is rejected as wall-blocking evidence and reloaded before the
+actual completed-wall test. Debug commands resample wall/door/tree comps and
+invalidate elevated sight before recasting. Doors, tree growth and roofs are not
+separately renewed by this bounded native wall test.
+
+The unchanged preserved colony is reloaded, refogged and left paused at tick
+2248, reflecting native Pause on load's one-tick increment from the saved 2247.
+All five original plans and the original tower remain; test walls, destroyed
+lane objects and diagnostic plans are restored. Camera, loadout, God Mode and
+developer palette are retained. The original `total-fog-bug` save is not written.
+Native logs have no recognized errors/exceptions or open attention. Evidence is
+under ignored `artifacts/refog-20261014`. This is a focused 1.7 result, not a new
+1.6 runtime, DLC integration or performance gate. No player ZIP is sent.

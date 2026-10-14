@@ -58,10 +58,19 @@ public sealed class FogMeshScenarios
                 {
                     x = Math.Max(0, Math.Min(map.Size.x - 1, x));
                     z = Math.Max(0, Math.Min(map.Size.z - 1, z));
-                    int index = map.cellIndices.CellToIndex(new IntVec3(x, 0, z));
-                    if (map.fogGrid.IsFogged(new IntVec3(x, 0, z)) || !fog.knownCells[index])
-                        return 255;
-                    return counts[index] > 0 ? (byte)0 : SectionLayerFog.PrefFogAlpha;
+                    byte Raw(IntVec3 cell)
+                    {
+                        int cellIndex = map.cellIndices.CellToIndex(cell);
+                        if (map.fogGrid.IsFogged(cell) || !fog.IsKnown(Faction.OfPlayer, cellIndex))
+                            return 255;
+                        return counts[cellIndex] > 0 ? (byte)0 : SectionLayerFog.PrefFogAlpha;
+                    }
+                    var position = new IntVec3(x, 0, z);
+                    byte alpha = Raw(position);
+                    if (position.GetEdifice(map) is Watchtowers.Building_Watchtower tower)
+                        foreach (var cell in tower.OccupiedRect().ClipInsideMap(map))
+                            alpha = Math.Min(alpha, Raw(cell));
+                    return alpha;
                 }
                 for (int sx = 0; sx < map.Size.x; sx += 17)
                 for (int sz = 0; sz < map.Size.z; sz += 17)

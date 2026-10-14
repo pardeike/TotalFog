@@ -60,6 +60,13 @@ public class CompFog : ThingComp
         parts[5]?.CompTick();
     }
 
+    internal void RefreshBlockers()
+    {
+        Setup();
+        (parts[3] as CompWallOcclusion)?.Refresh();
+        (parts[5] as CompTreeOcclusion)?.Refresh();
+    }
+
     public override void CompTickRare()
     {
         Setup();

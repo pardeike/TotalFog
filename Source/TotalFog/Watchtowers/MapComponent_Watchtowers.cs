@@ -40,6 +40,13 @@ public sealed class MapComponent_Watchtowers : MapComponent
         }
     }
 
+    internal void InvalidateSight()
+    {
+        elevatedBlockers = null;
+        foreach (var tower in Towers)
+            tower.SightDirty = true;
+    }
+
     internal Building_Watchtower For(Thing thing)
     {
         var pawn = thing as Pawn ?? (thing as Corpse)?.InnerPawn;
@@ -54,6 +61,7 @@ public sealed class MapComponent_Watchtowers : MapComponent
             SpawnedTowerCount++;
         }
         dirtyDrawings.Add(tower);
+        map.GetVisibility().DirtyTowerFog(tower);
     }
 
     internal void Unregister(Building_Watchtower tower)
@@ -65,6 +73,7 @@ public sealed class MapComponent_Watchtowers : MapComponent
         if (Towers.Remove(tower) && countedGame.TryGetTarget(out var game) && game == ownerGame)
             SpawnedTowerCount--;
         dirtyDrawings.Remove(tower);
+        map.GetVisibility().DirtyTowerFog(tower);
     }
 
     public override void MapRemoved()

@@ -126,6 +126,43 @@ public class SectionLayerFog : SectionLayer
                 PrefFogAlpha
             );
         }
+        // The tower is one opaque building, not nine independently drawable
+        // surfaces. Match its whole-building rendering within the solid base.
+        // Ground sight, targeting and cells behind it retain the original grid.
+        foreach (var tower in fog.TowerComponent.Towers)
+        {
+            var footprint = tower.OccupiedRect();
+            if (!footprint.Overlaps(rect.ExpandedBy(1)))
+                continue;
+            byte alpha = byte.MaxValue;
+            foreach (var cell in footprint.ClipInsideMap(Map))
+            {
+                int index = Map.cellIndices.CellToIndex(cell);
+                alpha = Math.Min(
+                    alpha,
+                    FogAppearance.CellAlpha(
+                        Map.fogGrid.IsFogged(index),
+                        known != null && known[index],
+                        counts[index],
+                        PrefFogAlpha
+                    )
+                );
+                if (alpha == 0)
+                    break;
+            }
+            TowerGeometry.FillFogFootprint(
+                samples,
+                stride,
+                rect.Height + 2,
+                rect.minX - 1,
+                rect.minZ - 1,
+                tower.Position.x,
+                tower.Position.z,
+                Map.Size.x,
+                Map.Size.z,
+                alpha
+            );
+        }
         FogAppearance.FillSection(samples, rect.Width, rect.Height, targetAlphas);
         for (int vertex = 0; vertex < targetAlphas.Length; vertex++)
         {

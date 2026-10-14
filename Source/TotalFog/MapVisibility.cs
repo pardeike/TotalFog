@@ -514,6 +514,13 @@ public class MapVisibility : MapComponent
         var faction = Faction.OfPlayer;
         if (faction == null)
             return;
+        // Debug commands run while paused. Resample doors/trees as well as
+        // spawned walls before casting; ordinary queued refreshes need a tick.
+        foreach (var thing in map.listerThings.AllThings)
+            thing.TryGetComp<CompFog>()?.RefreshBlockers();
+        TowerComponent.InvalidateSight();
+        foreach (var watcher in fowWatchers.ToArray())
+            watcher.UpdateFoV(true);
         int key = Key(faction);
         var known = GetFactionKnownCells(faction);
         if (known == null)
@@ -582,9 +589,31 @@ public class MapVisibility : MapComponent
         ref var listeners = ref hiddenAt[index];
         for (int i = 0; i < listeners.Count; i++)
         {
+            if (listeners[i].parent is Watchtowers.Building_Watchtower tower)
+                DirtyTowerFog(tower);
             if (otherPlayerFactions.Count != 0)
                 listeners[i].RecordObservation(faction, this);
             listeners[i].UpdateVisibility(true);
+        }
+    }
+
+    internal void DirtyTowerFog(Watchtowers.Building_Watchtower tower)
+    {
+        // One observed face shades the solid footprint as a whole. Include
+        // its far section/border on sight changes and native spawn/despawn.
+        var footprint = tower.OccupiedRect().ExpandedBy(1).ClipInsideMap(map);
+        foreach (
+            int section in new SectionRange(
+                footprint.minX / SectionSize,
+                footprint.maxX / SectionSize,
+                footprint.minZ / SectionSize,
+                footprint.maxZ / SectionSize,
+                (coverage.Width + SectionSize - 1) / SectionSize
+            )
+        )
+        {
+            dirtySections.TryGetValue(section, out ulong pending);
+            dirtySections[section] = pending | FogDefOf.RealFogOfWar;
         }
     }
 

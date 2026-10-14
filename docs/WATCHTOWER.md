@@ -192,6 +192,13 @@ geometry is captured through an existing native layer object; no custom
 SectionLayer is registered in every map section. The original control artwork
 remains in the companion.
 
+Fog shading treats the opaque 3x3 base as one surface, using the least opacity
+of its physical footprint cells. It leaves discovery, current sight, combat
+queries and neighbouring ground unchanged. Whole-footprint section invalidation
+follows sight changes and native spawn/despawn. The 14 October Steam 1.7 Refog
+reproduction and independent target/uploaded mesh checks pass on DLL a43afaf6;
+section seams, map corners and short edge buffers have pure controls.
+
 The solid base protects a partly climbed actor from incoming fire on the opposite
 side; the open ladder side remains exposed. A completed platform is exempt from
 its own footprint. A real rear bullet damages the base without injuring the

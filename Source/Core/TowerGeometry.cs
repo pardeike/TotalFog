@@ -27,6 +27,32 @@ public static class TowerGeometry
     public static int SightRadius(float ordinaryRange, float multiplier, int maximum) =>
         Math.Max(0, Math.Min(maximum, (int)Math.Round(ordinaryRange * multiplier)));
 
+    /// <summary>Shade only the solid 3x3 base, without changing discovery or sight.</summary>
+    public static void FillFogFootprint(
+        byte[] samples,
+        int width,
+        int height,
+        int minX,
+        int minZ,
+        int towerX,
+        int towerZ,
+        int mapWidth,
+        int mapHeight,
+        byte alpha
+    )
+    {
+        // Border samples repeat the nearest map cell, just like native fog.
+        int left = towerX <= 1 ? minX : Math.Max(minX, towerX - 1);
+        int right =
+            towerX >= mapWidth - 2 ? minX + width - 1 : Math.Min(minX + width - 1, towerX + 1);
+        int bottom = towerZ <= 1 ? minZ : Math.Max(minZ, towerZ - 1);
+        int top =
+            towerZ >= mapHeight - 2 ? minZ + height - 1 : Math.Min(minZ + height - 1, towerZ + 1);
+        for (int z = bottom; z <= top; z++)
+        for (int x = left; x <= right; x++)
+            samples[(z - minZ) * width + x - minX] = alpha;
+    }
+
     public static void CopySightWindow(
         bool[] source,
         bool[] destination,
