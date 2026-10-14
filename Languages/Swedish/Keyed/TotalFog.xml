@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Återställ till standard</RFWreset>
+  <TotalFog_ResetDesc>Återställer alla inställningar till sina standardvärden. Trädblockering ändras inte medan ett spel är laddat.</TotalFog_ResetDesc>
+  <CurrentModVersion>Version {0}</CurrentModVersion>
+  <NotVisible>Utom synhåll</NotVisible>
+  <CannotPlaceInUndiscovered>Kan inte placera i outforskat område.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Måste placeras under tak.</MustBeUnderRoof>
+  <MustBeNextToWall>Måste placeras intill en vägg.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Utseende</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Sikt</TotalFog_PageVision>
+  <TotalFog_PageInformation>Information</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Ljud</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Hur utforskad mark ser ut när ingen håller ögonen på den.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Vem som ser åt dig, och hur långt.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Vilka meddelanden och detaljer som får avslöja sådant ingen har sett.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Musik och ljud kan avslöja dolda händelser. Välj vad du vill höra.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Mörker i utforskade områden</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Hur mörk utforskad mark blir när ingen kan se den just nu.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Svart (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Dimmans toningshastighet</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Hur snabbt dimman tonas när sikten ändras. Av växlar omedelbart.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Långsam</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Medel</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Snabb</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Av</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>Grundläggande siktavstånd</baseViewRange>
+  <baseViewRangeDesc>Hur långt en kolonist ser innan hälsa, ljus och väder räknas in.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Andra ögon</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Siktmultiplikator för byggnader</buildingVisionMod>
+  <buildingVisionModDesc>Skalar hur långt kameror och andra byggnader ser. Förhandsvisningen vid placering ändras inte.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Siktmultiplikator för vapentorn</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Skalar hur långt automatiska vapentorn ser. Ett vapentorn behöver ström eller bränsle för att se över huvud taget.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Siktmultiplikator för djur</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Skalar hur långt dina djur ser. Ett djur behöver en ägare och träningen ”släpp loss” för att se åt dig.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Siktmultiplikator för mekar</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Skalar hur långt dina mekar ser. 1 behåller deras normala räckvidd. Vapenräckvidd och hörsel ändras inte.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Allierade och besökare delar sin sikt</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Vänligt sinnade människor och djur på din karta låter dig se vad de ser, på halva deras normala räckvidd.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Fångar delar sin sikt</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Dina fångar låter dig se vad de ser, på en femtedel av deras normala räckvidd.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Terräng och kartor</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Nya kartor börjar utforskade</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>Nya kartor börjar med all mark utforskad. Du ser fortfarande bara vad dina kolonister ser just nu.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Träd blockerar sikten</treesBlockSight>
+  <treesBlockSightDesc>Fullvuxna träd blockerar siktlinjen. Plantor och stubbar gör det inte.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Ändra detta från huvudmenyn och ladda sedan ditt spel.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Ingen dimma på hemkartor</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Dina hemkartor visar allt. Dimman finns kvar på alla andra kartor.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Full kartvy vid gravskeppsflygning</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Visar hela kartan medan du väljer landningsplats och under start och landning. Det kan visa dig sådant ingen har sett.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Vakttorn</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Siktmultiplikator för utkik</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Hur mycket längre en utkik ser från toppen av ett vakttorn. Tak, berg och andra torn blockerar fortfarande sikten.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Siktgräns för utkik</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>En utkik ser aldrig längre än så här många rutor.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Klättringstid för stege (ticks)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Hur lång tid det tar att klättra upp eller ner. 60 ticks är en sekund speltid.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Utkikar får skjuta</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Utkikar kan skjuta över fristående väggar. Däruppe är de lättare att träffa och kan inte slåss i närstrid.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Siktgräns för teleskop</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>En kolonist vid ett spaningsteleskop ser aldrig längre än så här många rutor. Oberoende av vakttorn.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Fördröjda nyheter om osedda händelser</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Notiser och meddelanden om något som ingen kan se väntar tills någon ser det. Kolonins hälsa och världshändelser kommer fortfarande direkt.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Slopade nyheter om osedda händelser</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Notiser och meddelanden av de valda slagen slopas medan ingen kan se vad de handlar om. Kolonins hälsa, synliga händelser och världshändelser kommer fortfarande. Använd ”Fördröjda nyheter” ovan för att behålla dem i stället.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Stora hot</hideThreatBig>
+  <hideThreatSmall>Små hot</hideThreatSmall>
+  <hideEventPositive>Goda nyheter</hideEventPositive>
+  <hideEventNegative>Dåliga nyheter</hideEventNegative>
+  <hideEventNeutral>Neutrala nyheter</hideEventNeutral>
+  <TotalFog_SilentRaids>Tysta räder</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Ingen notis och ingen nedsaktning när räder eller människojagande flockar anländer, inte ens i full åsyn. De anfaller ändå, och strid saktar fortfarande ner tiden. Musik är en separat inställning.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Övrig information</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Lista osedda vilda djur</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Fliken Djurliv listar även djur som ingen kan se. Det avslöjar att de finns där.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Dölj osedda pratbubblor</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Döljer Interaction Bubbles för karaktärer utom synhåll.</hideSpeakBubbleDesc>
+  <aiSmart>Fiender har också dimma</aiSmart>
+  <aiSmartDesc>Mänskliga fiender kan bara sikta på vad deras egen sida kan se. En kolonist i mörkret förblir dold.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Använd ihågkomna byggnader och föremål</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Markera, inspektera och ge order till byggnader och föremål du har sett tidigare, så länge de fortfarande står där du såg dem. Det gäller även arbetsorder via högerklick. Människor, djur, stridsmål och allt som aldrig har setts kräver fortfarande aktuell sikt. Dina egna kolonister och byggplaner fungerar alltid.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Kameror behöver en operatör</NeedWatcher>
+  <NeedWatcherDesc>Kameror visar bara sin omgivning medan en kolonist arbetar vid en kamerakonsol.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Ingen strids- eller Anomaly-musik</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Låter den vanliga musiken fortsätta under strider och Anomaly-händelser, så att ett musikbyte inte kan varna dig.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Tysta dolda ljud</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Ljud från sådant ingen kan se är tysta, även pågående loopar. Detta åsidosätter hörselbaserad filtrering.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Hörselbaserad ljudfiltrering</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Dolda ljud dämpas och spelas bara nära en levande kolonist som skulle kunna höra dem. Bortom hörselräckvidden är de tysta.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Hörselräckvidd</audioSourceRange>
+  <audioSourceRangeDesc>Hur många rutor bort en kolonist fortfarande kan höra ett dolt ljud.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Dämpning med avståndet</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Hur mycket tystare ett dolt ljud blir mot kanten av hörselräckvidden.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Hörselmarkörer</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Visa hörselmarkörer</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Små markeringar visar var en kolonist hör dold rörelse. Stäng av för att ta bort dem.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Räckvidd för hörselmarkörer</baseHearingRange>
+  <TotalFog_HearingRangeDesc>Hur många rutor bort dold rörelse kan höras.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Aktiva kameror: {0}</TotalFog_CameraCount>
+  <Revealing>Övervakar</Revealing>
+  <NoCameraConsole>Ingen bemannad kamerakonsol</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Utkik: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Håll utkik från tornet</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Håll utkik tills kommenderingen upphävs</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Håll utkik i {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Håller utkik tills kommenderingen upphävs eller nya order ges</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Vakten slutar om {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Klättrar upp i {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Klättrar ner från {0}.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Klättra ner</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Hämta ner från tornet</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>tornet är upptaget eller stegen blockerad</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>Rutan framför stegen måste hållas fri.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Ett vakttorn behöver fri himmel.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Hämta ner utkiken innan tornet demonteras.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Stegen är blockerad. Röj rutan framför den så att utkiken kan klättra ner.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Väntar på att stegen till {0} ska bli fri.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} hoppar ner från det blockerade vakttornet. Fallet kan göra ont.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

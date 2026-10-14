@@ -3,8 +3,8 @@
   <!--=============================== Tier 2.5 Microelectronics ===================================-->
   <ResearchProjectDef>
     <defName>CameraSecurity</defName>
-    <label>Security camera</label>
-    <description>Allows the construction of security camera, providing your colony vision when some one is watching them.</description>
+    <label>security cameras</label>
+    <description>Build surveillance cameras and a camera console. Powered cameras show you their surroundings while a colonist operates the console.</description>
     <baseCost>800</baseCost>
     <prerequisites>
       <li>Electricity</li>
@@ -15,8 +15,8 @@
   </ResearchProjectDef>
   <ResearchProjectDef>
     <defName>CameraSecurityAdvanced</defName>
-    <label>Advanced camera lens</label>
-    <description>Allows the construction of advanced security camera. Their vision range is better than the previous one and more flexible, and some niche one too.</description>
+    <label>advanced camera lenses</label>
+    <description>Build better cameras: ceiling and ground models, a solar camera that needs no power line, and a long-range camera post.</description>
     <baseCost>800</baseCost>
     <prerequisites>
       <li>CameraSecurity</li>
@@ -28,7 +28,7 @@
   <ResearchProjectDef>
     <defName>WatchTelescope</defName>
     <label>watch telescope</label>
-    <description>Allows the production of watch telescope.</description>
+    <description>Build a watch telescope. A colonist standing at it sees twice as far.</description>
     <baseCost>500</baseCost>
     <techLevel>Medieval</techLevel>
     <researchViewX>2.00</researchViewX>

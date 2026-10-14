@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Varsayılana döndür</RFWreset>
+  <TotalFog_ResetDesc>Tüm ayarları varsayılan değerlerine döndürür. Bir oyun yüklüyken ağaçların görüşü engellemesi olduğu gibi kalır.</TotalFog_ResetDesc>
+  <CurrentModVersion>Sürüm {0}</CurrentModVersion>
+  <NotVisible>Görüş dışında</NotVisible>
+  <CannotPlaceInUndiscovered>Keşfedilmemiş alanlara yerleştirilemez.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Çatı altına yerleştirilmeli.</MustBeUnderRoof>
+  <MustBeNextToWall>Duvara yaslanması gerekli.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Görünüm</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Görüş</TotalFog_PageVision>
+  <TotalFog_PageInformation>Bilgi</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Ses</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Keşfedilmiş zemin kimse bakmıyorken nasıl görünür.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Senin için kimler görür ve ne kadar uzağı.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Hangi mesajlar ve ayrıntılar sana kimsenin görmediği şeyleri anlatabilir.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Müzik ve sesler gizli olayları ele verebilir. Ne duymak istediğini seç.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Keşfedilmiş alanların karanlığı</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Keşfedilmiş zemin, şu anda kimse göremiyorken ne kadar kararır.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Siyah (%100)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>%82</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>%71</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>%59</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>%47</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>%39</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>%31</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>%24</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Sisin solma hızı</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Görüş değiştiğinde sisin ne kadar hızlı solduğu. Kapalı seçeneğinde anında değişir.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Yavaş</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Orta</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Hızlı</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Kapalı</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>Temel görüş menzili</baseViewRange>
+  <baseViewRangeDesc>Sağlık, ışık ve hava durumu hesaba katılmadan önce bir kolonicinin ne kadar uzağı gördüğü.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Diğer gözler</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Yapı görüş çarpanı</buildingVisionMod>
+  <buildingVisionModDesc>Kameraların ve diğer yapıların ne kadar uzağı gördüğünü ölçekler. Yerleştirme ön izlemesi değişmez.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Taret görüş çarpanı</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Otomatik taretlerin ne kadar uzağı gördüğünü ölçekler. Bir taretin görebilmesi için güç veya yakıt gerekir.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Hayvan görüş çarpanı</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Hayvanlarının ne kadar uzağı gördüğünü ölçekler. Bir hayvanın senin için görebilmesi için bir efendisi ve saldırma eğitimi olmalıdır.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Mekanoit görüş çarpanı</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Mekanoitlerinin ne kadar uzağı gördüğünü ölçekler. 1 değeri normal menzillerini korur. Silah menzili ve işitme değişmez.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Müttefikler ve ziyaretçiler görüşünü paylaşır</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Haritandaki dost kişiler ve hayvanlar, normal menzillerinin yarısı kadar, gördüklerini sana gösterir.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Mahkûmlar görüşünü paylaşır</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Mahkûmların, normal menzillerinin beşte biri kadar, gördüklerini sana gösterir.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Arazi ve haritalar</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Yeni haritalar keşfedilmiş başlar</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>Yeni haritalar tüm zemin keşfedilmiş olarak başlar. Yine de yalnızca kolonicilerinin şu anda gördüğünü görürsün.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Ağaçlar görüşü engeller</treesBlockSight>
+  <treesBlockSightDesc>Büyümüş ağaçlar görüş hattını keser. Fidanlar ve kütükler kesmez.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Bunu ana menüden değiştir, sonra oyununu yükle.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Ev haritalarında sis yok</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Ev haritaların her şeyi gösterir. Diğer tüm haritalarda sis kalır.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Gravgemi uçuşlarında tam harita görünümü</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>İniş yeri seçerken ve kalkış ile iniş sırasında tüm haritayı gösterir. Bu, kimsenin görmediği şeyleri sana gösterebilir.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Gözcü kuleleri</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Gözcü görüş çarpanı</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Bir gözcünün gözcü kulesinin tepesinden ne kadar daha uzağı gördüğü. Çatılar, dağlar ve diğer kuleler görüşü yine de engeller.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Gözcü görüş sınırı</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Bir gözcü hiçbir zaman bu kadar kareden daha uzağı göremez.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Merdiven tırmanma süresi (tik)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Yukarı veya aşağı tırmanmanın ne kadar sürdüğü. 60 tik, bir saniye oyun zamanıdır.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Gözcüler ateş edebilir</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Gözcüler bağımsız duvarların üzerinden ateş edebilir. Yukarıdayken daha kolay vurulurlar ve yakın dövüş yapamazlar.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Teleskop görüş sınırı</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Gözetleme teleskobundaki bir kolonici hiçbir zaman bu kadar kareden daha uzağı göremez. Gözcü kulelerinden bağımsızdır.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Görülmeyen olaylarda gecikmeli haberler</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Kimsenin göremediği bir şeyle ilgili bildirimler ve mesajlar, biri onu görene kadar bekler. Koloni sağlığı ve dünya olayları yine de hemen gelir.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Görülmeyen olaylarda atılan haberler</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Seçilen türlerdeki bildirimler ve mesajlar, konularını kimse göremiyorken atılır. Koloni sağlığı, görülen olaylar ve dünya olayları yine de gelir. Bunları saklamak için yukarıdaki "Gecikmeli haberler" seçeneğini kullan.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Büyük tehditler</hideThreatBig>
+  <hideThreatSmall>Küçük tehditler</hideThreatSmall>
+  <hideEventPositive>İyi haberler</hideEventPositive>
+  <hideEventNegative>Kötü haberler</hideEventNegative>
+  <hideEventNeutral>Nötr haberler</hideEventNeutral>
+  <TotalFog_SilentRaids>Sessiz baskınlar</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Baskınlar veya insan avcısı sürüleri geldiğinde, açıkça görünseler bile bildirim ve yavaşlama olmaz. Yine de saldırırlar ve çatışma zamanı yine de yavaşlatır. Müzik ayrı bir ayardır.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Diğer bilgiler</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Görülmeyen yabani hayvanları listele</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Yaban sekmesi kimsenin göremediği hayvanları da listeler. Bu, orada olduklarını ele verir.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Görülmeyen konuşma balonlarını gizle</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Görüş dışındaki karakterlerin Interaction Bubbles balonlarını gizler.</hideSpeakBubbleDesc>
+  <aiSmart>Düşmanlar için de sis var</aiSmart>
+  <aiSmartDesc>İnsan düşmanlar yalnızca kendi taraflarının görebildiğini hedef alabilir. Karanlıktaki bir kolonici gizli kalır.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Hatırlanan yapıları ve eşyaları kullan</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Daha önce gördüğün yapıları ve eşyaları, hâlâ gördüğün yerde durdukları sürece seçebilir, inceleyebilir ve onlara emir verebilirsin. Sağ tık iş emirleri de buna dâhildir. Kişiler, hayvanlar, çatışma hedefleri ve hiç görülmemiş her şey için yine de güncel görüş gerekir. Kendi kolonicilerin ve inşaat planların her zaman çalışır.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Kameralar için operatör gerekir</NeedWatcher>
+  <NeedWatcherDesc>Kameralar çevrelerini yalnızca bir kolonici kamera konsolunda çalışırken gösterir.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Çatışma veya Anomali müziği yok</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Çatışma ve Anomali olayları sırasında normal müziğin çalmaya devam etmesini sağlar; böylece müzik değişimi seni uyaramaz.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Gizli sesleri sustur</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Kimsenin göremediği şeylerden gelen sesler, süregelen döngüler dâhil, sessizdir. Bu, işitmeye dayalı filtrelemeyi geçersiz kılar.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>İşitmeye dayalı ses filtreleme</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Gizli sesler boğuk çalar ve yalnızca onları duyabilecek yaşayan bir kolonicinin yakınında duyulur. İşitme menzilinin ötesinde sessizdir.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>İşitme menzili</audioSourceRange>
+  <audioSourceRangeDesc>Bir kolonicinin gizli bir sesi kaç kare uzaktan hâlâ duyabildiği.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Mesafeyle boğuklaşma</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Gizli bir sesin işitme menzilinin kenarına doğru ne kadar kısıldığı.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>İşitme göstergeleri</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>İşitme göstergelerini göster</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Küçük işaretler bir kolonicinin gizli hareketi nerede duyduğunu gösterir. Kaldırmak için bunu kapat.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>İşitme göstergesi menzili</baseHearingRange>
+  <TotalFog_HearingRangeDesc>Gizli hareketin kaç kare uzaktan duyulabildiği.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Çalışan kameralar: {0}</TotalFog_CameraCount>
+  <Revealing>İzliyor</Revealing>
+  <NoCameraConsole>Kullanılan kamera konsolu yok</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Gözcü: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Kuleden nöbet tut</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Normal Moda geçene kadar nöbet tut</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>{0} boyunca nöbet tut</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Normal Moda geçene veya başka emir alana kadar nöbet tutuyor</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Nöbetin bitmesine {0} kaldı</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Yukarı tırmanıyor: {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Aşağı iniyor: {0}.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Aşağı in</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Kuleden indir</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>kule dolu veya merdiven tıkalı</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>Merdivenin önündeki kare boş kalmalı.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Gözcü kulesi için açık gökyüzü gerekir.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Kuleyi yıkmadan önce gözcüyü aşağı indir.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Merdiven tıkalı. Gözcünün aşağı inebilmesi için merdivenin önündeki kareyi boşalt.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Merdivenin boşalması bekleniyor: {0}.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0}, tıkalı gözcü kulesinden atlıyor. Düşüş yaralanmaya yol açabilir.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

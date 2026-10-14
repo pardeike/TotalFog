@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>охранные камеры</CameraSecurity.label>
+  <CameraSecurity.description>Постройка камер наблюдения и консоли наблюдения. Камеры с питанием показывают вам своё окружение, пока поселенец работает за консолью.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>усовершенствованные объективы</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Постройка камер получше: потолочной и напольной моделей, солнечной камеры без кабеля и дальнобойной камеры на столбе.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>наблюдательный телескоп</WatchTelescope.label>
+  <WatchTelescope.description>Постройка наблюдательного телескопа. Поселенец, стоящий у него, видит вдвое дальше.</WatchTelescope.description>
+</LanguageData>

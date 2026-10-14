@@ -34,7 +34,7 @@ public class Building_VisionConsole : Building
         if (mapComp != null)
         {
             inspect.AppendInNewLine(
-                "CameraCount".Translate() + ": " + mapComp.SurveillanceCameraCount(Faction)
+                "TotalFog_CameraCount".Translate(mapComp.SurveillanceCameraCount(Faction))
             );
         }
 

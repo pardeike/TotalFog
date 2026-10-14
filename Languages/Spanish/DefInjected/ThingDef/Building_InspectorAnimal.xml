@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>gallina inspectora</InspectorChicken.label>
+  <InspectorChicken.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no ve ni come.</InspectorChicken.description>
+  <InspectorHare.label>liebre inspectora</InspectorHare.label>
+  <InspectorHare.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no ve ni come.</InspectorHare.description>
+  <InspectorMonkey.label>mono inspector</InspectorMonkey.label>
+  <InspectorMonkey.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no ve ni come.</InspectorMonkey.description>
+  <InspectorRat.label>rata inspectora</InspectorRat.label>
+  <InspectorRat.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no ve ni come.</InspectorRat.description>
+  <InspectorSquirrel.label>ardilla inspectora</InspectorSquirrel.label>
+  <InspectorSquirrel.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no ve ni come.</InspectorSquirrel.description>
+</LanguageData>

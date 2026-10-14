@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>курица-наблюдатель</InspectorChicken.label>
+  <InspectorChicken.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не видит и не ест.</InspectorChicken.description>
+  <InspectorHare.label>заяц-наблюдатель</InspectorHare.label>
+  <InspectorHare.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не видит и не ест.</InspectorHare.description>
+  <InspectorMonkey.label>обезьяна-наблюдатель</InspectorMonkey.label>
+  <InspectorMonkey.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не видит и не ест.</InspectorMonkey.description>
+  <InspectorRat.label>крыса-наблюдатель</InspectorRat.label>
+  <InspectorRat.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не видит и не ест.</InspectorRat.description>
+  <InspectorSquirrel.label>белка-наблюдатель</InspectorSquirrel.label>
+  <InspectorSquirrel.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не видит и не ест.</InspectorSquirrel.description>
+</LanguageData>

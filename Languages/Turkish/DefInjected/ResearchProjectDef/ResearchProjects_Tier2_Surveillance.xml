@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>güvenlik kameraları</CameraSecurity.label>
+  <CameraSecurity.description>Gözetleme kameraları ve bir kamera konsolu inşa et. Güç alan kameralar, bir kolonici konsolu kullanırken sana çevrelerini gösterir.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>gelişmiş kamera lensleri</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Daha iyi kameralar inşa et: tavan ve zemin modelleri, güç hattı gerektirmeyen bir güneş enerjili kamera ve uzun menzilli bir kamera direği.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>gözetleme teleskobu</WatchTelescope.label>
+  <WatchTelescope.description>Bir gözetleme teleskobu inşa et. Başında duran bir kolonici iki kat uzağı görür.</WatchTelescope.description>
+</LanguageData>

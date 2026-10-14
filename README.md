@@ -145,6 +145,8 @@ too much.
 
 ## Good to know
 
+- **Languages:** English, German, French, Spanish, Latin American Spanish, Dutch, Swedish,
+  Polish, Russian, Turkish, Japanese, Korean, Simplified and Traditional Chinese.
 - **Needs** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) and RimWorld 1.6 or 1.7. Use the released Steam Harmony for your game version.
 - **Replaces** Real Fog of War and NWN Real Fog of War. Turn those off. Total Fog
   can read the explored map and waiting messages from their saves. Please try a

@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <TotalFog_WatchtowerRescue.label>救援瞭望塔上的角色</TotalFog_WatchtowerRescue.label>
+  <TotalFog_WatchtowerRescue.label>从瞭望塔救援</TotalFog_WatchtowerRescue.label>
   <TotalFog_WatchtowerRescue.verb>救援</TotalFog_WatchtowerRescue.verb>
-  <TotalFog_WatchtowerRescue.gerund>救援中</TotalFog_WatchtowerRescue.gerund>
+  <TotalFog_WatchtowerRescue.gerund>救援</TotalFog_WatchtowerRescue.gerund>
 </LanguageData>

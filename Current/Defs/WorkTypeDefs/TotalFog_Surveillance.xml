@@ -4,9 +4,9 @@
     <defName>TotalFog_Surveillance</defName>
     <labelShort>cameras</labelShort>
     <pawnLabel>Camera operator</pawnLabel>
-    <gerundLabel>watching cameras</gerundLabel>
-    <verb>Watch cameras at</verb>
-    <description>Operate a camera console to provide surveillance vision. Set this work's priority separately from basic tasks.</description>
+    <gerundLabel>operating cameras</gerundLabel>
+    <verb>Operate cameras</verb>
+    <description>Operate a camera console so your cameras can show their surroundings. Its priority is separate from basic work.</description>
     <naturalPriority>50</naturalPriority>
     <alwaysStartActive>false</alwaysStartActive>
     <relevantSkills>

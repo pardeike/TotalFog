@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>恢復為預設值</RFWreset>
+  <TotalFog_ResetDesc>將所有設定恢復為預設值。遊戲已載入時，樹木遮擋視線的設定維持不變。</TotalFog_ResetDesc>
+  <CurrentModVersion>版本{0}</CurrentModVersion>
+  <NotVisible>視野外</NotVisible>
+  <CannotPlaceInUndiscovered>不能放置在未探索的區域。</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>必須放置在屋頂下。</MustBeUnderRoof>
+  <MustBeNextToWall>必須靠牆放置。</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>外觀</TotalFog_PageAppearance>
+  <TotalFog_PageVision>視野</TotalFog_PageVision>
+  <TotalFog_PageInformation>資訊</TotalFog_PageInformation>
+  <TotalFog_PageAudio>音效</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>無人注視時，已探索地面的顯示方式。</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>誰為你提供視野，以及能看多遠。</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>哪些訊息和細節可以告訴你無人看見的事情。</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>音樂和聲音可能洩露隱藏的事件。選擇你想聽到的內容。</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>已探索區域的暗度</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>無人看見時，已探索地面會變得多暗。</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>黑色（100%）</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>迷霧淡化速度</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>視野變化時迷霧淡化的速度。關閉則立即切換。</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>慢</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>中</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>快</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>關閉</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>基礎視野範圍</baseViewRange>
+  <baseViewRangeDesc>在計入健康、光線和天氣之前，殖民者能看多遠。</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>其他觀察者</TotalFog_AdditionalObservers>
+  <buildingVisionMod>建築視野倍率</buildingVisionMod>
+  <buildingVisionModDesc>調整攝影機和其他建築的視野距離。放置預覽不會改變。</buildingVisionModDesc>
+  <TotalFog_TurretVision>砲塔視野倍率</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>調整自動砲塔的視野距離。砲塔需要電力或燃料才能提供視野。</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>動物視野倍率</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>調整你的動物的視野距離。動物需要有主人並完成出擊訓練才能為你提供視野。</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>機械族視野倍率</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>調整你的機械族的視野距離。1 維持正常範圍。武器射程和聽力不受影響。</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>同盟和訪客共享視野</allyGiveVision>
+  <TotalFog_AllyVisionDesc>地圖上的友善人物和動物讓你看見他們所見，範圍為其正常視野的一半。</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>俘虜共享視野</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>你的俘虜讓你看見他們所見，範圍為其正常視野的五分之一。</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>地形與地圖</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>新地圖初始已探索</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>新地圖開始時所有地面均已探索。你仍然只能看見殖民者目前看見的東西。</TotalFog_MapRevealDesc>
+  <treesBlockSight>樹木遮擋視線</treesBlockSight>
+  <treesBlockSightDesc>成年樹木會遮擋視線。樹苗和樹樁不會。</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>請在主選單中變更此設定，然後載入你的遊戲。</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>殖民地地圖無迷霧</onlyOutsideColony>
+  <onlyOutsideColonyDesc>你的殖民地地圖顯示一切。其他地圖仍有迷霧。</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>重力船飛行時顯示全圖</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>選擇降落地點以及起飛和降落期間顯示整張地圖。這可能讓你看見無人見過的東西。</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>瞭望塔</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>瞭望員視野倍率</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>瞭望員在瞭望塔頂能看多遠的倍數。屋頂、山體和其他瞭望塔仍會遮擋視線。</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>瞭望員視野上限</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>瞭望員的視野不會超過此格數。</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>爬梯時間（tick）</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>上下梯子所需的時間。60 tick 為一秒遊戲時間。</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>瞭望員可以射擊</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>瞭望員可以越過獨立的牆射擊。在塔上他們更容易被擊中，且無法近戰。</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>望遠鏡視野上限</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>使用觀測望遠鏡的殖民者的視野不會超過此格數。與瞭望塔無關。</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>延遲未見事件的訊息</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>關於無人看見之事的信件和訊息會等到有人看見時才送達。殖民地健康和世界事件仍會立即送達。</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>捨棄未見事件的訊息</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>所選類別的信件和訊息在無人能看見其對象時會被捨棄。殖民地健康、可見事件和世界事件仍會送達。若想保留它們，請改用上方的「延遲未見事件的訊息」。</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>主要威脅</hideThreatBig>
+  <hideThreatSmall>次要威脅</hideThreatSmall>
+  <hideEventPositive>好消息</hideEventPositive>
+  <hideEventNegative>壞消息</hideEventNegative>
+  <hideEventNeutral>中性消息</hideEventNeutral>
+  <TotalFog_SilentRaids>無聲襲擊</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>敵襲或狂暴獸群到來時不發信件、不減速，即使就在眼前。襲擊仍會發生，戰鬥仍會減速。音樂另行設定。</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>其他資訊</TotalFog_InformationOptions>
+  <wildLifeTabVisible>列出未見的野生動物</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>野生動物分頁也會列出無人看見的動物。這會洩露牠們的存在。</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>隱藏未見的對話泡泡</hideSpeakBubble>
+  <hideSpeakBubbleDesc>隱藏視野外角色的 Interaction Bubbles。</hideSpeakBubbleDesc>
+  <aiSmart>敵人也有迷霧</aiSmart>
+  <aiSmartDesc>人類敵人只能瞄準己方看見的目標。身處黑暗中的殖民者仍然隱藏。</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>使用記憶中的建築和物品</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>可以選取、檢視並指揮你曾經見過的建築和物品，只要它們仍在原處，包括右鍵工作指令。人物、動物、戰鬥目標和從未見過的東西仍需要目前視野。你自己的殖民者和建造計畫始終可用。</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>攝影機需要操作員</NeedWatcher>
+  <NeedWatcherDesc>只有殖民者在攝影機控制台工作時，攝影機才會顯示周圍環境。</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>不播放戰鬥與異邪音樂</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>戰鬥和異邪事件期間繼續播放普通音樂，使音樂變化無法向你示警。</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>靜音隱藏的聲音</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>無人看見的事物發出的聲音完全靜音，包括持續循環的聲音。此選項優先於基於聽力的過濾。</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>基於聽力的聲音過濾</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>隱藏的聲音會變得低沉，且只在能聽見它的活著的殖民者附近播放。超出聽力範圍則靜音。</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>聽力範圍</audioSourceRange>
+  <audioSourceRangeDesc>殖民者在多少格外仍能聽見隱藏的聲音。</audioSourceRangeDesc>
+  <volumeMufflingModifier>隨距離減弱</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>隱藏的聲音接近聽力範圍邊緣時減弱多少。</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>聽覺提示</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>顯示聽覺提示</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>小標記顯示殖民者聽見隱藏移動的位置。關閉此選項可移除它們。</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>聽覺提示範圍</baseHearingRange>
+  <TotalFog_HearingRangeDesc>在多少格外能聽見隱藏的移動。</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>運作中的攝影機：{0}</TotalFog_CameraCount>
+  <Revealing>監視中</Revealing>
+  <NoCameraConsole>沒有正在操作的攝影機控制台</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>瞭望員：{0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>在塔上瞭望</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>瞭望直到取消徵召</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>瞭望{0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>持續瞭望直到取消徵召或被調離</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>瞭望將在{0}後結束</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>正在爬上{0}。</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>正在爬下{0}。</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>爬下</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>從塔上接下</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>塔已佔用或梯子被擋住</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0}（{1}）</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>梯子前的格子必須保持暢通。</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>瞭望塔需要露天。</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>拆除瞭望塔前請先讓瞭望員下來。</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>梯子被擋住了。清空梯子前的格子，讓瞭望員能夠下來。</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>正在等待{0}的梯子暢通。</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0}從被堵住的瞭望塔跳下。墜落可能受傷。</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

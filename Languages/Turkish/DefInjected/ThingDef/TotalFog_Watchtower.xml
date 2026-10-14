@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Watchtower.label>gözcü kulesi</TotalFog_Watchtower.label>
+  <TotalFog_Watchtower.description>Bir gözcüye yer veren sağlam bir 3x3 kule. Bağımsız duvarların üzerini görmek için merdivene tırman. Çatılar, dağlar ve diğer kuleler görüşü yine de engeller. Yukarıdaki bir gözcü kolay vurulur. Yıkmadan önce gözcüyü indir: çöken kule üzerindeki kişiyi yaralar.</TotalFog_Watchtower.description>
+</LanguageData>

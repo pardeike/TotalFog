@@ -2,8 +2,8 @@
 <Defs>
   <ThingDef ParentName="BuildingBase">
     <defName>CameraConsole</defName>
-    <label>Central camera console</label>
-    <description>A central hub for monitoring camera, allowing them to actually deliver vision</description>
+    <label>camera console</label>
+    <description>Connects your surveillance cameras. While a colonist works here, the cameras show you what they see. Needs power.</description>
     <thingClass>TotalFog.Building_VisionConsole</thingClass>
     <building>
       <joyKind>Television</joyKind>
@@ -74,12 +74,12 @@
   <JobDef>
     <defName>SurveilCameraConsole</defName>
     <driverClass>TotalFog.JobDriver_MonitorVision</driverClass>
-    <reportString>surveil TargetA.</reportString>
+    <reportString>Operating TargetA.</reportString>
     <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
   </JobDef>
   <WorkGiverDef>
     <defName>SurveilCameraConsole</defName>
-    <label>surveil camera Console</label>
+    <label>operate camera console</label>
     <giverClass>TotalFog.WorkGiver_MonitorVision</giverClass>
     <workType>TotalFog_Surveillance</workType>
     <priorityInType>150</priorityInType>
@@ -93,7 +93,7 @@
   <JobDef>
     <defName>WatchCamera</defName>
     <driverClass>JobDriver_WatchTelevision</driverClass>
-    <reportString>watching camera.</reportString>
+    <reportString>Watching the cameras.</reportString>
     <joyDuration>3000</joyDuration>
     <joyKind>Television</joyKind>
     <allowOpportunisticPrefix>true</allowOpportunisticPrefix>

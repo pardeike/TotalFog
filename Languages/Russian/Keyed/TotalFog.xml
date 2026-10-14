@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Восстановить по умолчанию</RFWreset>
+  <TotalFog_ResetDesc>Возвращает всем настройкам значения по умолчанию. Пока игра загружена, преграждение обзора деревьями не меняется.</TotalFog_ResetDesc>
+  <CurrentModVersion>Версия {0}</CurrentModVersion>
+  <NotVisible>Вне поля зрения</NotVisible>
+  <CannotPlaceInUndiscovered>Нельзя разместить в неразведанной зоне.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Нужно разместить под крышей.</MustBeUnderRoof>
+  <MustBeNextToWall>Нужно разместить вплотную к стене.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Внешний вид</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Зрение</TotalFog_PageVision>
+  <TotalFog_PageInformation>Информация</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Звук</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Как выглядит разведанная земля, когда за ней никто не следит.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Кто видит за вас и как далеко.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Какие сообщения и сведения могут рассказать вам о том, чего никто не видел.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Музыка и звуки могут выдать скрытые события. Выберите, что вы хотите слышать.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Затемнение разведанных областей</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Насколько темнеет разведанная земля, когда её сейчас никто не видит.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Чёрный (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Скорость перехода тумана</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Как быстро туман меняется при изменении обзора. «Выкл» переключает мгновенно.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Медленно</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Средне</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Быстро</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Выкл</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>Базовая дальность обзора</baseViewRange>
+  <baseViewRangeDesc>Как далеко видит поселенец без учёта здоровья, освещения и погоды.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Другие наблюдатели</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Множитель обзора построек</buildingVisionMod>
+  <buildingVisionModDesc>Масштабирует дальность обзора камер и других построек. Предпросмотр при размещении не меняется.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Множитель обзора турелей</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Масштабирует дальность обзора автоматических турелей. Чтобы видеть, турели нужна энергия или топливо.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Множитель обзора животных</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Масштабирует дальность обзора ваших животных. Чтобы видеть за вас, животному нужен хозяин и обучение команде «Атаковать».</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Множитель обзора механоидов</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Масштабирует дальность обзора ваших механоидов. 1 сохраняет их обычную дальность. Дальность оружия и слух не меняются.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Союзники и гости делятся обзором</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Дружественные люди и животные на вашей карте показывают вам то, что видят сами, на половине своей обычной дальности.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Пленники делятся обзором</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Ваши пленники показывают вам то, что видят сами, на одной пятой своей обычной дальности.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Местность и карты</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Новые карты сразу разведаны</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>На новых картах вся земля уже разведана. Вы по-прежнему видите только то, что сейчас видят ваши поселенцы.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Деревья закрывают обзор</treesBlockSight>
+  <treesBlockSightDesc>Взрослые деревья перекрывают прямую видимость. Саженцы и пни — нет.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Измените это в главном меню, затем загрузите игру.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Без тумана на домашних картах</onlyOutsideColony>
+  <onlyOutsideColonyDesc>На домашних картах видно всё. На всех остальных картах туман остаётся.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Вся карта при полётах гравикорабля</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Показывает всю карту, пока вы выбираете зону посадки, а также при взлёте и посадке. Так можно увидеть то, чего никто не видел.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Дозорные вышки</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Множитель обзора дозорного</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Насколько дальше видит дозорный с вершины дозорной вышки. Крыши, горы и другие вышки по-прежнему закрывают обзор.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Предел обзора дозорного</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Дозорный никогда не видит дальше этого числа клеток.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Время подъёма по лестнице (тики)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Сколько длится подъём или спуск. 60 тиков — одна секунда игрового времени.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Дозорные могут стрелять</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Дозорные могут стрелять поверх отдельно стоящих стен. Наверху в них легче попасть, и они не могут драться врукопашную.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Предел обзора телескопа</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Поселенец у наблюдательного телескопа никогда не видит дальше этого числа клеток. Не зависит от дозорных вышек.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Задержка новостей о невидимом</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Письма и сообщения о том, чего никто не видит, ждут, пока это кто-нибудь увидит. Новости о здоровье поселения и мировые события приходят сразу.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Пропуск новостей о невидимом</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Письма и сообщения выбранных видов отбрасываются, пока никто не видит того, о чём они. Новости о здоровье поселения, видимые события и мировые события приходят по-прежнему. Чтобы сохранять их, используйте «Задержку новостей» выше.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Серьёзные угрозы</hideThreatBig>
+  <hideThreatSmall>Мелкие угрозы</hideThreatSmall>
+  <hideEventPositive>Хорошие новости</hideEventPositive>
+  <hideEventNegative>Плохие новости</hideEventNegative>
+  <hideEventNeutral>Нейтральные новости</hideEventNeutral>
+  <TotalFog_SilentRaids>Тихие налёты</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Ни письма, ни замедления, когда приходят налётчики или агрессивные животные, даже у всех на виду. Они всё равно нападают, и бой по-прежнему замедляет время. Музыка настраивается отдельно.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Прочая информация</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Невидимые животные в «Фауне»</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Вкладка «Фауна» показывает и животных, которых никто не видит. Это выдаёт их присутствие.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Скрывать невидимые реплики</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Скрывает пузыри Interaction Bubbles у персонажей вне поля зрения.</hideSpeakBubbleDesc>
+  <aiSmart>Туман и для врагов</aiSmart>
+  <aiSmartDesc>Враги-люди могут целиться только в то, что видит их сторона. Поселенец в темноте остаётся незамеченным.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Запомненные постройки и предметы</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Позволяет выделять, осматривать и отдавать приказы постройкам и предметам, которые вы уже видели, пока они остаются там, где вы их видели. Сюда входят рабочие приказы по правому щелчку. Люди, животные, цели в бою и всё, что никто не видел, по-прежнему требуют текущего обзора. Ваши поселенцы и проекты строительства работают всегда.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Камерам нужен оператор</NeedWatcher>
+  <NeedWatcherDesc>Камеры показывают своё окружение, только пока поселенец работает за консолью наблюдения.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Без боевой музыки и музыки Anomaly</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Во время боя и событий Anomaly продолжает играть обычная музыка, чтобы её смена не могла вас предупредить.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Заглушать невидимые звуки</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Звуки того, чего никто не видит, не слышны, включая длящиеся звуки. Это отменяет фильтр по слуху.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Фильтр звуков по слуху</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Невидимые звуки приглушены и слышны только рядом с живым поселенцем, который мог бы их услышать. За пределами дальности слуха они не слышны.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Дальность слуха</audioSourceRange>
+  <audioSourceRangeDesc>За сколько клеток поселенец ещё слышит невидимый звук.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Приглушение с расстоянием</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Насколько тише становится невидимый звук ближе к границе дальности слуха.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Индикаторы слуха</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Показывать индикаторы слуха</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Небольшие метки показывают, где поселенец слышит невидимое движение. Отключите, чтобы их убрать.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Дальность индикаторов слуха</baseHearingRange>
+  <TotalFog_HearingRangeDesc>За сколько клеток слышно невидимое движение.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Работающих камер: {0}</TotalFog_CameraCount>
+  <Revealing>Наблюдает</Revealing>
+  <NoCameraConsole>За консолью наблюдения никто не работает</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Дозорный: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Нести дозор на вышке</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Нести дозор до роспуска</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Нести дозор в течение {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Несёт дозор до роспуска или нового приказа</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Дозор закончится через {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Поднимается по лестнице ({0}).</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Спускается по лестнице ({0}).</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Спуститься</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Снять с вышки</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>вышка занята или лестница перекрыта</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>Клетка перед лестницей должна оставаться свободной.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Дозорной вышке нужно открытое небо.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Снимите дозорного с вышки, прежде чем разбирать её.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Лестница перекрыта. Освободите клетку перед ней, чтобы дозорный мог спуститься.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Ждёт, пока освободится лестница ({0}).</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} прыгает с перекрытой дозорной вышки. Падение может быть болезненным.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

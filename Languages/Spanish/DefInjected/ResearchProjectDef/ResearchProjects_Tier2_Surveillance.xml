@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>cámaras de seguridad</CameraSecurity.label>
+  <CameraSecurity.description>Construye cámaras de vigilancia y una consola de cámaras. Las cámaras con energía te muestran sus alrededores mientras un colono opera la consola.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>lentes de cámara avanzadas</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Construye cámaras mejores: modelos de techo y de suelo, una cámara solar que no necesita conducto eléctrico y un poste de cámara de largo alcance.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>telescopio de vigilancia</WatchTelescope.label>
+  <WatchTelescope.description>Construye un telescopio de vigilancia. Un colono situado en él ve el doble de lejos.</WatchTelescope.description>
+</LanguageData>

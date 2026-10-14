@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>inspektionshöna</InspectorChicken.label>
+  <InspectorChicken.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den varken ser eller äter längre.</InspectorChicken.description>
+  <InspectorHare.label>inspektionshare</InspectorHare.label>
+  <InspectorHare.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den varken ser eller äter längre.</InspectorHare.description>
+  <InspectorMonkey.label>inspektionsapa</InspectorMonkey.label>
+  <InspectorMonkey.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den varken ser eller äter längre.</InspectorMonkey.description>
+  <InspectorRat.label>inspektionsråtta</InspectorRat.label>
+  <InspectorRat.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den varken ser eller äter längre.</InspectorRat.description>
+  <InspectorSquirrel.label>inspektionsekorre</InspectorSquirrel.label>
+  <InspectorSquirrel.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den varken ser eller äter längre.</InspectorSquirrel.description>
+</LanguageData>

@@ -5,8 +5,8 @@
     <defName>WatchTower</defName>
     <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
-    <label>watch tower</label>
-    <description>A retired watchtower retained for existing saves. It no longer extends vision.</description>
+    <label>old watchtower</label>
+    <description>Retired. Kept so old saves still load. It no longer extends sight.</description>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -101,8 +101,8 @@
     <defName>WatchTowerRoofed</defName>
     <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
-    <label>roofed watch tower</label>
-    <description>A retired roofed watchtower retained for existing saves. It no longer extends vision or removes the weather penalty.</description>
+    <label>old roofed watchtower</label>
+    <description>Retired. Kept so old saves still load. It no longer extends sight or shelters from weather.</description>
     <altitudeLayer>Skyfaller</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -147,7 +147,7 @@
     <defName>TowerLightBeacon</defName>
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>light beacon</label>
-    <description>A retired light beacon retained for existing saves. It no longer provides light or extends vision.</description>
+    <description>Retired. Kept so old saves still load. It no longer gives light or sight.</description>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
     <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
@@ -286,7 +286,7 @@
   <ThingDef ParentName="BaseVisionStuff">
     <defName>WatchTelescope</defName>
     <label>watch telescope</label>
-    <description>Watch Telescope that increase vision when colonists stand on it.</description>
+    <description>A telescope on a stand. A colonist standing here sees twice as far.</description>
     <minifiedDef>MinifiedThing</minifiedDef>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>

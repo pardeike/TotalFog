@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>Mały dzwonek alarmowy</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie zapewnia widoku.</SecurityBellSmall.description>
+  <SecurityBell.label>Duży dzwon alarmowy</SecurityBell.label>
+  <SecurityBell.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie zapewnia widoku.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>Kamera ścienna</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Mała kamera przymocowana do ściany. Krótki zasięg, tania i oszczędna w poborze energii.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>Kamera w krzaku</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Kamera ukryta w krzaku, łatwa do przeoczenia. Krótki zasięg.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>Kamera w suchym krzaku</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Kamera ukryta w suchym krzaku, łatwa do przeoczenia. Krótki zasięg.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>Kamera sufitowa</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>Kamera do użytku w pomieszczeniach. Musi wisieć pod dachem. Krótki zasięg, tania w budowie.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>Kamera naziemna</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Solidna kamera na podstawie naziemnej. Średni zasięg.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>Kamera słoneczna</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Kamera z własnym panelem słonecznym. Nie potrzebuje linii zasilania, ale musi stać pod gołym niebem. Średni zasięg.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>Słup z kamerą</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Kamera wysoko na słupie z szerokim widokiem. Daleki zasięg, ale pobiera dużo energii. Musi stać pod gołym niebem.</SurveillanceCamera_High.description>
+</LanguageData>

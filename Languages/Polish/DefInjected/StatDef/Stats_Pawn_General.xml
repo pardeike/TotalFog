@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>wzrok w dzień</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Mnożnik określający, jak daleko to stworzenie widzi w świetle dziennym.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>wzrok w nocy</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Mnożnik określający, jak daleko to stworzenie widzi w nocy.</NightVisionEffectiveness.description>
+</LanguageData>

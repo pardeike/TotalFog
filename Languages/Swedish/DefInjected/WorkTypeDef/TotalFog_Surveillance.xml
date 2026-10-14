@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Surveillance.description>Bemanna en kamerakonsol så att dina kameror kan visa sin omgivning. Prioriteten är skild från grundarbete.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.labelShort>kameror</TotalFog_Surveillance.labelShort>
+  <TotalFog_Surveillance.pawnLabel>Kameraoperatör</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.gerundLabel>bemannar kameror</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>Bemanna kameror</TotalFog_Surveillance.verb>
+</LanguageData>

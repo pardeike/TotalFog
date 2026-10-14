@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
+  <TotalFog_Surveillance.description>Eine Kamerakonsole bedienen, damit deine Kameras ihre Umgebung zeigen können. Die Priorität ist von der Hilfsarbeit getrennt.</TotalFog_Surveillance.description>
   <TotalFog_Surveillance.labelShort>Kameras</TotalFog_Surveillance.labelShort>
   <TotalFog_Surveillance.pawnLabel>Kameraoperator</TotalFog_Surveillance.pawnLabel>
-  <TotalFog_Surveillance.gerundLabel>Kameras beobachten</TotalFog_Surveillance.gerundLabel>
-  <TotalFog_Surveillance.verb>Kameras beobachten bei</TotalFog_Surveillance.verb>
-  <TotalFog_Surveillance.description>Eine Kamerakonsole bedienen, um Sicht durch Überwachungskameras zu erhalten. Die Priorität dieser Arbeit lässt sich unabhängig von einfachen Aufgaben einstellen.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.gerundLabel>Kamerabedienung</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>Kameras bedienen</TotalFog_Surveillance.verb>
 </LanguageData>

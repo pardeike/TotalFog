@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>白天視力</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>該生物在白天視野距離的倍率。</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>夜間視力</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>該生物在夜間視野距離的倍率。</NightVisionEffectiveness.description>
+</LanguageData>

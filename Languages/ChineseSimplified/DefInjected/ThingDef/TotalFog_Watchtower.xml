@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <TotalFog_Watchtower.label>瞭望塔</TotalFog_Watchtower.label>
-  <TotalFog_Watchtower.description>坚固的三格宽瞭望塔，容纳一名瞭望员。殖民者爬上梯子后可以看越过独立围墙的区域。有屋顶的房间、山体和其他瞭望塔会遮挡视线。暴露在高处的瞭望员更容易被击中。拆除前必须清空瞭望塔；摧毁它可能使塔上角色受伤。</TotalFog_Watchtower.description>
+  <TotalFog_Watchtower.description>坚固的3x3塔楼，可容纳一名瞭望员。爬上梯子即可越过独立的墙观察。屋顶、山体和其他瞭望塔仍会遮挡视线。塔上的瞭望员容易被击中。拆除前请先让瞭望员下来：塔倒塌会伤到上面的人。</TotalFog_Watchtower.description>
 </LanguageData>

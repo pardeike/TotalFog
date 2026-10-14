@@ -2,7 +2,7 @@
 <Defs>
   <DesignatorDropdownGroupDef>
     <defName>InspectorAnimal</defName>
-    <label>Inspector Animal</label>
+    <label>inspector animals</label>
   </DesignatorDropdownGroupDef>
   <!-- Most animal eat 0.56 nutrition per day -->
   <ThingDef Name="InspectorAnimalBase" ParentName="BaseVisionStuff" Abstract="True">
@@ -47,8 +47,8 @@
     <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <specialDisplayRadius>0</specialDisplayRadius>
-    <label>inspector Chicken</label>
-    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
+    <label>inspector chicken</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorChicken</texPath>
     </graphicData>
@@ -60,8 +60,8 @@
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorHare</defName>
-    <label>inspector Hare</label>
-    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
+    <label>inspector hare</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorHare</texPath>
     </graphicData>
@@ -72,8 +72,8 @@
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorMonkey</defName>
-    <label>inspector Monkey</label>
-    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
+    <label>inspector monkey</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorMonkey</texPath>
     </graphicData>
@@ -84,8 +84,8 @@
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorRat</defName>
-    <label>inspector Rat</label>
-    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
+    <label>inspector rat</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorRat</texPath>
     </graphicData>
@@ -96,8 +96,8 @@
   </ThingDef>
   <ThingDef ParentName="InspectorAnimalBase">
     <defName>InspectorSquirrel</defName>
-    <label>inspector Squirrel</label>
-    <description>A retired surveillance ornament retained for existing saves. It no longer provides vision or consumes food.</description>
+    <label>inspector squirrel</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
     <graphicData>
       <texPath>Things/Buildings/InspectorSquirrel</texPath>
     </graphicData>

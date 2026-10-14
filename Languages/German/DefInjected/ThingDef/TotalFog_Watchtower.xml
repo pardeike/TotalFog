@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <TotalFog_Watchtower.label>Wachturm</TotalFog_Watchtower.label>
-  <TotalFog_Watchtower.description>Ein massiver, drei Zellen breiter Wachturm für einen Ausguck. Kolonisten steigen über die Leiter hinauf, um über freistehende Mauern zu sehen. Überdachte Räume, Berge und andere Türme blockieren die Sicht. Der exponierte Ausguck ist leichter zu treffen. Vor dem Rückbau muss der Turm leer sein; seine Zerstörung kann die Besatzung verletzen.</TotalFog_Watchtower.description>
+  <TotalFog_Watchtower.description>Ein massiver 3x3-Turm mit Platz für einen Wachposten. Über die Leiter geht es hinauf, um über freistehende Wände zu sehen. Dächer, Berge und andere Türme blockieren die Sicht weiterhin. Ein Wachposten dort oben ist leicht zu treffen. Hole ihn herunter, bevor du den Turm abreißt: Ein einstürzender Turm verletzt, wer gerade oben ist.</TotalFog_Watchtower.description>
 </LanguageData>

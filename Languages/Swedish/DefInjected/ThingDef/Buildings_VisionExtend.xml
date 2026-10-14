@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>gammalt vakttorn</WatchTower.label>
+  <WatchTower.description>Utgånget. Finns kvar så att gamla sparfiler kan laddas. Det förlänger inte längre sikten.</WatchTower.description>
+  <WatchTowerRoofed.label>gammalt vakttorn med tak</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Utgånget. Finns kvar så att gamla sparfiler kan laddas. Det förlänger inte längre sikten och skyddar inte mot väder.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>ljusfyr</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den ger inte längre ljus eller sikt.</TowerLightBeacon.description>
+  <WatchTelescope.label>spaningsteleskop</WatchTelescope.label>
+  <WatchTelescope.description>Ett teleskop på stativ. En kolonist som står här ser dubbelt så långt.</WatchTelescope.description>
+</LanguageData>

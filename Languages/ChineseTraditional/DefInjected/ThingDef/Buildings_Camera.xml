@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>小型警鈴</SecurityBellSmall.label>
+  <SecurityBellSmall.description>已停用。保留以便舊存檔仍能載入。它不再提供視野。</SecurityBellSmall.description>
+  <SecurityBell.label>大型警鈴</SecurityBell.label>
+  <SecurityBell.description>已停用。保留以便舊存檔仍能載入。它不再提供視野。</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>壁掛攝影機</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>固定在牆上的小型攝影機。範圍短，便宜，省電。</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>灌木攝影機</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>藏在灌木中的攝影機，容易被忽略。範圍短。</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>枯灌木攝影機</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>藏在枯死灌木中的攝影機，容易被忽略。範圍短。</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>天花板攝影機</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>室內用攝影機。必須掛在屋頂下。範圍短，建造便宜。</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>地面攝影機</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>安裝在地面底座上的堅固攝影機。範圍中等。</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>太陽能攝影機</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>自帶太陽能板的攝影機。不需電線，但必須放置在露天處。範圍中等。</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>攝影機柱</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>立柱頂端的高位攝影機，視野開闊。範圍遠，但耗電量大。必須放置在露天處。</SurveillanceCamera_High.description>
+</LanguageData>

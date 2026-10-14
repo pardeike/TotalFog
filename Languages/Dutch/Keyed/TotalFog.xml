@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Standaardinstellingen herstellen</RFWreset>
+  <TotalFog_ResetDesc>Zet alle instellingen terug naar hun standaardwaarden. Zolang een spel geladen is, blijft het blokkeren van zicht door bomen zoals het is.</TotalFog_ResetDesc>
+  <CurrentModVersion>Versie {0}</CurrentModVersion>
+  <NotVisible>Buiten zicht</NotVisible>
+  <CannotPlaceInUndiscovered>Kan niet in onontdekt gebied plaatsen.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Moet onder een dak worden geplaatst.</MustBeUnderRoof>
+  <MustBeNextToWall>Moet tegen een muur worden geplaatst.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Uiterlijk</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Zicht</TotalFog_PageVision>
+  <TotalFog_PageInformation>Informatie</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Geluid</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Hoe verkend terrein eruitziet als niemand het in de gaten houdt.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Wie er voor je kijkt, en hoe ver.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Welke berichten en details je mogen vertellen over dingen die niemand heeft gezien.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Muziek en geluiden kunnen verborgen gebeurtenissen verraden. Kies wat je wilt horen.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Duisternis van verkend gebied</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Hoe donker verkend terrein wordt als niemand het op dit moment kan zien.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Zwart (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Vervaagsnelheid van de mist</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Hoe snel de mist vervaagt als het zicht verandert. Bij Uit schakelt hij direct om.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Langzaam</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Gemiddeld</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Snel</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Uit</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>Basiszichtbereik</baseViewRange>
+  <baseViewRangeDesc>Hoe ver een kolonist ziet voordat gezondheid, licht en weer worden meegerekend.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Andere ogen</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Zichtfactor gebouwen</buildingVisionMod>
+  <buildingVisionModDesc>Schaalt hoe ver camera's en andere gebouwen zien. Het plaatsingsvoorbeeld verandert niet.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Zichtfactor afweergeschut</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Schaalt hoe ver automatisch afweergeschut ziet. Afweergeschut heeft stroom of brandstof nodig om iets te kunnen zien.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Zichtfactor dieren</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Schaalt hoe ver je dieren zien. Een dier heeft een baasje en de training 'aanvallen' nodig om voor je te kijken.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Zichtfactor mechanoïden</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Schaalt hoe ver je mechanoïden zien. Bij 1 houden ze hun normale bereik. Wapenbereik en gehoor veranderen niet.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Bondgenoten en bezoekers delen hun zicht</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Bevriende mensen en dieren op je kaart laten je zien wat zij zien, op de helft van hun normale bereik.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Gevangenen delen hun zicht</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Je gevangenen laten je zien wat zij zien, op een vijfde van hun normale bereik.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Terrein en kaarten</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Nieuwe kaarten beginnen verkend</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>Nieuwe kaarten beginnen met al het terrein verkend. Je ziet nog steeds alleen wat je kolonisten op dit moment zien.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Bomen blokkeren zicht</treesBlockSight>
+  <treesBlockSightDesc>Volgroeide bomen blokkeren de zichtlijn. Zaailingen en stronken niet.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Wijzig dit in het hoofdmenu en laad daarna je spel.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Geen mist op thuiskaarten</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Je thuiskaarten tonen alles. Op alle andere kaarten blijft de mist.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Hele kaart zichtbaar tijdens gravschipvluchten</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Toont de hele kaart terwijl je een landingsplek kiest en tijdens opstijgen en landen. Dit kan je dingen tonen die niemand heeft gezien.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Wachttorens</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Zichtfactor uitkijk</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Hoeveel verder een uitkijk ziet vanaf de top van een wachttoren. Daken, bergen en andere torens blokkeren het zicht nog steeds.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Zichtlimiet uitkijk</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Een uitkijk ziet nooit verder dan dit aantal cellen.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Klimtijd ladder (ticks)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Hoe lang omhoog of omlaag klimmen duurt. 60 ticks zijn één seconde speltijd.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Uitkijken mogen schieten</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Uitkijken kunnen over vrijstaande muren schieten. Daarboven zijn ze makkelijker te raken en kunnen ze niet van dichtbij vechten.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Zichtlimiet telescoop</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Een kolonist aan een uitkijktelescoop ziet nooit verder dan dit aantal cellen. Staat los van wachttorens.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Uitgesteld nieuws over ongeziene gebeurtenissen</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Brieven en berichten over iets wat niemand kan zien wachten tot iemand het ziet. Nieuws over de gezondheid van de kolonie en wereldgebeurtenissen komt nog steeds meteen aan.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Weggelaten nieuws over ongeziene gebeurtenissen</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Brieven en berichten van de gekozen soorten vervallen zolang niemand kan zien waar ze over gaan. Nieuws over de gezondheid van de kolonie, zichtbare gebeurtenissen en wereldgebeurtenissen komt nog steeds aan. Gebruik 'Uitgesteld nieuws' hierboven om ze in plaats daarvan te bewaren.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Grote bedreigingen</hideThreatBig>
+  <hideThreatSmall>Kleine bedreigingen</hideThreatSmall>
+  <hideEventPositive>Goed nieuws</hideEventPositive>
+  <hideEventNegative>Slecht nieuws</hideEventNegative>
+  <hideEventNeutral>Neutraal nieuws</hideEventNeutral>
+  <TotalFog_SilentRaids>Stille overvallen</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Geen brief en geen vertraging als overvallen of mensenjagende groepen aankomen, zelfs in het volle zicht. Ze vallen nog steeds aan, en gevechten vertragen de tijd nog steeds. Muziek is een aparte instelling.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Overige informatie</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Ongeziene wilde dieren tonen</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Het tabblad Wildleven toont ook dieren die niemand kan zien. Dit verraadt dat ze er zijn.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Ongeziene tekstballonnen verbergen</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Verbergt Interaction Bubbles van personages buiten zicht.</hideSpeakBubbleDesc>
+  <aiSmart>Vijanden hebben ook mist</aiSmart>
+  <aiSmartDesc>Menselijke vijanden kunnen alleen richten op wat hun eigen kant kan zien. Een kolonist in het donker blijft verborgen.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Onthouden gebouwen en voorwerpen gebruiken</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Selecteer, inspecteer en geef bevelen aan gebouwen en voorwerpen die je eerder hebt gezien, zolang ze nog staan waar je ze zag. Dit geldt ook voor werkopdrachten via rechtsklikken. Mensen, dieren, gevechtsdoelen en alles wat nooit gezien is, vereisen nog steeds actueel zicht. Je eigen kolonisten en bouwplannen werken altijd.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Camera's hebben een bediener nodig</NeedWatcher>
+  <NeedWatcherDesc>Camera's tonen hun omgeving alleen zolang een kolonist aan een cameraconsole werkt.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Geen gevechts- of Anomaly-muziek</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Laat de normale muziek doorspelen tijdens gevechten en Anomaly-gebeurtenissen, zodat een muziekwisseling je niet kan waarschuwen.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Verborgen geluiden dempen</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Geluiden van dingen die niemand kan zien zijn stil, ook doorlopende geluiden. Dit gaat vóór het filteren op gehoor.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Geluidsfilter op gehoor</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Verborgen geluiden klinken gedempt en spelen alleen af bij een levende kolonist die ze zou kunnen horen. Buiten gehoorbereik zijn ze stil.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Gehoorbereik</audioSourceRange>
+  <audioSourceRangeDesc>Op hoeveel cellen afstand een kolonist een verborgen geluid nog kan horen.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Demping met afstand</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Hoeveel zachter een verborgen geluid wordt richting de rand van het gehoorbereik.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Gehoorindicatoren</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Gehoorindicatoren tonen</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Kleine markeringen tonen waar een kolonist verborgen beweging hoort. Zet dit uit om ze te verwijderen.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Bereik gehoorindicatoren</baseHearingRange>
+  <TotalFog_HearingRangeDesc>Op hoeveel cellen afstand verborgen beweging te horen is.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Werkende camera's: {0}</TotalFog_CameraCount>
+  <Revealing>Houdt toezicht</Revealing>
+  <NoCameraConsole>Geen bediende cameraconsole</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Uitkijk: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Wacht houden vanaf toren</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Wacht houden tot het wapen zakt</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>{0} wacht houden</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Houdt de wacht tot het wapen zakt of een ander bevel komt</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Wacht eindigt over {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Klimt op {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Klimt van {0} af.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Naar beneden klimmen</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Van toren naar beneden halen</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>toren bezet of ladder geblokkeerd</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>De cel voor de ladder moet vrij blijven.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Een wachttoren heeft open lucht nodig.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Haal de uitkijk naar beneden voordat je de toren afbreekt.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>De ladder is geblokkeerd. Maak de cel ervoor vrij zodat de uitkijk naar beneden kan klimmen.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Wacht tot de ladder van {0} vrij is.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} springt van de geblokkeerde wachttoren. De val kan pijn doen.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

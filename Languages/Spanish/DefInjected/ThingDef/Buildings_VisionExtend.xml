@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>torre de vigilancia antigua</WatchTower.label>
+  <WatchTower.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no amplía la visión.</WatchTower.description>
+  <WatchTowerRoofed.label>torre de vigilancia techada antigua</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no amplía la visión ni protege del clima.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>baliza luminosa</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no da luz ni visión.</TowerLightBeacon.description>
+  <WatchTelescope.label>telescopio de vigilancia</WatchTelescope.label>
+  <WatchTelescope.description>Un telescopio sobre un soporte. Un colono situado aquí ve el doble de lejos.</WatchTelescope.description>
+</LanguageData>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Surveillance.description>Bedien een cameraconsole zodat je camera's hun omgeving kunnen tonen. De prioriteit staat los van basiswerk.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.labelShort>camera's</TotalFog_Surveillance.labelShort>
+  <TotalFog_Surveillance.pawnLabel>Camerabediener</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.gerundLabel>camera's bedienen</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>Bedien camera's</TotalFog_Surveillance.verb>
+</LanguageData>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>visión diurna</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Multiplicador de hasta dónde ve esta criatura con luz de día.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>visión nocturna</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Multiplicador de hasta dónde ve esta criatura de noche.</NightVisionEffectiveness.description>
+</LanguageData>

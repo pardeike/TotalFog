@@ -18,7 +18,7 @@
     "Source/TotalFog/Audio/MusicVisibility.cs": "0b679f72aafb05a5bfed4d41795daba24e9406bd2273b447997314702550289b",
     "Source/TotalFog/Audio/SustainerVisibility.cs": "9d5da6c6f9803b091bc59f9e715e4a6b86b793f38d822e34053c166e4a078411",
     "Source/TotalFog/Building_VisionCamera.cs": "949a882d105238cf36a4935dcaaf64c65fc1eaba098c6141b6e51d8c118c2987",
-    "Source/TotalFog/Building_VisionConsole.cs": "39826e9e930bfd7f198517ec131098631fa67988186ff888eb49c33b6ed823c4",
+    "Source/TotalFog/Building_VisionConsole.cs": "e47002f141916d77981200cfa8f9eda211d952b0339619a8c617eea7f34c2b0a",
     "Source/TotalFog/CompBuildingSight.cs": "10fcc696f096f000744d51ee6a883ed947a9bdd992503b2b6ee0d2648eb72b9c",
     "Source/TotalFog/CompCellRegistration.cs": "7001e7df3a0730256739346e508bb5328ada779d5121087b44b4151c85ae304d",
     "Source/TotalFog/CompFog.cs": "da95cf37bee1410661289087c36f84a165f7b13527705dfdcfb998417df17f09",
@@ -101,14 +101,14 @@
     "Source/TotalFog/Presentation/ThingVisibility.cs": "ff55d5b0e27e84f556cf37a604086ad5d96c327d9ff0029edaee09e6034ffbcb",
     "Source/TotalFog/Properties/AssemblyInfo.cs": "d02ea3dbe42de67e82a5c52cadcd42efcbb4d58c32fb592c9a5cf9b7e211d1c5",
     "Source/TotalFog/SectionLayerFog.cs": "c6583bc3de364da9769e642998ea54754d15ccc96a64e6e556a8d52b7574547f",
-    "Source/TotalFog/SettingsWindow.cs": "7f3e13736200f2f018c53169a6a753b20b1bc19430ad589eba04f8823f1df681",
+    "Source/TotalFog/SettingsWindow.cs": "ad8a9907aba3759b2822e080887ebafceafe3f8700ec7a4af3216c7be7bff23b",
     "Source/TotalFog/SoundAudibility.cs": "24ac6ef070c45c642c985e3cb6fad226a625080762f4a415c148690959e870a1",
     "Source/TotalFog/TotalFog.csproj": "d27774d45adb2959145427e0202cfddd6a8bfef07ba713bbb78466ec9ef55002",
     "Source/TotalFog/TotalFogMod.cs": "24362ea806fd7268db24dd378b1ff22647f2348cfa10d62df2b43590346e1fe7",
     "Source/TotalFog/Utils/FogThingUtility.cs": "f0e2e5b8ee34bf27af9f1cba97f2ba8b70dcaf32ff88d5a1410afaef66cd0f4b",
     "Source/TotalFog/Verb_ExtendSight.cs": "b62e5eb70586ae6ef563a8e7dc5c76924381d54259e6ad907999a4352de44cf6",
     "Source/TotalFog/Visibility.cs": "7306788f5da28b0f37a9ca110f788c90d132bd219c8644df70438dce9d025c11",
-    "Source/TotalFog/Watchtowers/Building_Watchtower.cs": "7f3e60e651e672815cde42050bdeaf4e03ddb1abbed24e2955d07ba593642d06",
+    "Source/TotalFog/Watchtowers/Building_Watchtower.cs": "1bf3222f834daa3d72029386900cffb0724953931919a274d7f0634314f92a62",
     "Source/TotalFog/Watchtowers/Graphic_WatchtowerPreview.cs": "9b16ceb2dda6ae1d386da56794ac78be7bf0eae57036c2ebb1f6ecdfe8d0126d",
     "Source/TotalFog/Watchtowers/JobDriver_Watchtower.cs": "bed7747329eab947b86f48f871cf31eb1d5bd452b8cb16ff0a745719d03a74a8",
     "Source/TotalFog/Watchtowers/MapComponent_Watchtowers.cs": "140185ae152df88783893a93b6843e9ac6220680947489df366e9006b30026ff",
@@ -126,5 +126,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "26fba604fd74c7037f35d33000340090b8fe498ab729f1622a9d8b18d09b937f"
+  "dllSha256": "cf9f97413775ddf0bd723ca71edba6e5d088d626d76265f9890e12fc8dea5831"
 }

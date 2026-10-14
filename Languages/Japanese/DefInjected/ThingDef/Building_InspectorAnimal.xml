@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>偵察ニワトリ</InspectorChicken.label>
+  <InspectorChicken.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう何も見ず,何も食べません.</InspectorChicken.description>
+  <InspectorHare.label>偵察ノウサギ</InspectorHare.label>
+  <InspectorHare.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう何も見ず,何も食べません.</InspectorHare.description>
+  <InspectorMonkey.label>偵察サル</InspectorMonkey.label>
+  <InspectorMonkey.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう何も見ず,何も食べません.</InspectorMonkey.description>
+  <InspectorRat.label>偵察ネズミ</InspectorRat.label>
+  <InspectorRat.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう何も見ず,何も食べません.</InspectorRat.description>
+  <InspectorSquirrel.label>偵察リス</InspectorSquirrel.label>
+  <InspectorSquirrel.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう何も見ず,何も食べません.</InspectorSquirrel.description>
+</LanguageData>

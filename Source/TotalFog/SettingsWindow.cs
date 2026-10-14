@@ -164,7 +164,7 @@ public partial class FogSettings
         );
         Range(
             row,
-            "turretVisionModDesc",
+            "TotalFog_TurretVision",
             ref TurretVisionModifier,
             .2f,
             2f,
@@ -172,7 +172,7 @@ public partial class FogSettings
         );
         Range(
             row,
-            "animalVisionModDesc",
+            "TotalFog_AnimalVision",
             ref AnimalVisionModifier,
             .2f,
             2f,

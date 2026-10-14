@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>дневное зрение</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Множитель дальности обзора этого существа при дневном свете.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>ночное зрение</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Множитель дальности обзора этого существа ночью.</NightVisionEffectiveness.description>
+</LanguageData>

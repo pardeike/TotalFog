@@ -1,6 +1,6 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <TotalFog_WatchtowerWatch.reportString>Beobachtet von TargetA aus.</TotalFog_WatchtowerWatch.reportString>
-  <TotalFog_WatchtowerDescend.reportString>Steigt von TargetA hinab.</TotalFog_WatchtowerDescend.reportString>
-  <TotalFog_WatchtowerRetrieve.reportString>Birgt TargetC von TargetA.</TotalFog_WatchtowerRetrieve.reportString>
+  <TotalFog_WatchtowerWatch.reportString>hält Wache auf TargetA.</TotalFog_WatchtowerWatch.reportString>
+  <TotalFog_WatchtowerDescend.reportString>klettert von TargetA herunter.</TotalFog_WatchtowerDescend.reportString>
+  <TotalFog_WatchtowerRetrieve.reportString>holt TargetC von TargetA herunter.</TotalFog_WatchtowerRetrieve.reportString>
 </LanguageData>

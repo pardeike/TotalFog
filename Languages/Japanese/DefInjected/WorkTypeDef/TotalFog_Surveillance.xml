@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Surveillance.description>カメラコンソールを操作し,カメラが周囲を映せるようにします.優先度は雑用とは別に設定します.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.labelShort>カメラ</TotalFog_Surveillance.labelShort>
+  <TotalFog_Surveillance.pawnLabel>カメラ操作員</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.gerundLabel>カメラ操作</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>カメラ操作</TotalFog_Surveillance.verb>
+</LanguageData>

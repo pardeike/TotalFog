@@ -218,7 +218,10 @@ public sealed class Building_Watchtower : WatchtowerGraphic
         if (!CanEnter(pawn, retrieve ? body : null))
         {
             yield return new FloatMenuOption(
-                label.Translate() + " (" + "TotalFog_TowerUnavailable".Translate() + ")",
+                "TotalFog_TowerOptionUnavailable".Translate(
+                    label.Translate(),
+                    "TotalFog_TowerUnavailable".Translate()
+                ),
                 null,
                 retrieve ? WatchtowerIcons.Retrieve : WatchtowerIcons.Watch,
                 Color.white
@@ -295,10 +298,10 @@ public sealed class Building_Watchtower : WatchtowerGraphic
     {
         if (!CanEnter(worker, body) || !worker.CanReserve(body) || !worker.CanReserve(this))
             return new FloatMenuOption(
-                "TotalFog_TowerRetrieve".Translate()
-                    + " ("
-                    + "TotalFog_TowerUnavailable".Translate()
-                    + ")",
+                "TotalFog_TowerOptionUnavailable".Translate(
+                    "TotalFog_TowerRetrieve".Translate(),
+                    "TotalFog_TowerUnavailable".Translate()
+                ),
                 null,
                 WatchtowerIcons.Retrieve,
                 Color.white

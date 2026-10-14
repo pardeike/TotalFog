@@ -2,8 +2,8 @@
 <Defs>
   <StatDef>
     <defName>DayVisionEffectiveness</defName>
-    <label>daylight vision effectiveness </label>
-    <description>Multiplier on the the vision range at daylight of this creature.</description>
+    <label>daytime sight</label>
+    <description>Multiplier on how far this creature sees in daylight.</description>
     <category>BasicsPawn</category>
     <defaultBaseValue>1.0</defaultBaseValue>
     <hideAtValue>1.0</hideAtValue>
@@ -13,8 +13,8 @@
   </StatDef>
   <StatDef>
     <defName>NightVisionEffectiveness</defName>
-    <label>night vision effectiveness </label>
-    <description>Multiplier on the the vision range at night of this creature.</description>
+    <label>night sight</label>
+    <description>Multiplier on how far this creature sees at night.</description>
     <category>BasicsPawn</category>
     <defaultBaseValue>0.65</defaultBaseValue>
     <hideAtValue>1.0</hideAtValue>

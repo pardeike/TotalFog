@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>säkerhetskameror</CameraSecurity.label>
+  <CameraSecurity.description>Bygg övervakningskameror och en kamerakonsol. Strömförsörjda kameror visar dig sin omgivning medan en kolonist bemannar konsolen.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>avancerade kameralinser</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Bygg bättre kameror: tak- och markmodeller, en solcellskamera som inte behöver någon elledning och en kamerastolpe med lång räckvidd.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>spaningsteleskop</WatchTelescope.label>
+  <WatchTelescope.description>Bygg ett spaningsteleskop. En kolonist som står vid det ser dubbelt så långt.</WatchTelescope.description>
+</LanguageData>

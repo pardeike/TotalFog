@@ -3,7 +3,7 @@
   <ThingDef ParentName="BuildingBase">
     <defName>TotalFog_Watchtower</defName>
     <label>watchtower</label>
-    <description>A solid, three-cell-wide watchtower with room for one lookout. Colonists climb its ladder to see over freestanding walls. Roofed rooms, mountains and other towers block its view. The exposed lookout is easier to shoot. An occupied tower must be emptied before deconstruction; destruction can injure its occupant.</description>
+    <description>A solid 3x3 tower with room for one lookout. Climb the ladder to see over freestanding walls. Roofs, mountains and other towers still block the view. A lookout up there is easy to hit. Bring them down before deconstructing: a collapsing tower hurts whoever is on it.</description>
     <thingClass>TotalFog.Watchtowers.Building_Watchtower</thingClass>
     <size>(3,3)</size>
     <rotatable>true</rotatable>
@@ -60,24 +60,24 @@
   <JobDef>
     <defName>TotalFog_WatchtowerWatch</defName>
     <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
-    <reportString>Watching from TargetA.</reportString>
+    <reportString>Keeping watch from TargetA.</reportString>
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
   <JobDef>
     <defName>TotalFog_WatchtowerDescend</defName>
     <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
-    <reportString>Climbing down TargetA.</reportString>
+    <reportString>Climbing down from TargetA.</reportString>
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
   <JobDef>
     <defName>TotalFog_WatchtowerRetrieve</defName>
     <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
-    <reportString>Retrieving TargetC from TargetA.</reportString>
+    <reportString>Bringing TargetC down from TargetA.</reportString>
     <casualInterruptible>false</casualInterruptible>
   </JobDef>
   <WorkGiverDef>
     <defName>TotalFog_WatchtowerRescue</defName>
-    <label>rescue watchtower occupant</label>
+    <label>rescue from watchtower</label>
     <giverClass>TotalFog.Watchtowers.WorkGiver_WatchtowerRescue</giverClass>
     <workType>Doctor</workType>
     <verb>rescue</verb>

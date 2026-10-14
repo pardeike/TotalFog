@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Watchtower.label>瞭望塔</TotalFog_Watchtower.label>
+  <TotalFog_Watchtower.description>堅固的3x3塔樓，可容納一名瞭望員。爬上梯子即可越過獨立的牆觀察。屋頂、山體和其他瞭望塔仍會遮擋視線。塔上的瞭望員容易被擊中。拆除前請先讓瞭望員下來：塔倒塌會傷到上面的人。</TotalFog_Watchtower.description>
+</LanguageData>

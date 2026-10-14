@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Watchtower.label>見張り塔</TotalFog_Watchtower.label>
+  <TotalFog_Watchtower.description>見張り1人分のスペースがある頑丈な3x3の塔です.はしごを登ると独立した壁の向こうまで見渡せます.屋根や山,他の塔は視界を遮ります.塔の上の見張りは被弾しやすくなります.解体する前に見張りを降ろしてください.崩れる塔は上にいる者を傷つけます.</TotalFog_Watchtower.description>
+</LanguageData>

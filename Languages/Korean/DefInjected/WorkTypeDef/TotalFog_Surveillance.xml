@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <TotalFog_Surveillance.labelShort>감시</TotalFog_Surveillance.labelShort>
-  <TotalFog_Surveillance.pawnLabel>감시 카메라 담당자</TotalFog_Surveillance.pawnLabel>
-  <TotalFog_Surveillance.gerundLabel>감시 카메라 관찰 중</TotalFog_Surveillance.gerundLabel>
-  <TotalFog_Surveillance.verb>감시 카메라 관찰</TotalFog_Surveillance.verb>
-  <TotalFog_Surveillance.description>카메라 콘솔을 조작하여 감시 시야를 확보합니다. 기본 작업과 별도로 이 작업의 우선순위를 설정할 수 있습니다.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.description>카메라가 주변을 보여 줄 수 있도록 카메라 콘솔을 조작합니다. 우선순위는 심부름과 별개입니다.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.labelShort>카메라</TotalFog_Surveillance.labelShort>
+  <TotalFog_Surveillance.pawnLabel>카메라 조작</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.gerundLabel>카메라 조작</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>카메라 조작</TotalFog_Surveillance.verb>
 </LanguageData>

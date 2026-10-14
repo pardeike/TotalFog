@@ -2,7 +2,7 @@
 <Defs>
   <DesignatorDropdownGroupDef>
     <defName>SurveillanceCamera</defName>
-    <label>Surveillance Camera</label>
+    <label>surveillance cameras</label>
   </DesignatorDropdownGroupDef>
   <!-- Base Camera -->
   <ThingDef Name="BaseCamera" ParentName="BaseVisionStuff" Abstract="True">
@@ -37,9 +37,9 @@
   <ThingDef ParentName="BaseVisionStuff">
     <defName>SecurityBellSmall</defName>
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
-    <label>small security bell </label>
+    <label>small security bell</label>
     <uiIconScale>0.25</uiIconScale>
-    <description>A retired security bell retained for existing saves. It no longer provides vision.</description>
+    <description>Retired. Kept so old saves still load. It no longer provides sight.</description>
     <graphicData>
       <texPath>Things/Buildings/SecurityBellSmall</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -77,7 +77,7 @@
     <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
     <label>large security bell</label>
     <uiIconScale>0.25</uiIconScale>
-    <description>A retired security bell retained for existing saves. It no longer provides vision.</description>
+    <description>Retired. Kept so old saves still load. It no longer provides sight.</description>
     <graphicData>
       <texPath>Things/Buildings/SecurityBell</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -113,8 +113,8 @@
   <!-- Tier 1, blocky and non curved-->
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Mounted</defName>
-    <label>wall mounted surveillance camera</label>
-    <description>Surveillance camera that provide vision for an area. 24 Camera view range radius. Automatically sustain itself power</description>
+    <label>wall camera</label>
+    <description>A small camera fixed to a wall. Short range, cheap, and easy on power.</description>
     <altitudeLayer>Skyfaller</altitudeLayer>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <fillPercent>0</fillPercent>
@@ -161,8 +161,8 @@
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Bush</defName>
-    <label>surveillance camera in a bush</label>
-    <description>Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy</description>
+    <label>camera in a bush</label>
+    <description>A camera hidden inside a bush, easy to overlook. Short range.</description>
     <altitudeLayer>Building</altitudeLayer>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <pathCost>30</pathCost>
@@ -210,8 +210,8 @@
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_DeadBush</defName>
-    <label>surveillance camera in a dead bush</label>
-    <description>Surveillance camera that provide vision for an area. 24 camera range radius. Camouflaged so it won't be attacked by enemy</description>
+    <label>camera in a dead bush</label>
+    <description>A camera hidden inside a dead bush, easy to overlook. Short range.</description>
     <altitudeLayer>Building</altitudeLayer>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <pathCost>30</pathCost>
@@ -261,8 +261,8 @@
   <!-- Tier 2, flexible, curved and provide more vision range -->
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_UnderRoof</defName>
-    <label>ceiling surveillance camera</label>
-    <description>Surveillance camera that provide vision for an area. Cheaper for indoor build. 25 Camera view range radius.</description>
+    <label>ceiling camera</label>
+    <description>A camera for indoor use. Must hang under a roof. Short range, cheap to build.</description>
     <altitudeLayer>Skyfaller</altitudeLayer>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <clearBuildingArea>false</clearBuildingArea>
@@ -308,8 +308,8 @@
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Ground</defName>
-    <label>Ground surveillance camera</label>
-    <description>Surveillance camera that provide vision for an area. 35 Camera view range radius.</description>
+    <label>ground camera</label>
+    <description>A sturdy camera on a ground mount. Medium range.</description>
     <altitudeLayer>Building</altitudeLayer>
     <pathCost>10</pathCost>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
@@ -345,8 +345,8 @@
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_Solar</defName>
-    <label>Self sustained surveillance camera</label>
-    <description>Surveillance camera that provide vision for an area. 40 Camera view range radius. Automatically sustain itself power</description>
+    <label>solar camera</label>
+    <description>A camera with its own solar panel. Needs no power line, but must stand under open sky. Medium range.</description>
     <altitudeLayer>Building</altitudeLayer>
     <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
     <pathCost>10</pathCost>
@@ -389,8 +389,8 @@
   </ThingDef>
   <ThingDef ParentName="BaseCamera">
     <defName>SurveillanceCamera_High</defName>
-    <label>surveillance camera post</label>
-    <description>Surveillance camera that provide vision for an area. 65 Camera view range radius. Can't be placed indoor</description>
+    <label>camera post</label>
+    <description>A camera high on a post with a wide view. Long range, but hungry for power. Must stand under open sky.</description>
     <fillPercent>0.2</fillPercent>
     <pathCost>40</pathCost>
     <graphicData>

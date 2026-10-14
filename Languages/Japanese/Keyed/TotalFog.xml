@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>デフォルトに戻す</RFWreset>
+  <TotalFog_ResetDesc>すべての設定をデフォルトに戻します.木の遮蔽はゲームの読み込み中は変更されません.</TotalFog_ResetDesc>
+  <CurrentModVersion>Version {0}</CurrentModVersion>
+  <NotVisible>視界外</NotVisible>
+  <CannotPlaceInUndiscovered>未知の場所に配置することはできません.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>屋根の下に設置する必要があります.</MustBeUnderRoof>
+  <MustBeNextToWall>壁に接して設置する必要があります.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>外観</TotalFog_PageAppearance>
+  <TotalFog_PageVision>視界</TotalFog_PageVision>
+  <TotalFog_PageInformation>情報</TotalFog_PageInformation>
+  <TotalFog_PageAudio>オーディオ</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>誰も見ていないときの探索済みの地面の見え方です.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>誰があなたの目となり,どこまで見えるかを決めます.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>誰も見ていない物事を,どのメッセージや詳細が伝えてよいかを決めます.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>音楽や効果音は隠れたイベントを知らせてしまいます.何を聞きたいかを選んでください.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>探索済みエリアの暗さ</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>誰も見ていない探索済みの地面がどれだけ暗くなるかを決めます.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>黒(100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>霧の変化速度</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>視界が変わったときに霧が切り替わる速さです.Offでは即座に切り替わります.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>遅い</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>普通</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>速い</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Off</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>基本視界</baseViewRange>
+  <baseViewRangeDesc>健康状態,明るさ,天候を考慮する前の入植者の視界距離です.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>その他の目</TotalFog_AdditionalObservers>
+  <buildingVisionMod>建物の視界倍率</buildingVisionMod>
+  <buildingVisionModDesc>カメラなどの建物の視界距離に掛ける倍率です.設置時のプレビューは変わりません.</buildingVisionModDesc>
+  <TotalFog_TurretVision>タレットの視界倍率</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>自動タレットの視界距離に掛ける倍率です.タレットが見るには電力か燃料が必要です.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>動物の視界倍率</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>あなたの動物の視界距離に掛ける倍率です.動物があなたの目となるには,主人と攻撃の訓練が必要です.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>メカノイドの視界倍率</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>あなたのメカノイドの視界距離に掛ける倍率です.1で通常の視界になります.武器の射程と聴覚は変わりません.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>同盟者と訪問者が視界を共有</allyGiveVision>
+  <TotalFog_AllyVisionDesc>マップ上の友好的な人や動物が見ているものを,通常の半分の距離まで見ることができます.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>囚人が視界を共有</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>囚人が見ているものを,通常の5分の1の距離まで見ることができます.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>地形とマップ</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>新しいマップを探索済みで開始</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>新しいマップは最初からすべての地面が探索済みになります.それでも今見えるのは,入植者が現在見ているものだけです.</TotalFog_MapRevealDesc>
+  <treesBlockSight>木が視線を遮る</treesBlockSight>
+  <treesBlockSightDesc>成長した木は視線を遮ります.苗木や切り株は遮りません.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>メインメニューで変更してから,ゲームを読み込んでください.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>拠点マップでは霧なし</onlyOutsideColony>
+  <onlyOutsideColonyDesc>拠点マップではすべてが表示されます.他のマップでは霧が残ります.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>グラヴシップ飛行中はマップ全体を表示</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>着陸地点の選択中と離着陸中はマップ全体を表示します.誰も見ていないものが見えてしまうことがあります.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>見張り塔</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>見張りの視界倍率</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>見張り塔の上から見張りがどれだけ遠くまで見えるかの倍率です.屋根や山,他の塔は視界を遮ります.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>見張りの視界上限</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>見張りはこのセル数より遠くは見えません.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>はしごの昇降時間(ティック)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>登り降りにかかる時間です.60ティックがゲーム内時間の1秒です.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>見張りの射撃許可</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>見張りは独立した壁越しに射撃できます.塔の上では被弾しやすく,白兵戦はできません.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>望遠鏡の視界上限</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>監視望遠鏡を使う入植者はこのセル数より遠くは見えません.見張り塔とは無関係です.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>未確認イベントの通知遅延</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>誰も見ていない物事に関するレターやメッセージは,誰かが見るまで保留されます.コロニーの健康状態やワールドイベントはすぐに届きます.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>未確認イベントの通知破棄</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>選択した種類のレターやメッセージは,誰もその対象を見ていない間は破棄されます.コロニーの健康状態,見えているイベント,ワールドイベントは届きます.代わりに保留したい場合は上の「通知遅延」を使ってください.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>主要な脅威</hideThreatBig>
+  <hideThreatSmall>小さな脅威</hideThreatSmall>
+  <hideEventPositive>良い知らせ</hideEventPositive>
+  <hideEventNegative>悪い知らせ</hideEventNegative>
+  <hideEventNeutral>中立的な知らせ</hideEventNeutral>
+  <TotalFog_SilentRaids>襲撃の通知なし</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>襲撃や人狩りの群れが到着しても,たとえ見えていてもレターは届かず,速度も落ちません.攻撃は行われ,戦闘中は時間が遅くなります.音楽は別の設定です.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>その他の情報</TotalFog_InformationOptions>
+  <wildLifeTabVisible>未確認の野生動物を一覧表示</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>野生動物タブに誰も見ていない動物も表示します.その動物がいることが分かってしまいます.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>視界外の吹き出しを非表示</hideSpeakBubble>
+  <hideSpeakBubbleDesc>視界外のキャラの Interaction Bubbles を非表示にします.</hideSpeakBubbleDesc>
+  <aiSmart>敵にも霧を適用</aiSmart>
+  <aiSmartDesc>人間の敵は自陣営が見えるものしか狙えません.暗がりにいる入植者は隠れたままです.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>記憶した建物やアイテムを操作</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>以前見たことのある建物やアイテムは,見た場所にそのまま残っている限り,選択,確認,命令ができます.右クリックの作業命令も含みます.人や動物,戦闘目標,一度も見ていないものには現在の視界が必要です.自分の入植者と建築計画は常に操作できます.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>カメラには操作者が必要</NeedWatcher>
+  <NeedWatcherDesc>カメラは入植者がカメラコンソールで作業している間だけ周囲を映します.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>戦闘・アノマリー音楽なし</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>戦闘中やアノマリーイベント中も通常の音楽を流し続け,音楽の変化で気づかれないようにします.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>隠れた音を消音</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>誰も見ていないものの音は,継続音も含めて鳴りません.聴覚によるフィルタリングより優先されます.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>聴覚による音のフィルタリング</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>隠れた音はくぐもり,それを聞き取れる生きた入植者の近くでのみ鳴ります.聴覚範囲の外では無音です.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>聴覚範囲</audioSourceRange>
+  <audioSourceRangeDesc>入植者が隠れた音を聞き取れるセル数です.</audioSourceRangeDesc>
+  <volumeMufflingModifier>距離による減衰</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>聴覚範囲の端に近づくにつれて,隠れた音がどれだけ小さくなるかを決めます.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>聴覚マーク</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>聴覚マークを表示</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>入植者が隠れた動きを聞き取った場所に小さなマークを表示します.不要ならオフにしてください.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>聴覚マークの範囲</baseHearingRange>
+  <TotalFog_HearingRangeDesc>隠れた動きを聞き取れるセル数です.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>稼働中のカメラ：{0}</TotalFog_CameraCount>
+  <Revealing>監視中</Revealing>
+  <NoCameraConsole>操作中のカメラコンソールなし</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>見張り：{0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>塔から見張る</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>徴兵終了まで見張る</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>{0}見張る</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>徴兵終了か別の命令まで見張り中</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>見張り終了まで{0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>{0}を登っています.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>{0}を降りています.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>降りる</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>塔から降ろす</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>塔が使用中かはしごが塞がれている</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0}({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>はしごの前のセルは空けておく必要があります.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>見張り塔は屋根の下には設置できません.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>塔を解体する前に見張りを降ろしてください.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>はしごが塞がれています.見張りが降りられるよう,はしごの前のセルを空けてください.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>{0}のはしごが空くのを待っています.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0}は塞がれた見張り塔から飛び降ります.落下で負傷するかもしれません.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

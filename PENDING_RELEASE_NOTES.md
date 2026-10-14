@@ -52,7 +52,7 @@ local testing do not indicate that a new player build has been released.
 - Apply native Clear All Fog, Refog Map and rectangle fog commands to Total Fog. Settle fog fades while paused so scrolling does not leave stale straight section edges.
 - Refresh sight blockers and observers immediately for debug fog commands, including walls placed while paused.
 - Restore real sight after Refog even when the colonist stands on a tower.
-- Translate current settings and tower text into German, French, Simplified Chinese and Korean.
+- Rewrite all settings, building, research and job text in plain, friendly English, and translate it into German, French, Spanish, Latin American Spanish, Dutch, Swedish, Polish, Russian, Turkish, Japanese, Korean, Simplified Chinese and Traditional Chinese.
 
 ## Integrations and stability
 

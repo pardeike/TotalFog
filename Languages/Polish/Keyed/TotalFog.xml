@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Przywróć ustawienia domyślne</RFWreset>
+  <TotalFog_ResetDesc>Przywraca wszystkie ustawienia do wartości domyślnych. Zasłanianie widoku przez drzewa pozostaje bez zmian, dopóki gra jest wczytana.</TotalFog_ResetDesc>
+  <CurrentModVersion>Wersja {0}</CurrentModVersion>
+  <NotVisible>Poza zasięgiem wzroku</NotVisible>
+  <CannotPlaceInUndiscovered>Nie można umieścić na nieodkrytym terenie.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Należy umieścić pod dachem.</MustBeUnderRoof>
+  <MustBeNextToWall>Należy umieścić przy ścianie.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Wygląd</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Wzrok</TotalFog_PageVision>
+  <TotalFog_PageInformation>Informacje</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Dźwięk</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Jak wygląda odkryty teren, gdy nikt go nie obserwuje.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Kto widzi za Ciebie i jak daleko.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Które wiadomości i szczegóły mogą zdradzać rzeczy, których nikt nie widział.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Muzyka i dźwięki mogą zdradzać ukryte zdarzenia. Wybierz, co chcesz słyszeć.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Zaciemnienie odkrytych obszarów</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Jak bardzo ciemnieje odkryty teren, gdy nikt go w tej chwili nie widzi.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Czarny (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Szybkość zanikania mgły</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Jak szybko mgła zanika, gdy zmienia się widok. „Wył” przełącza natychmiast.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Wolno</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Średnio</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Szybko</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Wył</fogFadeSpeedSetting_Disabled>
+
+  <!-- Vision -->
+  <baseViewRange>Podstawowy zasięg widzenia</baseViewRange>
+  <baseViewRangeDesc>Jak daleko widzi kolonista, zanim zostaną uwzględnione zdrowie, światło i pogoda.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Inni obserwatorzy</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Mnożnik widzenia budynków</buildingVisionMod>
+  <buildingVisionModDesc>Skaluje, jak daleko widzą kamery i inne budynki. Podgląd podczas umieszczania się nie zmienia.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Mnożnik widzenia wieżyczek</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Skaluje, jak daleko widzą automatyczne wieżyczki. Wieżyczka potrzebuje zasilania lub paliwa, aby w ogóle widzieć.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Mnożnik widzenia zwierząt</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Skaluje, jak daleko widzą Twoje zwierzęta. Zwierzę potrzebuje właściciela i wyszkolenia w ataku, aby widzieć za Ciebie.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Mnożnik widzenia mechów</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Skaluje, jak daleko widzą Twoje mechy. 1 zachowuje ich normalny zasięg. Zasięg broni i słuch się nie zmieniają.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Sojusznicy i goście dzielą się wzrokiem</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Przyjaźni ludzie i zwierzęta na Twojej mapie pozwalają Ci widzieć to, co widzą oni, w połowie ich normalnego zasięgu.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Więźniowie dzielą się wzrokiem</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Twoi więźniowie pozwalają Ci widzieć to, co widzą oni, w jednej piątej ich normalnego zasięgu.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Teren i mapy</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Nowe mapy zaczynają odkryte</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>Nowe mapy zaczynają z całym terenem odkrytym. Nadal widzisz tylko to, co w tej chwili widzą Twoi koloniści.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Drzewa zasłaniają widok</treesBlockSight>
+  <treesBlockSightDesc>Dorosłe drzewa blokują linię widoku. Sadzonki i pniaki nie.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Zmień to w menu głównym, a potem wczytaj grę.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Brak mgły na mapach domowych</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Na Twoich mapach domowych widać wszystko. Na pozostałych mapach mgła pozostaje.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Pełny widok mapy podczas lotów grawstatku</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Pokazuje całą mapę, gdy wybierasz strefę lądowania oraz podczas startu i lądowania. Może to pokazać rzeczy, których nikt nie widział.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Wieże strażnicze</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Mnożnik widzenia wartownika</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>O ile dalej widzi wartownik ze szczytu wieży strażniczej. Dachy, góry i inne wieże nadal zasłaniają widok.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Limit widzenia wartownika</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Wartownik nigdy nie widzi dalej niż tyle pól.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Czas wspinaczki po drabinie (tiki)</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Jak długo trwa wejście na górę lub zejście. 60 tików to jedna sekunda czasu gry.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Wartownicy mogą strzelać</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Wartownicy mogą strzelać ponad wolnostojącymi ścianami. Na górze łatwiej ich trafić i nie mogą walczyć wręcz.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Limit widzenia teleskopu</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Kolonista przy teleskopie obserwacyjnym nigdy nie widzi dalej niż tyle pól. Niezależne od wież strażniczych.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Opóźnione wieści o niewidzianych zdarzeniach</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Powiadomienia i wiadomości o czymś, czego nikt nie widzi, czekają, aż ktoś to zobaczy. Wieści o zdrowiu kolonii i zdarzeniach na świecie nadal przychodzą od razu.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Pomijane wieści o niewidzianych zdarzeniach</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Powiadomienia i wiadomości wybranych rodzajów są pomijane, dopóki nikt nie widzi tego, czego dotyczą. Wieści o zdrowiu kolonii, widocznych zdarzeniach i zdarzeniach na świecie nadal przychodzą. Użyj opcji „Opóźnione wieści” powyżej, aby zamiast tego je zachować.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Poważne zagrożenia</hideThreatBig>
+  <hideThreatSmall>Drobne zagrożenia</hideThreatSmall>
+  <hideEventPositive>Dobre wieści</hideEventPositive>
+  <hideEventNegative>Złe wieści</hideEventNegative>
+  <hideEventNeutral>Neutralne wieści</hideEventNeutral>
+  <TotalFog_SilentRaids>Ciche najazdy</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Brak powiadomienia i spowolnienia, gdy nadchodzą najazdy lub sfory wściekłych zwierząt, nawet na widoku. Nadal atakują, a walka nadal spowalnia czas. Muzyka to osobne ustawienie.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Inne informacje</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Lista niewidzianych dzikich zwierząt</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Zakładka Fauna wyświetla również zwierzęta, których nikt nie widzi. Zdradza to ich obecność.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Ukryj niewidziane dymki rozmów</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Ukrywa dymki z moda Interaction Bubbles u postaci poza zasięgiem wzroku.</hideSpeakBubbleDesc>
+  <aiSmart>Wrogowie też mają mgłę</aiSmart>
+  <aiSmartDesc>Ludzcy wrogowie mogą obierać za cel tylko to, co widzi ich własna strona. Kolonista w ciemności pozostaje ukryty.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Używaj zapamiętanych budynków i przedmiotów</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Zaznaczaj, sprawdzaj i wydawaj polecenia budynkom i przedmiotom widzianym wcześniej, o ile wciąż są tam, gdzie je widziano. Dotyczy to też poleceń pracy z menu prawego przycisku myszy. Ludzie, zwierzęta, cele w walce i wszystko, czego nigdy nie widziano, nadal wymagają bieżącego widoku. Twoi koloniści i plany budowy działają zawsze.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Kamery potrzebują operatora</NeedWatcher>
+  <NeedWatcherDesc>Kamery pokazują swoje otoczenie tylko wtedy, gdy kolonista pracuje przy konsoli kamer.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Bez muzyki walki i Anomalii</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Podczas walki i zdarzeń Anomalii gra dalej zwykła muzyka, więc jej zmiana nie może Cię ostrzec.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Wycisz ukryte dźwięki</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Dźwięki rzeczy, których nikt nie widzi, są wyciszone, w tym trwające pętle. Ma to pierwszeństwo przed filtrowaniem według słuchu.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Filtrowanie dźwięków według słuchu</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Ukryte dźwięki są stłumione i słychać je tylko w pobliżu żywego kolonisty, który mógłby je usłyszeć. Poza zasięgiem słuchu są wyciszone.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Zasięg słuchu</audioSourceRange>
+  <audioSourceRangeDesc>Z ilu pól kolonista wciąż słyszy ukryty dźwięk.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Tłumienie z odległością</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>O ile cichszy staje się ukryty dźwięk przy granicy zasięgu słuchu.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Wskaźniki słuchu</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Pokaż wskaźniki słuchu</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Małe znaczniki pokazują, gdzie kolonista słyszy ukryty ruch. Wyłącz, aby je usunąć.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Zasięg wskaźników słuchu</baseHearingRange>
+  <TotalFog_HearingRangeDesc>Z ilu pól słychać ukryty ruch.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Działające kamery: {0}</TotalFog_CameraCount>
+  <Revealing>Obserwuje</Revealing>
+  <NoCameraConsole>Brak obsługiwanej konsoli kamer</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Wartownik: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Pełnij wartę na wieży</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Pełnij wartę do zwolnienia z trybu bojowego</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Pełnij wartę: {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Pełni wartę do zwolnienia z trybu bojowego lub innego rozkazu</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Pozostały czas warty: {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Wchodzi na górę: {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Schodzi na dół: {0}.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Zejdź</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Sprowadź z wieży</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>wieża zajęta lub drabina zablokowana</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>Pole przed drabiną musi pozostać wolne.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Wieża strażnicza musi stać pod gołym niebem.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Sprowadź wartownika na dół przed rozbiórką wieży.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Drabina jest zablokowana. Opróżnij pole przed nią, aby wartownik mógł zejść.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Czeka na odblokowanie drabiny: {0}.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} zeskakuje z zablokowanej wieży strażniczej. Upadek może boleć.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>
