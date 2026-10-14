@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>A cuántas casillas de distancia un colono aún puede oír un sonido oculto.</audioSourceRangeDesc>
   <volumeMufflingModifier>Amortiguación con la distancia</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Cuánto se atenúa un sonido oculto hacia el límite del alcance auditivo.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Indicadores de audición</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Mostrar indicadores de audición</TotalFog_ShowHearingCues>
-  <TotalFog_ShowHearingCuesDesc>Pequeñas marcas muestran dónde oye un colono movimiento oculto. Desactívalo para quitarlas.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Alcance de los indicadores de audición</baseHearingRange>
+  <TotalFog_HearingIndicators>Marcadores de sonido</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Mostrar marcadores de sonido</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Pequeños marcadores muestran dónde oye un colono movimiento oculto. Desactívalo para quitarlos.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Alcance de los marcadores de sonido</baseHearingRange>
   <TotalFog_HearingRangeDesc>A cuántas casillas de distancia se puede oír movimiento oculto.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

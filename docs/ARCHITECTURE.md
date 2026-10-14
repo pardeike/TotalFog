@@ -62,7 +62,7 @@ targets or neighbouring cells. Native undiscovered fog still takes precedence.
   gate, so work access does not grant an unseen melee or ranged attack option.
 - Notifications retain original payloads until their targets are observed, survive
   saves and replay once. Audio has independent settings for combat music, hidden
-  sources, hearing filtering and hearing indicators.
+  sources, hearing filtering and sound markers.
 - Optional integrations own their feature detection and exceptions. They do not
   change the core visibility algorithm.
 
@@ -182,7 +182,7 @@ Other mods can bind `TotalFog.Visibility.IsVisible(Verse.Thing)` once as a
 sight policy, including held-map lookup, vanilla fog and configured bypasses.
 Remembered static appearance and player ownership do not grant visibility for
 live effects. Null/mapless things keep the existing unrestricted presentation
-policy; hearing indicators follow their recipient faction. Call on the game thread; the query does not
+policy; sound markers follow their recipient faction. Call on the game thread; the query does not
 advance simulation, refresh sight, change registration or create effect state.
 
 Zombieland uses this optional query for the target of a visible healer's

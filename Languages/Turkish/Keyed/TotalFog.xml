@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>Bir kolonicinin gizli bir sesi kaç kare uzaktan hâlâ duyabildiği.</audioSourceRangeDesc>
   <volumeMufflingModifier>Mesafeyle boğuklaşma</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Gizli bir sesin işitme menzilinin kenarına doğru ne kadar kısıldığı.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>İşitme göstergeleri</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>İşitme göstergelerini göster</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>Ses işaretleri</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Ses işaretlerini göster</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Küçük işaretler bir kolonicinin gizli hareketi nerede duyduğunu gösterir. Kaldırmak için bunu kapat.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>İşitme göstergesi menzili</baseHearingRange>
+  <baseHearingRange>Ses işareti menzili</baseHearingRange>
   <TotalFog_HearingRangeDesc>Gizli hareketin kaç kare uzaktan duyulabildiği.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

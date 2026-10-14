@@ -97,8 +97,8 @@
   <aiSmartDesc>人類敵人只能瞄準己方看見的目標。身處黑暗中的殖民者仍然隱藏。</aiSmartDesc>
   <TotalFog_InteractWithRememberedObjects>使用記憶中的建築和物品</TotalFog_InteractWithRememberedObjects>
   <TotalFog_InteractWithRememberedObjectsDesc>可以選取、檢視並指揮你曾經見過的建築和物品，只要它們仍在原處，包括右鍵工作指令。人物、動物、戰鬥目標和從未見過的東西仍需要目前視野。你自己的殖民者和建造計畫始終可用。</TotalFog_InteractWithRememberedObjectsDesc>
-  <NeedWatcher>攝影機需要操作員</NeedWatcher>
-  <NeedWatcherDesc>只有殖民者在攝影機控制台工作時，攝影機才會顯示周圍環境。</NeedWatcherDesc>
+  <NeedWatcher>攝影機需要監控員</NeedWatcher>
+  <NeedWatcherDesc>只有殖民者在監控台工作時，攝影機才會顯示周圍環境。</NeedWatcherDesc>
 
   <!-- Audio -->
   <TotalFog_SuppressCombatMusic>不播放戰鬥與異邪音樂</TotalFog_SuppressCombatMusic>
@@ -111,16 +111,16 @@
   <audioSourceRangeDesc>殖民者在多少格外仍能聽見隱藏的聲音。</audioSourceRangeDesc>
   <volumeMufflingModifier>隨距離減弱</volumeMufflingModifier>
   <volumeMufflingModifierDesc>隱藏的聲音接近聽力範圍邊緣時減弱多少。</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>聽覺提示</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>顯示聽覺提示</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>聲音標記</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>顯示聲音標記</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>小標記顯示殖民者聽見隱藏移動的位置。關閉此選項可移除它們。</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>聽覺提示範圍</baseHearingRange>
+  <baseHearingRange>聲音標記範圍</baseHearingRange>
   <TotalFog_HearingRangeDesc>在多少格外能聽見隱藏的移動。</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->
   <TotalFog_CameraCount>運作中的攝影機：{0}</TotalFog_CameraCount>
   <Revealing>監視中</Revealing>
-  <NoCameraConsole>沒有正在操作的攝影機控制台</NoCameraConsole>
+  <NoCameraConsole>沒有正在操作的監控台</NoCameraConsole>
 
   <!-- Watchtower -->
   <TotalFog_TowerOccupied>瞭望員：{0}</TotalFog_TowerOccupied>

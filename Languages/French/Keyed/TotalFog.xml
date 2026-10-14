@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>À combien de cases un colon entend encore un son caché.</audioSourceRangeDesc>
   <volumeMufflingModifier>Atténuation avec la distance</volumeMufflingModifier>
   <volumeMufflingModifierDesc>À quel point un son caché s'affaiblit en approchant de la limite de la portée d'ouïe.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Indicateurs d'ouïe</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Afficher les indicateurs d'ouïe</TotalFog_ShowHearingCues>
-  <TotalFog_ShowHearingCuesDesc>De petites marques indiquent où un colon entend un mouvement caché. Désactivez pour les retirer.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Portée des indicateurs d'ouïe</baseHearingRange>
+  <TotalFog_HearingIndicators>Marqueurs de bruit</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Afficher les marqueurs de bruit</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>De petits marqueurs indiquent où un colon entend un mouvement caché. Désactivez pour les retirer.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Portée des marqueurs de bruit</baseHearingRange>
   <TotalFog_HearingRangeDesc>À combien de cases un mouvement caché peut être entendu.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

@@ -97,7 +97,7 @@
   <aiSmartDesc>Menschliche Gegner können nur anvisieren, was ihre eigene Seite sehen kann. Ein Kolonist im Dunkeln bleibt verborgen.</aiSmartDesc>
   <TotalFog_InteractWithRememberedObjects>Bekannte Gebäude und Gegenstände nutzen</TotalFog_InteractWithRememberedObjects>
   <TotalFog_InteractWithRememberedObjectsDesc>Du kannst Gebäude und Gegenstände auswählen, untersuchen und befehligen, die du schon gesehen hast, solange sie noch dort sind, wo du sie gesehen hast. Das schließt Arbeitsaufträge per Rechtsklick ein. Personen, Tiere, Kampfziele und alles nie Gesehene brauchen weiterhin aktuelle Sicht. Deine eigenen Kolonisten und Baupläne funktionieren immer.</TotalFog_InteractWithRememberedObjectsDesc>
-  <NeedWatcher>Kameras brauchen einen Operator</NeedWatcher>
+  <NeedWatcher>Kameras brauchen einen Bediener</NeedWatcher>
   <NeedWatcherDesc>Kameras zeigen ihre Umgebung nur, während ein Kolonist an einer Kamerakonsole arbeitet.</NeedWatcherDesc>
 
   <!-- Audio -->
@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>Wie viele Zellen entfernt ein Kolonist ein verborgenes Geräusch noch hören kann.</audioSourceRangeDesc>
   <volumeMufflingModifier>Dämpfung mit der Entfernung</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Wie viel leiser ein verborgenes Geräusch zum Rand der Hörweite hin wird.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Hörhinweise</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Hörhinweise anzeigen</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>Geräuschmarkierungen</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Geräuschmarkierungen anzeigen</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Kleine Markierungen zeigen, wo ein Kolonist verborgene Bewegung hört. Schalte dies aus, um sie zu entfernen.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Reichweite der Hörhinweise</baseHearingRange>
+  <baseHearingRange>Reichweite der Geräuschmarkierungen</baseHearingRange>
   <TotalFog_HearingRangeDesc>Wie viele Zellen entfernt verborgene Bewegung gehört werden kann.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

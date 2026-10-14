@@ -2,7 +2,7 @@
 <LanguageData>
   <TotalFog_Surveillance.description>카메라가 주변을 보여 줄 수 있도록 카메라 콘솔을 조작합니다. 우선순위는 심부름과 별개입니다.</TotalFog_Surveillance.description>
   <TotalFog_Surveillance.labelShort>카메라</TotalFog_Surveillance.labelShort>
-  <TotalFog_Surveillance.pawnLabel>카메라 조작</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.pawnLabel>감시 담당자</TotalFog_Surveillance.pawnLabel>
   <TotalFog_Surveillance.gerundLabel>카메라 조작</TotalFog_Surveillance.gerundLabel>
   <TotalFog_Surveillance.verb>카메라 조작</TotalFog_Surveillance.verb>
 </LanguageData>

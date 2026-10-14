@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>За сколько клеток поселенец ещё слышит невидимый звук.</audioSourceRangeDesc>
   <volumeMufflingModifier>Приглушение с расстоянием</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Насколько тише становится невидимый звук ближе к границе дальности слуха.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Индикаторы слуха</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Показывать индикаторы слуха</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>Метки звуков</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Показывать метки звуков</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Небольшие метки показывают, где поселенец слышит невидимое движение. Отключите, чтобы их убрать.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Дальность индикаторов слуха</baseHearingRange>
+  <baseHearingRange>Дальность меток звуков</baseHearingRange>
   <TotalFog_HearingRangeDesc>За сколько клеток слышно невидимое движение.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

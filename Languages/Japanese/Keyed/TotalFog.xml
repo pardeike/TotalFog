@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>入植者が隠れた音を聞き取れるセル数です.</audioSourceRangeDesc>
   <volumeMufflingModifier>距離による減衰</volumeMufflingModifier>
   <volumeMufflingModifierDesc>聴覚範囲の端に近づくにつれて,隠れた音がどれだけ小さくなるかを決めます.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>聴覚マーク</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>聴覚マークを表示</TotalFog_ShowHearingCues>
-  <TotalFog_ShowHearingCuesDesc>入植者が隠れた動きを聞き取った場所に小さなマークを表示します.不要ならオフにしてください.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>聴覚マークの範囲</baseHearingRange>
+  <TotalFog_HearingIndicators>物音マーカー</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>物音マーカーを表示</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>入植者が隠れた動きを聞き取った場所に小さなマーカーを表示します.不要ならオフにしてください.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>物音マーカーの範囲</baseHearingRange>
   <TotalFog_HearingRangeDesc>隠れた動きを聞き取れるセル数です.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

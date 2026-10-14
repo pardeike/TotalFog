@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>Hur många rutor bort en kolonist fortfarande kan höra ett dolt ljud.</audioSourceRangeDesc>
   <volumeMufflingModifier>Dämpning med avståndet</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Hur mycket tystare ett dolt ljud blir mot kanten av hörselräckvidden.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Hörselmarkörer</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Visa hörselmarkörer</TotalFog_ShowHearingCues>
-  <TotalFog_ShowHearingCuesDesc>Små markeringar visar var en kolonist hör dold rörelse. Stäng av för att ta bort dem.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Räckvidd för hörselmarkörer</baseHearingRange>
+  <TotalFog_HearingIndicators>Ljudmarkörer</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Visa ljudmarkörer</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Små markörer visar var en kolonist hör dold rörelse. Stäng av för att ta bort dem.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Räckvidd för ljudmarkörer</baseHearingRange>
   <TotalFog_HearingRangeDesc>Hur många rutor bort dold rörelse kan höras.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

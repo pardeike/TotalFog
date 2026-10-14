@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <TotalFog_Surveillance.description>操作攝影機控制台，讓攝影機顯示周圍環境。其優先順序獨立於基礎工作。</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.description>操作監控台，讓攝影機顯示周圍環境。其優先順序獨立於基礎工作。</TotalFog_Surveillance.description>
   <TotalFog_Surveillance.labelShort>攝影機</TotalFog_Surveillance.labelShort>
-  <TotalFog_Surveillance.pawnLabel>攝影機操作員</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.pawnLabel>監控員</TotalFog_Surveillance.pawnLabel>
   <TotalFog_Surveillance.gerundLabel>操作攝影機</TotalFog_Surveillance.gerundLabel>
   <TotalFog_Surveillance.verb>操作攝影機</TotalFog_Surveillance.verb>
 </LanguageData>

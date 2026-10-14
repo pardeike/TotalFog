@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>How many cells away a colonist can still hear a hidden sound.</audioSourceRangeDesc>
   <volumeMufflingModifier>Muffling with distance</volumeMufflingModifier>
   <volumeMufflingModifierDesc>How much quieter a hidden sound gets toward the edge of hearing range.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Hearing indicators</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Show hearing indicators</TotalFog_ShowHearingCues>
-  <TotalFog_ShowHearingCuesDesc>Small marks show where a colonist hears hidden movement. Turn this off to remove them.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Hearing indicator range</baseHearingRange>
+  <TotalFog_HearingIndicators>Sound markers</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Show sound markers</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Small markers show where a colonist hears hidden movement. Turn this off to remove them.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Sound marker range</baseHearingRange>
   <TotalFog_HearingRangeDesc>How many cells away hidden movement can be heard.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>Op hoeveel cellen afstand een kolonist een verborgen geluid nog kan horen.</audioSourceRangeDesc>
   <volumeMufflingModifier>Demping met afstand</volumeMufflingModifier>
   <volumeMufflingModifierDesc>Hoeveel zachter een verborgen geluid wordt richting de rand van het gehoorbereik.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Gehoorindicatoren</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Gehoorindicatoren tonen</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>Geluidsmarkeringen</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Geluidsmarkeringen tonen</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Kleine markeringen tonen waar een kolonist verborgen beweging hoort. Zet dit uit om ze te verwijderen.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Bereik gehoorindicatoren</baseHearingRange>
+  <baseHearingRange>Bereik geluidsmarkeringen</baseHearingRange>
   <TotalFog_HearingRangeDesc>Op hoeveel cellen afstand verborgen beweging te horen is.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

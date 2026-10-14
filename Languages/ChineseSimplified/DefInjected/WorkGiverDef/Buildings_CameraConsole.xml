@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <SurveilCameraConsole.label>操作摄像头控制台</SurveilCameraConsole.label>
+  <SurveilCameraConsole.label>操作监控台</SurveilCameraConsole.label>
   <SurveilCameraConsole.verb>操作</SurveilCameraConsole.verb>
   <SurveilCameraConsole.gerund>操作</SurveilCameraConsole.gerund>
 </LanguageData>

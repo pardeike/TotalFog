@@ -2,7 +2,7 @@
 <LanguageData>
   <TotalFog_Surveillance.description>Eine Kamerakonsole bedienen, damit deine Kameras ihre Umgebung zeigen können. Die Priorität ist von der Hilfsarbeit getrennt.</TotalFog_Surveillance.description>
   <TotalFog_Surveillance.labelShort>Kameras</TotalFog_Surveillance.labelShort>
-  <TotalFog_Surveillance.pawnLabel>Kameraoperator</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.pawnLabel>Kamerabediener</TotalFog_Surveillance.pawnLabel>
   <TotalFog_Surveillance.gerundLabel>Kamerabedienung</TotalFog_Surveillance.gerundLabel>
   <TotalFog_Surveillance.verb>Kameras bedienen</TotalFog_Surveillance.verb>
 </LanguageData>

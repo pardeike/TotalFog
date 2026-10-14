@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>Z ilu pól kolonista wciąż słyszy ukryty dźwięk.</audioSourceRangeDesc>
   <volumeMufflingModifier>Tłumienie z odległością</volumeMufflingModifier>
   <volumeMufflingModifierDesc>O ile cichszy staje się ukryty dźwięk przy granicy zasięgu słuchu.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>Wskaźniki słuchu</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>Pokaż wskaźniki słuchu</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>Znaczniki odgłosów</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Pokaż znaczniki odgłosów</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Małe znaczniki pokazują, gdzie kolonista słyszy ukryty ruch. Wyłącz, aby je usunąć.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Zasięg wskaźników słuchu</baseHearingRange>
+  <baseHearingRange>Zasięg znaczników odgłosów</baseHearingRange>
   <TotalFog_HearingRangeDesc>Z ilu pól słychać ukryty ruch.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

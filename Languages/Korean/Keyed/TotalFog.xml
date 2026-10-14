@@ -111,10 +111,10 @@
   <audioSourceRangeDesc>정착민이 숨겨진 소리를 들을 수 있는 거리를 칸 수로 정합니다.</audioSourceRangeDesc>
   <volumeMufflingModifier>거리에 따른 감쇠</volumeMufflingModifier>
   <volumeMufflingModifierDesc>청각 범위 가장자리로 갈수록 숨겨진 소리가 얼마나 작아지는지 정합니다.</volumeMufflingModifierDesc>
-  <TotalFog_HearingIndicators>청각 표시</TotalFog_HearingIndicators>
-  <TotalFog_ShowHearingCues>청각 표시 보기</TotalFog_ShowHearingCues>
+  <TotalFog_HearingIndicators>소리 감지 표시</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>소리 감지 표시 보기</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>정착민이 숨겨진 움직임을 듣는 곳에 작은 표시가 나타납니다. 끄면 표시가 사라집니다.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>청각 표시 범위</baseHearingRange>
+  <baseHearingRange>소리 감지 표시 범위</baseHearingRange>
   <TotalFog_HearingRangeDesc>숨겨진 움직임을 들을 수 있는 거리를 칸 수로 정합니다.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

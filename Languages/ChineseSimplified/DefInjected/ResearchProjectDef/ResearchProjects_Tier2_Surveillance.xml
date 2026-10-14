@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <CameraSecurity.label>安防摄像头</CameraSecurity.label>
-  <CameraSecurity.description>建造监控摄像头和摄像头控制台。通电的摄像头会在殖民者操作控制台时显示周围环境。</CameraSecurity.description>
+  <CameraSecurity.description>建造监控摄像头和监控台。通电的摄像头会在殖民者操作监控台时显示周围环境。</CameraSecurity.description>
   <CameraSecurityAdvanced.label>高级摄像镜头</CameraSecurityAdvanced.label>
   <CameraSecurityAdvanced.description>建造更好的摄像头：吊顶和地面型号、无需电线的太阳能摄像头，以及远程摄像柱。</CameraSecurityAdvanced.description>
   <WatchTelescope.label>观测望远镜</WatchTelescope.label>

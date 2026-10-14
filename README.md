@@ -86,7 +86,7 @@ They cannot be selected for new construction.
 - Combat and Anomaly music are off by default, so the music cannot warn you about unseen threats.
 - Sounds from hidden things can be muted, or muffled by distance. Only living
   pawns in your faction provide hearing, according to their hearing capacity.
-- Small hearing indicators can show that *something* moves out there.
+- Small sound markers can show that *something* moves out there.
 
 ### News only when you see it
 

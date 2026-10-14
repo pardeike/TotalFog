@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <CameraSecurity.label>保全攝影機</CameraSecurity.label>
-  <CameraSecurity.description>建造監視攝影機和攝影機控制台。通電的攝影機會在殖民者操作控制台時顯示周圍環境。</CameraSecurity.description>
+  <CameraSecurity.description>建造監視攝影機和監控台。通電的攝影機會在殖民者操作監控台時顯示周圍環境。</CameraSecurity.description>
   <CameraSecurityAdvanced.label>進階攝影機鏡頭</CameraSecurityAdvanced.label>
   <CameraSecurityAdvanced.description>建造更好的攝影機：天花板和地面型號、不需電線的太陽能攝影機，以及遠程攝影機柱。</CameraSecurityAdvanced.description>
   <WatchTelescope.label>觀測望遠鏡</WatchTelescope.label>

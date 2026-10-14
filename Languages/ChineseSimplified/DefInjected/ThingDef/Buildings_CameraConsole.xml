@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CameraConsole.label>摄像头控制台</CameraConsole.label>
+  <CameraConsole.label>监控台</CameraConsole.label>
   <CameraConsole.description>连接你的监控摄像头。殖民者在此工作时，摄像头会向你显示所见。需要电力。</CameraConsole.description>
 </LanguageData>
