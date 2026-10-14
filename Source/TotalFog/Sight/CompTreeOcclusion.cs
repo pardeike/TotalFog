@@ -30,7 +30,7 @@ public class CompTreeOcclusion : FogSubcomponent
         int tick = Find.TickManager.TicksGame;
         if (tick < nextCheck)
             return;
-        nextCheck = tick + 60;
+        nextCheck = tick + FogTiming.TreeOcclusionInterval;
         Refresh();
     }
 

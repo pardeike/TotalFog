@@ -18,9 +18,9 @@
     <Compile Include="../TotalFog/Compatibility/CombatExtendedIntegration.cs" Link="Production/CombatExtendedIntegration.cs" />
     <Compile Include="../TotalFog/Compatibility/MultiplayerIntegration.cs" Link="Production/MultiplayerIntegration.cs" />
     <Compile Include="../TotalFog/Detours/Verb.cs" Link="Production/Verb.cs" />
-    <Compile Include="../TotalFog/CompPresentationState.cs" Link="Production/CompPresentationState.cs" />
-    <Compile Include="../TotalFog/CompVisibility.cs" Link="Production/CompVisibility.cs" />
-    <Compile Include="../TotalFog/CompCellRegistration.cs" Link="Production/CompCellRegistration.cs" />
+    <Compile Include="../TotalFog/Sight/CompPresentationState.cs" Link="Production/CompPresentationState.cs" />
+    <Compile Include="../TotalFog/Sight/CompVisibility.cs" Link="Production/CompVisibility.cs" />
+    <Compile Include="../TotalFog/Sight/CompCellRegistration.cs" Link="Production/CompCellRegistration.cs" />
     <Compile Include="../TotalFog/Presentation/ThingVisibility.cs" Link="Production/ThingVisibility.cs" />
     <Compile Include="../TotalFog/Visibility.cs" Link="Production/Visibility.cs" />
     <Compile Include="../TotalFog/Notifications/NotificationVisibility.cs" Link="Production/NotificationVisibility.cs" />
@@ -33,8 +33,8 @@
     <Compile Include="../TotalFog/Presentation/CustomInspectionCell.cs" Link="Production/CustomInspectionCell.cs" />
     <Compile Include="../TotalFog/Presentation/InterfaceVisibility.cs" Link="Production/InterfaceVisibility.cs" />
     <Compile Include="../TotalFog/Presentation/MapSearchVisibility.cs" Link="Production/MapSearchVisibility.cs" />
-    <Compile Include="../TotalFog/FogSubcomponent.cs" Link="Production/FogSubcomponent.cs" />
-    <Compile Include="../TotalFog/FogMapUtility.cs" Link="Production/FogMapUtility.cs" />
+    <Compile Include="../TotalFog/Sight/FogSubcomponent.cs" Link="Production/FogSubcomponent.cs" />
+    <Compile Include="../TotalFog/Sight/FogMapUtility.cs" Link="Production/FogMapUtility.cs" />
     <Compile Include="../TotalFog/Audio/SustainerVisibility.cs" Link="Production/SustainerVisibility.cs" />
     <Compile Include="../TotalFog/Presentation/DiscoveryOverlays.cs" Link="Production/DiscoveryOverlays.cs" />
     <Compile Include="../TotalFog/Presentation/CellVisibility.cs" Link="Production/CellVisibility.cs" />

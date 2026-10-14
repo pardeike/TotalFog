@@ -424,7 +424,7 @@ internal static class WatchtowerPatches
             // Native corpse placement can move items out of an impassable
             // edifice. This body's saved platform slot is intentionally valid.
             corpse.Position = __state.Position;
-            corpse.TryGetComp<CompFog>()?.ComponentsPositionTracker?.updatePosition();
+            corpse.TryGetComp<CompFog>()?.ComponentsPositionTracker?.UpdatePosition();
             if (__state.Occupant == __instance)
                 __state.Watching = false;
             __state.RefreshSight();

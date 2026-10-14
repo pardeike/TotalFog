@@ -54,7 +54,7 @@ public class DeferredNotifications : MapComponent
     {
         if (queue.Items.Count == 0 || MultiplayerIntegration.TicksFor(map) < nextCheck)
             return;
-        nextCheck = MultiplayerIntegration.TicksFor(map) + 30;
+        nextCheck = MultiplayerIntegration.TicksFor(map) + FogTiming.NotificationCheckInterval;
         queue.Drain(
             valid,
             ready,

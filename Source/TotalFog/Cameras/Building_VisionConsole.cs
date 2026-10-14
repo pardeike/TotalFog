@@ -46,7 +46,7 @@ public class Building_VisionConsole : Building
         return FogSettings.NeedWatcher;
     }
 
-    private void drawOverLay()
+    private void DrawOverlay()
     {
         if (!Manned || Rotation != Rot4.North)
         {
@@ -69,7 +69,7 @@ public class Building_VisionConsole : Building
     protected override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
         base.DrawAt(drawLoc, flip);
-        drawOverLay();
+        DrawOverlay();
     }
 
     public void Used(int delta)

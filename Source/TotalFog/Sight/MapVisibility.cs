@@ -403,7 +403,7 @@ public class MapVisibility : MapComponent
             if (!thing.Spawned)
                 continue;
             var comp = thing.TryGetComp<CompFog>();
-            comp?.ComponentsPositionTracker?.updatePosition();
+            comp?.ComponentsPositionTracker?.UpdatePosition();
             comp?.FieldOfViewWatcher?.UpdateFoV(true);
             comp?.HideFromPlayer?.UpdateVisibility(true);
         }

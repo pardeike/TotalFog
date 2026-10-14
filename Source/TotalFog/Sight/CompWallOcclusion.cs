@@ -27,7 +27,7 @@ public class CompWallOcclusion : FogSubcomponent
         int tick = Find.TickManager.TicksGame;
         if (tick < nextCheck)
             return;
-        nextCheck = tick + 30;
+        nextCheck = tick + FogTiming.BlockerCheckInterval;
         Refresh();
     }
 

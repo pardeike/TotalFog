@@ -26,96 +26,11 @@ using Verb = TotalFog.Detours.Verb;
 
 namespace TotalFog;
 
-[StaticConstructorOnStartup]
-public class TotalFogMod : Mod
+// Harmony patch registration for the base fog hooks. Optional features install
+// their own hooks through PatchSafety from the static constructor in TotalFogMod.cs.
+public partial class TotalFogMod
 {
-    private static readonly Harmony harmony;
-
-    static TotalFogMod()
-    {
-        harmony = new Harmony("brrainz.totalfog");
-        PatchSafety.Install(
-            "legacy save import",
-            () => Compatibility.LegacySaveTypes.Install(harmony)
-        );
-        PatchSafety.Install("base fog hooks", injectDetours);
-        PatchSafety.Install("debug fog commands", () => DebugFogCommands.Install(harmony));
-        PatchSafety.Install("watchtowers", () => Watchtowers.WatchtowerPatches.Install(harmony));
-    }
-
-    public TotalFogMod(ModContentPack content)
-        : base(content)
-    {
-        FogSettings.CurrentVersion = typeof(TotalFogMod).Assembly.GetName().Version.ToString(3);
-
-        LongEventHandler.ExecuteWhenFinished(() =>
-            PatchSafety.Install("minimap", () => Compatibility.MinimapIntegration.Install(harmony))
-        );
-        LongEventHandler.ExecuteWhenFinished(() =>
-            PatchSafety.Install(
-                "interaction bubbles",
-                () => Compatibility.BubbleIntegration.Install(harmony)
-            )
-        );
-        LongEventHandler.ExecuteWhenFinished(() =>
-        {
-            PatchSafety.Install(
-                "Combat Extended targeting",
-                () => Compatibility.CombatExtendedIntegration.Install(harmony)
-            );
-            PatchSafety.Install(
-                "Combat Extended towers",
-                () => Compatibility.CombatExtendedTowers.Install(harmony)
-            );
-        });
-        LongEventHandler.ExecuteWhenFinished(() =>
-            PatchSafety.Install("Multiplayer", Compatibility.MultiplayerIntegration.Install)
-        );
-        GetSettings<FogSettings>();
-    }
-
-    public static void LogMessage(string message)
-    {
-        if (!Prefs.DevMode)
-        {
-            return;
-        }
-
-        Log.Message($"[Total Fog] {message}");
-    }
-
-    public override string SettingsCategory()
-    {
-        return Content.Name;
-    }
-
-    public override void DoSettingsWindowContents(Rect rect)
-    {
-        FogSettings.DoSettingsWindowContents(rect);
-    }
-
-    public static void InitializeCompsPrefix(ThingWithComps __instance)
-    {
-        var def = __instance.def;
-        if (
-            def.category
-                is not (
-                    ThingCategory.Pawn
-                    or ThingCategory.Building
-                    or ThingCategory.Item
-                    or ThingCategory.Filth
-                    or ThingCategory.Gas
-                    or ThingCategory.Plant
-                )
-            && !def.IsBlueprint
-        )
-            return;
-        def.comps ??= new List<CompProperties>();
-        if (!def.comps.Any(c => c.compClass == typeof(CompFog)))
-            def.comps.Insert(0, CompFog.CompDef);
-    }
-
-    private static void injectDetours()
+    private static void InjectDetours()
     {
         PatchSafety.Install("threat alerts", () => Notifications.ThreatAlerts.Install(harmony));
         PatchSafety.Patch(
@@ -230,7 +145,7 @@ public class TotalFogMod : Mod
                 nameof(Presentation.GasVisibility.Transpiler)
             )
         );
-        patchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
+        PatchMethod(typeof(Verse.Verb), typeof(Verb), "CanHitCellFromCellIgnoringRange");
         PatchSafety.Patch(
             harmony,
             AccessTools.Method(typeof(Verse.Verb), nameof(Verse.Verb.TryFindShootLineFromTo)),
@@ -250,7 +165,7 @@ public class TotalFogMod : Mod
         );
         // Selection proxies recurse directly into SelectInternal. Guard the
         // actual target as well as the initial public Select request.
-        patchMethod(typeof(RimWorld.Selector), typeof(Selector), "SelectInternal");
+        PatchMethod(typeof(RimWorld.Selector), typeof(Selector), "SelectInternal");
         PatchSafety.Patch(
             harmony,
             AccessTools.Method(typeof(RimWorld.Selector), "SelectableObjectsUnderMouse"),
@@ -270,14 +185,14 @@ public class TotalFogMod : Mod
                 nameof(Presentation.InterfaceVisibility.MultiSelectCandidatesPostfix)
             )
         );
-        patchMethod(
+        PatchMethod(
             typeof(RimWorld.BeautyUtility),
             typeof(BeautyUtility),
             nameof(RimWorld.BeautyUtility.FillBeautyRelevantCells)
         );
-        patchMethod(typeof(MainTabWindow_Wildlife), typeof(MainTabWindowWildlife), "get_Pawns");
+        PatchMethod(typeof(MainTabWindow_Wildlife), typeof(MainTabWindowWildlife), "get_Pawns");
 
-        patchMethod(typeof(Verse.Pawn), typeof(Pawn), nameof(Verse.Pawn.DrawGUIOverlay));
+        PatchMethod(typeof(Verse.Pawn), typeof(Pawn), nameof(Verse.Pawn.DrawGUIOverlay));
         PatchSafety.Patch(
             harmony,
             AccessTools.Method(typeof(DynamicDrawManager), "ComputeCulledThings"),
@@ -406,7 +321,7 @@ public class TotalFogMod : Mod
                     nameof(Presentation.InterfaceVisibility.PawnLabelPrefix)
                 )
             );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.GenMapUI),
             typeof(GenMapUI),
             nameof(Verse.GenMapUI.DrawThingLabel),
@@ -415,27 +330,27 @@ public class TotalFogMod : Mod
             typeof(Color)
         );
 
-        patchMethod(
+        PatchMethod(
             typeof(SectionLayer_ThingsGeneral),
             typeof(SectionLayerThingsGeneral),
             "TakePrintFrom"
         );
-        patchMethod(
+        PatchMethod(
             typeof(SectionLayer_ThingsPowerGrid),
             typeof(SectionLayerThingsPowerGrid),
             "TakePrintFrom"
         );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.AI.ReservationUtility),
             typeof(ReservationUtility),
             nameof(Verse.AI.ReservationUtility.CanReserve)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.AI.ReservationUtility),
             typeof(ReservationUtility),
             nameof(Verse.AI.ReservationUtility.CanReserveAndReach)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.AI.HaulAIUtility),
             typeof(HaulAIUtility),
             nameof(Verse.AI.HaulAIUtility.HaulToStorageJob)
@@ -457,7 +372,7 @@ public class TotalFogMod : Mod
                     nameof(Presentation.MapSearchVisibility.LocationPrefix)
                 )
             );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.EnvironmentStatsDrawer),
             typeof(EnvironmentStatsDrawer),
             "ShouldShowWindowNow"
@@ -509,7 +424,7 @@ public class TotalFogMod : Mod
                 nameof(Watchtowers.TowerPresentation.DrawingFinalizer)
             )
         );
-        patchMethod(
+        PatchMethod(
             typeof(Verse.GenView),
             typeof(GenView),
             nameof(Verse.GenView.ShouldSpawnMotesAt),
@@ -528,152 +443,152 @@ public class TotalFogMod : Mod
         );
 
         //Area only designator
-        patchMethod(
+        PatchMethod(
             typeof(Designator_AreaBuildRoof),
             typeof(DesignatorPrefix),
             nameof(Designator_AreaBuildRoof.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_AreaNoRoof),
             typeof(DesignatorPrefix),
             nameof(Designator_AreaNoRoof.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_ZoneAdd_Growing),
             typeof(DesignatorPrefix),
             nameof(Designator_ZoneAdd_Growing.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_ZoneAddStockpile),
             typeof(DesignatorPrefix),
             nameof(Designator_ZoneAddStockpile.CanDesignateCell)
         );
 
         //Area+Designator
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Claim),
             typeof(DesignatorPrefix),
             nameof(Designator_Claim.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Claim),
             typeof(DesignatorPrefix),
             nameof(Designator_Claim.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Deconstruct),
             typeof(DesignatorPrefix),
             nameof(Designator_Deconstruct.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Deconstruct),
             typeof(DesignatorPrefix),
             nameof(Designator_Deconstruct.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Haul),
             typeof(DesignatorPrefix),
             nameof(Designator_Haul.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Haul),
             typeof(DesignatorPrefix),
             nameof(Designator_Haul.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Hunt),
             typeof(DesignatorPrefix),
             nameof(Designator_Hunt.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Hunt),
             typeof(DesignatorPrefix),
             nameof(Designator_Hunt.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Plants),
             typeof(DesignatorPrefix),
             nameof(Designator_Plants.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Plants),
             typeof(DesignatorPrefix),
             nameof(Designator_Plants.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_PlantsHarvest),
             typeof(DesignatorPrefix),
             nameof(Designator_PlantsHarvest.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_PlantsHarvestWood),
             typeof(DesignatorPrefix),
             nameof(Designator_PlantsHarvestWood.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_RemoveFloor),
             typeof(DesignatorPrefix),
             nameof(Designator_RemoveFloor.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_SmoothSurface),
             typeof(DesignatorPrefix),
             nameof(Designator_SmoothSurface.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Tame),
             typeof(DesignatorPrefix),
             nameof(Designator_Tame.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Tame),
             typeof(DesignatorPrefix),
             nameof(Designator_Tame.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Uninstall),
             typeof(DesignatorPrefix),
             nameof(Designator_Uninstall.CanDesignateCell)
         );
 
         //PLacing designator
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Uninstall),
             typeof(DesignatorPrefix),
             nameof(Designator_Uninstall.CanDesignateThing)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Build),
             typeof(DesignatorPlace),
             nameof(Designator_Build.CanDesignateCell)
         );
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Install),
             typeof(DesignatorPlace),
             nameof(Designator_Install.CanDesignateCell)
         );
 
         foreach (var type in new[] { typeof(Designator_Forbid), typeof(Designator_Unforbid) })
-            patchMethod(type, typeof(DoorOrders), nameof(Designator_Forbid.CanDesignateThing));
+            PatchMethod(type, typeof(DoorOrders), nameof(Designator_Forbid.CanDesignateThing));
 
         //Specific designation
-        patchMethod(
+        PatchMethod(
             typeof(Designator_Mine),
             typeof(DesignatorMine),
             nameof(Designator_Mine.CanDesignateCell)
         );
 
         //Designation
-        patchMethod(
+        PatchMethod(
             typeof(Verse.Designation),
             typeof(Designation),
             nameof(Verse.Designation.Notify_Added)
         );
-        patchMethod(typeof(Verse.Designation), typeof(Designation), "Notify_Removing");
+        PatchMethod(typeof(Verse.Designation), typeof(Designation), "Notify_Removing");
 
         /* Filth checks
-        patchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
-        patchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
+        PatchMethod(typeof(Thing), typeof(Patch_Filth_Draw), nameof(Filth.DrawNowAt));
+        PatchMethod(typeof(Filth), typeof(Patch_Filth_Destroy), nameof(Filth.Destroy));
         */
 
         PatchSafety.Patch(
@@ -728,7 +643,7 @@ public class TotalFogMod : Mod
         );
     }
 
-    private static void patchMethod(
+    private static void PatchMethod(
         Type sourceType,
         Type targetType,
         string methodName,

@@ -27,20 +27,20 @@ public class CompCellRegistration : FogSubcomponent
         affecter = parent.TryGetComp<CompSightModifier>();
         Remove();
         position = IntVec3.Invalid;
-        updatePosition();
+        UpdatePosition();
     }
 
-    public override void ReceiveCompSignal(string signal) => updatePosition();
+    public override void ReceiveCompSignal(string signal) => UpdatePosition();
 
     public override void CompTick()
     {
         // Every tick already checks the inputs that can move the footprint.
         // A periodic call with the same inputs only repeats this same check.
         if (!registered || map != parent.Map || !SameFootprint())
-            updatePosition();
+            UpdatePosition();
     }
 
-    public void updatePosition()
+    public void UpdatePosition()
     {
         if (!parent.Spawned || parent.Map == null)
             return;

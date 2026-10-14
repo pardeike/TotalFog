@@ -37,7 +37,7 @@ public class CompPresentationState : FogSubcomponent
             selector.Deselect(parent);
         }
 
-        updateMeshes();
+        UpdateMeshes();
     }
 
     public void Show()
@@ -49,10 +49,10 @@ public class CompPresentationState : FogSubcomponent
 
         Hidden = false;
 
-        updateMeshes();
+        UpdateMeshes();
     }
 
-    private void updateMeshes()
+    private void UpdateMeshes()
     {
         // Dynamic culling owns realtime objects. Their visibility transitions
         // cannot change section geometry, terrain, roofs or power-grid meshes.

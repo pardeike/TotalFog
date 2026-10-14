@@ -40,19 +40,19 @@ public static class FogThingUtility
         return result;
     }
 
-    public static DeferredNotifications GetDeferredNotifications(this Map _this)
+    public static DeferredNotifications GetDeferredNotifications(this Map map)
     {
-        return _this.GetComponent<DeferredNotifications>();
+        return map.GetComponent<DeferredNotifications>();
     }
 
-    extension(Thing _this)
+    extension(Thing thing)
     {
         public bool IsFogVisible(bool forRender = false) =>
-            Presentation.ThingVisibility.IsVisible(_this);
+            Presentation.ThingVisibility.IsVisible(thing);
 
         public ThingComp TryGetCompLocal(CompProperties def)
         {
-            var category = _this.def.category;
+            var category = thing.def.category;
 
             if (
                 category != ThingCategory.Pawn
@@ -60,13 +60,13 @@ public static class FogThingUtility
                 && category != ThingCategory.Item
                 && category != ThingCategory.Filth
                 && category != ThingCategory.Gas
-                && !_this.def.IsBlueprint
+                && !thing.def.IsBlueprint
             )
             {
                 return null;
             }
 
-            if (_this is ThingWithComps thingWithComps)
+            if (thing is ThingWithComps thingWithComps)
             {
                 return thingWithComps.GetCompByDefType(def);
             }
@@ -76,7 +76,7 @@ public static class FogThingUtility
 
         public CompPresentationState GetPresentationState()
         {
-            var compMainComponent = (CompFog)_this.TryGetCompLocal(CompFog.CompDef);
+            var compMainComponent = (CompFog)thing.TryGetCompLocal(CompFog.CompDef);
             var result = compMainComponent?.Hiddenable;
 
             return result;

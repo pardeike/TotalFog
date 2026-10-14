@@ -51,7 +51,7 @@ public class CompSightSource : FogSubcomponent
         position = IntVec3.Invalid;
         lastMovement = Compatibility.MultiplayerIntegration.TicksFor(parent.Map);
         nextCheck = lastMovement;
-        nextHearing = lastMovement + 100;
+        nextHearing = lastMovement + FogTiming.HearingCueInterval;
         UpdateFoV(true);
     }
 
@@ -69,12 +69,12 @@ public class CompSightSource : FogSubcomponent
             lastMovement = tick;
         if (parent.Position != position || tick >= nextCheck)
         {
-            nextCheck = tick + 30;
+            nextCheck = tick + FogTiming.SourceRefreshInterval;
             UpdateFoV();
         }
         if (pawn != null && tick >= nextHearing)
         {
-            nextHearing = tick + 100;
+            nextHearing = tick + FogTiming.HearingCueInterval;
             EmitHearingCues();
         }
     }

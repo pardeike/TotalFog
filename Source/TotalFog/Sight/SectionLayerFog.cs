@@ -29,7 +29,7 @@ public class SectionLayerFog : SectionLayer
 
     // The existing nine-vertex topology is retained: it matches the vanilla
     // material and the independently tested shared-edge alpha contract.
-    private static void makeBaseGeometry(
+    private static void MakeBaseGeometry(
         Section section,
         LayerSubMesh sm,
         AltitudeLayer altitudeLayer
@@ -102,7 +102,7 @@ public class SectionLayerFog : SectionLayer
         if (first)
         {
             mesh.mesh.MarkDynamic();
-            makeBaseGeometry(section, mesh, AltitudeLayer.FogOfWar);
+            MakeBaseGeometry(section, mesh, AltitudeLayer.FogOfWar);
             targetAlphas = new byte[mesh.mesh.vertexCount];
             colors = new Color32[targetAlphas.Length];
         }

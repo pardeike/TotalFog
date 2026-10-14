@@ -28,8 +28,8 @@ internal static class Verb
         // Coverage and blockers can change while the game is paused or within
         // one tick. Always evaluate current sight; a per-tick cache is stale.
         __result =
-            caster.Faction != null && seenByFaction(caster, targetLoc)
-            || fovLineOfSight(sourceSq, targetLoc, caster);
+            caster.Faction != null && SeenByFaction(caster, targetLoc)
+            || FovLineOfSight(sourceSq, targetLoc, caster);
     }
 
     internal static void TryFindShootLineFromTo_Postfix(
@@ -44,7 +44,7 @@ internal static class Verb
             && __instance.caster?.Faction?.IsPlayer == true
             && __instance.ProjectileFliesOverhead()
         )
-            __result = seenByFaction(__instance.caster, targ.Thing.PositionHeld);
+            __result = SeenByFaction(__instance.caster, targ.Thing.PositionHeld);
     }
 
     internal static void TurretTargetPostfix(
@@ -54,10 +54,10 @@ internal static class Verb
     )
     {
         if (__result && t != null && __instance.Faction?.IsPlayer == true)
-            __result = seenByFaction(__instance, t.PositionHeld);
+            __result = SeenByFaction(__instance, t.PositionHeld);
     }
 
-    private static bool seenByFaction(Thing thing, IntVec3 targetLoc)
+    private static bool SeenByFaction(Thing thing, IntVec3 targetLoc)
     {
         if (thing?.Map == null || thing.Faction == null)
         {
@@ -68,7 +68,7 @@ internal static class Verb
         return mapComponentSeenFog == null || mapComponentSeenFog.IsShown(thing.Faction, targetLoc);
     }
 
-    private static bool fovLineOfSight(IntVec3 sourceSq, IntVec3 targetLoc, Thing thing)
+    private static bool FovLineOfSight(IntVec3 sourceSq, IntVec3 targetLoc, Thing thing)
     {
         if (thing == null)
         {
