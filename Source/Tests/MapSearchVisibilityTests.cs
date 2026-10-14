@@ -39,9 +39,10 @@ public sealed class MapSearchVisibilityTests
         var item = Item(true);
         Assert.True(MapSearchVisibility.AllowsResult(item));
         Assert.True(MapSearchVisibility.LocationPrefix(item));
-        Assert.False(ThingVisibility.CanInspect(item));
+        Assert.True(ThingVisibility.CanInspect(item));
         item.PositionHeld = new IntVec3(1, 0);
         item.Map.Fog.knownCells[1] = true;
+        Assert.False(ThingVisibility.CanInspect(item));
         Assert.True(MapSearchVisibility.AllowsResult(item));
         item.Map.Fog.knownCells[1] = false;
         Assert.False(MapSearchVisibility.AllowsResult(item));

@@ -22,6 +22,8 @@
   <TotalFog_DiscardEvents>보이지 않는 사건의 메시지와 편지 삭제</TotalFog_DiscardEvents>
   <TotalFog_DiscardEventsDesc>대상이 보이지 않을 때만 선택한 범주를 삭제합니다. 정착지 건강 사건, 보이는 사건과 대상 없는 전역 사건은 즉시 표시됩니다. 지연을 사용하면 대상이 관찰될 때까지 알림을 보관합니다.</TotalFog_DiscardEventsDesc>
   <TotalFog_InformationOptions>기타 정보</TotalFog_InformationOptions>
+  <TotalFog_SelectRememberedObjects>기억한 물체 선택</TotalFog_SelectRememberedObjects>
+  <TotalFog_SelectRememberedObjectsDesc>탐험한 지형에서 이전에 본 건물과 물체가 같은 위치에 있으면 선택할 수 있습니다. 현재 정보 창도 계속 사용할 수 있습니다. 끄면 현재 시야 안에 있어야 선택할 수 있습니다. 숨겨진 캐릭터와 발견하지 못한 물체는 선택할 수 없습니다. 아군 캐릭터와 건설 청사진은 일반적인 명령을 그대로 사용할 수 있습니다.</TotalFog_SelectRememberedObjectsDesc>
   <TotalFog_SilentRaids>조용한 습격과 식인 동물 무리</TotalFog_SilentRaids>
   <TotalFog_SilentRaidsDesc>보이는 경우에도 적 습격과 식인 동물 무리의 도착 편지와 도착 시 속도 감소를 없앱니다. 지연된 도착 경고도 보관하지 않습니다. 공격과 일반 전투 속도 감소는 그대로입니다. 전투 음악은 별도로 설정합니다.</TotalFog_SilentRaidsDesc>
   <TotalFog_HearingIndicators>청각 표시</TotalFog_HearingIndicators>

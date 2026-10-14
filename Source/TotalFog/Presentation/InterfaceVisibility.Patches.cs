@@ -119,9 +119,21 @@ internal static partial class InterfaceVisibility
     {
         var original = AccessTools.PropertyGetter(typeof(Thing), nameof(Thing.Position));
         var replacement = AccessTools.Method(typeof(InterfaceVisibility), nameof(TooltipPosition));
+        var nativeFog = AccessTools.Method(
+            typeof(GridsUtility),
+            nameof(GridsUtility.Fogged),
+            new[] { typeof(IntVec3), typeof(Map) }
+        );
+        var fogGate = AccessTools.Method(typeof(InterfaceVisibility), nameof(TooltipFogged));
         var body = instructions.ToList();
         if (
             !PatchSafety.Matches("InterfaceVisibility.Patches.TooltipTranspiler", body, original, 2)
+            || !PatchSafety.Matches(
+                "InterfaceVisibility.Patches.TooltipTranspiler.Fogged",
+                body,
+                nativeFog,
+                1
+            )
         )
             return body;
         var result = new List<CodeInstruction>();
@@ -133,6 +145,8 @@ internal static partial class InterfaceVisibility
                 instruction.opcode = OpCodes.Call;
                 instruction.operand = replacement;
             }
+            if (instruction.Calls(nativeFog))
+                instruction.operand = fogGate;
             result.Add(instruction);
         }
         return result;

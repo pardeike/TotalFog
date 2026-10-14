@@ -26,6 +26,7 @@ public partial class FogSettings
         var color = GUI.color;
         var contentColor = GUI.contentColor;
         bool enabled = GUI.enabled;
+        bool rememberedSelection = SelectRememberedObjects;
         bool watching = Compatibility.MultiplayerIntegration.BeginSettingsWatch();
         try
         {
@@ -116,6 +117,8 @@ public partial class FogSettings
         finally
         {
             Compatibility.MultiplayerIntegration.EndSettingsWatch(watching);
+            if (rememberedSelection != SelectRememberedObjects)
+                Presentation.InterfaceVisibility.ReconcileSelection();
             Text.Font = font;
             Text.Anchor = anchor;
             GUI.color = color;
@@ -242,6 +245,12 @@ public partial class FogSettings
         Check(row, "hideEventNeutral", ref HideEventNeutral);
         Check(row, "hideEventPositive", ref HideEventPositive);
         Section(row, "TotalFog_InformationOptions");
+        Check(
+            row,
+            "TotalFog_SelectRememberedObjects",
+            ref SelectRememberedObjects,
+            "TotalFog_SelectRememberedObjectsDesc"
+        );
         Check(row, "wildLifeTabVisible", ref WildLifeTabVisible, "wildLifeTabVisibleDesc");
         Check(row, "hideSpeakBubble", ref HideSpeakBubble, "hideSpeakBubbleDesc");
         Check(row, "aiSmart", ref AISmart, "aiSmartDesc");
@@ -451,6 +460,7 @@ public partial class FogSettings
         AllyGiveVision = false;
         MapRevealAtStart = false;
         WildLifeTabVisible = true;
+        SelectRememberedObjects = true;
         OnlyOutsideColony = false;
         DoAudioCheck = false;
         SuppressCombatMusic = true;

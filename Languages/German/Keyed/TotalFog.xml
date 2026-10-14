@@ -22,6 +22,8 @@
   <TotalFog_DiscardEvents>Ungesehene Meldungen und Briefe verwerfen</TotalFog_DiscardEvents>
   <TotalFog_DiscardEventsDesc>Gewählte Kategorien nur verwerfen, solange ihre Ziele ungesehen sind. Gesundheitsmeldungen der Kolonie, sichtbare Ereignisse und globale Ereignisse ohne Ziel bleiben sofort sichtbar. Mit Verzögerung bleiben ungesehene Meldungen erhalten, bis ihre Ziele beobachtet werden.</TotalFog_DiscardEventsDesc>
   <TotalFog_InformationOptions>Weitere Informationen</TotalFog_InformationOptions>
+  <TotalFog_SelectRememberedObjects>Gemerkte Objekte auswählen</TotalFog_SelectRememberedObjects>
+  <TotalFog_SelectRememberedObjectsDesc>Zuvor gesehene Gebäude und Objekte auf erkundetem Gelände auswählen, solange sie am selben Ort bleiben. Ihre aktuellen Informationsfenster bleiben verfügbar. Deaktivieren, um aktuelle Sicht zu verlangen. Verborgene Figuren und unentdeckte Objekte bleiben unzugänglich. Eigene Figuren und Baupläne behalten ihre normalen Befehle.</TotalFog_SelectRememberedObjectsDesc>
   <TotalFog_SilentRaids>Stille Überfälle und menschenjagende Tiere</TotalFog_SilentRaids>
   <TotalFog_SilentRaidsDesc>Ankunftsbriefe und die Verlangsamung bei feindlichen Überfällen und menschenjagenden Tieren entfernen, auch wenn sie sichtbar sind. Keine verzögerte Ankunftswarnung aufbewahren. Angriffe und die normale Kampfverlangsamung bleiben erhalten. Kampfmusik wird getrennt eingestellt.</TotalFog_SilentRaidsDesc>
   <TotalFog_HearingIndicators>Hörhinweise</TotalFog_HearingIndicators>

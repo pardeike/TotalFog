@@ -32,10 +32,16 @@ a wild boar or something much worse. To be safe, you have to look.
 - Your own pawns remain selectable and controllable, even animals that provide no
   vision. Their presence does not reveal nearby things or hidden effects.
 - Use the area Forbid/Allow tools for previously seen player doors outside sight.
-  Their live inspector stays closed until someone can see them again.
+  With remembered selection disabled, their inspector stays closed until someone
+  can see them again.
 - Map search includes previously seen static things and your pawns' inventories.
-  Never-seen things and hidden enemies stay out of the results. Finding a
-  remembered thing does not open its live inspector through fog.
+  Never-seen things and hidden enemies stay out of the results.
+- Remembered buildings and objects can be selected at their last observed
+  location by default. Disable **Select remembered objects** under Information
+  to require current sight instead. Hidden pawns and undiscovered objects stay
+  unavailable. This setting grants no combat sight or event information.
+  Objects remembered in older saves need one fresh observation to record their
+  location. No appearance snapshots are saved.
 - Allies and neutral visitors can share their view with you through one setting;
   prisoners have a separate sharing option.
 

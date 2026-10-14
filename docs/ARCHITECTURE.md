@@ -29,7 +29,13 @@ Exploration is a saved boolean grid for each player faction. Current sight is a
 reference-counted grid rebuilt from faction observers. Object observation records
 which player factions have seen it, rather than storing an appearance. The
 primary faction retains the original `seenByPlayer` save value; extra factions
-have separate observation identities. A new object in an explored cell stays
+have separate observation identities. Static objects also retain the map and
+cell at which each faction last actually saw them, solely for selection. The
+primary observer uses inline integer fields; secondary positions use a lazy
+dictionary. Stationary observations do not add sight queries or timers. Moving
+objects update the location only under current sight. Missing location records
+from older saves remain conservative until a fresh observation.
+A new object in an explored cell stays
 hidden until observed. Pawns, flyers, projectiles, corpses and
 ordinary motes require current sight. Player pawn observers and owned blueprints
 and construction frames retain presentation exceptions. Owned pawns and those
@@ -44,8 +50,13 @@ targets or neighbouring cells. Native undiscovered fog still takes precedence.
   settings into sight. Footprint differences change coverage only where needed.
 - Presentation gates print eligibility and the engine's completed culling flags.
   All pawn draw phases use the same decision and native interpolated drawing cell.
-  Other labels, overlays, tooltips, selection and inspection require current
-  sight even when an observed static object remains eligible for native rendering.
+  Labels, overlays, tooltips, selection and inspection of stationary remembered
+  objects follow Select remembered objects, enabled by default. Turning it off
+  requires current sight and immediately reconciles existing selection, even
+  while paused. Native panels may expose current state when this option is on.
+  Unseen replacements, moved objects, hostile pawns and registered moving
+  inspection cores retain their current-sight boundary. Combat targets, audio
+  and notifications always retain their independent current-sight checks.
 - Notifications retain original payloads until their targets are observed, survive
   saves and replay once. Audio has independent settings for combat music, hidden
   sources, hearing filtering and hearing indicators.
@@ -80,7 +91,8 @@ navigation using the same remembered-static policy as drawing. Observed static
 things can remain searchable at their native positions; unknown replacements,
 hidden mobile targets and hidden enemy inventories cannot. Player pawn contents
 and current registered inspection cores retain their corresponding access.
-Selection still requires current sight under the ordinary inspection policy.
+Selection follows the remembered-object preference and recorded location;
+strict mode still requires current sight.
 Owned pawns, blueprints and frames retain their explicit control exceptions.
 Click and double-click selection filter hidden Things from the native mixed
 object sequence while retaining zones and plans. Rectangle selection filters

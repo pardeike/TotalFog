@@ -6,8 +6,15 @@ using Xunit;
 
 namespace TotalFog.Tests;
 
-public sealed class ObservationTests
+public sealed class ObservationTests : System.IDisposable
 {
+    // Retain the original strict-information contracts as explicit option A.
+    private readonly bool oldSelection = FogSettings.SelectRememberedObjects;
+
+    public ObservationTests() => FogSettings.SelectRememberedObjects = false;
+
+    public void Dispose() => FogSettings.SelectRememberedObjects = oldSelection;
+
     [Fact]
     public void OwnedBlueprintRendersOutsideSightWithoutRevealingLiveInformation()
     {

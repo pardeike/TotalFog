@@ -17,11 +17,12 @@ public sealed class ObservationScenarios
 {
     [Tool(
         "totalfog/static_interface",
-        Description = "Verify that a remembered static item loses selection and stops live UI callbacks until sight returns, while remembered render eligibility remains."
+        Description = "Check native remembered item/proxy selection and UI with the strict or remembered-selection preference; restore the original preference."
     )]
     public static async Task<object> StaticInterface(
         IRimBridgeContext ctx,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        bool selectRememberedObjects = false
     )
     {
         StaticInterfaceProbe probe = null;
@@ -29,6 +30,7 @@ public sealed class ObservationScenarios
         MapVisibility fog = null;
         int index = -1;
         bool addedSight = false;
+        bool previousSelection = FogSettings.SelectRememberedObjects;
         object observed = null,
             hidden = null,
             revealed = null;
@@ -43,6 +45,7 @@ public sealed class ObservationScenarios
                     var map =
                         Find.CurrentMap
                         ?? throw new InvalidOperationException("Load a test map first.");
+                    FogSettings.SelectRememberedObjects = selectRememberedObjects;
                     fog = map.GetComponent<MapVisibility>();
                     var cell = map.AllCells.First(c =>
                         !map.fogGrid.IsFogged(c)
@@ -52,22 +55,28 @@ public sealed class ObservationScenarios
                         && c.GetThingList(map).Count == 0
                     );
                     index = map.cellIndices.CellToIndex(cell);
-                    var def = new ThingDef
+                    var def = DefDatabase<ThingDef>.GetNamedSilentFail(
+                        "TotalFogStaticInterfaceProbe"
+                    );
+                    if (def == null)
                     {
-                        defName = "TotalFogStaticInterfaceProbe",
-                        label = "static interface probe",
-                        thingClass = typeof(StaticInterfaceProbe),
-                        category = ThingCategory.Item,
-                        drawerType = DrawerType.RealtimeOnly,
-                        drawGUIOverlay = true,
-                        hasTooltip = true,
-                        selectable = true,
-                        stackLimit = 10,
-                        size = new IntVec2(1, 1),
-                        modContentPack = LoadedModManager.GetMod<TotalFogMod>().Content,
-                    };
-                    PresentationScenarios.AssignHash(def);
-                    DefGenerator.AddImpliedDef(def);
+                        def = new ThingDef
+                        {
+                            defName = "TotalFogStaticInterfaceProbe",
+                            label = "static interface probe",
+                            thingClass = typeof(StaticInterfaceProbe),
+                            category = ThingCategory.Item,
+                            drawerType = DrawerType.RealtimeOnly,
+                            drawGUIOverlay = true,
+                            hasTooltip = true,
+                            selectable = true,
+                            stackLimit = 10,
+                            size = new IntVec2(1, 1),
+                            modContentPack = LoadedModManager.GetMod<TotalFogMod>().Content,
+                        };
+                        PresentationScenarios.AssignHash(def);
+                        DefGenerator.AddImpliedDef(def);
+                    }
                     probe = (StaticInterfaceProbe)ThingMaker.MakeThing(def);
                     GenSpawn.Spawn(probe, cell, map);
                     probe.SetForbidden(true, false);
@@ -76,22 +85,28 @@ public sealed class ObservationScenarios
                         && c.Standable(map)
                         && c.GetThingList(map).Count == 0
                     );
-                    var proxyDef = new ThingDef
+                    var proxyDef = DefDatabase<ThingDef>.GetNamedSilentFail(
+                        "TotalFogSelectionProxyProbe"
+                    );
+                    if (proxyDef == null)
                     {
-                        defName = "TotalFogSelectionProxyProbe",
-                        label = "selection proxy probe",
-                        thingClass = typeof(ThingWithComps),
-                        category = ThingCategory.Item,
-                        drawerType = DrawerType.None,
-                        size = new IntVec2(1, 1),
-                        modContentPack = def.modContentPack,
-                        comps = new List<CompProperties>
+                        proxyDef = new ThingDef
                         {
-                            new() { compClass = typeof(CompSelectProxy) },
-                        },
-                    };
-                    PresentationScenarios.AssignHash(proxyDef);
-                    DefGenerator.AddImpliedDef(proxyDef);
+                            defName = "TotalFogSelectionProxyProbe",
+                            label = "selection proxy probe",
+                            thingClass = typeof(ThingWithComps),
+                            category = ThingCategory.Item,
+                            drawerType = DrawerType.None,
+                            size = new IntVec2(1, 1),
+                            modContentPack = def.modContentPack,
+                            comps = new List<CompProperties>
+                            {
+                                new() { compClass = typeof(CompSelectProxy) },
+                            },
+                        };
+                        PresentationScenarios.AssignHash(proxyDef);
+                        DefGenerator.AddImpliedDef(proxyDef);
+                    }
                     proxy = (ThingWithComps)ThingMaker.MakeThing(proxyDef);
                     GenSpawn.Spawn(proxy, proxyCell, map);
                     proxy.TryGetComp<CompSelectProxy>().thingToSelect = probe;
@@ -201,6 +216,7 @@ public sealed class ObservationScenarios
             return new
             {
                 observed,
+                selectRememberedObjects,
                 hidden,
                 revealed,
                 observedThroughProxy,
@@ -219,6 +235,8 @@ public sealed class ObservationScenarios
                         probe.Destroy();
                     if (proxy != null && !proxy.Destroyed)
                         proxy.Destroy();
+                    FogSettings.SelectRememberedObjects = previousSelection;
+                    Presentation.InterfaceVisibility.ReconcileSelection();
                 },
                 CancellationToken.None
             );
@@ -580,6 +598,10 @@ public sealed class ObservationScenarios
             visible = thing.IsFogVisible(),
             hidden = comp.Hiddenable.Hidden,
             seen = comp.HideFromPlayer.SeenByPlayer,
+            rememberedAtCurrentLocation = comp.HideFromPlayer.WasSeenAtCurrentLocation(
+                Faction.OfPlayer
+            ),
+            canInspect = Presentation.ThingVisibility.CanInspect(thing),
             inSight = thing
                 .Map.GetComponent<MapVisibility>()
                 .IsShown(Faction.OfPlayer, thing.PositionHeld),

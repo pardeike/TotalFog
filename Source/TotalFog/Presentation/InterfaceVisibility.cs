@@ -8,6 +8,13 @@ namespace TotalFog.Presentation;
 
 internal static partial class InterfaceVisibility
 {
+    internal static void ReconcileSelection()
+    {
+        foreach (var obj in Find.Selector.SelectedObjects.ToArray())
+            if (obj is Thing thing && !CanRead(thing))
+                Find.Selector.Deselect(thing);
+    }
+
     // Native rectangle selection prioritizes resources and pawns before
     // buildings. Remove hidden candidates before that choice, rather than
     // rejecting the chosen category only when SelectInternal is reached.
@@ -23,12 +30,20 @@ internal static partial class InterfaceVisibility
 
     // Mouseover dispatch follows one CompSelectProxy before reading the label.
     // A visible proxy must not grant access to its unobserved target's live UI.
-    private static bool CanRead(Thing thing, IntVec3? renderedCell = null)
+    private static bool CanRead(
+        Thing thing,
+        IntVec3? renderedCell = null,
+        bool allowRememberedSelection = true
+    )
     {
-        if (!ThingVisibility.CanInspect(thing, renderedCell))
+        if (!ThingVisibility.CanInspect(thing, renderedCell, allowRememberedSelection))
             return false;
         var target = thing?.TryGetComp<CompSelectProxy>()?.thingToSelect;
-        return target == null || ThingVisibility.CanInspect(target);
+        return target == null
+            || ThingVisibility.CanInspect(
+                target,
+                allowRememberedSelection: allowRememberedSelection
+            );
     }
 
     [HarmonyPriority(Priority.Last)]
@@ -47,6 +62,11 @@ internal static partial class InterfaceVisibility
             return IntVec3.Invalid;
         return CustomInspectionCell.TryGetCell(thing, out var cell) ? cell : thing.Position;
     }
+
+    // Some engines return false for out-of-map fog queries. Invalid is our
+    // explicit rejection, so it must skip tooltip and shot-report dispatch.
+    public static bool TooltipFogged(IntVec3 cell, Map map) =>
+        cell == IntVec3.Invalid || map.fogGrid.IsFogged(cell);
 
     public static List<Thing> MouseoverThings(IntVec3 cell, Map map)
     {
@@ -89,7 +109,7 @@ internal static partial class InterfaceVisibility
             bool visible =
                 thing != null && CustomInspectionCell.TryGetCell(thing, out _)
                     ? CellVisibility.IsCurrent(thing.MapHeld, clickCell)
-                    : CanRead(thing);
+                    : CanRead(thing, allowRememberedSelection: false);
             if (!visible)
                 continue;
             if (write != read)

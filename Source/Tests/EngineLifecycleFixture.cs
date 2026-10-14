@@ -248,6 +248,8 @@ namespace Verse
 
     public class Map
     {
+        private static int nextMapId;
+        public int uniqueID = ++nextMapId;
         public AreaManager areaManager = new();
         public IntVec3 Size = new(2, 2);
         public bool Bypass;
@@ -467,6 +469,7 @@ namespace Verse
     public class Selector
     {
         public HashSet<Thing> Selected = new();
+        public List<object> SelectedObjects => new(Selected);
 
         public bool IsSelected(Thing thing) => Selected.Contains(thing);
 
@@ -551,6 +554,13 @@ namespace Verse
     public static class Scribe_Collections
     {
         public static void Look<T>(ref List<T> values, string key, LookMode mode) { }
+
+        public static void Look<K, V>(
+            ref Dictionary<K, V> values,
+            string key,
+            LookMode keyMode,
+            LookMode valueMode
+        ) { }
     }
 
     public class FactionManager
@@ -871,6 +881,7 @@ namespace TotalFog
         public static int AudioSourceRange = 30;
         public static bool OnlyOutsideColony;
         public static bool ClearFogDuringTargeting = true;
+        public static bool SelectRememberedObjects = true;
         public static bool AISmart;
         public static bool SilentRaids;
         public static bool HideEventNegative,

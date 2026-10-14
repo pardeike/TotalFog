@@ -9044,3 +9044,58 @@ sandstone plan and restoring Jade's ground position and original plans. Evidence
 is under ignored `artifacts/tower-projection-fog-20261014`. Remembered shade has
 pure endpoint controls; this bounded follow-up does not renew native remembered
 wall-material pixels, 1.6 rendering, every projectile/effect or performance.
+
+### Remembered selection preference, 2026-10-14
+
+Select remembered objects defaults to enabled in the static initializer, saved
+settings fallback and Reset defaults. It grants native selection, overlays,
+tooltips and inspection only to previously observed static identities at their
+recorded map/cell in known terrain. The strict option retains current-sight
+inspection. Owned pawns/plans keep control; combat targets, notifications and
+audio retain separate current-sight checks. Registered inspection cores retain
+their explicit current-sight contract. Ownership/home work permission does not
+invent an observation. Existing saves lacking location records need one fresh
+observation; no location is guessed from an old seen flag.
+
+Canonical format/build and binary verification pass with 498 C# and seven
+artifact tests, zero warnings/errors. Sixteen new source-linked cases cover
+static items/buildings, known/native fog, unseen replacements, movement with and
+without sight, map/faction isolation, click/rectangle candidates, paused selection
+reconciliation, registered cores and the tooltip rejection. The stationary
+fast path adds no timer or repeated sight query to maintain recorded locations.
+Gameplay SHA-256 is
+`fcd8ab23900f80658ae488cd760b77fc6adfff51386378ecdcd512a2739f8bec`;
+companion is
+`a6915da639480af4ac5cd447eaf656d35729ec6553e7e887ff0d13af9e1e604e`.
+Both deployed files match and a fresh Steam 1.7.4977 rev1248 process loads the
+unchanged ten-mod profile.
+
+Native item/proxy checks accept selection in sight in both modes. After losing
+sight, strict mode rejects both direct and proxy selection, with zero overlay
+and tooltip callbacks. Remembered mode retains both selections and live UI
+callbacks. Real Steel/Gold fixtures start hidden when spawned on known terrain,
+become selectable after observation, and remain selectable without current sight
+after in-process save/load and a full restart. Two static-target messages stay
+queued until actual sight, replaying exactly once. Movement, faction separation
+and building footprints have source-linked evidence in this slice, not new
+native scenarios. Existing Multiplayer synchronization discovers the new boolean
+through its primitive-field registration; Multiplayer acceptance remains deferred.
+
+The first native attempt has no suitable empty remembered cell and is rejected
+as a fixture failure. Real climb/descent then establishes remembered terrain.
+Repeating the historical UI probe exposes duplicate generated definitions; the
+companion now reuses them. Strict mode also exposes a genuine native tooltip
+hole: rejecting a thing returned Invalid, but the engine's fog query could treat
+that coordinate as unfogged. An explicit Invalid rejection now runs before
+tooltip/shot-report construction. DecompilerServer confirms the two position
+loads and single fog call in both installed engines. The final fresh run has no
+recognized errors/exceptions or open attention. Earlier failed results are kept
+separately and are not accepted as proof.
+
+The unchanged preserved scene reloads paused at tick 4132, retaining Jade on the
+ground, both completed towers and four plans. The temporary observation save
+and probe objects are removed. No original save or saved preference is overwritten.
+Evidence and bounded logs are under ignored
+`artifacts/remembered-selection-20261014`. The README, current architecture/coverage
+and all five maintained UI languages describe the preference. This is focused
+1.7 evidence; it does not renew 1.6 native, broad optional-mod or performance gates.

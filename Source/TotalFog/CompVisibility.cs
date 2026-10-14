@@ -12,6 +12,9 @@ public class CompVisibility : FogSubcomponent
     private bool seenByPlayer;
     private int firstObserverFactionId;
     private List<int> otherObserverFactionIds;
+    private int observedMapId = -1;
+    private int firstObservedCell = -1;
+    private Dictionary<int, int> otherObservedCells;
     public bool SeenByPlayer => WasSeenBy(Faction.OfPlayer);
 
     public bool WasSeenBy(Faction faction) =>
@@ -30,6 +33,29 @@ public class CompVisibility : FogSubcomponent
     private int nextCheck;
     private bool setup;
 
+    // Location knowledge is selection-only. Do not snapshot appearance or
+    // resample stationary objects merely to keep this record up to date.
+    internal bool WasSeenAtCurrentLocation(Faction faction) =>
+        CanRememberLocation
+        && WasSeenBy(faction)
+        && observedMapId == parent.MapHeld?.uniqueID
+        && (
+            faction.loadID == firstObserverFactionId
+                ? firstObservedCell == parent.MapHeld.cellIndices.CellToIndex(parent.PositionHeld)
+                : otherObservedCells != null
+                    && otherObservedCells.TryGetValue(faction.loadID, out int cell)
+                    && cell == parent.MapHeld.cellIndices.CellToIndex(parent.PositionHeld)
+        );
+
+    private bool CanRememberLocation =>
+        parent is not (Pawn or Corpse)
+        && parent.def.category is not (ThingCategory.Projectile or ThingCategory.Mote)
+        && !parent.def.IsBlueprint
+        && !parent.def.IsFrame;
+
+    private bool NeedsObservation(Faction faction) =>
+        !WasSeenBy(faction) || CanRememberLocation && !WasSeenAtCurrentLocation(faction);
+
     public override void PostSpawnSetup(bool respawningAfterLoad)
     {
         setup = true;
@@ -46,6 +72,14 @@ public class CompVisibility : FogSubcomponent
         Scribe_Collections.Look(
             ref otherObserverFactionIds,
             "totalFogOtherObservers",
+            LookMode.Value
+        );
+        Scribe_Values.Look(ref observedMapId, "totalFogObservedMap", -1);
+        Scribe_Values.Look(ref firstObservedCell, "totalFogFirstObservedCell", -1);
+        Scribe_Collections.Look(
+            ref otherObservedCells,
+            "totalFogOtherObservedCells",
+            LookMode.Value,
             LookMode.Value
         );
     }
@@ -97,8 +131,8 @@ public class CompVisibility : FogSubcomponent
         );
         if (forceUpdate && parent is not Pawn)
             visible = true;
-        // Remembered geometry must not keep a live inspector open. Coverage
-        // transitions call this immediately; periodic checks cover other changes.
+        // Selection follows the user's remembered-object preference. Coverage
+        // transitions call this immediately; movement also invalidates location.
         if (Find.Selector.IsSelected(parent) && !ThingVisibility.CanInspect(parent))
             Find.Selector.Deselect(parent);
         // Before initialization, permissive rendering protects engine setup but
@@ -106,18 +140,15 @@ public class CompVisibility : FogSubcomponent
         if (visible)
         {
             if (
-                !WasSeenBy(Faction.OfPlayer)
+                NeedsObservation(Faction.OfPlayer)
                 && primaryView
                 && fog.OtherPlayerFactions.Count == 0
                 && fog.Initialized
-                && (
-                    !Compatibility.GravshipVisibility.Revealed
-                    || ThingVisibility.IsVisible(
-                        parent,
-                        allowMemory: false,
-                        registeredVisibility: fog,
-                        observed: false
-                    )
+                && ThingVisibility.IsVisible(
+                    parent,
+                    allowMemory: false,
+                    registeredVisibility: fog,
+                    observed: false
                 )
             )
                 Remember(Faction.OfPlayer);
@@ -135,7 +166,7 @@ public class CompVisibility : FogSubcomponent
             || faction == null
             || !faction.IsPlayer
             || !fog.Initialized
-            || WasSeenBy(faction)
+            || !NeedsObservation(faction)
         )
             return;
         if (
@@ -151,15 +182,31 @@ public class CompVisibility : FogSubcomponent
 
     private void Remember(Faction faction)
     {
-        if (faction == null || WasSeenBy(faction))
+        if (faction == null)
             return;
+        bool previouslySeen = WasSeenBy(faction);
         if (!seenByPlayer)
         {
             seenByPlayer = true;
             firstObserverFactionId = faction.loadID;
         }
-        else
+        else if (!previouslySeen)
             (otherObserverFactionIds ??= new()).Add(faction.loadID);
-        Notifications.EntityDiscovery.Observed(parent);
+        if (CanRememberLocation && parent.MapHeld != null)
+        {
+            if (observedMapId != parent.MapHeld.uniqueID)
+            {
+                observedMapId = parent.MapHeld.uniqueID;
+                firstObservedCell = -1;
+                otherObservedCells?.Clear();
+            }
+            int cell = parent.MapHeld.cellIndices.CellToIndex(parent.PositionHeld);
+            if (faction.loadID == firstObserverFactionId)
+                firstObservedCell = cell;
+            else
+                (otherObservedCells ??= new())[faction.loadID] = cell;
+        }
+        if (!previouslySeen)
+            Notifications.EntityDiscovery.Observed(parent);
     }
 }

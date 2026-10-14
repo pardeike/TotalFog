@@ -29,7 +29,7 @@
     "Source/TotalFog/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
     "Source/TotalFog/CompSightSource.cs": "b2f29383ac27b8b42d437c72b28d487422508d4d92ea0d9b5ea29788de7fbc61",
     "Source/TotalFog/CompTreeOcclusion.cs": "3d0c1c93950748994ab4fabf6681e828c8dee76afbc81119da2a24f3e0a50bfc",
-    "Source/TotalFog/CompVisibility.cs": "2fcc8cdf4c14287eb1784572898d8726f92db71a54c4832f08e2f1655915378d",
+    "Source/TotalFog/CompVisibility.cs": "711ed66fa12edf65bef3260df44dd121837823023b51cb1e638384dc2cf84cc1",
     "Source/TotalFog/CompWallOcclusion.cs": "588788a9f01b609f54afc243d281b293d016acab0e651d01b69be2907bd980de",
     "Source/TotalFog/Compatibility/AnimalVision.cs": "e59f58efb05595fc0afa7ab4bcc905f719e12c836fed0b4b574a475249be7c76",
     "Source/TotalFog/Compatibility/BubbleIntegration.cs": "954e810cf9b70a7cdd049fd233096d7f52937632c0c911ab85ef1041af9eb87b",
@@ -66,7 +66,7 @@
     "Source/TotalFog/FogDefOf.cs": "4de079616c59dabcde78efd3e0b58b074e012664197dd8fd1a98ead832240190",
     "Source/TotalFog/FogDefaultsDef.cs": "bfbf6d2394c7c95bce4c8f431d0d6d0407ec3fbf9bd6805458b48daa8d3d1de4",
     "Source/TotalFog/FogMapUtility.cs": "29a016f17c05a935b1bce94820eaa433cc8154155c04455d3e76a0794aeac942",
-    "Source/TotalFog/FogSettings.cs": "98c9d377478f3602607167e69868b2fbf02c016272ab123cf376ac9253bb0166",
+    "Source/TotalFog/FogSettings.cs": "6b5cac63ce8547b8f061054ece9c7e26fc1aade7ca62952a5ada83702889de5d",
     "Source/TotalFog/FogSubcomponent.cs": "f0e30133a3eb5aab141588dda39d7ed5dd3f086bfea58fe3d4af22a1284584d8",
     "Source/TotalFog/Graphic_HearingCue.cs": "d790c0e0079bdc09e5cef4b7f1c30ad2dd82b5a3907a639f670c83f2dae4ff50",
     "Source/TotalFog/HarmonyPatches.cs": "7c874fe75b2b471bef5db572f2b0826e909ded77941c8278d5c218793ea5049d",
@@ -94,14 +94,14 @@
     "Source/TotalFog/Presentation/FogMeshInvalidation.cs": "cdfc269a703ec94039b1942a50c2b2ca918acee08c8242cd3438185b77b9d5f4",
     "Source/TotalFog/Presentation/GasVisibility.Patches.cs": "3d72fd7ee8b6d43c79d4783c43ab1bdd434f1240bcb69d4092b3e43a05c7ce03",
     "Source/TotalFog/Presentation/GasVisibility.cs": "352f6d12669280b3a937f900800f489e8fb52c432842429284ff0c82de4fbc06",
-    "Source/TotalFog/Presentation/InterfaceVisibility.Patches.cs": "8029c6cd836ce428af95dad8c557a7c1d28004d5cc30e50a518eb7d641fd343d",
-    "Source/TotalFog/Presentation/InterfaceVisibility.cs": "01722e841cfcffa80352e7ce0c66c595fe8dcc6ef4f3e752004565424303f777",
+    "Source/TotalFog/Presentation/InterfaceVisibility.Patches.cs": "aceabdbbde808fc31f716c5ffe4e7d900036bf8ac248e430ddebd8b4b94fee25",
+    "Source/TotalFog/Presentation/InterfaceVisibility.cs": "0121967dac9349210fa7d310788b9010f67ee402ab74e36fe899213c793d63a8",
     "Source/TotalFog/Presentation/LightingVisibility.cs": "d64b4d3877820b9c8c37ee81762465d81d4af02d0ce22cffd8237ae058443817",
     "Source/TotalFog/Presentation/MapSearchVisibility.cs": "3c74cc3dc019d689d2ba46e832d3326b59720068c3e3d1a1f5dfca9ad973fe39",
-    "Source/TotalFog/Presentation/ThingVisibility.cs": "558f5308ae6e4bcb9be606b5ea665a135d9f25ff4e8bdc09e74fbc00abb8115f",
+    "Source/TotalFog/Presentation/ThingVisibility.cs": "936ff2702dd7a93f8b68702f1c450abeb3efc0f503988b08c8536ee33a0ed09b",
     "Source/TotalFog/Properties/AssemblyInfo.cs": "d02ea3dbe42de67e82a5c52cadcd42efcbb4d58c32fb592c9a5cf9b7e211d1c5",
     "Source/TotalFog/SectionLayerFog.cs": "c6583bc3de364da9769e642998ea54754d15ccc96a64e6e556a8d52b7574547f",
-    "Source/TotalFog/SettingsWindow.cs": "6b031d0b14899f7cf12ffb61fc4b91a66c71ca5af7e626743f8fb82d9e6b37cc",
+    "Source/TotalFog/SettingsWindow.cs": "e4c37c4d0952ee78927d5a7f9de11813a41efad7466fd358621a5b0229b6f66f",
     "Source/TotalFog/SoundAudibility.cs": "24ac6ef070c45c642c985e3cb6fad226a625080762f4a415c148690959e870a1",
     "Source/TotalFog/TotalFog.csproj": "d27774d45adb2959145427e0202cfddd6a8bfef07ba713bbb78466ec9ef55002",
     "Source/TotalFog/TotalFogMod.cs": "188a701d11f94a5611dc9f494b8302b27500a9070c313d450851e0545f3601f0",
@@ -126,5 +126,5 @@
     "Source/TotalFog/WorkGiver_MonitorVision.cs": "e4ed04ee2998d106071a3142e1eceb7eda30a14683baba63314c03e73b325fb0",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "9635b448c9f837409150111e75f892361203a4c69540a50afe68a2f46492ae8d"
+  "dllSha256": "fcd8ab23900f80658ae488cd760b77fc6adfff51386378ecdcd512a2739f8bec"
 }

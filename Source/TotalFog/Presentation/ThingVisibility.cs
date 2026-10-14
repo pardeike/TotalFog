@@ -9,12 +9,26 @@ internal static class ThingVisibility
     // Owned pawns and construction orders remain under the player's control
     // outside current sight. This UI exception never grants sight to effects,
     // enemy targets, discovered entities or neighbouring cells.
-    internal static bool CanInspect(Thing thing, IntVec3? renderedCell = null) =>
+    internal static bool CanInspect(
+        Thing thing,
+        IntVec3? renderedCell = null,
+        bool allowRememberedSelection = true
+    ) =>
         IsVisible(
             thing,
             allowMemory: thing != null
-                && thing.Faction == Faction.OfPlayer
-                && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame),
+                && (
+                    thing.Faction == Faction.OfPlayer
+                        && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame)
+                    || allowRememberedSelection
+                        && FogSettings.SelectRememberedObjects
+                        && thing.Spawned
+                        && thing is not (Pawn or PawnFlyer or Corpse)
+                        && thing
+                            .TryGetComp<CompFog>()
+                            ?.HideFromPlayer?.WasSeenAtCurrentLocation(Faction.OfPlayer) == true
+                        && !CustomInspectionCell.TryGetCell(thing, out _)
+                ),
             renderedCell: renderedCell
         );
 
