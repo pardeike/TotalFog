@@ -26,8 +26,11 @@ using Verb = TotalFog.Detours.Verb;
 
 namespace TotalFog;
 
-// Harmony patch registration for the base fog hooks. Optional features install
-// their own hooks through PatchSafety from the static constructor in TotalFogMod.cs.
+// Harmony registration for the base fog hooks, installed as one PatchSafety feature
+// from the static constructor in TotalFogMod.cs. Threat alerts and gravship visibility
+// install from here as their own features. Other features with an Install method are
+// listed in that static constructor; integrations with other mods install from the
+// instance constructor once loading has finished.
 public partial class TotalFogMod
 {
     private static void InjectDetours()

@@ -61,11 +61,11 @@
     "Source/TotalFog/Mod/DebugFogCommands.cs": "75123af133283a625d72d471d75d69ae78922bd88fffa170efc0a234b0f7e867",
     "Source/TotalFog/Mod/FogDefOf.cs": "4de079616c59dabcde78efd3e0b58b074e012664197dd8fd1a98ead832240190",
     "Source/TotalFog/Mod/FogDefaultsDef.cs": "bfbf6d2394c7c95bce4c8f431d0d6d0407ec3fbf9bd6805458b48daa8d3d1de4",
-    "Source/TotalFog/Mod/FogSettings.cs": "ce6eb31bfd7e7a94919e481c0ac48744b52b1c7423da292260157c8e5a173ce4",
+    "Source/TotalFog/Mod/FogSettings.cs": "a68063960b3a9b58f958e61fb2ad13375a99529b648844cc89c1c2f146ec73fd",
     "Source/TotalFog/Mod/HarmonyPatches.cs": "7c874fe75b2b471bef5db572f2b0826e909ded77941c8278d5c218793ea5049d",
     "Source/TotalFog/Mod/PatchSafety.cs": "77ab016113fd96c8acd68ad4307d7947e6319b255bf52006a8bc9971a660a4bd",
-    "Source/TotalFog/Mod/SettingsWindow.cs": "ad8a9907aba3759b2822e080887ebafceafe3f8700ec7a4af3216c7be7bff23b",
-    "Source/TotalFog/Mod/TotalFogMod.Patches.cs": "d58b7e12e47693dae81631d5317cdc28988a79d0625ea3b18d207caa135ab590",
+    "Source/TotalFog/Mod/SettingsWindow.cs": "4e6ccf5ea238ad8bacb252ca559186886f083e6cd1d5b48234521abc086e70b8",
+    "Source/TotalFog/Mod/TotalFogMod.Patches.cs": "4c979bf86f55341dd6f3de3cc038426cd32f4ab8f96fb176d1ee29e7555ca37a",
     "Source/TotalFog/Mod/TotalFogMod.cs": "7248e0673e7c8fffa3630024e472e5c8b9b572e143c0c8aa3a66440da6067460",
     "Source/TotalFog/Notifications/DeferredNotifications.cs": "a7a30e32b4e760e2175b998f1d3e14a7caa3dcb13efebc882f09970e2399ba3e",
     "Source/TotalFog/Notifications/EntityDiscovery.cs": "05889f81142944d22fed6ead269c58d3c0dd8b7bc99758266028cdedadea482b",
@@ -104,12 +104,12 @@
     "Source/TotalFog/Sight/CompWallOcclusion.cs": "151214c0dcbfee1d9f1fd0f8c33425b535c5402ad95134ced543b857fa20e25d",
     "Source/TotalFog/Sight/FogMapUtility.cs": "29a016f17c05a935b1bce94820eaa433cc8154155c04455d3e76a0794aeac942",
     "Source/TotalFog/Sight/FogSubcomponent.cs": "f0e30133a3eb5aab141588dda39d7ed5dd3f086bfea58fe3d4af22a1284584d8",
-    "Source/TotalFog/Sight/FogTiming.cs": "ec378c297e51a577ec1de492404e9fc70681f52868227d3d06e7a8fc56373952",
+    "Source/TotalFog/Sight/FogTiming.cs": "ca8086c4ddf44c96bb1d178373256465186ded46c414eba70e34d553061fd3bf",
     "Source/TotalFog/Sight/MapVisibility.cs": "97b1ac681bb051cfcdc8433ba021b2f235dcfb825ea9aa68555b1689c0a3fd26",
     "Source/TotalFog/Sight/SectionLayerFog.cs": "1954b6cdd97074acd2c426e160cc2e063c0b732e4ed4811f6189e8238063bdf4",
     "Source/TotalFog/SoundAudibility.cs": "24ac6ef070c45c642c985e3cb6fad226a625080762f4a415c148690959e870a1",
     "Source/TotalFog/TotalFog.csproj": "d27774d45adb2959145427e0202cfddd6a8bfef07ba713bbb78466ec9ef55002",
-    "Source/TotalFog/Utils/FogThingUtility.cs": "3461761496b66ec53f867f66d88a7598ce5011979d88955a9ec9d3cd0c9ad8c4",
+    "Source/TotalFog/Utils/FogThingUtility.cs": "6b58cd552519de9eaf6b400067fbf306b703f0308df2ca5044f614330bc7b4db",
     "Source/TotalFog/Visibility.cs": "7306788f5da28b0f37a9ca110f788c90d132bd219c8644df70438dce9d025c11",
     "Source/TotalFog/Watchtowers/Building_Watchtower.cs": "1bf3222f834daa3d72029386900cffb0724953931919a274d7f0634314f92a62",
     "Source/TotalFog/Watchtowers/Graphic_WatchtowerPreview.cs": "9b16ceb2dda6ae1d386da56794ac78be7bf0eae57036c2ebb1f6ecdfe8d0126d",
@@ -128,5 +128,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "c3011702fe45bc18a0250632ae12c48d656a37d47683ec6f4535d8933ba52d28"
+  "dllSha256": "bcff16ec3b95618f12b6d9b6c5e74574be377fd8a83843a1bff71dcb7243de40"
 }

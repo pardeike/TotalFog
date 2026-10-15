@@ -49,37 +49,5 @@ public static class FogThingUtility
     {
         public bool IsFogVisible(bool forRender = false) =>
             Presentation.ThingVisibility.IsVisible(thing);
-
-        public ThingComp TryGetCompLocal(CompProperties def)
-        {
-            var category = thing.def.category;
-
-            if (
-                category != ThingCategory.Pawn
-                && category != ThingCategory.Building
-                && category != ThingCategory.Item
-                && category != ThingCategory.Filth
-                && category != ThingCategory.Gas
-                && !thing.def.IsBlueprint
-            )
-            {
-                return null;
-            }
-
-            if (thing is ThingWithComps thingWithComps)
-            {
-                return thingWithComps.GetCompByDefType(def);
-            }
-
-            return null;
-        }
-
-        public CompPresentationState GetPresentationState()
-        {
-            var compMainComponent = (CompFog)thing.TryGetCompLocal(CompFog.CompDef);
-            var result = compMainComponent?.Hiddenable;
-
-            return result;
-        }
     }
 }

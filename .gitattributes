@@ -1,0 +1,2 @@
+# C# is LF in every checkout, including Windows; the CSharpier check rejects CRLF.
+*.cs text eol=lf

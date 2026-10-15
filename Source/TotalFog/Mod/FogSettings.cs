@@ -64,7 +64,7 @@ public partial class FogSettings : ModSettings
 
     // public static bool doFilthReveal = true; // Whether filth should be automatically revealed when its created
 
-    private static void applySettings()
+    private static void ApplySettings()
     {
         SectionLayerFog.PrefFadeSpeedMult = (int)fogFadeSpeed;
         SectionLayerFog.PrefEnableFade = fogFadeSpeed != FogFadeSpeedEnum.Disabled;
@@ -126,7 +126,7 @@ public partial class FogSettings : ModSettings
         Scribe_Values.Look(ref treesBlockSightValue, "treesBlockSight");
 
         if (Scribe.mode != LoadSaveMode.Saving)
-            applySettings();
+            ApplySettings();
     }
 
     private enum FogAlpha

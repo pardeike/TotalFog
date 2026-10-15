@@ -23,19 +23,18 @@ without Verse or Unity references. Test instrumentation lives in
 
 ## Conventions
 
-- Types bound by name from outside the assembly keep `namespace TotalFog;`
-  regardless of folder: everything referenced from `Current/Defs` XML, from
-  `Compatibility/LegacySaveTypes.cs` and by reflection in `BridgeTools`. Folder
-  namespaces (`TotalFog.Presentation`, `TotalFog.Watchtowers`, ...) are used
-  only where nothing binds by name. Move files freely; do not rename types or
-  namespaces without checking those three places.
+- A type's full name (namespace plus type name) is a contract. `Current/Defs`
+  XML, saved games and `Compatibility/LegacySaveTypes.cs` bind types by full
+  name, so a rename can break existing games. Folders do not set namespaces, so
+  moving a file is free. `BridgeTools` is test instrumentation; it reflects on
+  some names and is simply updated alongside a rename.
 - Every Harmony install goes through `PatchSafety.Install` so one failing hook
   disables only its feature and logs once. Shared targets have one installation
   owner in `TotalFogMod.Patches.cs`.
-- Presentation code asks the sight model; it never changes it. Simulation
-  (ticking, damage, spawning) is never gated by visibility.
+- Presentation code asks the sight model; it never changes it.
 - Formatting is owned by CSharpier (`./scripts/mod format`); the build and CI
-  reject unformatted files. Line endings are LF.
+  reject unformatted files. `.editorconfig` is its only configuration, and
+  `.gitattributes` keeps C# files LF in every checkout, including Windows.
 - Player-facing text lives in `Languages/English`; code uses keys only.
 
 See [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) for the design and

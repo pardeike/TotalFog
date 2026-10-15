@@ -136,7 +136,7 @@ public partial class FogSettings
             value =>
             {
                 fogAlpha = value;
-                applySettings();
+                ApplySettings();
             }
         );
         Choice(
@@ -146,7 +146,7 @@ public partial class FogSettings
             value =>
             {
                 fogFadeSpeed = value;
-                applySettings();
+                ApplySettings();
             }
         );
     }
@@ -473,6 +473,6 @@ public partial class FogSettings
         ClearFogDuringTargeting = true;
         if (Current.ProgramState != ProgramState.Playing)
             TreesBlockSight = false;
-        applySettings();
+        ApplySettings();
     }
 }

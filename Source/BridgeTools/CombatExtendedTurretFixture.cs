@@ -241,7 +241,7 @@ public sealed class CombatExtendedTurretFixture
                     if (action == "configure-enemy-fog")
                     {
                         FogSettings.AISmart = enemyFog;
-                        AccessTools.Method(typeof(FogSettings), "applySettings").Invoke(null, null);
+                        AccessTools.Method(typeof(FogSettings), "ApplySettings").Invoke(null, null);
                     }
                     if (action == "configure")
                     {
