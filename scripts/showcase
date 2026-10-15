@@ -124,6 +124,14 @@ def verify_media():
         raise RuntimeError("Showcase movie differs from its manifest")
     if sha(MEDIA / "contact-sheet.png") != manifest["contactSheetSha256"]:
         raise RuntimeError("Contact sheet differs from its manifest")
+    youtube = MEDIA / "youtube.json"
+    if youtube.exists():
+        receipt = json.loads(youtube.read_text())
+        if (
+            receipt["sourceSha256"] != manifest["video"]["sha256"]
+            or receipt["visibility"] != "unlisted"
+        ):
+            raise RuntimeError("The YouTube receipt must describe this exact movie as unlisted")
     return manifest
 
 
@@ -226,7 +234,7 @@ def assemble(recipe, proof, stills):
             ):
                 raise RuntimeError("Native capture dimensions differ: " + str(frame))
         master = output / (shot["id"] + ".png")
-        shutil.copy2(frames[len(frames) // 2], master)
+        shutil.copy2(frames[min(shot.get("stillFrame", 0), len(frames) - 1)], master)
         jpg = master.with_suffix(".jpg")
         run(
             "ffmpeg",
@@ -423,9 +431,16 @@ def main():
         if not launch.get("gabpConnected"):
             bridge.tool("games_connect", gameId=GAME_ID)
         if args.mode == "publish":
-            plan = bridge.native(
-                "totalfog/showcase_gallery", mediaDirectory=str(MEDIA), confirm=False
-            )
+            gallery_args = {"mediaDirectory": str(MEDIA)}
+            if (MEDIA / "youtube.json").exists():
+                gallery_args["youtubeVideoId"] = json.loads((MEDIA / "youtube.json").read_text())[
+                    "videoId"
+                ]
+                if (MEDIA / "workshop-gallery.json").exists():
+                    gallery_args["previousYouTubeVideoId"] = json.loads(
+                        (MEDIA / "workshop-gallery.json").read_text()
+                    ).get("youtubeVideoId")
+            plan = bridge.native("totalfog/showcase_gallery", **gallery_args, confirm=False)
             (WORK / "gallery-plan.json").write_text(json.dumps(plan, indent=2) + "\n")
             if (
                 not plan.get("success")
@@ -433,9 +448,7 @@ def main():
                 != (ROOT / "About/PublishedFileId.txt").read_text().strip()
             ):
                 raise RuntimeError("Workshop gallery ownership/target preflight failed")
-            result = bridge.native(
-                "totalfog/showcase_gallery", mediaDirectory=str(MEDIA), confirm=True
-            )
+            result = bridge.native("totalfog/showcase_gallery", **gallery_args, confirm=True)
             (WORK / "gallery-result.json").write_text(json.dumps(result, indent=2) + "\n")
             if not result.get("success"):
                 raise RuntimeError(
@@ -446,6 +459,7 @@ def main():
                     {
                         "publishedFileId": result["publishedFileId"],
                         "manifestSha256": sha(MEDIA / "manifest.json"),
+                        "youtubeVideoId": gallery_args.get("youtubeVideoId"),
                         "gallery": result["gallery"],
                     },
                     indent=2,

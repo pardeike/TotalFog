@@ -78,8 +78,10 @@ capture. Read Media/Showcase/README.md before changing the recipe. Finished
 screenshots, video, reference save and manifest are deliberately checked in
 under Media/Showcase with stable filenames; raw frames/logs stay in artifacts.
 This workflow builds the companion only and preserves released gameplay bytes.
-`showcase publish` updates the owner's additional Workshop images only; it
-does not republish mod content or upload the movie to a video service.
+`showcase publish` updates the owner's additional Workshop images and optionally
+embeds the already-uploaded video from Media/Showcase/youtube.json; it does not
+republish mod content or upload the movie to a video service. Show revised media
+to Andreas and obtain his approval before uploading it.
 The earlier local `total-fog` branch retains the private development history;
 do not push it or other private branches/tags. The public `upstream-baseline`
 tag retains the original payload used by baseline comparisons.

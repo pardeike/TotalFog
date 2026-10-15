@@ -25,7 +25,8 @@ public sealed class ShowcaseScenarios
             height,
             fps,
             seed,
-            visionRange;
+            visionRange,
+            memoryOpacity;
         public float uiScale;
         public string saveName;
         public Shot[] shots;
@@ -34,6 +35,7 @@ public sealed class ShowcaseScenarios
     [Serializable]
     public sealed class Shot
     {
+        public int stillFrame;
         public string id,
             title,
             mode;
@@ -80,6 +82,7 @@ public sealed class ShowcaseScenarios
         await gate.WaitAsync(cancellationToken);
         var proof = RimBridgeEvidence.CreateManifest("totalfog/showcase");
         proof.saveName = recipe.saveName;
+        var sightSnapshots = new List<object>();
         try
         {
             await On(() =>
@@ -126,7 +129,9 @@ public sealed class ShowcaseScenarios
                         .ToArray(),
                     recipe.seed,
                     recipe.visionRange,
+                    recipe.memoryOpacity,
                     ticksPerVideoFrame = 2,
+                    sightSnapshots,
                 };
             });
             if (action == "stage")
@@ -182,6 +187,8 @@ public sealed class ShowcaseScenarios
                     await On(() => PrepareShot(recipe, shot));
                     if (shot.mode == "wide")
                         await Step(180);
+                    if (shot.mode == "combat")
+                        await Step(190);
                     if (shot.mode is "vision" or "audio")
                         await Call(
                             "rimworld/open_mod_settings",
@@ -234,7 +241,42 @@ public sealed class ShowcaseScenarios
                             throw new InvalidOperationException(
                                 "Native frame capture failed: " + capture.Error
                             );
-                        if (frame == frames / 2)
+                        if (frame == Math.Min(shot.stillFrame, frames - 1))
+                        {
+                            await On(() =>
+                                sightSnapshots.Add(
+                                    new
+                                    {
+                                        shot = shot.id,
+                                        frame,
+                                        colonists = Find
+                                            .CurrentMap.mapPawns.FreeColonistsSpawned.Select(
+                                                p => new
+                                                {
+                                                    name = p.Name.ToStringShort,
+                                                    x = p.Position.x,
+                                                    z = p.Position.z,
+                                                    drawX = p.DrawPos.x,
+                                                    drawZ = p.DrawPos.z,
+                                                    job = p.CurJobDef?.defName,
+                                                }
+                                            )
+                                            .ToArray(),
+                                        enemies = Find
+                                            .CurrentMap.mapPawns.AllPawnsSpawned.Where(p =>
+                                                p.Faction?.HostileTo(Faction.OfPlayer) == true
+                                            )
+                                            .Select(p => new
+                                            {
+                                                name = p.Name.ToStringShort,
+                                                visible = Visibility.IsVisible(p),
+                                                x = p.Position.x,
+                                                z = p.Position.z,
+                                            })
+                                            .ToArray(),
+                                    }
+                                )
+                            );
                             proof.captures.Add(
                                 new RimBridgeEvidenceCapture
                                 {
@@ -246,6 +288,7 @@ public sealed class ShowcaseScenarios
                                     kind = "native-screenshot",
                                 }
                             );
+                        }
                     }
                     int end = await ctx.MainThread.InvokeAsync(
                         () => Find.TickManager.TicksGame,
@@ -297,6 +340,13 @@ public sealed class ShowcaseScenarios
                 throw new InvalidOperationException(
                     "Native simulation did not advance the requested ticks."
                 );
+            // Paused frame stepping advances the path but leaves the native
+            // draw interpolation cached. Photograph the current path position.
+            await On(() =>
+            {
+                foreach (var pawn in Find.CurrentMap.mapPawns.AllPawnsSpawned)
+                    pawn.Drawer.tweener.ResetTweenedPosToRoot();
+            });
         }
         async Task Call(string name, object args)
         {
@@ -328,6 +378,9 @@ public sealed class ShowcaseScenarios
     private static Pawn Actor(string name) =>
         Find.CurrentMap.mapPawns.FreeColonistsSpawned.Single(p => p.Name.ToStringShort == name);
 
+    private static Pawn Raider(string name) =>
+        Find.CurrentMap.mapPawns.AllPawnsSpawned.Single(p => p.Name.ToStringShort == name);
+
     private static void RefreshSight()
     {
         foreach (var watcher in Find.CurrentMap.GetVisibility().fowWatchers.ToArray())
@@ -342,6 +395,7 @@ public sealed class ShowcaseScenarios
         Prefs.DevMode = false;
         FogSettings.BaseViewRange = recipe.visionRange;
         FogSettings.DoAudioCheck = true;
+        SetAppearance(recipe);
         Messages.Clear();
         foreach (var letter in Find.LetterStack.LettersListForReading.ToArray())
             Find.LetterStack.RemoveLetter(letter);
@@ -354,6 +408,23 @@ public sealed class ShowcaseScenarios
                     JobMaker.MakeJob(JobDefOf.Goto, new IntVec3(175, 0, 106)),
                     JobTag.Misc
                 );
+        if (shot.mode is "corner" or "combat")
+        {
+            Actor("Bea")
+                .jobs.TryTakeOrderedJob(
+                    JobMaker.MakeJob(JobDefOf.Goto, new IntVec3(147, 0, 101)),
+                    JobTag.Misc
+                );
+            Attack(Actor("Cam"), Raider("Vex"));
+            Attack(Raider("Vex"), Actor("Cam"));
+            foreach (string name in new[] { "Rook", "Ash" })
+            {
+                var wait = JobMaker.MakeJob(JobDefOf.Wait_Combat);
+                wait.expiryInterval = 6000;
+                wait.canUseRangedWeapon = true;
+                Raider(name).jobs.StartJob(wait, JobCondition.InterruptForced);
+            }
+        }
         if (shot.mode is "tower" or "wide")
         {
             var tower = Find
@@ -377,6 +448,27 @@ public sealed class ShowcaseScenarios
         AccessTools.Field(typeof(FogSettings), "scrollPosition").SetValue(null, Vector2.zero);
         RefreshSight();
         Find.CameraDriver.SetRootPosAndSize(new Vector3(shot.x, 0, shot.z), shot.zoom);
+    }
+
+    private static void Attack(Pawn shooter, Pawn target)
+    {
+        var job = JobMaker.MakeJob(JobDefOf.AttackStatic, target);
+        job.maxNumStaticAttacks = int.MaxValue;
+        shooter.jobs.StartJob(job, JobCondition.InterruptForced);
+    }
+
+    private static void SetAppearance(Recipe recipe)
+    {
+        AccessTools
+            .Field(typeof(FogSettings), "fogAlpha")
+            .SetValue(
+                null,
+                Enum.ToObject(
+                    AccessTools.Inner(typeof(FogSettings), "FogAlpha"),
+                    recipe.memoryOpacity
+                )
+            );
+        AccessTools.Method(typeof(FogSettings), "ApplySettings").Invoke(null, null);
     }
 
     private static void Stage(Recipe recipe)
@@ -404,6 +496,7 @@ public sealed class ShowcaseScenarios
         }
         FogSettings.BaseViewRange = recipe.visionRange;
         FogSettings.OnlyOutsideColony = false;
+        SetAppearance(recipe);
         Prefs.DevMode = false;
         map.weatherManager.TransitionTo(WeatherDefOf.Clear);
         // The immutable reference keeps the same local summer noon lighting.
@@ -490,13 +583,31 @@ public sealed class ShowcaseScenarios
             }
             Floor(106, 100, 3, 16, "PavedTile");
             Floor(126, 104, 52, 3, "Gravel");
-            for (int i = 0; i < 1000; i++)
+            // A real L-shaped ruin makes the sight shadow legible at close zoom.
+            Floor(134, 96, 26, 27, "SoilRich");
+            for (int z = 103; z <= 120; z++)
+                Place("Wall", 143, z, "BlocksSandstone");
+            for (int x = 144; x <= 154; x++)
+                Place("Wall", x, 120, "BlocksSandstone");
+            foreach (int x in new[] { 134, 135, 137 })
+                Place("Barricade", x, 99, "WoodLog");
+            foreach (
+                var cell in new[]
+                {
+                    new IntVec3(148, 0, 95),
+                    new IntVec3(150, 0, 95),
+                    new IntVec3(155, 0, 109),
+                }
+            )
+                Place("ChunkGranite", cell.x, cell.z);
+            for (int i = 0; i < 2800; i++)
             {
                 int x = Rand.Range(74, 192),
                     z = Rand.Range(85, 171);
                 if (
                     new CellRect(87, 97, 42, 34).Contains(new IntVec3(x, 0, z))
                     || z is >= 103 and <= 108
+                    || new CellRect(134, 94, 23, 29).Contains(new IntVec3(x, 0, z))
                 )
                     continue;
                 var cell = new IntVec3(x, 0, z);
@@ -528,8 +639,8 @@ public sealed class ShowcaseScenarios
             IntVec3[] positions =
             {
                 new(123, 0, 97),
-                new(140, 0, 106),
-                new(97, 0, 120),
+                new(138, 0, 106),
+                new(136, 0, 100),
                 new(108, 0, 111),
             };
             for (int i = 0; i < names.Length; i++)
@@ -546,14 +657,45 @@ public sealed class ShowcaseScenarios
                         ),
                     false
                 );
+                pawn.equipment.DestroyAllEquipment();
+                pawn.equipment.AddEquipment(
+                    (ThingWithComps)ThingMaker.MakeThing(ThingDef.Named("Gun_AssaultRifle"))
+                );
+                pawn.skills.GetSkill(SkillDefOf.Shooting).Level = 11;
                 GenSpawn.Spawn(pawn, positions[i], map);
-                pawn.drafter.Drafted = i < 2;
+                pawn.drafter.Drafted = i < 3;
                 pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 60000));
                 if (pawn.needs.food != null)
                     pawn.needs.food.CurLevelPercentage = 1;
                 if (pawn.needs.rest != null)
                     pawn.needs.rest.CurLevelPercentage = 1;
             }
+            string[] raiders = { "Vex", "Rook", "Ash" };
+            IntVec3[] enemyPositions = { new(149, 0, 95), new(152, 0, 110), new(154, 0, 115) };
+            for (int i = 0; i < raiders.Length; i++)
+            {
+                var pawn = PawnGenerator.GeneratePawn(
+                    PawnKindDefOf.Colonist,
+                    Faction.OfAncientsHostile
+                );
+                pawn.Name = new NameTriple(raiders[i], raiders[i], "Raider");
+                foreach (var hediff in pawn.health.hediffSet.hediffs.ToArray())
+                    pawn.health.RemoveHediff(hediff);
+                pawn.equipment.DestroyAllEquipment();
+                pawn.equipment.AddEquipment(
+                    (ThingWithComps)ThingMaker.MakeThing(ThingDef.Named("Gun_BoltActionRifle"))
+                );
+                pawn.skills.GetSkill(SkillDefOf.Shooting).Level = 7;
+                GenSpawn.Spawn(pawn, enemyPositions[i], map);
+                pawn.jobs.StartJob(JobMaker.MakeJob(JobDefOf.Wait, 60000));
+            }
+            foreach (var pawn in map.mapPawns.AllPawnsSpawned)
+            foreach (
+                var trait in pawn
+                    .story.traits.allTraits.Where(t => t.def == TraitDefOf.Brawler)
+                    .ToArray()
+            )
+                pawn.story.traits.RemoveTrait(trait);
             map.GetVisibility().DebugSetFog(new CellRect(0, 0, map.Size.x, map.Size.z), true, true);
             RefreshSight();
         }

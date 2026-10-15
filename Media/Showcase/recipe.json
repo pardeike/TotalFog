@@ -5,13 +5,74 @@
   "uiScale": 1.0,
   "fps": 30,
   "seed": 150026,
-  "visionRange": 36,
+  "visionRange": 18,
   "saveName": "TotalFogShowcase",
   "shots": [
-    {"id": "01-exploration", "title": "Explore beyond the fog", "mode": "explore", "seconds": 5, "x": 154, "z": 106, "endX": 173, "endZ": 106, "zoom": 27, "endZoom": 27},
-    {"id": "02-watchtower", "title": "Put a lookout above your walls", "mode": "tower", "seconds": 4, "x": 123, "z": 100, "endX": 123, "endZ": 100, "zoom": 11, "endZoom": 11},
-    {"id": "03-colony", "title": "Remember the land. Watch for danger.", "mode": "wide", "seconds": 4, "x": 112, "z": 111, "endX": 119, "endZ": 113, "zoom": 38, "endZoom": 58},
-    {"id": "04-vision", "title": "Choose how far your colony sees", "mode": "vision", "seconds": 2.5, "x": 112, "z": 111, "endX": 112, "endZ": 111, "zoom": 32, "endZoom": 32},
-    {"id": "05-audio", "title": "Keep unseen threats out of the soundtrack", "mode": "audio", "seconds": 2.5, "x": 112, "z": 111, "endX": 112, "endZ": 111, "zoom": 32, "endZoom": 32}
-  ]
+    {
+      "id": "01-exploration",
+      "title": "A wall can hide an ambush",
+      "mode": "corner",
+      "seconds": 5,
+      "x": 145,
+      "z": 108,
+      "endX": 148,
+      "endZ": 107,
+      "zoom": 19,
+      "endZoom": 19,
+      "stillFrame": 0
+    },
+    {
+      "id": "02-watchtower",
+      "title": "Climb above the walls. See farther.",
+      "mode": "tower",
+      "seconds": 4,
+      "x": 130,
+      "z": 106,
+      "endX": 130,
+      "endZ": 106,
+      "zoom": 23,
+      "endZoom": 23,
+      "stillFrame": 80
+    },
+    {
+      "id": "03-colony",
+      "title": "Advance carefully. Reveal the threat.",
+      "mode": "combat",
+      "seconds": 4,
+      "x": 149,
+      "z": 106,
+      "endX": 149,
+      "endZ": 106,
+      "zoom": 17,
+      "endZoom": 17,
+      "stillFrame": 50
+    },
+    {
+      "id": "04-vision",
+      "title": "Set the sight range for your game",
+      "mode": "vision",
+      "seconds": 2.5,
+      "x": 140,
+      "z": 108,
+      "endX": 140,
+      "endZ": 108,
+      "zoom": 23,
+      "endZoom": 23,
+      "stillFrame": 0
+    },
+    {
+      "id": "05-audio",
+      "title": "Keep unseen threats out of the soundtrack",
+      "mode": "audio",
+      "seconds": 2.5,
+      "x": 140,
+      "z": 108,
+      "endX": 140,
+      "endZ": 108,
+      "zoom": 23,
+      "endZoom": 23,
+      "stillFrame": 0
+    }
+  ],
+  "memoryOpacity": 120
 }

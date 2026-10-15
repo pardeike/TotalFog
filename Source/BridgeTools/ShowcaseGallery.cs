@@ -33,21 +33,29 @@ public sealed class ShowcaseGallery
         public uint index { get; set; }
         public string file { get; set; }
         public string url { get; set; }
+        public string kind { get; set; }
     }
 
     private static readonly SemaphoreSlim gate = new(1, 1);
 
     [Tool(
         "totalfog/showcase_gallery",
-        Description = "Read or update Total Fog's additional Workshop screenshots. Verify the logged-on owner, app, item and manifest hashes. Update matching filenames in place and retain all other previews. No mod content, title, description, tags or primary preview changes. confirm=true submits."
+        Description = "Read or update Total Fog's additional Workshop screenshots and an optional already-uploaded YouTube preview. Verify the logged-on owner, app, item and manifest hashes. Update matching filenames/video IDs in place and retain other previews. No mod content, title, description, tags or primary preview changes. confirm=true submits."
     )]
     public static async Task<object> Run(
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string mediaDirectory,
-        bool confirm = false
+        bool confirm = false,
+        string youtubeVideoId = null,
+        string previousYouTubeVideoId = null
     )
     {
+        if (
+            youtubeVideoId != null
+            && !System.Text.RegularExpressions.Regex.IsMatch(youtubeVideoId, "^[A-Za-z0-9_-]{11}$")
+        )
+            throw new ArgumentException("Use a YouTube video ID, not a URL.");
         var manifest = JsonUtility.FromJson<Manifest>(
             File.ReadAllText(Path.Combine(mediaDirectory, "manifest.json"))
         );
@@ -104,6 +112,15 @@ public sealed class ShowcaseGallery
                 cancellationToken
             );
             var before = await Query();
+            var videoIndex =
+                before.FirstOrDefault(p => p.kind == "youtube" && p.url == youtubeVideoId)?.index
+                ?? before
+                    .FirstOrDefault(p =>
+                        p.kind == "youtube"
+                        && previousYouTubeVideoId != null
+                        && p.url == previousYouTubeVideoId
+                    )
+                    ?.index;
             var changes = files
                 .Select(path => new
                 {
@@ -119,6 +136,8 @@ public sealed class ShowcaseGallery
                     success = true,
                     submitted = false,
                     publishedFileId = item.m_PublishedFileId,
+                    youtubeVideoId,
+                    videoIndex,
                     changes,
                     gallery = before,
                 };
@@ -151,6 +170,20 @@ public sealed class ShowcaseGallery
                                     "Steam rejected preview setup: " + changes[i].file
                                 );
                         }
+                        if (youtubeVideoId != null)
+                        {
+                            bool accepted = videoIndex.HasValue
+                                ? SteamUGC.UpdateItemPreviewVideo(
+                                    update,
+                                    videoIndex.Value,
+                                    youtubeVideoId
+                                )
+                                : SteamUGC.AddItemPreviewVideo(update, youtubeVideoId);
+                            if (!accepted)
+                                throw new InvalidOperationException(
+                                    "Steam rejected the YouTube preview setup."
+                                );
+                        }
                         callback = CallResult<SubmitItemUpdateResult_t>.Create(
                             (result, failed) =>
                             {
@@ -181,11 +214,16 @@ public sealed class ShowcaseGallery
                 var after = await Query();
                 return new
                 {
-                    success = changes.All(c =>
-                        after.Count(p => p.file == c.file && !string.IsNullOrEmpty(p.url)) == 1
-                    ),
+                    success = (
+                        youtubeVideoId == null
+                        || after.Count(p => p.kind == "youtube" && p.url == youtubeVideoId) == 1
+                    )
+                        && changes.All(c =>
+                            after.Count(p => p.file == c.file && !string.IsNullOrEmpty(p.url)) == 1
+                        ),
                     submitted = true,
                     publishedFileId = item.m_PublishedFileId,
+                    youtubeVideoId,
                     changes,
                     gallery = after,
                 };
@@ -265,7 +303,7 @@ public sealed class ShowcaseGallery
                                         4096,
                                         out var original,
                                         1024,
-                                        out _
+                                        out var previewType
                                     )
                                 )
                                     throw new InvalidOperationException(
@@ -277,6 +315,11 @@ public sealed class ShowcaseGallery
                                         index = i,
                                         file = Path.GetFileName(original),
                                         url = url,
+                                        kind =
+                                            previewType
+                                            == EItemPreviewType.k_EItemPreviewType_YouTubeVideo
+                                                ? "youtube"
+                                                : "image",
                                     }
                                 );
                             }
