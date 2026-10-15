@@ -73,6 +73,13 @@ Use `./scripts/mod source-publish` to push committed source to
 https://github.com/pardeike/TotalFog. It verifies the public repository and
 remote commit without building, tagging, releasing or updating Steam.
 The public development branch is `public-main`, tracking `origin/main`.
+Use `./scripts/mod showcase` for the repeatable 1920x1080, UI-scale-1 media
+capture. Read Media/Showcase/README.md before changing the recipe. Finished
+screenshots, video, reference save and manifest are deliberately checked in
+under Media/Showcase with stable filenames; raw frames/logs stay in artifacts.
+This workflow builds the companion only and preserves released gameplay bytes.
+`showcase publish` updates the owner's additional Workshop images only; it
+does not republish mod content or upload the movie to a video service.
 The earlier local `total-fog` branch retains the private development history;
 do not push it or other private branches/tags. The public `upstream-baseline`
 tag retains the original payload used by baseline comparisons.

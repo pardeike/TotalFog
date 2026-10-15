@@ -35,6 +35,7 @@ installed game's `Mods` folder.
 | `./scripts/mod feedback-verify <label> [core16]` | Renews exact-binary paired native correctness gates; `core16` uses the isolated offline Core-only fixture |
 | `./scripts/mod feedback-package` | Verifies the existing paired gates and creates separate preliminary Total Fog and Zombieland ZIPs |
 | `./scripts/mod source-publish` | Pushes committed source and verifies GitHub; does not publish a player ZIP or update Steam |
+| `./scripts/mod showcase [capture\|stills\|stage\|verify\|publish]` | Reproduces or publishes the fixed-size screenshots and short video; see [the media recipe](../Media/Showcase/README.md) |
 
 For a short wide-zoom comparison, prefix `runtime-compare` with
 `TOTALFOG_WIDE_VIEW=1 TOTALFOG_COMPARISON_PAIRS=1`. It records the actual visible

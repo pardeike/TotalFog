@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "width": 1920,
+  "height": 1080,
+  "uiScale": 1.0,
+  "fps": 30,
+  "seed": 150026,
+  "visionRange": 36,
+  "saveName": "TotalFogShowcase",
+  "shots": [
+    {"id": "01-exploration", "title": "Explore beyond the fog", "mode": "explore", "seconds": 5, "x": 154, "z": 106, "endX": 173, "endZ": 106, "zoom": 27, "endZoom": 27},
+    {"id": "02-watchtower", "title": "Put a lookout above your walls", "mode": "tower", "seconds": 4, "x": 123, "z": 100, "endX": 123, "endZ": 100, "zoom": 11, "endZoom": 11},
+    {"id": "03-colony", "title": "Remember the land. Watch for danger.", "mode": "wide", "seconds": 4, "x": 112, "z": 111, "endX": 119, "endZ": 113, "zoom": 38, "endZoom": 58},
+    {"id": "04-vision", "title": "Choose how far your colony sees", "mode": "vision", "seconds": 2.5, "x": 112, "z": 111, "endX": 112, "endZ": 111, "zoom": 32, "endZoom": 32},
+    {"id": "05-audio", "title": "Keep unseen threats out of the soundtrack", "mode": "audio", "seconds": 2.5, "x": 112, "z": 111, "endX": 112, "endZ": 111, "zoom": 32, "endZoom": 32}
+  ]
+}

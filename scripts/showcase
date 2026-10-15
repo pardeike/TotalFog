@@ -1,0 +1,511 @@
+#!/usr/bin/env python3
+"""Reproduce Total Fog's native Workshop screenshots and 18-second showcase."""
+
+from pathlib import Path
+import argparse
+import gzip
+import hashlib
+import json
+import os
+import queue
+import re
+import shutil
+import subprocess
+import threading
+import tomllib
+import xml.etree.ElementTree as ET
+
+from build_receipt import verify_receipt
+
+ROOT = Path(__file__).resolve().parents[1]
+MEDIA = ROOT / "Media/Showcase"
+DATA = ROOT / "artifacts/ShowcaseUserData"
+WORK = ROOT / "artifacts/showcase"
+GAME_ID = "total-fog-showcase"
+RECIPE = MEDIA / "recipe.json"
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+class Bridge:
+    def __init__(self):
+        config = tomllib.loads((Path.home() / ".codex/config.toml").read_text())["mcp_servers"][
+            "gabs"
+        ]
+        self.process = subprocess.Popen(
+            [config["command"], *config.get("args", [])],
+            env={**os.environ, **config.get("env", {})},
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            text=True,
+        )
+        self.responses = queue.Queue()
+        self.sequence = 0
+
+        def read():
+            try:
+                for line in self.process.stdout:
+                    self.responses.put(json.loads(line))
+            finally:
+                self.responses.put(None)
+
+        threading.Thread(target=read, daemon=True).start()
+        self.rpc(
+            "initialize",
+            {
+                "protocolVersion": "2025-06-18",
+                "capabilities": {},
+                "clientInfo": {"name": "Total Fog showcase", "version": "1"},
+            },
+        )
+        self.process.stdin.write(
+            json.dumps({"jsonrpc": "2.0", "method": "notifications/initialized"}) + "\n"
+        )
+        self.process.stdin.flush()
+
+    def rpc(self, method, params):
+        self.sequence += 1
+        self.process.stdin.write(
+            json.dumps({"jsonrpc": "2.0", "id": self.sequence, "method": method, "params": params})
+            + "\n"
+        )
+        self.process.stdin.flush()
+        while True:
+            result = self.responses.get(timeout=1200)
+            if result is None:
+                raise RuntimeError("GABS disconnected")
+            if result.get("id") != self.sequence:
+                continue
+            if "error" in result or result.get("result", {}).get("isError"):
+                raise RuntimeError(str(result))
+            return result["result"]
+
+    def tool(self, name, **args):
+        result = self.rpc("tools/call", {"name": name, "arguments": args})
+        if "structuredContent" not in result:
+            raise RuntimeError("Missing structured GABS response: " + name)
+        return result["structuredContent"]
+
+    def native(self, local, **args):
+        result = self.tool("games_tool_names", gameId=GAME_ID, query=local)
+        matches = [t for t in result["tools"] if t["localName"] == local]
+        if len(matches) != 1:
+            raise RuntimeError("Missing native tool: " + local)
+        self.tool("games_tool_detail", gameId=GAME_ID, tool=matches[0]["name"])
+        return self.tool(
+            "games_call_tool", gameId=GAME_ID, tool=matches[0]["name"], arguments=args, timeout=1200
+        )
+
+    def close(self):
+        self.process.stdin.close()
+        self.process.terminate()
+        self.process.wait(timeout=10)
+
+
+def run(*args):
+    subprocess.run(args, cwd=ROOT, check=True)
+
+
+def verify_media():
+    manifest = json.loads((MEDIA / "manifest.json").read_text())
+    if (
+        not manifest.get("video")
+        or manifest["recipeSha256"] != sha(RECIPE)
+        or manifest["referenceSaveSha256"] != sha(MEDIA / "reference.rws.gz")
+    ):
+        raise RuntimeError("Produce a complete showcase before publication")
+    for shot in manifest["shots"]:
+        for extension in ["png", "jpg"]:
+            if sha(MEDIA / (shot["id"] + "." + extension)) != shot[extension + "Sha256"]:
+                raise RuntimeError("Media differs from its verified manifest: " + shot["id"])
+    if sha(MEDIA / manifest["video"]["file"]) != manifest["video"]["sha256"]:
+        raise RuntimeError("Showcase movie differs from its manifest")
+    if sha(MEDIA / "contact-sheet.png") != manifest["contactSheetSha256"]:
+        raise RuntimeError("Contact sheet differs from its manifest")
+    return manifest
+
+
+def configure(recipe):
+    config_dir = DATA / "Config"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    (DATA / "Saves").mkdir(exist_ok=True)
+    mods = ET.Element("ModsConfigData")
+    ET.SubElement(mods, "version").text = "1.7.4979 rev109"
+    active = ET.SubElement(mods, "activeMods")
+    for mod in [
+        "brrainz.harmony_steam",
+        "brrainz.rimbridgeserver",
+        "ludeon.rimworld",
+        "brrainz.totalfog",
+    ]:
+        ET.SubElement(active, "li").text = mod
+    known = ET.SubElement(mods, "knownExpansions")
+    for expansion in ["royalty", "ideology", "biotech", "anomaly", "odyssey"]:
+        ET.SubElement(known, "li").text = "ludeon.rimworld." + expansion
+    ET.ElementTree(mods).write(
+        config_dir / "ModsConfig.xml", encoding="utf-8", xml_declaration=True
+    )
+    prefs = ET.Element("PrefsData")
+    for key, value in {
+        "screenWidth": recipe["width"],
+        "screenHeight": recipe["height"],
+        "fullscreen": "false",
+        "uiScale": recipe["uiScale"],
+        "devMode": "true",
+        "pauseOnLoad": "true",
+        "runInBackground": "true",
+        "langFolderName": "English",
+        "volumeGame": 0,
+        "volumeMusic": 0,
+    }.items():
+        ET.SubElement(prefs, key).text = str(value)
+    ET.ElementTree(prefs).write(config_dir / "Prefs.xml", encoding="utf-8", xml_declaration=True)
+    path = Path.home() / ".gabs/config.json"
+    config = json.loads(path.read_text())
+    entry = {
+        "id": GAME_ID,
+        "name": "Total Fog showcase",
+        "launchMode": "SteamManaged",
+        "target": "294100",
+        "args": [
+            "-savedatafolder=" + str(DATA),
+            "-screen-width",
+            str(recipe["width"]),
+            "-screen-height",
+            str(recipe["height"]),
+            "-screen-fullscreen",
+            "0",
+        ],
+        "gabpMode": "local",
+        "description": "Owned Core-only marketing fixture, fixed 1920x1080 window and UI scale 1",
+    }
+    if GAME_ID in config["games"] and config["games"][GAME_ID] != entry:
+        raise RuntimeError("Existing showcase registration differs; preserve it for review")
+    config["games"][GAME_ID] = entry
+    path.write_text(json.dumps(config, indent=2) + "\n")
+
+
+def assemble(recipe, proof, stills):
+    output = WORK / "output"
+    if output.exists():
+        shutil.rmtree(output)
+    output.mkdir()
+    manifest = {
+        "schemaVersion": 1,
+        "recipeSha256": sha(RECIPE),
+        "referenceSaveSha256": sha(MEDIA / "reference.rws.gz"),
+        "gameplaySha256": sha(ROOT / "Current/Assemblies/TotalFog.dll"),
+        "companionSha256": sha(ROOT / "artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll"),
+        "gameVersion": proof["gameVersion"],
+        "modVersion": proof["modVersion"],
+        "viewport": {k: recipe[k] for k in ["width", "height", "uiScale", "fps"]},
+        "environment": proof["environment"]["details"],
+        "assertions": proof["assertions"],
+        "shots": [],
+    }
+    clips = []
+    for shot in recipe["shots"]:
+        folder = WORK / "frames" / shot["id"]
+        frames = sorted(folder.glob("frame-*.png"))
+        expected = (
+            int(round(shot["seconds"] * recipe["fps"]))
+            if not stills and shot["mode"] not in ["vision", "audio"]
+            else 1
+        )
+        if len(frames) != expected:
+            raise RuntimeError(f"{shot['id']}: expected {expected} frames, found {len(frames)}")
+        for frame in frames:
+            # Native PNG IHDR, checked without resizing the game image.
+            data = frame.read_bytes()
+            if (
+                data[:8] != b"\x89PNG\r\n\x1a\n"
+                or int.from_bytes(data[16:20], "big") != recipe["width"]
+                or int.from_bytes(data[20:24], "big") != recipe["height"]
+            ):
+                raise RuntimeError("Native capture dimensions differ: " + str(frame))
+        master = output / (shot["id"] + ".png")
+        shutil.copy2(frames[len(frames) // 2], master)
+        jpg = master.with_suffix(".jpg")
+        run(
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-i",
+            str(master),
+            "-frames:v",
+            "1",
+            "-q:v",
+            "2",
+            str(jpg),
+        )
+        if jpg.stat().st_size >= 1_000_000:
+            raise RuntimeError("Workshop image exceeds 1 MB: " + str(jpg))
+        manifest["shots"].append(
+            {
+                **shot,
+                "capturedFrames": len(frames),
+                "pngSha256": sha(master),
+                "jpgSha256": sha(jpg),
+                "jpgBytes": jpg.stat().st_size,
+            }
+        )
+    run(
+        "uv",
+        "run",
+        "--no-project",
+        "--cache-dir",
+        str(ROOT / "artifacts/tool-cache"),
+        "--with",
+        "pillow==12.3.0",
+        "--python",
+        str(Path(os.sys.executable)),
+        str(ROOT / "scripts/showcase-layout.py"),
+        str(RECIPE),
+        str(output),
+        str(WORK),
+    )
+    if not stills:
+        for shot in recipe["shots"]:
+            folder = WORK / "frames" / shot["id"]
+            frames = sorted(folder.glob("frame-*.png"))
+            clip = WORK / (shot["id"] + ".mp4")
+            args = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y"]
+            if len(frames) == 1:
+                args += ["-loop", "1", "-framerate", str(recipe["fps"]), "-i", str(frames[0])]
+            else:
+                args += ["-framerate", str(recipe["fps"]), "-i", str(folder / "frame-%05d.png")]
+            args += [
+                "-i",
+                str(WORK / (shot["id"] + "-title.png")),
+                "-filter_complex",
+                "[0:v][1:v]overlay=0:0",
+                "-t",
+                str(shot["seconds"]),
+                "-an",
+                "-c:v",
+                "libx264",
+                "-preset",
+                "medium",
+                "-crf",
+                "18",
+                "-pix_fmt",
+                "yuv420p",
+                str(clip),
+            ]
+            run(*args)
+            clips.append(clip)
+        listing = WORK / "clips.txt"
+        listing.write_text("".join("file '" + str(p) + "'\n" for p in clips))
+        movie = output / "total-fog-showcase.mp4"
+        run(
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            str(listing),
+            "-c",
+            "copy",
+            "-movflags",
+            "+faststart",
+            str(movie),
+        )
+        info = json.loads(
+            subprocess.check_output(
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-show_streams",
+                    "-show_format",
+                    "-of",
+                    "json",
+                    str(movie),
+                ],
+                text=True,
+            )
+        )
+        stream = next(s for s in info["streams"] if s["codec_type"] == "video")
+        duration = float(info["format"]["duration"])
+        if (
+            stream["width"] != recipe["width"]
+            or stream["height"] != recipe["height"]
+            or abs(duration - sum(s["seconds"] for s in recipe["shots"])) > 0.01
+            or int(stream["nb_frames"]) != round(duration * recipe["fps"])
+            or stream["avg_frame_rate"] != str(recipe["fps"]) + "/1"
+            or any(s["codec_type"] == "audio" for s in info["streams"])
+        ):
+            raise RuntimeError("Encoded video dimensions, duration, frame count or streams differ")
+        manifest["video"] = {
+            "file": movie.name,
+            "sha256": sha(movie),
+            "seconds": duration,
+            "frames": int(stream["nb_frames"]),
+            "fps": stream["avg_frame_rate"],
+            "audio": False,
+        }
+    else:
+        manifest["video"] = None
+    manifest["contactSheetSha256"] = sha(output / "contact-sheet.png")
+    (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    # Preview runs and failed encoding must not replace the published bundle.
+    # Promote a complete checked set, with its manifest last.
+    if not stills:
+        for path in sorted(output.iterdir(), key=lambda p: p.name == "manifest.json"):
+            shutil.copy2(path, MEDIA / path.name)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "mode",
+        nargs="?",
+        choices=["capture", "stills", "stage", "publish", "verify"],
+        default="capture",
+    )
+    args = parser.parse_args()
+    WORK.mkdir(parents=True, exist_ok=True)
+    recipe = json.loads(RECIPE.read_text())
+    if args.mode in ["verify", "publish"]:
+        verify_media()
+    if args.mode == "verify":
+        return
+    verify_receipt(ROOT, ROOT / "Current/Assemblies/TotalFog.dll")
+    before = sha(ROOT / "Current/Assemblies/TotalFog.dll")
+    mods = Path(os.environ["RIMWORLD_MOD_DIR"]).expanduser().absolute()
+    bridge = Bridge()
+    started = False
+    try:
+        statuses = bridge.tool("games_status")["games"]
+        if any(
+            g["status"] not in ["stopped", "stale-runtime-cleaned"]
+            for g in statuses
+            if g["gameId"] != "unity-editor"
+        ):
+            raise RuntimeError("Stop the running RimWorld session before showcase capture")
+        configure(recipe)
+        # GABS snapshots configured games when its stdio server starts.
+        bridge.close()
+        bridge = Bridge()
+        if sha(mods / "TotalFog/Current/Assemblies/TotalFog.dll") != before:
+            raise RuntimeError("The installed Total Fog differs from the tracked release")
+        run(
+            "dotnet",
+            "build",
+            "Source/BridgeTools/TotalFog.BridgeTools.csproj",
+            "-c",
+            "Release",
+            "--nologo",
+            "-v:q",
+        )
+        bundle = mods.parent / "BridgeTools/TotalFog"
+        bundle.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(
+            ROOT / "artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll",
+            bundle / "TotalFog.BridgeTools.dll",
+        )
+        staged = MEDIA / "reference.rws.gz"
+        if staged.exists() and args.mode != "stage":
+            (DATA / "Saves" / (recipe["saveName"] + ".rws")).write_bytes(
+                gzip.decompress(staged.read_bytes())
+            )
+        started = True
+        launch = bridge.tool("games_start", gameId=GAME_ID, timeout=120)
+        if not launch.get("gabpConnected"):
+            bridge.tool("games_connect", gameId=GAME_ID)
+        if args.mode == "publish":
+            plan = bridge.native(
+                "totalfog/showcase_gallery", mediaDirectory=str(MEDIA), confirm=False
+            )
+            (WORK / "gallery-plan.json").write_text(json.dumps(plan, indent=2) + "\n")
+            if (
+                not plan.get("success")
+                or str(plan["publishedFileId"])
+                != (ROOT / "About/PublishedFileId.txt").read_text().strip()
+            ):
+                raise RuntimeError("Workshop gallery ownership/target preflight failed")
+            result = bridge.native(
+                "totalfog/showcase_gallery", mediaDirectory=str(MEDIA), confirm=True
+            )
+            (WORK / "gallery-result.json").write_text(json.dumps(result, indent=2) + "\n")
+            if not result.get("success"):
+                raise RuntimeError(
+                    "Workshop gallery upload/readback incomplete; inspect artifacts/showcase/gallery-result.json before retrying"
+                )
+            (MEDIA / "workshop-gallery.json").write_text(
+                json.dumps(
+                    {
+                        "publishedFileId": result["publishedFileId"],
+                        "manifestSha256": sha(MEDIA / "manifest.json"),
+                        "gallery": result["gallery"],
+                    },
+                    indent=2,
+                )
+                + "\n"
+            )
+            return
+        if not staged.exists() or args.mode == "stage":
+            generated = bridge.native(
+                "rimworld/start_debug_game_ready",
+                readiness="visual",
+                pauseIfNeeded=True,
+                timeoutMs=180000,
+            )
+            if not generated.get("success"):
+                raise RuntimeError("Native reference map generation failed")
+            result = bridge.native("totalfog/showcase", recipePath=str(RECIPE), action="stage")
+            (WORK / "stage-result.json").write_text(json.dumps(result, indent=2) + "\n")
+            if not result.get("success"):
+                raise RuntimeError("Native scene setup failed")
+            source = DATA / "Saves" / (recipe["saveName"] + ".rws")
+            staged.write_bytes(gzip.compress(source.read_bytes(), mtime=0))
+        if args.mode == "stage":
+            return
+        frames = WORK / "frames"
+        if frames.exists():
+            shutil.rmtree(frames)
+        proof = bridge.native(
+            "totalfog/showcase",
+            recipePath=str(RECIPE),
+            outputDirectory=str(frames),
+            video=args.mode != "stills",
+        )
+        (WORK / "capture-result.json").write_text(json.dumps(proof, indent=2) + "\n")
+        if not proof.get("success"):
+            raise RuntimeError(
+                "Native showcase failed; inspect artifacts/showcase/capture-result.json"
+            )
+        if before != sha(ROOT / "Current/Assemblies/TotalFog.dll"):
+            raise RuntimeError("Capture modified the gameplay DLL")
+        native_log = (
+            Path.home()
+            / "Library/Application Support/Ludeon Studios/RimWorld by Ludeon Studios/Logs/Player.log"
+        )
+        shutil.copy2(native_log, WORK / "Player.log")
+        errors = [
+            line
+            for line in native_log.read_text(errors="replace").splitlines()
+            if re.search(r" ERROR |Exception|Error while", line)
+        ]
+        if errors:
+            raise RuntimeError(
+                "Native capture logged errors; inspect artifacts/showcase/Player.log: " + errors[0]
+            )
+        assemble(recipe, proof, args.mode == "stills")
+    finally:
+        if started:
+            bridge.tool("games_stop", gameId=GAME_ID)
+        bridge.close()
+
+
+if __name__ == "__main__":
+    main()

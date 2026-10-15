@@ -243,6 +243,7 @@ try:
         "metadata",
         "package",
         "package-built",
+        "showcase",
         "feedback-package",
         "feedback-verify",
         "setup",
@@ -261,7 +262,7 @@ try:
         "source-publish",
     }:
         raise RuntimeError(
-            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, package-built, feedback-package, feedback-verify <evidence label> [core16], setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, package-built, showcase [capture|stills|stage|verify|publish], feedback-package, feedback-verify <evidence label> [core16], setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
         )
     if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
         raise RuntimeError(
@@ -290,6 +291,18 @@ try:
         if mode == "source-publish":
             step = "public source publication"
             run(["python3", str(ROOT / "scripts/publish-source")], log)
+        if mode == "showcase":
+            step = "native showcase capture"
+            if sys.argv[2:] != ["verify"]:
+                stopped()
+                if MODS.resolve() != steam_mods.resolve():
+                    raise RuntimeError(
+                        "Showcase capture uses Steam's Mods folder: " + str(steam_mods)
+                    )
+            # A legacy environment may name the same shared Mods directory
+            # through the old app. Its sibling BridgeTools root is different.
+            workflow_env["RIMWORLD_MOD_DIR"] = str(steam_mods)
+            run([sys.executable, str(ROOT / "scripts/showcase"), *sys.argv[2:]], log)
         if mode == "metadata":
             step = "installed metadata"
             stopped()
@@ -353,6 +366,7 @@ try:
             "runtime-benchmark",
             "feedback-verify",
             "package-built",
+            "showcase",
             "source-publish",
         }:
             step = "formatting"
@@ -1401,6 +1415,7 @@ except Exception as exc:
         "runtime comparison",
         "paired native feedback verification",
         "public source publication",
+        "native showcase capture",
     } and isinstance(exc, subprocess.CalledProcessError):
         messages = [
             line

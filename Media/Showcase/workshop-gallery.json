@@ -1,0 +1,31 @@
+{
+  "publishedFileId": 3820003593,
+  "manifestSha256": "549173bffc75cceb6c1fdcd48f7a06937880e5196f625994c74aa74251eb0f1f",
+  "gallery": [
+    {
+      "file": "03-colony.jpg",
+      "index": 0,
+      "url": "https://images.steamusercontent.com/ugc/16922837966047631798/88AFE0BEA7A4E1A7D7037A877B5E51CF72B2D04D/"
+    },
+    {
+      "file": "02-watchtower.jpg",
+      "index": 1,
+      "url": "https://images.steamusercontent.com/ugc/11863464051420070924/135A5E6EC9483BAB9E3C4E660CB2C8CC7B0F5440/"
+    },
+    {
+      "file": "01-exploration.jpg",
+      "index": 2,
+      "url": "https://images.steamusercontent.com/ugc/11521727426054737549/1630E394C383DBC19DAC4F674A279AD7857D78C9/"
+    },
+    {
+      "file": "04-vision.jpg",
+      "index": 3,
+      "url": "https://images.steamusercontent.com/ugc/14968895127210473346/BEDC389FEAA88490DEB312832E6A86F7C236C38F/"
+    },
+    {
+      "file": "05-audio.jpg",
+      "index": 4,
+      "url": "https://images.steamusercontent.com/ugc/14902227104131843708/67FC8644EB8B4104341827AEA1BA18F80DE16970/"
+    }
+  ]
+}

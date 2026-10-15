@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "recipeSha256": "6a113251bcc8654d801d2feb89d07d4576ee56cbb6229a483077c9460142fc3e",
+  "referenceSaveSha256": "6ffe9658c631d82486d27d5fc89c58ccea74507ca627646e9f5b417f2d232b04",
+  "gameplaySha256": "790a8548387a3eaf30ed68ead5fbb269ee357f3504c9bac8952741940f334321",
+  "companionSha256": "20770c3d9836ef56d6a7eb4b3e1aa1133f9cc32538ebc7a9db00fcfe28fae40c",
+  "gameVersion": "1.7.4979 rev109",
+  "modVersion": "1.0.0",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "uiScale": 1.0,
+    "fps": 30
+  },
+  "environment": {
+    "activeMods": [
+      "brrainz.harmony_steam",
+      "brrainz.rimbridgeserver",
+      "ludeon.rimworld",
+      "brrainz.totalfog"
+    ],
+    "fullscreen": false,
+    "game": "1.7.4979 rev109",
+    "gameplayMvid": "c89a9a9b-7ecd-4734-8d2b-04359427aba7",
+    "graphicsDevice": "Apple M4 Max",
+    "height": 1080,
+    "seed": 150026,
+    "ticksPerVideoFrame": 2,
+    "uiScale": 1,
+    "visionRange": 36,
+    "width": 1920
+  },
+  "assertions": [
+    {
+      "actual": 300,
+      "expected": 300,
+      "name": "01-exploration fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 240,
+      "expected": 240,
+      "name": "02-watchtower fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 240,
+      "expected": 240,
+      "name": "03-colony fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "04-vision fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 0,
+      "expected": 0,
+      "name": "05-audio fixed simulation interval",
+      "success": true
+    }
+  ],
+  "shots": [
+    {
+      "id": "01-exploration",
+      "title": "Explore beyond the fog",
+      "mode": "explore",
+      "seconds": 5,
+      "x": 154,
+      "z": 106,
+      "endX": 173,
+      "endZ": 106,
+      "zoom": 27,
+      "endZoom": 27,
+      "capturedFrames": 150,
+      "pngSha256": "b8f3497b81a1d141162c6e3d7dda3fad87c04980f4e90dd39f09fbab2a7af720",
+      "jpgSha256": "a4646a421cde8fe73ec8d4516d801751a22bbffad62fd5af71585efae711123c",
+      "jpgBytes": 377119
+    },
+    {
+      "id": "02-watchtower",
+      "title": "Put a lookout above your walls",
+      "mode": "tower",
+      "seconds": 4,
+      "x": 123,
+      "z": 100,
+      "endX": 123,
+      "endZ": 100,
+      "zoom": 11,
+      "endZoom": 11,
+      "capturedFrames": 120,
+      "pngSha256": "e5d70bc1779558aaab7687254e35f11eee2a102b96d2106896e4824f522e49c1",
+      "jpgSha256": "c4d3eb6a64b24cd5e23ba3f9d0e15d3d683c13530c4eaacd0e5542668101a085",
+      "jpgBytes": 634017
+    },
+    {
+      "id": "03-colony",
+      "title": "Remember the land. Watch for danger.",
+      "mode": "wide",
+      "seconds": 4,
+      "x": 112,
+      "z": 111,
+      "endX": 119,
+      "endZ": 113,
+      "zoom": 38,
+      "endZoom": 58,
+      "capturedFrames": 120,
+      "pngSha256": "6a3bde0b2e26f19d888cd96312627840b8bc02f1992a1261697cb07747e42ae1",
+      "jpgSha256": "9a621f6955f05e9a277bfc626b4995b6a475f82edb0cc27d25475ded538870ae",
+      "jpgBytes": 319156
+    },
+    {
+      "id": "04-vision",
+      "title": "Choose how far your colony sees",
+      "mode": "vision",
+      "seconds": 2.5,
+      "x": 112,
+      "z": 111,
+      "endX": 112,
+      "endZ": 111,
+      "zoom": 32,
+      "endZoom": 32,
+      "capturedFrames": 1,
+      "pngSha256": "d6d831070ff788213b1a8081f1a85c0182664078c46436e3feefd34a9399f06f",
+      "jpgSha256": "cbbbe0709598ddfaa417d2b8bdc440a1aa7f235a0c7eaea4b0958cd7c2e85238",
+      "jpgBytes": 299285
+    },
+    {
+      "id": "05-audio",
+      "title": "Keep unseen threats out of the soundtrack",
+      "mode": "audio",
+      "seconds": 2.5,
+      "x": 112,
+      "z": 111,
+      "endX": 112,
+      "endZ": 111,
+      "zoom": 32,
+      "endZoom": 32,
+      "capturedFrames": 1,
+      "pngSha256": "b4c417a33e9b5eda56712b74e5fab10392cf8442607c1da55187e04c122e0b9f",
+      "jpgSha256": "d542c6f3983c9a186f8da62af11bcb60c5dce9002c4dc7b30683779369ee2d5f",
+      "jpgBytes": 298754
+    }
+  ],
+  "video": {
+    "file": "total-fog-showcase.mp4",
+    "sha256": "dd8823daf92d5e3902c310fabe869db497380fcf5d97bdfbd659e7353f117621",
+    "seconds": 18.0,
+    "frames": 540,
+    "fps": "30/1",
+    "audio": false
+  },
+  "contactSheetSha256": "9ac38d74a599fa13b93a400eeee7a39449887e54423a418d5e9785481072d806"
+}
