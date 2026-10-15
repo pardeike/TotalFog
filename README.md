@@ -92,8 +92,8 @@ insects.
   Fog reads the explored map and waiting messages from their saves. Try it on a
   copy of your save first.
 - **Built for big colonies:** the sight engine is new and written for speed.
-- **Zombieland:** Total Fog hides zombie effects, warnings and the Symbiant. Some
-  of this needs a Zombieland update that is not on the Workshop yet.
+- **Zombieland:** Total Fog hides zombie effects, warnings and the Symbiant. This
+  needs an up-to-date Zombieland version.
 - **Combat Extended** weapons, turrets and mortars have been tested on 1.6.
 - **Multiplayer** works in local tests on 1.6 but is not fully verified yet.
 
