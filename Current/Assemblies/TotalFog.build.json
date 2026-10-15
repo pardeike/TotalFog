@@ -57,7 +57,7 @@
     "Source/TotalFog/Detours/SectionLayerThingsGeneral.cs": "8c1a8646c415f837d4cf8d56776755f2061555dfd770600765c6af343fa2d9e2",
     "Source/TotalFog/Detours/SectionLayerThingsPowerGrid.cs": "3e5e6fbdb4bbd292fbdb674ff8b6707c76ff63393811ab84cc94eff5f7ef8ebb",
     "Source/TotalFog/Detours/Selector.cs": "0fc875a7c25faa3cbf7ae3a3d1742c385f22c1b1e47733c0fa0643c3ee3ff9a2",
-    "Source/TotalFog/Detours/Verb.cs": "b37a7165b5c27d4812588f9922779e52dc9ec1604414f09acb4d404c48a7a55c",
+    "Source/TotalFog/Detours/Verb.cs": "cf6a85afe5c037437dcc1ad460730359a0eba8ef6b93a4d7cbc3a8082187092c",
     "Source/TotalFog/Mod/DebugFogCommands.cs": "75123af133283a625d72d471d75d69ae78922bd88fffa170efc0a234b0f7e867",
     "Source/TotalFog/Mod/FogDefOf.cs": "4de079616c59dabcde78efd3e0b58b074e012664197dd8fd1a98ead832240190",
     "Source/TotalFog/Mod/FogDefaultsDef.cs": "bfbf6d2394c7c95bce4c8f431d0d6d0407ec3fbf9bd6805458b48daa8d3d1de4",
@@ -128,5 +128,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "bcff16ec3b95618f12b6d9b6c5e74574be377fd8a83843a1bff71dcb7243de40"
+  "dllSha256": "6d943705939ca7aaffa5e42ff2df025284c192b29b7d7845c78518bf19afbcf1"
 }

@@ -25,7 +25,7 @@ local testing do not indicate that a new player build has been released.
 
 ## Watchtowers and cameras
 
-- Add an experimental 3x3 watchtower with one elevated lookout, a timed ladder, configurable sight, optional shooting, rescue and collapse injury.
+- Add a 3x3 watchtower with one elevated lookout, a timed ladder, configurable sight, optional shooting, rescue and collapse injury.
 - Require Complex furniture and heavy ground support. Completed towers block all nine cells; previews remain walkable and use translucent native-style blueprints. New ladders face the player by default.
 - Render placed watchtower blueprints even before construction materials are available.
 - Offer one-, two- and four-hour watches counted from reaching the deck, or drafted holding until undrafted or ordered away. Preserve timers across saves and respect explicit orders, draft transitions and Fire at will.
@@ -56,6 +56,7 @@ local testing do not indicate that a new player build has been released.
 
 ## Integrations and stability
 
+- Check a manned turret's sight from the gun itself, with its crew's full manning range. Previously the check could start one cell off and drop the weapon-range extension; this affects modded direct-fire guns, as vanilla mortars need no line of sight.
 - Apply Combat Extended targeting to each observing faction while preserving native ballistics, failed checks, power/manning sight, mortar blind-cell fire and last-known-cell bursts. Do not track unseen Things during firing.
 - With the updated Zombieland, clip Symbiant bodies and their moving cores by visible cells, permit visible-core inspection with a hidden root, and restrict body-cell targeting by faction sight.
 - With the updated Zombieland, filter source-specific effects, readouts, highlights, warnings and sounds through the optional integration. Keep each mod usable on its own.

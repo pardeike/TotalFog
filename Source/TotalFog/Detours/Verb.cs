@@ -75,6 +75,7 @@ internal static class Verb
             return true;
         }
 
+        var manned = false;
         var compMannable = thing.TryGetComp<CompMannable>();
         if (compMannable != null)
         {
@@ -84,8 +85,10 @@ internal static class Verb
                 return true;
             }
 
+            // The crew looks along the gun: sight starts at the turret's firing
+            // cell and uses the crew's stationary range while manning.
             thing = manningPawn;
-            sourceSq += thing.Position - thing.InteractionCell;
+            manned = true;
         }
 
         if (thing is not Verse.Pawn)
@@ -110,7 +113,8 @@ internal static class Verb
             return true;
         }
 
-        var shouldMove = sourceSq != thing.Position && !thing.Position.AdjacentToCardinal(sourceSq);
+        var shouldMove =
+            !manned && sourceSq != thing.Position && !thing.Position.AdjacentToCardinal(sourceSq);
         var num = Mathf.RoundToInt(
             compFieldOfViewWatcher.CalcPawnSightRange(sourceSq, true, shouldMove)
         );

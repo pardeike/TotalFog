@@ -185,6 +185,30 @@ public sealed class CombatExtendedIntegrationTests : IDisposable
     }
 
     [Fact]
+    public void MannedTurretSightStartsAtTheGunWithStationaryCrew()
+    {
+        var turret = new CeTurret { Faction = Faction.OfPlayer, PositionHeld = new(1, 1) };
+        var sight = new CompSightSource { Range = 0 };
+        var crew = new Pawn
+        {
+            Faction = Faction.OfPlayer,
+            Map = turret.Map,
+            PositionHeld = new(1, 0),
+            // A pawn has no interaction cell; the engine returns a free neighbour.
+            InteractionCellOverride = new(0, 0),
+            Component = new CompFog { FieldOfViewWatcher = sight },
+        };
+        turret.Component = new RimWorld.CompMannable { ManningPawn = crew };
+        turret.Map.Fog.Initialized = true;
+        var verb = new CeVerb { caster = turret };
+        bool result = true;
+        CombatExtendedIntegration.HitCellPostfix(verb, ref result, new(1.5f, 0, 1.5f), new(0, 1));
+        Assert.Equal(new IntVec3(1, 1), sight.LastSource);
+        Assert.False(sight.LastShouldMove);
+        Assert.False(result);
+    }
+
+    [Fact]
     public void UnmannedPlayerTurretsRequireCurrentFactionSight()
     {
         var turret = new RimWorld.Building_Turret { Faction = Faction.OfPlayer };

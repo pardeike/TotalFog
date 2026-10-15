@@ -21,14 +21,18 @@
     <li>CETeam.CombatExtended</li>
     <li>rwmt.Multiplayer</li>
   </loadAfter>
-  <description>Fog of war for RimWorld 1.6 and 1.7. Explore with colonists, animals, cameras and watchtowers. Configure vision, delayed unseen-event notifications, combat music, hidden-source audio and optional Silent Raids in the mod settings. Defaults: map fog and Combat/Anomaly music suppression are on. Hidden-source audio checks and delayed unseen-event notifications are off; the Wildlife tab remains available. Enable those information settings for stricter fog. Silent Raids, message discarding and hidden-source muting are optional and off by default. Existing saved settings are preserved.
+  <description>You only know what your colonists can see.
 
-Early version: broader compatibility is still being tested. Enable Harmony and use this instead of other Real Fog of War versions.
+Real fog of war for RimWorld: the map stays dark until someone looks, and explored land turns grey when nobody is watching. Raids come out of the dark, and a noise at night might be anything.
 
-Feedback and support: https://discord.gg/G4r84eN7w6
-Source and current testing status: https://github.com/pardeike/TotalFog
+Build surveillance cameras, a watch telescope and watchtowers to see farther. Four settings pages let you choose how strict it gets, from light atmosphere to hard survival with hidden sounds, delayed news, silent raids and enemies that only shoot at what they see.
 
-Independently maintained by Andreas Pardeike, based on Real Fog of War by Luca De Petrillo and the NWN continuation maintained by Mlie. Licensed under Apache 2.0; original credits are retained in NOTICE.md.</description>
+Needs Harmony. Turn off other Real Fog of War versions; Total Fog takes over their explored maps.
+
+Feedback: https://discord.gg/G4r84eN7w6
+Source: https://github.com/pardeike/TotalFog
+
+Based on Real Fog of War by Luca De Petrillo and its NWN continuation by Mlie. Apache License 2.0.</description>
   <modVersion IgnoreIfNoMatchingField="True">0.1.0</modVersion>
   <incompatibleWith>
     <li>Mlie.NWNRealFogOfWar</li>

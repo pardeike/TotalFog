@@ -89,7 +89,8 @@ namespace Verse
         public Map MapHeld => Map;
         public IntVec3 PositionHeld;
         public IntVec3 Position => PositionHeld;
-        public IntVec3 InteractionCell => PositionHeld;
+        public IntVec3? InteractionCellOverride;
+        public IntVec3 InteractionCell => InteractionCellOverride ?? PositionHeld;
         public int OverlayCalls;
 
         public void DrawGUIOverlay() => OverlayCalls++;
@@ -780,11 +781,13 @@ namespace TotalFog
     {
         public float Range;
         public Verse.IntVec3 LastSource;
+        public bool LastShouldMove;
         public int Queries;
 
         public float CalcPawnSightRange(Verse.IntVec3 cell, bool forTargeting, bool shouldMove)
         {
             LastSource = cell;
+            LastShouldMove = shouldMove;
             Queries++;
             return Range;
         }
