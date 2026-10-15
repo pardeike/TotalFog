@@ -4,17 +4,21 @@ These files are the reusable media for Total Fog's Workshop page. The filenames
 stay the same when the media is refreshed. Use a `main` link for the latest
 version, or replace `main` with a commit SHA to keep a particular version.
 
-[View all five screenshots](contact-sheet.png) ·
-[Download the 18-second video](total-fog-showcase.mp4) ·
+[View all nine screenshots](contact-sheet.png) ·
+[Download the 25-second video](total-fog-showcase.mp4) ·
 [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3820003593)
 
-![Five views of Total Fog](contact-sheet.png)
+![Nine views of Total Fog](contact-sheet.png)
 
 | View | Original capture | Workshop copy |
 | --- | --- | --- |
-| A wall corner hiding an ambush | [PNG](01-exploration.png) | [JPEG](01-exploration.jpg) |
+| A small visible area while scouting | [PNG](01-exploration.png) | [JPEG](01-exploration.jpg) |
 | A lookout revealing threats beyond the walls | [PNG](02-watchtower.png) | [JPEG](02-watchtower.jpg) |
-| Advancing around the corner into a firefight | [PNG](03-colony.png) | [JPEG](03-colony.jpg) |
+| A wall corner hiding an ambush | [PNG](03-colony.png) | [JPEG](03-colony.jpg) |
+| Advancing reveals the next threat | [PNG](09-advance.png) | [JPEG](09-advance.jpg) |
+| Retreating leaves remembered land under fog | [PNG](06-retreat.png) | [JPEG](06-retreat.jpg) |
+| Descending restores blind spots | [PNG](07-descend.png) | [JPEG](07-descend.jpg) |
+| A doorway reveals the room beyond | [PNG](08-doorway.png) | [JPEG](08-doorway.jpg) |
 | Vision settings | [PNG](04-vision.png) | [JPEG](04-vision.jpg) |
 | Audio settings | [PNG](05-audio.png) | [JPEG](05-audio.jpg) |
 
@@ -39,7 +43,7 @@ Steam signed in and RimWorld stopped:
 ./scripts/mod showcase
 ```
 
-This loads the checked-in fictional colony, records the five views in
+This loads the checked-in fictional colony, records the nine views in
 [recipe.json](recipe.json), encodes the video and verifies the finished files.
 It uses a separate GABS profile, `total-fog-showcase`, and savedata under
 `artifacts/ShowcaseUserData`. It does not load or overwrite a player's save or
@@ -50,9 +54,9 @@ its own game when finished.
 | Command | Purpose |
 | --- | --- |
 | `./scripts/mod showcase` | Replace the complete finished bundle after successful capture and encoding |
-| `./scripts/mod showcase stills` | Preview the five views in `artifacts/showcase/output`, leaving this bundle intact |
+| `./scripts/mod showcase stills` | Preview the nine views in `artifacts/showcase/output`, leaving this bundle intact |
 | `./scripts/mod showcase verify` | Check the finished files against their manifest without launching a game |
-| `./scripts/mod showcase publish` | Upload these five JPEGs and the optional YouTube preview to the owner's Workshop gallery; verify the native readback |
+| `./scripts/mod showcase publish` | Upload the recipe's JPEGs and optional YouTube preview to the owner's Workshop gallery; verify the native readback |
 | `./scripts/mod showcase stage` | Deliberately regenerate the fictional reference colony; normally keep the existing save |
 
 The publishing command updates images with matching filenames and appends any
@@ -60,6 +64,8 @@ missing images. It preserves unrelated gallery entries, the primary preview and
 the mod's content and metadata. It writes `workshop-gallery.json` here after a
 successful upload and readback. Steam's video preview API takes a YouTube ID;
 this workflow produces a local MP4 and does not upload it to a video service.
+Before the next approved upload, that gallery receipt may refer to an earlier
+manifest than the current local draft.
 After an approved unlisted YouTube upload, keep `youtube.json` in this folder
 with its `videoId`, `url`, `title`, `visibility: "unlisted"` and `sourceSha256`
 matching the MP4. The next `publish` adds that video to Steam, or replaces our
@@ -78,32 +84,39 @@ directory is a symlink. An existing unrelated GABS profile is preserved.
 - The actual game viewport is **1920×1080, windowed**, with **UI scale 1.0**.
   The companion verifies the resolution, fullscreen state and logical UI size
   before every screenshot. It never resizes a native capture afterward.
-- The recipe pins camera positions, zooms, an 18-cell sight preset, remembered
-  fog opacity 120 and English
-  settings pages. The sight preset is chosen for these scenes; it is not the
+- The recipe pins camera positions, zooms, a 10-cell sight preset, remembered
+  fog opacity 180 and English settings pages. Other colonists stay indoors.
+  The tower stands inside the perimeter with a one-cell gap from the southern
+  and eastern walls. Its normal 2x sight multiplier gives a 20-cell view.
+  The scout is unarmed; combat scenes use machine pistols. Aiming can extend
+  sight to weapon range, so a long-range rifle would overwhelm the small preset.
+  The sight preset is chosen for these scenes; it is not the
   mod's default sight range.
 - [reference.rws.gz](reference.rws.gz) holds the fictional colony, terrain,
   weather, local summer noon and native fog memory. Every shot reloads it.
   The staging seed is 150026. Initial remembered land came
   from actual colonist observations during setup.
-- Moving sections advance two native simulation ticks per captured frame.
-  At 30 fps this gives normal simulation speed, independent of capture time.
+- Moving sections advance four native simulation ticks per captured frame.
+  At 30 fps this gives 2x playback, independent of capture time. The movie labels
+  that speed. Each gameplay section lasts three seconds.
   After each step the capture tool refreshes the native pawn draw interpolator,
   which otherwise retains an old position while paused. This follows the
   current native path position and leaves the gameplay and tower drawing intact.
-  The settings pages hold still for 2.5 seconds each. Plant wind sway, tutorial
+  The settings pages hold still for two seconds each. Plant wind sway, tutorial
   overlays and debug counters are disabled for photography.
-- The video is **18 seconds**, **540 frames**, H.264/yuv420p, with no audio.
-  It shows a corner ambush, the watchtower revealing its surroundings, a
-  firefight after advancing and two settings
-  pages. Titles are added during encoding; the game rendering stays native.
+- The video is **25 seconds**, **750 frames**, H.264/yuv420p, with no audio.
+  Seven gameplay sections show scouting, rounding a corner, advancing into
+  combat, retreating, climbing, descending and a doorway revealing a room.
+  Two settings pages finish the cut. Titles are added during encoding; the
+  game rendering stays native.
 - PNGs are lossless masters. JPEGs are the same 1920×1080 images encoded below
   Steam's 1 MB gallery limit. The contact sheet is a labelled review board.
 
 [manifest.json](manifest.json) records actual engine and mod versions, loaded
 mods, viewport, gameplay and companion hashes, tick assertions and file hashes.
 It also records the visible and hidden raiders and the colonists' logical and
-drawn positions at each chosen still frame. The enemies, walls, cover, weapon
+drawn positions at the first, chosen and last frames. It records visible map
+cells in the camera rectangle. The enemies, walls, cover, weapon
 jobs and line-of-sight changes are native game objects and behavior.
 It describes the captures, not general gameplay or performance acceptance.
 The reference save and fixed ticks make conditions comparable; engine, GPU and

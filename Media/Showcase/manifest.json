@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "recipeSha256": "3829fc5ac95e62159580fcfa8bec879ccf0bd053f384381768ebcc178aa92ac9",
-  "referenceSaveSha256": "47d05c3b29481d66e3225fa3d1bcc44daff4d38b3a1972a30222b5ae6a37136b",
+  "recipeSha256": "24b16df683bedcbcd6ec0529e2d9777e8c85d6aefd1cac1b92da727e3a73877a",
+  "referenceSaveSha256": "4478f436570a715264e6d3805381435b9ecb9decc83929a20272cda61d24df0d",
   "gameplaySha256": "790a8548387a3eaf30ed68ead5fbb269ee357f3504c9bac8952741940f334321",
-  "companionSha256": "e4312f2485f24c2f98178ce680c73591801e3e70af362159747daa72b2815d7d",
+  "companionSha256": "1804d332597bda0a2714e12887184528d7bb3eb13023d6d6859a915a08cef11d",
   "gameVersion": "1.7.4979 rev109",
   "modVersion": "1.0.0",
   "viewport": {
@@ -12,6 +12,7 @@
     "uiScale": 1.0,
     "fps": 30
   },
+  "playbackSpeed": 2,
   "environment": {
     "activeMods": [
       "brrainz.harmony_steam",
@@ -24,314 +25,1477 @@
     "gameplayMvid": "c89a9a9b-7ecd-4734-8d2b-04359427aba7",
     "graphicsDevice": "Apple M4 Max",
     "height": 1080,
-    "memoryOpacity": 120,
+    "memoryOpacity": 180,
+    "playbackSpeed": 2,
     "seed": 150026,
     "sightSnapshots": [
       {
+        "cellsInView": 1792,
         "colonists": [
           {
-            "drawX": 123.5,
-            "drawZ": 97.5,
+            "drawX": 122.5,
+            "drawZ": 101.5,
             "job": "Wait",
             "name": "Ada",
-            "x": 123,
-            "z": 97
+            "x": 122,
+            "z": 101
           },
           {
-            "drawX": 140.5489,
-            "drawZ": 106.45109,
+            "drawX": 163.70242,
+            "drawZ": 142.5,
             "job": "Goto",
             "name": "Bea",
-            "x": 140,
-            "z": 106
+            "x": 163,
+            "z": 142
           },
           {
-            "drawX": 136.5,
-            "drawZ": 100.5,
-            "job": "AttackStatic",
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
             "name": "Cam",
-            "x": 136,
-            "z": 100
+            "x": 105,
+            "z": 122
           },
           {
             "drawX": 108.5,
-            "drawZ": 111.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Dee",
             "x": 108,
-            "z": 111
+            "z": 122
           }
         ],
         "enemies": [
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Vex",
-            "visible": true,
-            "x": 149,
+            "visible": false,
+            "x": 140,
             "z": 95
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Rook",
             "visible": false,
-            "x": 152,
+            "x": 140,
             "z": 110
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Ash",
             "visible": false,
-            "x": 154,
+            "x": 142,
             "z": 115
           }
         ],
         "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 501,
+        "seenInView": 317,
         "shot": "01-exploration"
       },
       {
+        "cellsInView": 1792,
         "colonists": [
           {
-            "drawX": 123.5,
-            "drawZ": 100.5,
-            "job": "TotalFog_WatchtowerWatch",
-            "name": "Ada",
-            "x": 123,
-            "z": 100
-          },
-          {
-            "drawX": 140.5,
-            "drawZ": 106.5,
-            "job": "Wait_Combat",
-            "name": "Bea",
-            "x": 140,
-            "z": 106
-          },
-          {
-            "drawX": 136.5,
-            "drawZ": 100.5,
-            "job": "Wait",
-            "name": "Cam",
-            "x": 136,
-            "z": 100
-          },
-          {
-            "drawX": 108.5,
-            "drawZ": 111.5,
-            "job": "Wait",
-            "name": "Dee",
-            "x": 108,
-            "z": 111
-          }
-        ],
-        "enemies": [
-          {
-            "name": "Vex",
-            "visible": true,
-            "x": 149,
-            "z": 95
-          },
-          {
-            "name": "Rook",
-            "visible": true,
-            "x": 152,
-            "z": 110
-          },
-          {
-            "name": "Ash",
-            "visible": true,
-            "x": 154,
-            "z": 115
-          }
-        ],
-        "frame": 80,
-        "shot": "02-watchtower"
-      },
-      {
-        "colonists": [
-          {
-            "drawX": 123.5,
-            "drawZ": 97.5,
-            "job": "Wait",
-            "name": "Ada",
-            "x": 123,
-            "z": 97
-          },
-          {
-            "drawX": 147.5,
+            "drawX": 122.5,
             "drawZ": 101.5,
-            "job": "Wait_Combat",
-            "name": "Bea",
-            "x": 147,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
             "z": 101
           },
           {
+            "drawX": 175.48943,
+            "drawZ": 141.5,
+            "job": "Goto",
+            "name": "Bea",
+            "x": 174,
+            "z": 141
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
             "drawX": 108.5,
-            "drawZ": 111.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Dee",
             "x": 108,
-            "z": 111
+            "z": 122
           }
         ],
         "enemies": [
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Vex",
-            "visible": true,
-            "x": 149,
-            "z": 94
+            "visible": false,
+            "x": 140,
+            "z": 95
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Rook",
-            "visible": true,
-            "x": 152,
+            "visible": false,
+            "x": 140,
             "z": 110
           },
           {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 45,
+        "hearingCues": 0,
+        "seenCells": 501,
+        "seenInView": 317,
+        "shot": "01-exploration"
+      },
+      {
+        "cellsInView": 1792,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 184.5,
+            "drawZ": 142.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 184,
+            "z": 142
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 501,
+        "seenInView": 317,
+        "shot": "01-exploration"
+      },
+      {
+        "cellsInView": 1400,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.64903,
+            "drawZ": 106.350975,
+            "job": "Goto",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 378,
+        "seenInView": 264,
+        "shot": "03-colony"
+      },
+      {
+        "cellsInView": 1400,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 138.5,
+            "drawZ": 101.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 138,
+            "z": 101
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
             "name": "Ash",
             "visible": true,
-            "x": 154,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 1244,
+        "seenInView": 793,
+        "shot": "03-colony"
+      },
+      {
+        "cellsInView": 1400,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 138.5,
+            "drawZ": 101.70242,
+            "job": "Goto",
+            "name": "Bea",
+            "x": 138,
+            "z": 101
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 479,
+        "seenInView": 323,
+        "shot": "09-advance"
+      },
+      {
+        "cellsInView": 1400,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 138.5,
+            "drawZ": 110.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 138,
+            "z": 110
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Goto",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": true,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 45,
+        "hearingCues": 0,
+        "seenCells": 895,
+        "seenInView": 689,
+        "shot": "09-advance"
+      },
+      {
+        "cellsInView": 1400,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 138.33084,
+            "drawZ": 110.516815,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 138,
+            "z": 110
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": true,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 895,
+        "seenInView": 689,
+        "shot": "09-advance"
+      },
+      {
+        "cellsInView": 1560,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 138.35098,
+            "drawZ": 110.350975,
+            "job": "Goto",
+            "name": "Bea",
+            "x": 138,
+            "z": 110
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": true,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 429,
+        "seenInView": 325,
+        "shot": "06-retreat"
+      },
+      {
+        "cellsInView": 1560,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 85,
+        "hearingCues": 0,
+        "seenCells": 723,
+        "seenInView": 455,
+        "shot": "06-retreat"
+      },
+      {
+        "cellsInView": 1560,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 723,
+        "seenInView": 455,
+        "shot": "06-retreat"
+      },
+      {
+        "cellsInView": 1008,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "TotalFog_WatchtowerWatch",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 379,
+        "seenInView": 246,
+        "shot": "02-watchtower"
+      },
+      {
+        "cellsInView": 1008,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 103.5,
+            "job": "TotalFog_WatchtowerWatch",
+            "name": "Ada",
+            "x": 122,
+            "z": 103
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
             "z": 115
           }
         ],
         "frame": 50,
-        "shot": "03-colony"
+        "hearingCues": 0,
+        "seenCells": 1298,
+        "seenInView": 896,
+        "shot": "02-watchtower"
       },
       {
+        "cellsInView": 1008,
         "colonists": [
           {
-            "drawX": 123.5,
-            "drawZ": 97.5,
-            "job": "Wait",
+            "drawX": 122.5,
+            "drawZ": 103.5,
+            "job": "TotalFog_WatchtowerWatch",
             "name": "Ada",
-            "x": 123,
-            "z": 97
+            "x": 122,
+            "z": 103
           },
           {
-            "drawX": 140.5,
+            "drawX": 131.5,
             "drawZ": 106.5,
-            "job": "Wait_Combat",
+            "job": "Wait",
             "name": "Bea",
-            "x": 140,
+            "x": 131,
             "z": 106
           },
           {
-            "drawX": 136.5,
-            "drawZ": 100.5,
+            "drawX": 105.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Cam",
-            "x": 136,
-            "z": 100
+            "x": 105,
+            "z": 122
           },
           {
             "drawX": 108.5,
-            "drawZ": 111.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Dee",
             "x": 108,
-            "z": 111
+            "z": 122
           }
         ],
         "enemies": [
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Vex",
             "visible": true,
-            "x": 149,
+            "x": 140,
             "z": 95
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Rook",
-            "visible": false,
-            "x": 152,
+            "visible": true,
+            "x": 140,
             "z": 110
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Ash",
             "visible": false,
-            "x": 154,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 1298,
+        "seenInView": 896,
+        "shot": "02-watchtower"
+      },
+      {
+        "cellsInView": 3772,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 103.5,
+            "job": "TotalFog_WatchtowerWatch",
+            "name": "Ada",
+            "x": 122,
+            "z": 103
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": true,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": true,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
             "z": 115
           }
         ],
         "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 1298,
+        "seenInView": 1297,
+        "shot": "07-descend"
+      },
+      {
+        "cellsInView": 3772,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait_Combat",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 569,
+        "seenInView": 569,
+        "shot": "07-descend"
+      },
+      {
+        "cellsInView": 1008,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 118.5,
+            "drawZ": 113.70242,
+            "job": "Goto",
+            "name": "Bea",
+            "x": 118,
+            "z": 113
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 381,
+        "seenInView": 312,
+        "shot": "08-doorway"
+      },
+      {
+        "cellsInView": 1050,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 118.5,
+            "drawZ": 122.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 118,
+            "z": 122
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 45,
+        "hearingCues": 0,
+        "seenCells": 374,
+        "seenInView": 321,
+        "shot": "08-doorway"
+      },
+      {
+        "cellsInView": 1008,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 118.5,
+            "drawZ": 122.5,
+            "job": "Wait_Combat",
+            "name": "Bea",
+            "x": 118,
+            "z": 122
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 89,
+        "hearingCues": 0,
+        "seenCells": 340,
+        "seenInView": 288,
+        "shot": "08-doorway"
+      },
+      {
+        "cellsInView": 2040,
+        "colonists": [
+          {
+            "drawX": 122.5,
+            "drawZ": 101.5,
+            "job": "Wait",
+            "name": "Ada",
+            "x": 122,
+            "z": 101
+          },
+          {
+            "drawX": 131.5,
+            "drawZ": 106.5,
+            "job": "Wait",
+            "name": "Bea",
+            "x": 131,
+            "z": 106
+          },
+          {
+            "drawX": 105.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Cam",
+            "x": 105,
+            "z": 122
+          },
+          {
+            "drawX": 108.5,
+            "drawZ": 122.5,
+            "job": "Wait",
+            "name": "Dee",
+            "x": 108,
+            "z": 122
+          }
+        ],
+        "enemies": [
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Vex",
+            "visible": false,
+            "x": 140,
+            "z": 95
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Rook",
+            "visible": false,
+            "x": 140,
+            "z": 110
+          },
+          {
+            "job": "Wait",
+            "moving": false,
+            "name": "Ash",
+            "visible": false,
+            "x": 142,
+            "z": 115
+          }
+        ],
+        "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 378,
+        "seenInView": 318,
         "shot": "04-vision"
       },
       {
+        "cellsInView": 2040,
         "colonists": [
           {
-            "drawX": 123.5,
-            "drawZ": 97.5,
+            "drawX": 122.5,
+            "drawZ": 101.5,
             "job": "Wait",
             "name": "Ada",
-            "x": 123,
-            "z": 97
+            "x": 122,
+            "z": 101
           },
           {
-            "drawX": 140.5,
+            "drawX": 131.5,
             "drawZ": 106.5,
-            "job": "Wait_Combat",
+            "job": "Wait",
             "name": "Bea",
-            "x": 140,
+            "x": 131,
             "z": 106
           },
           {
-            "drawX": 136.5,
-            "drawZ": 100.5,
+            "drawX": 105.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Cam",
-            "x": 136,
-            "z": 100
+            "x": 105,
+            "z": 122
           },
           {
             "drawX": 108.5,
-            "drawZ": 111.5,
+            "drawZ": 122.5,
             "job": "Wait",
             "name": "Dee",
             "x": 108,
-            "z": 111
+            "z": 122
           }
         ],
         "enemies": [
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Vex",
-            "visible": true,
-            "x": 149,
+            "visible": false,
+            "x": 140,
             "z": 95
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Rook",
             "visible": false,
-            "x": 152,
+            "x": 140,
             "z": 110
           },
           {
+            "job": "Wait",
+            "moving": false,
             "name": "Ash",
             "visible": false,
-            "x": 154,
+            "x": 142,
             "z": 115
           }
         ],
         "frame": 0,
+        "hearingCues": 0,
+        "seenCells": 378,
+        "seenInView": 318,
         "shot": "05-audio"
       }
     ],
-    "ticksPerVideoFrame": 2,
+    "ticksPerVideoFrame": 4,
     "uiScale": 1,
-    "visionRange": 18,
+    "visionRange": 10,
     "width": 1920
   },
   "assertions": [
     {
-      "actual": 300,
-      "expected": 300,
+      "actual": 360,
+      "expected": 360,
       "name": "01-exploration fixed simulation interval",
       "success": true
     },
     {
-      "actual": 240,
-      "expected": 240,
+      "actual": 360,
+      "expected": 360,
+      "name": "03-colony fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 360,
+      "expected": 360,
+      "name": "09-advance fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 360,
+      "expected": 360,
+      "name": "06-retreat fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 360,
+      "expected": 360,
       "name": "02-watchtower fixed simulation interval",
       "success": true
     },
     {
-      "actual": 240,
-      "expected": 240,
-      "name": "03-colony fixed simulation interval",
+      "actual": 360,
+      "expected": 360,
+      "name": "07-descend fixed simulation interval",
+      "success": true
+    },
+    {
+      "actual": 360,
+      "expected": 360,
+      "name": "08-doorway fixed simulation interval",
       "success": true
     },
     {
@@ -350,97 +1514,174 @@
   "shots": [
     {
       "id": "01-exploration",
-      "title": "A wall can hide an ambush",
-      "mode": "corner",
-      "seconds": 5,
-      "x": 145,
-      "z": 108,
-      "endX": 148,
-      "endZ": 107,
-      "zoom": 19,
-      "endZoom": 19,
-      "stillFrame": 0,
-      "capturedFrames": 150,
-      "pngSha256": "67aa692896d67ccc009e8f1434430f42f903da07d90bdbaf379161cd7360fae9",
-      "jpgSha256": "ec91d8aac077760f3e5d9baaec05ec0a41fe276f313aea1acbe64d682c98bed7",
-      "jpgBytes": 427924
-    },
-    {
-      "id": "02-watchtower",
-      "title": "Climb above the walls. See farther.",
-      "mode": "tower",
-      "seconds": 4,
-      "x": 130,
-      "z": 106,
-      "endX": 130,
-      "endZ": 106,
-      "zoom": 23,
-      "endZoom": 23,
-      "stillFrame": 80,
-      "capturedFrames": 120,
-      "pngSha256": "862ceec191dec3d4f7f6ce73e96d29187f1138f3a025fa0e7209b9a95fe32482",
-      "jpgSha256": "ee90dc7814b5e7ca75c6c029443060a5c7f62de37397478d79c3d637d8ed1cfc",
-      "jpgBytes": 442998
+      "title": "A small slice of a dangerous world",
+      "mode": "scout",
+      "seconds": 3,
+      "x": 164,
+      "z": 142,
+      "endX": 182,
+      "endZ": 142,
+      "zoom": 15,
+      "endZoom": 15,
+      "stillFrame": 45,
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "5bf61ac331c13aeb73a5f659e13b35631c8d71cc9d900f1957ce913f652aa3e0",
+      "jpgSha256": "23225264e917bd2366f5d909a4e1ffa058e9cac9fdec4964c8cb9fe83febe34c",
+      "jpgBytes": 294600
     },
     {
       "id": "03-colony",
-      "title": "Advance carefully. Reveal the threat.",
-      "mode": "combat",
-      "seconds": 4,
-      "x": 149,
-      "z": 106,
-      "endX": 149,
-      "endZ": 106,
-      "zoom": 17,
-      "endZoom": 17,
+      "title": "Walls leave blind corners",
+      "mode": "corner",
+      "seconds": 3,
+      "x": 135,
+      "z": 108,
+      "endX": 135,
+      "endZ": 108,
+      "zoom": 13,
+      "endZoom": 13,
+      "stillFrame": 0,
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "04c8213ae8016b3bad1162f44793b38f5d3b7a24be0bd26989aa81fde03543cd",
+      "jpgSha256": "e1c8c66e5bf547d14c4271742a322ddbf54cd112e55aed77053b01cced546f92",
+      "jpgBytes": 251032
+    },
+    {
+      "id": "09-advance",
+      "title": "Move forward. Find the next threat.",
+      "mode": "advance",
+      "seconds": 3,
+      "x": 138,
+      "z": 108,
+      "endX": 138,
+      "endZ": 108,
+      "zoom": 13,
+      "endZoom": 13,
+      "stillFrame": 45,
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "05faa64850f16e39d4f630f6ddd9d948a3794ed0ba714615fabae36ca2b4712b",
+      "jpgSha256": "1cf59800692a937d37b3b66b00c0e6641152d2bda2b985c059043aa877562c68",
+      "jpgBytes": 383444
+    },
+    {
+      "id": "06-retreat",
+      "title": "Leave, and the fog returns",
+      "mode": "retreat",
+      "seconds": 3,
+      "x": 135,
+      "z": 108,
+      "endX": 135,
+      "endZ": 108,
+      "zoom": 14,
+      "endZoom": 14,
+      "stillFrame": 85,
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "5e9afe1741b353bb2ef918468ebc9670491fa3ff32431625036ac30573f31b78",
+      "jpgSha256": "116b2520bc0bc9e535826026fe4b732a9697d24d8884bf4c58d0859a9d12b05b",
+      "jpgBytes": 271173
+    },
+    {
+      "id": "02-watchtower",
+      "title": "Climb above the wall",
+      "mode": "tower",
+      "seconds": 3,
+      "x": 123,
+      "z": 104,
+      "endX": 123,
+      "endZ": 104,
+      "zoom": 10,
+      "endZoom": 10,
       "stillFrame": 50,
-      "capturedFrames": 120,
-      "pngSha256": "2db156eec4f66a5ee5e5646ab3467104127d45016041c51bb7329b8e66a8e09b",
-      "jpgSha256": "ad5ec3e54e0ab7109cbd80fa8040848a26786a1622d0b61083ca7a4f280a0aa8",
-      "jpgBytes": 505023
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "0767399f5551153f2b1df0c8a18e3445c60e299be5e760b2dbfe921b15ac2cea",
+      "jpgSha256": "959453744b350285c0a7aa9564c80e07f6e1b457cbbf56be821ac2f7072a0477",
+      "jpgBytes": 576457
+    },
+    {
+      "id": "07-descend",
+      "title": "Climb down. Lose that view.",
+      "mode": "tower-down",
+      "seconds": 3,
+      "x": 132,
+      "z": 107,
+      "endX": 132,
+      "endZ": 107,
+      "zoom": 22,
+      "endZoom": 22,
+      "stillFrame": 0,
+      "warmupTicks": 150,
+      "capturedFrames": 90,
+      "pngSha256": "8013dcd7a07b3d9e2db86f8fab94a4eb0d2fedfb43477e1a002b29275d9816c1",
+      "jpgSha256": "fec5be29937ec89ade82cde7d9e1702fdba14d55eb52c67589680e00994ed5a5",
+      "jpgBytes": 296968
+    },
+    {
+      "id": "08-doorway",
+      "title": "A doorway reveals the room beyond",
+      "mode": "doorway",
+      "seconds": 3,
+      "x": 118,
+      "z": 118,
+      "endX": 118,
+      "endZ": 120,
+      "zoom": 11,
+      "endZoom": 11,
+      "stillFrame": 45,
+      "warmupTicks": 30,
+      "capturedFrames": 90,
+      "pngSha256": "ed69d323bde9ec924d6656c7e6c25c943ea1aeb1cfdac12543f43a97cce1cf9a",
+      "jpgSha256": "bc130d166a6a626a67af9986ea8ddcda5e062472511fbe9eee24b4dba41479b7",
+      "jpgBytes": 272396
     },
     {
       "id": "04-vision",
-      "title": "Set the sight range for your game",
+      "title": "Choose how little you can see",
       "mode": "vision",
-      "seconds": 2.5,
-      "x": 140,
+      "seconds": 2,
+      "x": 135,
       "z": 108,
-      "endX": 140,
+      "endX": 135,
       "endZ": 108,
-      "zoom": 23,
-      "endZoom": 23,
+      "zoom": 16,
+      "endZoom": 16,
       "stillFrame": 0,
+      "warmupTicks": 30,
       "capturedFrames": 1,
-      "pngSha256": "0729ef276e47dc52fd200ec2a6b061b52d608cb9fb56093c91698d1569701097",
-      "jpgSha256": "626e441e85fcab67cbb1ba8b80dd15422cafdc47a88dc3af48c1406e6df768f1",
-      "jpgBytes": 325535
+      "pngSha256": "3d7ee21f600d5c7b6f9166b5f9aeb44fc4dd5e93fe30aeb9e78bd4488ff3d4b3",
+      "jpgSha256": "51427ddc858969ecc10954c4ff4d0b5834c00a664e5532402ef16143286a4608",
+      "jpgBytes": 219091
     },
     {
       "id": "05-audio",
-      "title": "Keep unseen threats out of the soundtrack",
+      "title": "Keep hidden threats out of the soundtrack",
       "mode": "audio",
-      "seconds": 2.5,
-      "x": 140,
+      "seconds": 2,
+      "x": 135,
       "z": 108,
-      "endX": 140,
+      "endX": 135,
       "endZ": 108,
-      "zoom": 23,
-      "endZoom": 23,
+      "zoom": 16,
+      "endZoom": 16,
       "stillFrame": 0,
+      "warmupTicks": 30,
       "capturedFrames": 1,
-      "pngSha256": "5b6c4b32966d2ad6359432fb84c7994070c8ce40ee58c91932901c5e6b99d844",
-      "jpgSha256": "ec6bd70857fff052550e5b39e4be6dc65c551eaa3723fe1c1f66b1db6642c358",
-      "jpgBytes": 324902
+      "pngSha256": "61fed004903f546c52148fa72868d7797d4e0b8fc300c24bb503c8ace033c179",
+      "jpgSha256": "893d7ff4d44ffbcf163899be0f0d46c1d1457b2f27eec3ac32f8e027ec8bcbae",
+      "jpgBytes": 218740
     }
   ],
   "video": {
     "file": "total-fog-showcase.mp4",
-    "sha256": "27ab5201f1e655f566aa638629220a8a0347824a4060e11db97989909e66d838",
-    "seconds": 18.0,
-    "frames": 540,
+    "sha256": "898e6ed4a11651da76a699f2054c2c1b04d671108e7c87c561e2f09368429cba",
+    "seconds": 25.0,
+    "frames": 750,
     "fps": "30/1",
     "audio": false
   },
-  "contactSheetSha256": "9b4ad9b6d808478259d2dfd0459a02ceba8b84fab112698fd9396536d852f5d8"
+  "contactSheetSha256": "f3929c2b9dda00cc18d6802be78d2a1523830f8e6a2a965430c5352d25613f1e"
 }

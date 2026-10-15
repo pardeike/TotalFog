@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 recipe = json.loads(Path(sys.argv[1]).read_text())
 output, work = map(Path, sys.argv[2:4])
-board = Image.new("RGB", (1920, 840), "#171b20")
+board = Image.new("RGB", (1920, 420 * ((len(recipe["shots"]) + 2) // 3)), "#171b20")
 font = ImageFont.load_default(size=21)
 large = ImageFont.load_default(size=32)
 for i, shot in enumerate(recipe["shots"]):
@@ -20,5 +20,14 @@ for i, shot in enumerate(recipe["shots"]):
     width = draw.textlength(shot["title"], font=large) + 36
     draw.rounded_rectangle((24, 108, 24 + width, 168), radius=7, fill=(15, 20, 25, 224))
     draw.text((42, 123), shot["title"], font=large, fill="white")
+    if shot["mode"] not in ["vision", "audio"]:
+        draw.text(
+            (recipe["width"] - 240, 124),
+            "2x playback",
+            font=large,
+            fill="white",
+            stroke_width=2,
+            stroke_fill="black",
+        )
     title.save(work / (shot["id"] + "-title.png"))
 board.save(output / "contact-sheet.png")

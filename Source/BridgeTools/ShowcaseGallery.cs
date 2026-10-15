@@ -61,10 +61,13 @@ public sealed class ShowcaseGallery
         );
         if (
             manifest.shots == null
-            || manifest.shots.Length != 5
-            || manifest.shots.Select(s => s.id).Distinct().Count() != 5
+            || manifest.shots.Length < 1
+            || manifest.shots.Length > 12
+            || manifest.shots.Select(s => s.id).Distinct().Count() != manifest.shots.Length
         )
-            throw new ArgumentException("Use the five-image showcase manifest.");
+            throw new ArgumentException(
+                "Use a showcase manifest with one to twelve unique images."
+            );
         var files = manifest
             .shots.OrderBy(s =>
                 s.id == "03-colony" ? 0

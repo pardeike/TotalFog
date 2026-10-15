@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce Total Fog's native Workshop screenshots and 18-second showcase."""
+"""Reproduce Total Fog's native Workshop screenshots and short film."""
 
 from pathlib import Path
 import argparse
@@ -209,6 +209,7 @@ def assemble(recipe, proof, stills):
         "gameVersion": proof["gameVersion"],
         "modVersion": proof["modVersion"],
         "viewport": {k: recipe[k] for k in ["width", "height", "uiScale", "fps"]},
+        "playbackSpeed": recipe["playbackSpeed"],
         "environment": proof["environment"]["details"],
         "assertions": proof["assertions"],
         "shots": [],
@@ -368,8 +369,17 @@ def assemble(recipe, proof, stills):
     # Preview runs and failed encoding must not replace the published bundle.
     # Promote a complete checked set, with its manifest last.
     if not stills:
-        for path in sorted(output.iterdir(), key=lambda p: p.name == "manifest.json"):
-            shutil.copy2(path, MEDIA / path.name)
+        prior_path = MEDIA / "manifest.json"
+        prior = json.loads(prior_path.read_text()) if prior_path.exists() else {"shots": []}
+        current_ids = {s["id"] for s in recipe["shots"]}
+        for path in output.iterdir():
+            if path.name != "manifest.json":
+                shutil.copy2(path, MEDIA / path.name)
+        for shot in prior["shots"]:
+            if shot["id"] not in current_ids and re.fullmatch(r"[0-9]{2}-[a-z0-9-]+", shot["id"]):
+                for extension in ["png", "jpg"]:
+                    (MEDIA / (shot["id"] + "." + extension)).unlink(missing_ok=True)
+        shutil.copy2(output / "manifest.json", prior_path)
 
 
 def main():

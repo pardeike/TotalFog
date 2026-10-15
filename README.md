@@ -13,7 +13,7 @@ Total Fog runs on RimWorld 1.6 and 1.7. Questions, ideas and bug reports are
 welcome on the [Brrainz Discord](https://discord.gg/G4r84eN7w6) or as
 [GitHub issues](https://github.com/pardeike/TotalFog/issues).
 
-[In-game screenshots and an 18-second video](Media/Showcase/README.md).
+[In-game screenshots and a short video](Media/Showcase/README.md).
 
 ## What it does
 
