@@ -17,9 +17,22 @@ for i, shot in enumerate(recipe["shots"]):
     ImageDraw.Draw(board).text((x + 12, y + 374), shot["title"], font=font, fill="white")
     title = Image.new("RGBA", (recipe["width"], recipe["height"]))
     draw = ImageDraw.Draw(title)
-    width = draw.textlength(shot["title"], font=large) + 36
-    draw.rounded_rectangle((24, 108, 24 + width, 168), radius=7, fill=(15, 20, 25, 224))
+    subtitle = shot.get("subtitle")
+    width = (
+        max(
+            draw.textlength(shot["title"], font=large),
+            draw.textlength(subtitle, font=font) if subtitle else 0,
+        )
+        + 36
+    )
+    draw.rounded_rectangle(
+        (24, 108, 24 + width, 202 if subtitle else 168),
+        radius=7,
+        fill=(15, 20, 25, 224),
+    )
     draw.text((42, 123), shot["title"], font=large, fill="white")
+    if subtitle:
+        draw.text((42, 168), subtitle, font=font, fill="white")
     if shot["mode"] not in ["vision", "audio"]:
         draw.text(
             (recipe["width"] - 240, 124),

@@ -1,31 +1,66 @@
 {
   "publishedFileId": 3820003593,
-  "manifestSha256": "549173bffc75cceb6c1fdcd48f7a06937880e5196f625994c74aa74251eb0f1f",
+  "manifestSha256": "8a9dac9e6be34ee302527239cf4346cc5c6692236aae6c1c858c8678fb301493",
+  "youtubeVideoId": "QsE7-RVkkPo",
   "gallery": [
     {
       "file": "03-colony.jpg",
       "index": 0,
-      "url": "https://images.steamusercontent.com/ugc/16922837966047631798/88AFE0BEA7A4E1A7D7037A877B5E51CF72B2D04D/"
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/13920434299758956142/145EA6518A01694F5B61E3CBD19FF3609CF52241/"
     },
     {
       "file": "02-watchtower.jpg",
       "index": 1,
-      "url": "https://images.steamusercontent.com/ugc/11863464051420070924/135A5E6EC9483BAB9E3C4E660CB2C8CC7B0F5440/"
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/15093147472933033370/8A2F03FEE885D4627A9242D94B636269A42B3E54/"
     },
     {
       "file": "01-exploration.jpg",
       "index": 2,
-      "url": "https://images.steamusercontent.com/ugc/11521727426054737549/1630E394C383DBC19DAC4F674A279AD7857D78C9/"
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/12705347902016127146/C17429DFE7BC5D3CB0624A9B9D508DBA648FC3DD/"
     },
     {
       "file": "04-vision.jpg",
       "index": 3,
-      "url": "https://images.steamusercontent.com/ugc/14968895127210473346/BEDC389FEAA88490DEB312832E6A86F7C236C38F/"
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/18333474172229366667/BA3705C678A6B28AF6B89EF4990E08F71D7C5EBC/"
     },
     {
       "file": "05-audio.jpg",
       "index": 4,
-      "url": "https://images.steamusercontent.com/ugc/14902227104131843708/67FC8644EB8B4104341827AEA1BA18F80DE16970/"
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/14823421653374690810/2159B960C2E0E5D671884503C494F5C68834E2CB/"
+    },
+    {
+      "file": "09-advance.jpg",
+      "index": 5,
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/11189534716403078403/0CECA190C4564814173CCE8C1538FAB6B1BACD87/"
+    },
+    {
+      "file": "06-retreat.jpg",
+      "index": 6,
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/17656344350946381595/8C49CEF446EEDF7E03DE064D1A3E29298EC4879B/"
+    },
+    {
+      "file": "07-descend.jpg",
+      "index": 7,
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/16625685390998942268/5A5F1BCAA33B0982747E41DF2FB4E21687ABDBCC/"
+    },
+    {
+      "file": "08-doorway.jpg",
+      "index": 8,
+      "kind": "image",
+      "url": "https://images.steamusercontent.com/ugc/17812530089886293642/EA462455AD8BE7027F6A22C7213A0DE52EE4C568/"
+    },
+    {
+      "index": 9,
+      "kind": "youtube",
+      "url": "QsE7-RVkkPo"
     }
   ]
 }

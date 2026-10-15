@@ -10,7 +10,8 @@
   "shots": [
     {
       "id": "01-exploration",
-      "title": "A small slice of a dangerous world",
+      "title": "Total Fog",
+      "subtitle": "A slice of your world",
       "mode": "scout",
       "seconds": 3,
       "x": 164,

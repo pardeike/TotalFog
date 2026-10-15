@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "recipeSha256": "24b16df683bedcbcd6ec0529e2d9777e8c85d6aefd1cac1b92da727e3a73877a",
+  "recipeSha256": "f8a5a14f566074b578cd3b7be8e3f044ff9cbbe732c59a9468a7fffff9694165",
   "referenceSaveSha256": "4478f436570a715264e6d3805381435b9ecb9decc83929a20272cda61d24df0d",
   "gameplaySha256": "790a8548387a3eaf30ed68ead5fbb269ee357f3504c9bac8952741940f334321",
   "companionSha256": "1804d332597bda0a2714e12887184528d7bb3eb13023d6d6859a915a08cef11d",
@@ -1514,7 +1514,8 @@
   "shots": [
     {
       "id": "01-exploration",
-      "title": "A small slice of a dangerous world",
+      "title": "Total Fog",
+      "subtitle": "A slice of your world",
       "mode": "scout",
       "seconds": 3,
       "x": 164,
@@ -1677,11 +1678,11 @@
   ],
   "video": {
     "file": "total-fog-showcase.mp4",
-    "sha256": "898e6ed4a11651da76a699f2054c2c1b04d671108e7c87c561e2f09368429cba",
+    "sha256": "c4976b359867065b7ef4661e8d90e1a9660efd56639272b04669fa8b9cae63e4",
     "seconds": 25.0,
     "frames": 750,
     "fps": "30/1",
     "audio": false
   },
-  "contactSheetSha256": "f3929c2b9dda00cc18d6802be78d2a1523830f8e6a2a965430c5352d25613f1e"
+  "contactSheetSha256": "eceb4c9c857ffbec040a83366f841a7536cf01cb3f020173d72f2293c63c112c"
 }

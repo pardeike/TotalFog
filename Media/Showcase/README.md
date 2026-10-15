@@ -5,7 +5,8 @@ stay the same when the media is refreshed. Use a `main` link for the latest
 version, or replace `main` with a commit SHA to keep a particular version.
 
 [View all nine screenshots](contact-sheet.png) ·
-[Download the 25-second video](total-fog-showcase.mp4) ·
+[Watch the 25-second video](https://youtu.be/QsE7-RVkkPo) ·
+[Download the MP4](total-fog-showcase.mp4) ·
 [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3820003593)
 
 ![Nine views of Total Fog](contact-sheet.png)
