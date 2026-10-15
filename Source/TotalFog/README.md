@@ -9,7 +9,7 @@ without Verse or Unity references. Test instrumentation lives in
 
 | Folder | Owns |
 |---|---|
-| root | The optional public API for other mods: `Visibility.cs` and `SoundAudibility.cs`. Bind by name, see the main README. |
+| root | The optional public API for other mods: `Visibility.cs` and `SoundAudibility.cs`. Bind by name, see [`docs/INTEGRATION.md`](../../docs/INTEGRATION.md). |
 | `Mod/` | Mod entry and Harmony installation (`TotalFogMod.cs`, `TotalFogMod.Patches.cs`), `PatchSafety`, settings model (`FogSettings`) and window (`SettingsWindow`), def references, debug commands. |
 | `Sight/` | The sight model on a map: `MapVisibility` (per-map component, grids, refresh queue), `CompSightSource` (what an observer sees), `CompFog` and its subcomponents (per-thing visibility, cell registration, presentation state), wall and tree occlusion, the fog `SectionLayerFog`, shared tick intervals in `FogTiming`. |
 | `Presentation/` | Gates between the sight model and what the player sees: drawing, labels, overlays, tooltips, selection, lighting, gas, flecks, explosions, custom renderer and inspection registries. |

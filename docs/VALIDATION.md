@@ -8,6 +8,21 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## InitializeComps prefix cost, 2026-10-15
+
+A review flagged the InitializeComps prefix as a linear comp scan for every new
+thing. `totalfog/comp_setup_cost` measured it natively on Steam 1.7.4977 with
+the 118-entry `TotalFogLargeModsColony350-118` fixture and gameplay `bcff16ec`.
+CompFog is inserted first, so the scan stops at the first entry. On 52,866 map
+things (1,221 defs), the deployed prefix, an identical copy and a cached
+first-slot variant each took 3-11 ns per call. The identical pair differed as
+much as the variants did, and none allocated measurably. Loading the fixture
+made 53,740 InitializeComps calls, under 1 ms of prefix time in total; 8,924
+Superfast ticks made 132. Native MakeThing for the same def mix costs about
+610-660 ns. No gameplay change follows: the candidate is not measurably faster.
+The load also logged the known Limestone colour error and new MuzzleFlash, VEF
+minified-flower and MinifiedThing loader errors from Workshop mods.
+
 ## Construction and Spitter feedback fixes, 2026-10-13
 
 Candidate Total Fog gameplay SHA-256 is
