@@ -416,9 +416,10 @@ mistaken for a fresh candidate. Compare packaged and live-tested DLL hashes
 before sending a feedback build.
 
 Shared Languages/ is intentionally loaded through the root across historical
-versions. Public source publication is separate from a mod release. There is no
-Steam release workflow or Workshop item yet; PublishedFileId 0 is the unpublished
-sentinel.
+versions. Public source publication is separate from a mod release. Public
+releases use the locally tested Release build, with `package-built` for
+metadata-only final packaging and no rebuild during publication. Player
+packages omit preliminary testing instructions and companion tooling.
 
 Performance has priority over optional features, with required fog correctness
 preserved. Andreas accepted commit 07d128b0f98350b9f8936b3c09b36df8d7907106

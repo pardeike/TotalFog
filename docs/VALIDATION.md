@@ -9172,3 +9172,72 @@ job, the original towers/plans and camera, and interaction enabled. Temporary
 debug sight and draft changes are removed. No original save is overwritten and
 no player ZIP is sent. Evidence is under ignored
 `artifacts/right-click-20261014`.
+
+### Release candidate pair, 2026-10-15
+
+Total Fog 1.0.0 gameplay SHA-256 is
+`790a8548387a3eaf30ed68ead5fbb269ee357f3504c9bac8952741940f334321`;
+Zombieland 5.7.0.0 gameplay SHA-256 is
+`aceaa59be81ea902118554ff2e614dbe3be59081d784af6572bdf40dfb972da6`.
+The final builds pass 506 C# and seven artifact checks for Total Fog,
+Zombieland's XML/localization checks and reconciled coverage inventory.
+All three Zombieland bundles rebuild and validate in the pinned Unity
+2022.3.62f3 editor. Mac native startup validates the Metal shaders,
+213 loaded Zombieland definitions, 40 ThingDef graphics, two pawn stages
+and 45 sounds without class/config/database/graphic/sound errors.
+
+The offline 1.6.4871 rev573 Core-only pair uses the installed Workshop
+Harmony payload; its four Harmony DLL hashes match the subscribed release.
+Native controls pass four raid/manhunter arrival cases, seven danger-area
+warning cases, 21 Albino scream cases, sixteen explosion-camera cases,
+Symbiant body/core interaction and pixel checks, and all four 400/4,000-cell
+render-cost matrices. The accepted TPS baseline is retained. Spitter controls
+retain active/recovered motion and stop motion, animation and leaving in
+60-tick downed/dead cases. The named fixture is restored and no original
+player save is written.
+
+The first attempt fails on two 1.7-only fields in the isolated 1.6 preferences;
+removing them from that test configuration produces a clean native log.
+The next attempt reaches contamination and exposes an obsolete strict-selection
+expectation after the remembered-interaction default changed. Markers are
+correctly absent; remembered selection is intentionally allowed. The companion
+now scopes this scenario to interaction disabled and restores the prior option
+in finally. Only that failed scenario is rerun: all fourteen close/distant,
+hidden/revealed/mutated, zoom-return/reopen/clear controls and their paired
+pixel comparisons pass. Both gameplay DLLs remain byte-identical across this
+instrumentation change. Earlier passed results retain their original companion
+identity; the rerun records the new companion separately. Failed attempts
+remain preserved and are not reported as complete suite passes.
+
+Steam 1.7.4979 rev109 then loads the same Total Fog gameplay DLL with all five
+DLCs and without Zombieland. Actual installed-state readback confirms the mod
+instance, fog component and initialization, with no original upstream namespace
+or initializer errors. The production tower order scenario passes 98 checks,
+including all ladder facings, drafted hold, ground moves, three/four-pawn drag
+formations, timed undrafted watch, draft conversion, ladder clearance,
+wall connections and timer persistence through native save/load. Its temporary
+scene reloads the unchanged base. The actual 1.7 Player.log is read from the
+Ludeon Logs directory; its old requested -logFile path is not accepted as 1.7
+log evidence. Both final native processes stop with termination verified.
+
+Evidence is under ignored `artifacts/release-20261015` and
+`artifacts/feedback-verification-release100-clean-tp736tqg`.
+These are bounded Mac checks. They do not renew 1.4 gameplay, Windows/Linux
+runtime, every DLC branch, CE or Multiplayer acceptance. Zombieland's preserved
+1.4 payload stays unchanged. Public packages exclude companions, private
+Harmony, debug symbols and Finder metadata; Total Fog also excludes the
+preliminary-testing instructions. Publication promotes the tested bytes.
+
+The final deployment audit finds stale historical version folders and removed
+translations in the existing Total Fog install. Staging now replaces its owned
+destination and rejects a symlink or a source/ancestor destination. The clean
+installed folder and wrapped ZIP match all 277 files exactly, retaining the
+tested gameplay hash. A fresh Steam 1.7 startup and native fixture load confirm
+initialization with no errors. The older 1.6 fixture retains the same native
+version, ritual and think-node warnings as the preceding run; these are not
+reported as a warning-free load. No new player save is written.
+
+The shared package auditor still assumes an assembly folder named after the
+game version and falsely expects `1.6/Assemblies/TotalFog.dll`. Its general ZIP
+audit passes; a separate exact check validates the packaged metadata and both
+1.6/1.7 LoadFolders mappings to `Current`, alongside the installed/ZIP hashes.

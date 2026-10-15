@@ -19,6 +19,7 @@ installed game's `Mods` folder.
 | `./scripts/mod deploy-built` | Installs the already-built gameplay/companion pair without rebuilding; the game must be stopped |
 | `./scripts/mod metadata` | Updates the installed description and version/load-folder metadata without changing DLLs; the game must be stopped |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
+| `./scripts/mod package-built` | Packages the existing verified DLL without rebuilding, including first-release Workshop ID metadata |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
 | `./scripts/mod ce-setup` | Builds and deploys the mod and creates the separate Combat Extended test profile |
 | `./scripts/mod ce-setup core16` | Uses the offline 1.6 app with Core and the installed Workshop CE payload, in a separate profile; set its logical `Mods` path in `RIMWORLD_MOD_DIR` |

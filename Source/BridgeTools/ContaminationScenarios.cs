@@ -52,6 +52,7 @@ public sealed class ContaminationScenarios
         System.Reflection.FieldInfo overlay = null;
         bool oldOverlay = false,
             oldBypass = FogSettings.OnlyOutsideColony,
+            oldInteraction = FogSettings.InteractWithRememberedObjects,
             oldFade = SectionLayerFog.PrefEnableFade;
         bool addedSight = false,
             passed = true;
@@ -100,6 +101,10 @@ public sealed class ContaminationScenarios
                         )
                     );
                     FogSettings.OnlyOutsideColony = false;
+                    // This scenario checks strict hidden selection alongside
+                    // the overlay. Remembered interaction intentionally allows
+                    // inspecting an observed item after it loses current sight.
+                    FogSettings.InteractWithRememberedObjects = false;
                     SectionLayerFog.PrefEnableFade = false;
                     Find.Selector.ClearSelection();
                     foreach (var c in probeArea)
@@ -331,6 +336,7 @@ public sealed class ContaminationScenarios
                 stagedSight = !nativeSightSource,
                 nativeSightSource,
                 refreshChecks,
+                rememberedInteraction = false,
                 advancedTicks = 0,
                 pixelAcceptance = false,
                 rows,
@@ -352,6 +358,7 @@ public sealed class ContaminationScenarios
                         if (manager != null)
                             overlay.SetValue(manager, oldOverlay);
                         FogSettings.OnlyOutsideColony = oldBypass;
+                        FogSettings.InteractWithRememberedObjects = oldInteraction;
                         SectionLayerFog.PrefEnableFade = oldFade;
                         contaminationMesh = null;
                     },

@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
-<Manifest><identifier>TotalFog</identifier><version>0.1.0</version><dependencies/><incompatibleWith/><loadBefore/><loadAfter/></Manifest>
+<Manifest><identifier>TotalFog</identifier><version>1.0.0</version><dependencies/><incompatibleWith/><loadBefore/><loadAfter/></Manifest>

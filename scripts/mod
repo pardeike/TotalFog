@@ -36,7 +36,6 @@ PAYLOAD = [
     "LICENSE.md",
     "NOTICE.md",
     "README.md",
-    "PRELIMINARY.md",
 ]
 LOGS.mkdir(parents=True, exist_ok=True)
 step = "arguments"
@@ -114,6 +113,13 @@ def stage(destination, baseline=False):
     candidate = gameplay_assembly()
     if not baseline and not candidate.is_file():
         raise RuntimeError("Build output is missing: " + str(candidate))
+    # Deployment owns this directory. Replacing it prevents removed definitions,
+    # translations and historical DLLs from surviving an update.
+    resolved = destination.resolve()
+    if destination.is_symlink() or resolved == ROOT or resolved in ROOT.parents:
+        raise RuntimeError("Unsafe staging destination: " + str(destination))
+    if destination.exists():
+        shutil.rmtree(destination)
     destination.mkdir(parents=True, exist_ok=True)
     for name in PAYLOAD:
         src, dst = ROOT / name, destination / name
@@ -142,6 +148,7 @@ def stage(destination, baseline=False):
         if "1.6" not in mapped:
             shutil.rmtree(destination / "1.6", ignore_errors=True)
     # Remove the inherited updater metadata from previously staged installs.
+    (destination / "PRELIMINARY.md").unlink(missing_ok=True)
     (destination / "About/ModSync.xml").unlink(missing_ok=True)
     (assemblies / "rimworld-mod-real-fow.dll").unlink(missing_ok=True)
     if baseline:
@@ -235,6 +242,7 @@ try:
         "deploy-built",
         "metadata",
         "package",
+        "package-built",
         "feedback-package",
         "feedback-verify",
         "setup",
@@ -253,7 +261,7 @@ try:
         "source-publish",
     }:
         raise RuntimeError(
-            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, feedback-package, feedback-verify <evidence label> [core16], setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
+            "Use format, format-check, test, build, verify-binary, deploy, metadata, package, package-built, feedback-package, feedback-verify <evidence label> [core16], setup, dpa-setup, mp-setup, mp-layout, ce-setup, ce-zombieland-setup, zombieland-setup, zombieland-fallback-setup, baseline, benchmark, runtime-benchmark, runtime-compare, verify-rendered <evidence folder>, or source-publish"
         )
     if mode == "runtime-compare" and len(sys.argv) not in {4, 5}:
         raise RuntimeError(
@@ -264,7 +272,7 @@ try:
     ):
         raise RuntimeError("Use ce-setup [core16]")
     with logpath.open("w") as log:
-        if mode == "verify-binary":
+        if mode in {"verify-binary", "package-built"}:
             step = "tracked gameplay DLL"
             verify_receipt(ROOT, ROOT / "Current/Assemblies/TotalFog.dll")
         if mode in {"format", "format-check"}:
@@ -344,6 +352,7 @@ try:
             "verify-rendered",
             "runtime-benchmark",
             "feedback-verify",
+            "package-built",
             "source-publish",
         }:
             step = "formatting"
@@ -1332,7 +1341,7 @@ try:
                     )
                 if seen != set(bundle.namelist()):
                     raise RuntimeError("Feedback ZIPs do not cover the complete paired package")
-        if mode == "package":
+        if mode in {"package", "package-built"}:
             step = "package"
             import tempfile
 
