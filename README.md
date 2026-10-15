@@ -9,9 +9,8 @@ looks at it. When your colonists walk away, the area turns grey and you no
 longer know what happens there. A raid can come out of the dark, and a noise at
 night might be a boar, or something much worse. To stay safe, you have to look.
 
-Total Fog runs on RimWorld 1.6 and 1.7. It is still young, so feedback, bug
-reports and saves that show problems are very welcome on the
-[Brrainz Discord](https://discord.gg/G4r84eN7w6) or as
+Total Fog runs on RimWorld 1.6 and 1.7. Questions, ideas and bug reports are
+welcome on the [Brrainz Discord](https://discord.gg/G4r84eN7w6) or as
 [GitHub issues](https://github.com/pardeike/TotalFog/issues).
 
 ## What it does
@@ -74,13 +73,6 @@ Out of the box, the fog is on and combat music is off. Delayed messages, sound
 checks, Silent raids and hiding unseen wildlife are there when you want a
 stricter game.
 
-### What the fog does not hide
-
-Research, the storyteller, the world map, pathfinding and fleeing work as
-usual, and combat can still slow the game down. Hearing goes by distance, not
-around walls. Enemy fog applies to humanlike enemies, not to animals, mechs or
-insects.
-
 ## Good to know
 
 - **Requires** [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077)
@@ -88,17 +80,13 @@ insects.
 - **Languages:** English, German, French, Spanish, Latin American Spanish, Dutch,
   Swedish, Polish, Russian, Turkish, Japanese, Korean, Simplified Chinese and
   Traditional Chinese.
-- **Replaces** Real Fog of War and NWN Real Fog of War, so turn those off. Total
-  Fog reads the explored map and waiting messages from their saves. Try it on a
-  copy of your save first.
-- **Built for big colonies:** the sight engine is new and written for speed.
-- **Zombieland:** Total Fog hides zombie effects, warnings and the Symbiant. This
-  needs an up-to-date Zombieland version.
-- **Combat Extended** weapons, turrets and mortars have been tested on 1.6.
-- **Multiplayer** works in local tests on 1.6 but is not fully verified yet.
-
-Total Fog is not on the Steam Workshop yet. The current state of testing is in
-[docs/COVERAGE.md](docs/COVERAGE.md#current-status).
+- **Replaces** Real Fog of War and NWN Real Fog of War, so turn those off.
+  Switching keeps your explored map and waiting messages. Back up your save
+  first.
+- **Fast:** a new sight engine built for big colonies and long mod lists.
+- **Zombieland:** with an up-to-date Zombieland, zombie effects, warnings and
+  the Symbiant stay hidden in the fog.
+- **Combat Extended:** its targeting respects the fog too.
 
 ## For mod developers
 

@@ -1,67 +1,19 @@
-# Pending release notes
+The first release of Total Fog, the successor to Real Fog of War.
 
-Player-visible changes for the unreleased 0.1.0 version. Source commits and
-local testing do not indicate that a new player build has been released.
-
-## Vision and information
-
-- Keep new colonies unexplored until an actual sight source sees them; do not reveal the landing area before colonists arrive.
-- Support RimWorld 1.6 and 1.7 through the same Current/ payload.
-- Use native drawing for previously observed scenery, without expensive archives of its last appearance. Fresh objects stay hidden until observed.
-- Keep owned pawns controllable, labelled and available in menus even when they provide no shared vision. Their presence does not reveal nearby things or hidden effects.
-- Require current sight for other live labels, tooltips, overlays, selection, inspection, environment details and target information. Close live inspection when sight is lost.
-- Filter map search while retaining remembered static things and your pawns' inventories. Never-seen objects, hidden enemies and hidden enemy inventories remain excluded.
-- Preserve deferred letters and messages across saves, with their sounds, targets, recipient factions and map clocks. Vanished targets retain ordinary History/archive behavior.
-- Apply unseen-event settings to pre-arrival refugee pod letters, ordinary white messages and selected hidden-threat alerts and jump targets. Colony health, global events and visible notifications remain immediate.
-- Delay Anomaly codex discovery and its notice until the entity is first seen.
-- Add optional Silent Raids: suppress raid/manhunter arrival letters and arrival slowdown while retaining spawning and normal combat slowdown.
-- Keep gravship previews from permanently exploring cells or granting live effects, notification eligibility or sound-source sight.
-- Keep splitting fleshbeasts, held/flying pawns, projectiles, corpses, gas, explosions and artificial ground light behind their appropriate current-sight gates.
-- Retain owned blueprints, Forbid/Allow area orders for observed player doors, and known home-area work without opening hidden live inspection.
-- Keep owned blueprints and construction frames selectable and editable outside current sight, including drag selection and ordinary construction commands.
-- Prevent hidden resources and pawns from taking selection priority away from visible things and your construction plans, including click cycling, double-click and drag selection.
-- Preserve existing haul orders for known plain chunks. Let native construction clear hidden haulable items, plants and buildings blocking owned blueprints/frames on known terrain. Storage hauling uses that same work-permission rule; native construction still chooses its ordinary haul-aside job.
-- Allow cleaning fresh dirt in a known home area without revealing it.
-
-## Watchtowers and cameras
-
-- Add a 3x3 watchtower with one elevated lookout, a timed ladder, configurable sight, optional shooting, rescue and collapse injury.
-- Require Complex furniture and heavy ground support. Completed towers block all nine cells; previews remain walkable and use translucent native-style blueprints. New ladders face the player by default.
-- Render placed watchtower blueprints even before construction materials are available.
-- Offer one-, two- and four-hour watches counted from reaching the deck, or drafted holding until undrafted or ordered away. Preserve timers across saves and respect explicit orders, draft transitions and Fire at will.
-- Let drafted Go here and dragged formations use tower platforms, including Achtung's move orders. Ground routes begin at the ladder after descent; idle undrafted pawns step clear while retaining queued work.
-- Face the ladder in both directions. Undrafted lookouts turn through all four directions; idle drafted lookouts face the player while combat aiming retains priority.
-- Connect actual adjacent wall graphics to the solid base without unwanted end caps.
-- Keep a visible tower's base, raised deck and lookout free of fog clipping while hiding the background. Dim remembered towers consistently.
-- Keep raised bodies, labels, selection, effects and projectiles aligned. Preserve native trajectories, target cover, shield absorption and fire resistance; tall obstacles still block elevated shots.
-- Preserve occupied towers, downed occupants, corpses, rescue and carrying state through saves. Warn about blocked exits, protect ladder access and permit retrieval without requiring a bed. Desperate exits and collapse can cause fall injuries.
-- Give cameras a separate Cameras work priority. Choose working consoles, release operators when their console stops, and avoid console work when the operator requirement is disabled.
-- Set telescope sight independently of tower sight and restore portable camera textures on macOS.
-- Retire Chicken on a Stick, the other inspector animals, security bells, light beacons and old watchtowers. Saved objects remain loadable without their former sight, light or fuel consumption.
-
-## Audio and settings
-
-- Allow interacting with remembered buildings and objects by default while they remain in their last observed location, including selection, inspection and right-click work orders. Turn off Interact with remembered objects to require current sight. Unknown objects, hidden pawns and combat targets stay unavailable.
-- Keep the Vision settings in one scrolling column so lower controls remain accessible.
-- Keep hidden tooltips blocked on engines that treat invalid map cells as unfogged.
-- Suppress Combat and Anomaly music by default while retaining ordinary music.
-- Add optional hidden-source muting, hearing-distance filtering and hearing indicators. Living faction listeners supply hearing; general ambience stays native.
-- Apply audio choices to existing loops and restore normal volume when filtering is disabled. Reuse hearing checks within a map tick.
-- Organize Appearance, Vision, Information and Audio settings with a fixed footer, clear defaults and space beside the scrollbar. Preserve saved choices and explain intentional information cues.
-- Add a separate colony-mech vision multiplier, keeping normal range by default. Keep tree-blocking choices disabled while a game is loaded.
-- Apply native Clear All Fog, Refog Map and rectangle fog commands to Total Fog. Settle fog fades while paused so scrolling does not leave stale straight section edges.
-- Refresh sight blockers and observers immediately for debug fog commands, including walls placed while paused.
-- Restore real sight after Refog even when the colonist stands on a tower.
-- Rewrite all settings, building, research and job text in plain, friendly English, and translate it into German, French, Spanish, Latin American Spanish, Dutch, Swedish, Polish, Russian, Turkish, Japanese, Korean, Simplified Chinese and Traditional Chinese.
-
-## Integrations and stability
-
-- Check a manned turret's sight from the gun itself, with its crew's full manning range. Previously the check could start one cell off and drop the weapon-range extension; this affects modded direct-fire guns, as vanilla mortars need no line of sight.
-- Apply Combat Extended targeting to each observing faction while preserving native ballistics, failed checks, power/manning sight, mortar blind-cell fire and last-known-cell bursts. Do not track unseen Things during firing.
-- With the updated Zombieland, clip Symbiant bodies and their moving cores by visible cells, permit visible-core inspection with a hidden root, and restrict body-cell targeting by faction sight.
-- With the updated Zombieland, filter source-specific effects, readouts, highlights, warnings and sounds through the optional integration. Keep each mod usable on its own.
-- Retain Multiplayer synchronization for settings, player orders, faction knowledge, hearing, map clocks and saved sessions. Overall Multiplayer compatibility remains unverified.
-- Keep one unavailable optional hook, broken listener or failed delayed notification from preventing unrelated fog behavior. Avoid startup failures from an inactive bundled Multiplayer API.
-- Initialize sight after native blockers and lighting are ready. Preserve updates across larger tick intervals, movement, map/faction changes and callback refresh requests.
-- Reduce recurring sight, footprint, registration and mesh work. Discovery dirties terrain/roof/fertility meshes; ordinary sight changes avoid unrelated rebuilds. Skip enemy sight work when enemy fog is disabled.
-- Correct rectangular-map and shared-section boundaries, rare-ticking blockers and sources, power-grid rendering during flyer loading, and the renderer's ownership of held/flying things.
+- Real fog of war for RimWorld 1.6 and 1.7: colonists, colony mechs, trained animals and turrets reveal what they see, and explored land turns grey when nobody is watching.
+- New colonies start unexplored and reveal the landing site as your colonists arrive.
+- A new sight engine, built for speed in big colonies and long mod lists.
+- New 3x3 watchtower: send a lookout up for a 1, 2 or 4 hour watch, or keep a drafted lookout on duty. Lookouts see over walls and can shoot from the deck if you allow it.
+- Surveillance cameras have their own Cameras work type. Operators find a working console on their own, or you switch the operator requirement off.
+- The watch telescope has its own sight limit.
+- Your colonists, animals, blueprints and construction stay under your control in the fog. Buildings you have seen can still be selected and given orders.
+- Labels, tooltips, overlays, map search and selection show only what someone can see right now.
+- Letters and messages about unseen events can wait until someone sees them. Colony health and global events still arrive at once, and Anomaly entities enter the journal when first seen.
+- Optional silent raids: no arrival letter and no slowdown when raids and manhunter packs arrive.
+- Combat and Anomaly music are off by default, so the soundtrack keeps your secrets. Hidden sounds can be muted or muffled, and sound markers hint at movement out of sight.
+- Optional fair enemies: humanlike enemies only shoot at what their own faction can see.
+- Four clear settings pages: Appearance, Vision, Information and Audio.
+- Plain, friendly text in 14 languages.
+- Combat Extended targeting respects the fog. With an up-to-date Zombieland, zombie effects, warnings and the Symbiant stay hidden too.
+- Saves from Real Fog of War keep their explored map and waiting messages.
+- Chicken on a Stick, inspector animals, security bells, light beacons and the old watchtowers are retired. Ones already in your saves still load, but no longer give sight or light.
