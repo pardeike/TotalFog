@@ -1,5 +1,0 @@
-- Colonists can recover previously seen animal corpses after losing sight of them. Remembered corpse work menus follow the interaction setting.
-- Bills can use items in valid storage on explored ground without continuous line of sight.
-- Plain chunks refresh their graphics when sight changes.
-- Gravships keep their explored deck and remembered cargo after landing on another map.
-- Previously seen cargo stays interactable when player transport pods land without colonists.

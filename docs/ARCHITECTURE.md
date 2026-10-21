@@ -30,11 +30,17 @@ reference-counted grid rebuilt from faction observers. Object observation record
 which player factions have seen it, rather than storing an appearance. The
 primary faction retains the original `seenByPlayer` save value; extra factions
 have separate observation identities. Static objects also retain the map and
-cell at which each faction last actually saw them, solely for selection. The
+cell at which each faction last actually saw them, for selection and work permission. The
 primary observer uses inline integer fields; secondary positions use a lazy
 dictionary. Stationary observations do not add sight queries or timers. Moving
 objects update the location only under current sight. Missing location records
 from older saves remain conservative until a fresh observation.
+Explicit player gravship placement preserves carried exploration and reanchors
+already observed cargo. Player pods landing on a chosen cell carry a one-use
+saved observer marker. Native spawn consumes it. Native stack absorption applies
+that arrival knowledge to the receiving stack when items actually transfer.
+A partial remainder keeps its marker until spawning. These paths grant no live
+sight and do not mark previously unknown cargo as observed.
 A new object in an explored cell stays
 hidden until observed. Pawns, flyers, projectiles, corpses and
 ordinary motes require current sight. Player pawn observers and owned blueprints

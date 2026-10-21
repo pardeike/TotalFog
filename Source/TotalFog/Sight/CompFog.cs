@@ -99,4 +99,7 @@ public class CompFog : ThingComp
         foreach (var part in parts)
             part?.PostExposeData();
     }
+
+    public override void PreAbsorbStack(Thing otherStack, int count) =>
+        HideFromPlayer?.AbsorbArrival(otherStack, count);
 }

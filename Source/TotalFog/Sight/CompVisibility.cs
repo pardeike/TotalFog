@@ -70,15 +70,7 @@ public class CompVisibility : FogSubcomponent
             );
             arrivalObserverFactionId = 0;
             if (observer?.IsPlayer == true && CanRememberLocation && WasSeenBy(observer))
-            {
-                var fog = parent.Map.GetVisibility();
-                foreach (var cell in parent.OccupiedRect())
-                {
-                    parent.Map.fogGrid.Unfog(cell);
-                    fog.RevealCell(observer, parent.Map.cellIndices.CellToIndex(cell));
-                }
-                Remember(observer);
-            }
+                ApplyArrival(observer);
         }
         UpdateVisibility(true);
     }
@@ -133,6 +125,36 @@ public class CompVisibility : FogSubcomponent
     {
         if (faction?.IsPlayer == true && CanRememberLocation && WasSeenBy(faction))
             arrivalObserverFactionId = faction.loadID;
+    }
+
+    internal void AbsorbArrival(Thing other, int count)
+    {
+        if (count <= 0 || !parent.Spawned || !CanRememberLocation)
+            return;
+        var incoming = other.TryGetComp<CompFog>()?.HideFromPlayer;
+        if (incoming == null || incoming.arrivalObserverFactionId == 0)
+            return;
+        var observer = Find.FactionManager.AllFactionsListForReading.Find(f =>
+            f.loadID == incoming.arrivalObserverFactionId
+        );
+        if (observer?.IsPlayer != true || !incoming.WasSeenBy(observer))
+            return;
+        // Native unloading can absorb all cargo before spawning it. Preserve
+        // its explicit arrival knowledge on the receiving stack. A remainder
+        // keeps its own one-use marker until it spawns.
+        ApplyArrival(observer);
+        UpdateVisibility(true);
+    }
+
+    private void ApplyArrival(Faction observer)
+    {
+        var fog = parent.Map.GetVisibility();
+        foreach (var cell in parent.OccupiedRect())
+        {
+            parent.Map.fogGrid.Unfog(cell);
+            fog.RevealCell(observer, parent.Map.cellIndices.CellToIndex(cell));
+        }
+        Remember(observer);
     }
 
     public void UpdateVisibility(bool forceCheck, bool forceUpdate = false)

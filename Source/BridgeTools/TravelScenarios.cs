@@ -30,6 +30,7 @@ public sealed class TravelScenarios
         var samples = new List<object>();
         Thing cargo = null;
         Thing unknownCargo = null;
+        Thing receivingStack = null;
         Pawn viewer = null;
         Func<object> place = null;
         var result = await ctx.MainThread.InvokeAsync<object>(
@@ -49,8 +50,13 @@ public sealed class TravelScenarios
                         Find.Maps.SelectMany(m => m.listerThings.AllThings)
                             .Single(t => t.ThingID == thingID)
                     );
-                if (operation is not ("gravship" or "caravan" or "pod" or "pod-cargo"))
-                    throw new ArgumentException("Use gravship, caravan, pod, pod-cargo or status.");
+                if (
+                    operation
+                    is not ("gravship" or "caravan" or "pod" or "pod-cargo" or "pod-merge")
+                )
+                    throw new ArgumentException(
+                        "Use gravship, caravan, pod, pod-cargo, pod-merge or status."
+                    );
                 if (rotation < 0 || rotation > 3)
                     throw new ArgumentOutOfRangeException(nameof(rotation));
                 var destination =
@@ -181,6 +187,27 @@ public sealed class TravelScenarios
                             .GetVisibility()
                             .RevealCell(destination.cellIndices.CellToIndex(cell));
                     }
+                    if (operation == "pod-merge")
+                    {
+                        cargo.stackCount = 5;
+                        receivingStack = GenSpawn.Spawn(
+                            ThingMaker.MakeThing(cargo.def),
+                            landing,
+                            destination
+                        );
+                        receivingStack.stackCount = 2;
+                        samples.Add(
+                            new { phase = "unseen-receiving-stack", cargo = State(receivingStack) }
+                        );
+                        if (
+                            receivingStack
+                                .TryGetComp<CompFog>()
+                                .HideFromPlayer.WasSeenBy(Faction.OfPlayer)
+                        )
+                            throw new InvalidOperationException(
+                                "The receiving stack must be unobserved."
+                            );
+                    }
                     var info = new ActiveTransporterInfo { openDelay = 110, leaveSlag = false };
                     info.innerContainer.TryAdd(cargo);
                     if (operation == "pod")
@@ -197,6 +224,29 @@ public sealed class TravelScenarios
                         destination.Parent,
                         landing
                     ).Arrived(new List<ActiveTransporterInfo> { info }, destination.Tile);
+                    // Force native placement onto the unseen stack. Ordinary
+                    // near-placement can choose an empty cell instead, which
+                    // does not exercise the absorption callback.
+                    if (receivingStack != null)
+                    {
+                        info.innerContainer.Remove(cargo);
+                        bool placed = GenPlace.TryPlaceThing(
+                            cargo,
+                            receivingStack.Position,
+                            destination,
+                            ThingPlaceMode.Direct,
+                            out var merged
+                        );
+                        samples.Add(
+                            new
+                            {
+                                phase = "native-merge-placement",
+                                placed,
+                                sameStack = merged == receivingStack,
+                                cargoDestroyed = cargo.Destroyed,
+                            }
+                        );
+                    }
                     samples.Add(new { phase = "in-native-pod", cargo = State(cargo) });
                     if (stageOnly)
                         return new
@@ -224,30 +274,36 @@ public sealed class TravelScenarios
         );
         return await ctx.MainThread.InvokeAsync<object>(
             () =>
-                new
+            {
+                var arrived = receivingStack ?? cargo;
+                return new
                 {
-                    success = cargo.Spawned
+                    success = arrived.Spawned
+                        && (receivingStack == null || cargo.Destroyed && arrived.stackCount == 7)
                         && (
-                            operation == "pod-cargo"
-                                ? !cargo
+                            operation is "pod-cargo" or "pod-merge"
+                                ? !arrived
                                     .Map.GetVisibility()
-                                    .IsShown(Faction.OfPlayer, cargo.Position)
+                                    .IsShown(Faction.OfPlayer, arrived.Position)
                                     && !ThingVisibility.CanInspect(unknownCargo)
                                     && !unknownCargo
                                         .TryGetComp<CompFog>()
                                         .HideFromPlayer.WasSeenBy(Faction.OfPlayer)
-                                : viewer.Spawned && cargo.Map == viewer.Map
+                                : viewer.Spawned && arrived.Map == viewer.Map
                         )
-                        && cargo
+                        && arrived
                             .TryGetComp<CompFog>()
                             .HideFromPlayer.WasSeenAtCurrentLocation(Faction.OfPlayer)
-                        && ThingVisibility.CanInspect(cargo),
+                        && ThingVisibility.CanInspect(arrived),
                     samples,
-                    arrived = State(cargo),
+                    arrived = State(arrived),
+                    merged = receivingStack != null && cargo.Destroyed,
+                    stackCount = arrived.stackCount,
                     unknown = unknownCargo == null ? null : State(unknownCargo),
                     viewer = viewer.ThingID,
-                    destination = cargo.Map?.uniqueID,
-                },
+                    destination = arrived.Map?.uniqueID,
+                };
+            },
             cancellationToken
         );
     }

@@ -75,6 +75,54 @@ public sealed class TransportPodArrivalTests : IDisposable
         );
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ArrivingKnownCargoKeepsItsLocationWhenAbsorbedByAnotherStack(bool explored)
+    {
+        var cargo = Cargo(observed: true);
+        cargo.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        var receiver = Cargo(observed: false);
+        var map = Destination(explored);
+        Spawn(receiver, map, new IntVec3(1, 1));
+
+        receiver.TryGetComp<CompFog>().HideFromPlayer.AbsorbArrival(cargo, 5);
+
+        Assert.True(ThingVisibility.CanInspect(receiver));
+        Assert.True(
+            receiver.TryGetComp<CompFog>().HideFromPlayer.WasSeenAtCurrentLocation(Faction.OfPlayer)
+        );
+        Assert.True(map.Fog.knownCells[3]);
+        Assert.False(map.Fog.InSight[3]);
+        Assert.False(Visibility.IsVisible(receiver));
+        // A partially absorbed arrival must still authorize its remaining stack.
+        Spawn(cargo, map, new IntVec3(0, 0));
+        Assert.True(ThingVisibility.CanInspect(cargo));
+    }
+
+    [Theory]
+    [InlineData(false, true, 5)]
+    [InlineData(true, false, 5)]
+    [InlineData(true, true, 0)]
+    public void OrdinaryUnknownAndEmptyMergesDoNotGrantArrivalKnowledge(
+        bool observed,
+        bool arrival,
+        int count
+    )
+    {
+        var cargo = Cargo(observed);
+        if (arrival)
+            cargo.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        var receiver = Cargo(observed: false);
+        var map = Destination(true);
+        Spawn(receiver, map, new IntVec3(1, 1));
+
+        receiver.TryGetComp<CompFog>().HideFromPlayer.AbsorbArrival(cargo, count);
+
+        Assert.False(ThingVisibility.CanInspect(receiver));
+        Assert.False(receiver.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
+    }
+
     private static ThingWithComps Cargo(bool observed)
     {
         var cargo = new ThingWithComps();

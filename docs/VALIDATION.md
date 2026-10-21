@@ -8,6 +8,74 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Release 1.0.1 candidate, 2026-10-21
+
+The final versioned Release DLL is
+`766de38299b9acf6e64cdb481c8c6551305da4b784599a46030f4fd81b1d75e1`.
+It passes 532 C# tests and seven artifact tests with zero build warnings/errors.
+The ZIP has 277 files under one `TotalFog/` wrapper. Its SHA-256 is
+`173c401e7bb3e5eb658558452a950a462b6f6f7ca78da0a3092a9c53a660ca83`.
+Its file hashes equal the deployed Steam-folder payload. The extraction audit
+produces `TotalFog/About` exactly once and rejects tooling, debug symbols,
+private Harmony and Finder metadata. Publication must promote these bytes.
+
+Two new source-linked merge regressions fail before the fix. Five added cases
+then pass for explored/unexplored destinations, partial transfers, unknown
+cargo, ordinary merges and zero-item transfers. The existing saved arrival
+marker reaches the receiving stack through native `CompFog.PreAbsorbStack`.
+This adds no saved fields and no generic raid-arrival hook.
+
+The native absorption control passes on Steam 1.7.4984 rev1242 with all DLCs
+and offline Core-only 1.6.4871 with CE 16.7.4.0. It uses the real player's
+arrival action to mark observed medicine, then forces native direct placement
+onto an unseen two-unit stack before the pod opens. The five-unit incoming
+stack is destroyed by native absorption. The receiving stack has seven units,
+`seenHere=true`, `inspect=true` and `sight=false`. Unknown herbal medicine stays
+unobserved; the 1.6 control lands on explored ground. A fresh 1.7 process reloads
+the merged stack with remembered interaction and no current sight.
+Earlier attempts let native near-placement choose empty cells, so they did not
+exercise merging and are not accepted absorption evidence. This forced control
+proves the native callback, not the frequency of merges during ordinary landings.
+The same final DLL also repeats east-facing native gravship placement on
+1.7.4984: exactly 135 deck cells become known, the seen bench stays inspectable
+without sight, and the unseen stool remains uninspectable. Both small native
+profiles have no captured errors. The earlier broader CE controls retain their
+separate DLL/checkpoint below.
+
+The performance concern was static Things-layer regeneration for plain chunks,
+dirt and blood. One wide-view comparison uses accepted baseline `07d128b` and
+this candidate on the unchanged 118-entry colony save, SHA-256
+`fdc2f0792a1fd255f8c8074575f57aa5a41b98140e81b625eb4ab6294f175aa4`.
+Both run on 1.7.4984 with 35 pawns, a 350x350 map, 4592x2646 rendering,
+root size 100, all 122,500 cells in view, 300 warmup ticks and 15 seconds of
+ordinary Ultrafast playback. Native multiplier stays 15 and focus stays held.
+Settings, camera and engine identities match. This is a profiled spot check.
+
+| Metric | Accepted baseline | 1.0.1 candidate |
+|---|---:|---:|
+| TPS | 789.760 | 844.583 |
+| Mean tick CPU, ms | 0.77920 | 0.61881 |
+| Frame interval p95, ms | 36.5745 | 43.6388 |
+| Things-layer regeneration calls | 452 | 2,280 |
+| Inclusive Things-layer regeneration, ms | 54.875 | 426.362 |
+
+The extra mesh work is measurable, about 371 ms across the 15-second sample.
+The slower frame tail remains recorded. The baseline also has a 378 ms tick
+spike, so this pair does not prove a speed improvement. It establishes no
+throughput regression in this workload and does not justify removing the
+correctness fix. The accepted performance policy remains unchanged.
+Each process's first attempt paused before any measured ticks; both were
+reloaded and those zero-tick attempts were rejected. Both variants log the same
+known Limestone colour, MuzzleFlash abstract-type and VEF minified-item load
+errors. These are retained limits of the diagnostic loadout.
+
+Native results and the file manifest are retained under
+`artifacts/release101-*.json`. Corpses observed under 1.0.0 have no saved location
+anchor. Outside valid storage they need one real observation after upgrading;
+valid stored items on explored ground are usable immediately. No locations are
+invented during upgrade. The VGE/Rim Effect underground-room and Workshop tower
+shooting reports remain unverified. Multiplayer remains deferred.
+
 ## Player work and map-transfer reports, 2026-10-21
 
 The reports are [Beodyn's Discord post](https://discord.com/channels/900081000942567454/1390493088358858762/1562153781368590538),

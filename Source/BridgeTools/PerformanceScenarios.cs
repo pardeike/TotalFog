@@ -1038,6 +1038,7 @@ public sealed class PerformanceScenarios
                                 ("Verse.MapDrawer", "MapMeshDrawerUpdate_First"),
                                 ("Verse.MapDrawer", "DrawMapMesh"),
                                 ("Verse.SectionLayer_Gas", "Regenerate"),
+                                ("Verse.SectionLayer_Things", "Regenerate"),
                                 ("Verse.SectionLayer_LightingOverlay", "Regenerate"),
                                 ("Verse.DynamicDrawManager", "DrawDynamicThings"),
                                 (
