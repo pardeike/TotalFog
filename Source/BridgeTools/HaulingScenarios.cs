@@ -277,7 +277,7 @@ public sealed class HaulingScenarios
             else if (operation == "start")
             {
                 var job =
-                    new WorkGiver_HaulGeneral().JobOnThing(pawn, target, true)
+                    NativeHaulJob(pawn, target)
                     ?? throw new InvalidOperationException("The native haul job is unavailable.");
                 pawn.jobs.StartJob(job, JobCondition.InterruptForced);
             }
@@ -300,7 +300,7 @@ public sealed class HaulingScenarios
         var blockingJob =
             construction == null ? null : GenConstruct.HandleBlockingThingJob(construction, pawn);
         JobFailReason.Clear();
-        var nextJob = new WorkGiver_HaulGeneral().JobOnThing(pawn, target, true);
+        var nextJob = NativeHaulJob(pawn, target);
         var storageJob = target.def.EverHaulable
             ? Verse.AI.HaulAIUtility.HaulToStorageJob(pawn, target, false)
             : null;
@@ -362,6 +362,11 @@ public sealed class HaulingScenarios
             reason = JobFailReason.HaveReason ? JobFailReason.Reason : null,
         };
     }
+
+    private static Job NativeHaulJob(Pawn pawn, Thing target) =>
+        target is Corpse
+            ? new WorkGiver_HaulCorpses().JobOnThing(pawn, target, true)
+            : new WorkGiver_HaulGeneral().JobOnThing(pawn, target, true);
 
     [Tool(
         "totalfog/map_search_fixture",

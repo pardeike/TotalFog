@@ -15,6 +15,7 @@ public class CompVisibility : FogSubcomponent
     private int observedMapId = -1;
     private int firstObservedCell = -1;
     private Dictionary<int, int> otherObservedCells;
+    private int arrivalObserverFactionId;
     public bool SeenByPlayer => WasSeenBy(Faction.OfPlayer);
 
     public bool WasSeenBy(Faction faction) =>
@@ -33,7 +34,7 @@ public class CompVisibility : FogSubcomponent
     private int nextCheck;
     private bool setup;
 
-    // Location knowledge is selection-only. Do not snapshot appearance or
+    // Location knowledge permits remembered interaction. Do not snapshot appearance or
     // resample stationary objects merely to keep this record up to date.
     internal bool WasSeenAtCurrentLocation(Faction faction) =>
         CanRememberLocation
@@ -62,6 +63,23 @@ public class CompVisibility : FogSubcomponent
         if (seenByPlayer && firstObserverFactionId == 0)
             firstObserverFactionId = parent.Map.GetVisibility().PrimaryPlayerFactionId;
         nextCheck = 0;
+        if (arrivalObserverFactionId != 0)
+        {
+            var observer = Find.FactionManager.AllFactionsListForReading.Find(f =>
+                f.loadID == arrivalObserverFactionId
+            );
+            arrivalObserverFactionId = 0;
+            if (observer?.IsPlayer == true && CanRememberLocation && WasSeenBy(observer))
+            {
+                var fog = parent.Map.GetVisibility();
+                foreach (var cell in parent.OccupiedRect())
+                {
+                    parent.Map.fogGrid.Unfog(cell);
+                    fog.RevealCell(observer, parent.Map.cellIndices.CellToIndex(cell));
+                }
+                Remember(observer);
+            }
+        }
         UpdateVisibility(true);
     }
 
@@ -76,6 +94,7 @@ public class CompVisibility : FogSubcomponent
         );
         Scribe_Values.Look(ref observedMapId, "totalFogObservedMap", -1);
         Scribe_Values.Look(ref firstObservedCell, "totalFogFirstObservedCell", -1);
+        Scribe_Values.Look(ref arrivalObserverFactionId, "totalFogTransportObserverFaction");
         Scribe_Collections.Look(
             ref otherObservedCells,
             "totalFogOtherObservedCells",
@@ -98,6 +117,22 @@ public class CompVisibility : FogSubcomponent
     {
         Remember(Faction.OfPlayer);
         UpdateVisibility(true, true);
+    }
+
+    internal void RememberArrival(Faction faction)
+    {
+        // An explicit player transport may relocate existing knowledge. It
+        // cannot establish an observation of cargo the player has never seen.
+        if (!parent.Spawned || !CanRememberLocation || !WasSeenBy(faction))
+            return;
+        Remember(faction);
+        UpdateVisibility(true);
+    }
+
+    internal void RememberNextArrival(Faction faction)
+    {
+        if (faction?.IsPlayer == true && CanRememberLocation && WasSeenBy(faction))
+            arrivalObserverFactionId = faction.loadID;
     }
 
     public void UpdateVisibility(bool forceCheck, bool forceUpdate = false)

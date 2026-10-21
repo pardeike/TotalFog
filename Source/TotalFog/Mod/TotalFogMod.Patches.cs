@@ -644,6 +644,10 @@ public partial class TotalFogMod
             "gravship visibility",
             () => Compatibility.GravshipVisibility.Install(harmony)
         );
+        PatchSafety.Install(
+            "player transport-pod visibility",
+            () => Compatibility.TransportPodVisibility.Install(harmony)
+        );
     }
 
     private static void PatchMethod(

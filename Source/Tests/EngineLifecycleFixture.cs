@@ -311,8 +311,11 @@ namespace Verse
     public class FogGrid
     {
         public bool Fogged;
+        public readonly HashSet<IntVec3> Unfogged = new();
 
-        public bool IsFogged(IntVec3 cell) => Fogged;
+        public bool IsFogged(IntVec3 cell) => Fogged && !Unfogged.Contains(cell);
+
+        public void Unfog(IntVec3 cell) => Unfogged.Add(cell);
     }
 
     public class GasGrid
@@ -574,6 +577,9 @@ namespace Verse
 
     public class FactionManager
     {
+        public List<Faction> AllFactionsListForReading =>
+            new() { Faction.PrimaryPlayer, Faction.OfPlayer };
+
         public Faction GetById(int id) =>
             id == Faction.PrimaryPlayer.loadID ? Faction.PrimaryPlayer
             : id == Faction.OfPlayer.loadID ? Faction.OfPlayer
@@ -668,6 +674,13 @@ namespace RimWorld
     }
 
     public class Building_Turret : Verse.Building { }
+
+    public class Building_GravEngine : Verse.Building { }
+
+    public static class GravshipPlacementUtility
+    {
+        public static void PlaceGravshipInMap() { }
+    }
 
     public class Building_TurretGun : Building_Turret { }
 
@@ -845,6 +858,14 @@ namespace TotalFog
             && (uint)index < known.Length
             && known[index];
 
+        public void RevealCell(Verse.Faction faction, int index)
+        {
+            var known = GetFactionKnownCells(faction);
+            if (known == null)
+                FactionKnown[faction] = known = new bool[4];
+            known[index] = true;
+        }
+
         public bool IsShown(Verse.Faction faction, Verse.IntVec3 cell)
         {
             VisibilityQueries++;
@@ -935,6 +956,13 @@ namespace TotalFog
 
 namespace RimWorld.Planet
 {
+    public class Gravship
+    {
+        public RimWorld.Building_GravEngine Engine;
+        public readonly List<Verse.CellRect> OccupiedRects = new();
+        public readonly List<Verse.Thing> Things = new();
+    }
+
     public struct GlobalTargetInfo
     {
         public bool IsValid;

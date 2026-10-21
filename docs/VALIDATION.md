@@ -8,6 +8,59 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Player work and map-transfer reports, 2026-10-21
+
+The reports are [Beodyn's Discord post](https://discord.com/channels/900081000942567454/1390493088358858762/1562153781368590538),
+[the Workshop comments](https://steamcommunity.com/sharedfiles/filedetails/?id=3820003593)
+and [the animal-carcass discussion](https://steamcommunity.com/workshop/filedetails/discussion/3820003593/564796840407608931/).
+This candidate is not published. DLL SHA-256 is
+`6f7e5f2e6318fd890c6b2dc2d128238a28a7386ecbf0b8e343a1ca09b0851294`.
+The canonical build passes 527 C# tests with zero warnings/errors. Focused tests
+first fail for six work/render controls, four gravship controls and three pod
+arrival controls before their fixes. Original failures remain under
+`artifacts/logs/*regressions-red-20261021.log`.
+
+Native Steam 1.7.4982 rev1280 runs use all five DLCs, Workshop Harmony 3.0.1.0,
+RimBridgeServer 2.3.0 and Total Fog in the isolated `FeedbackUserData` profile.
+Earlier work-only DLL `d81b470f...` finds the exact hidden stockpiled marble
+chunk for stonecutting without a haul designation. Butchery finds the exact
+remembered hidden Muffalo corpse both outside storage and in a stockpile.
+Paired paused crops show a real plain `Verse.Thing` chunk hidden and redrawn
+when actual sight returns. These tests do not complete recipe jobs.
+The final DLL starts a native `WorkGiver_HaulCorpses` job on an unseen observed
+corpse and completes storage delivery over 1,000 individually stepped ticks.
+The fixture previously used `WorkGiver_HaulGeneral`, which natively excludes
+corpses; its missing job was a diagnostic error, not a separate mod defect.
+
+`totalfog/travel_arrival` packs a native empty gravship and places it on another
+native map. North/east rotations each add exactly the 135 carried cells to
+exploration. The observed bench remains inspectable without current sight.
+An unseen stool remains unobserved and uninspectable. Both states survive a
+fresh-process save/load. This exercises packing/placement and saved knowledge,
+not a full world-flight cutscene or VGE/Rim Effect's additional behavior.
+Early fixture attempts lacked a pilot console, evaluated fresh facility links
+before a normal tick, and included an unrelated pawn/observer. Those attempts
+are not gameplay acceptance evidence. The corrected fixture checks its unseen
+control before packing and requires an empty ship.
+
+Native caravan exit/entry and a passenger pod refresh cargo observation through
+the arriving colonist's sight without a new caravan exception. A player pod with
+only cargo reproduces `seen=true`, `seenHere=false`, `inspect=false` on explored
+ground. The correction marks previously observed cargo at the player's specific
+landing action. The generic helper also serves enemy raids and is not patched.
+A cold save preserves the pending observer on the industrial medicine. After
+load and 650 native ticks, it has `seenHere=true`, `inspect=true`, `sight=false`.
+The unseen herbal-medicine control still has `seen=false`, `inspect=false`.
+Pure controls consume the marker after one spawn and reject an unrelated hidden
+move, unknown payload and another faction's unobserved cargo.
+
+Evidence is retained in `artifacts/feedback-*-20261021.json`,
+`artifacts/feedback-render-20261021/` and
+`artifacts/logs/feedback-travel-native-20261021.log`. The final native process
+has no recognized errors or exceptions. Companion SDK-version warnings are
+retained. The companion is excluded from player packages. Performance retains
+the accepted baseline; no new throughput or Multiplayer claim is made.
+
 ## InitializeComps prefix cost, 2026-10-15
 
 A review flagged the InitializeComps prefix as a linear comp scan for every new

@@ -104,6 +104,12 @@ blueprint/corpse/lighting/door/highlight controls and portable camera
 screenshots. It stages temporary native objects and reloads the unchanged save.
 Inspect each returned row and the actual pixels; this is not a natural incident
 or full corpse-resurrection test. The companion remains outside player ZIPs.
+For player transport diagnostics, use `totalfog/travel_arrival` on the isolated
+paused feedback profile. Gravship controls pack and place native cargo on another
+map, with an unseen payload and no passengers. Caravan and pod controls use native
+entry/landing. `pod-cargo` omits the passenger; `stageOnly=true` leaves it airborne
+for a cold save/load. Status inspects saved cargo by ID. This does not test a full
+world flight, VGE/Rim Effect or Multiplayer. Reload the unchanged fixture afterward.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

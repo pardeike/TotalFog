@@ -457,13 +457,24 @@ public class MapVisibility : MapComponent
         }
     }
 
-    public void RevealCell(int index)
+    public void RevealCell(int index) => RevealCell(PrimaryPlayerFaction, index);
+
+    internal void RevealCell(Faction faction, int index)
     {
-        if ((uint)index >= coverage.CellCount || knownCells[index])
+        if (faction?.IsPlayer != true || (uint)index >= coverage.CellCount)
             return;
-        knownCells[index] = true;
-        DiscoveryChanged(index);
-        VisibilityChanged(PrimaryPlayerFaction, index);
+        var known = GetFactionKnownCells(faction);
+        if (known == null)
+        {
+            factionDiscovery.Add(faction.loadID, known = new bool[coverage.CellCount]);
+            if (!otherPlayerFactions.Contains(faction))
+                otherPlayerFactions.Add(faction);
+        }
+        if (known[index])
+            return;
+        known[index] = true;
+        DiscoveryChanged(index, faction);
+        VisibilityChanged(faction, index);
     }
 
     public void IncrementSeen(Faction faction, int index)
