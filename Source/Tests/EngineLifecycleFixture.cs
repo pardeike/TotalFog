@@ -98,6 +98,7 @@ namespace Verse
         public Faction Faction;
         public bool Spawned = true;
         public bool Destroyed;
+        public bool InValidStorage;
         public object Component;
         public int SizeX
         {
@@ -265,6 +266,7 @@ namespace Verse
 
         public Map()
         {
+            thingGrid = new ThingGrid(this);
             Fog = new(this);
             components.Add(Fog);
         }
@@ -287,6 +289,12 @@ namespace Verse
         public Tooltips tooltipGiverList = new();
         public MapDrawer mapDrawer = new();
         public List<Thing> Things = new();
+        public readonly ThingGrid thingGrid;
+    }
+
+    public sealed class ThingGrid(Map map)
+    {
+        public List<Thing> ThingsListAtFast(int index) => map.Things;
     }
 
     public class MapParent
@@ -652,6 +660,11 @@ namespace RimWorld
     public static class GravshipUtility
     {
         public static bool PlayerHasGravEngine(Verse.Map map) => map.HasGravEngine;
+    }
+
+    public static class StoreUtility
+    {
+        public static bool IsInValidStorage(Verse.Thing thing) => thing.InValidStorage;
     }
 
     public class Building_Turret : Verse.Building { }

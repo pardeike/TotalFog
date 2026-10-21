@@ -48,7 +48,7 @@ public class CompVisibility : FogSubcomponent
         );
 
     private bool CanRememberLocation =>
-        parent is not (Pawn or Corpse)
+        parent is not Pawn
         && parent.def.category is not (ThingCategory.Projectile or ThingCategory.Mote)
         && !parent.def.IsBlueprint
         && !parent.def.IsFrame;

@@ -13,24 +13,28 @@ internal static class ThingVisibility
         Thing thing,
         IntVec3? renderedCell = null,
         bool allowRememberedSelection = true
-    ) =>
-        IsVisible(
-            thing,
-            allowMemory: thing != null
-                && (
-                    thing.Faction == Faction.OfPlayer
-                        && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame)
-                    || allowRememberedSelection
-                        && FogSettings.InteractWithRememberedObjects
-                        && thing.Spawned
-                        && thing is not (Pawn or PawnFlyer or Corpse)
-                        && thing
-                            .TryGetComp<CompFog>()
-                            ?.HideFromPlayer?.WasSeenAtCurrentLocation(Faction.OfPlayer) == true
-                        && !CustomInspectionCell.TryGetCell(thing, out _)
-                ),
-            renderedCell: renderedCell
-        );
+    )
+    {
+        bool remember =
+            thing != null
+            && (
+                thing.Faction == Faction.OfPlayer
+                    && (thing is Pawn || thing.def.IsBlueprint || thing.def.IsFrame)
+                || allowRememberedSelection
+                    && FogSettings.InteractWithRememberedObjects
+                    && thing.Spawned
+                    && thing is not (Pawn or PawnFlyer)
+                    && thing
+                        .TryGetComp<CompFog>()
+                        ?.HideFromPlayer?.WasSeenAtCurrentLocation(Faction.OfPlayer) == true
+                    && !CustomInspectionCell.TryGetCell(thing, out _)
+            );
+        return IsVisible(thing, allowMemory: remember, renderedCell: renderedCell)
+            || thing is Corpse
+                && remember
+                && (!renderedCell.HasValue || renderedCell.Value == thing.PositionHeld)
+                && IsActionable(thing, Faction.OfPlayer);
+    }
 
     internal static bool Unrestricted(Map map, Faction observerFaction = null) =>
         FogSettings.OnlyOutsideColony && IsHomeFor(map, observerFaction);
@@ -71,6 +75,17 @@ internal static class ThingVisibility
             || !fog.IsKnown(observerFaction, map.cellIndices.CellToIndex(cell))
         )
             return false;
+        if (
+            thing is Corpse
+            && thing
+                .TryGetComp<CompFog>()
+                ?.HideFromPlayer?.WasSeenAtCurrentLocation(observerFaction) == true
+        )
+            return true;
+        // A valid stockpile or storage building is a standing work order.
+        // This permission does not reveal its contents or remember replacements.
+        if (thing.def.category == ThingCategory.Item && StoreUtility.IsInValidStorage(thing))
+            return true;
         // The home area is a standing cleaning order, including new dirt.
         // Filth has no observation component; this grants work access only.
         if (thing.def.category == ThingCategory.Filth && fog.HomeArea[cell])

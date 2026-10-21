@@ -11,12 +11,14 @@ public sealed class HaulingScenarios
 {
     [Tool(
         "totalfog/hauling_fixture",
-        Description = "Stage an owned construction or hauling order and test native reservation, obstruction-clearing, storage and cleaning jobs after actual sight loss. Supports fresh plant/building/item/filth replacements and map-search tests. Reload the unchanged fixture afterward."
+        Description = "Stage a chunk or animal corpse and test native hauling, storage and bill ingredient searches after sight loss. Also supports construction, cleaning and replacement controls. Reload the unchanged fixture afterward."
     )]
     public static object Fixture(
         string operation = "setup",
         string targetID = "",
-        string pawnID = ""
+        string pawnID = "",
+        string itemKind = "chunk",
+        string billGiverID = ""
     )
     {
         var map = Find.CurrentMap ?? throw new InvalidOperationException("Load a fixture first.");
@@ -41,11 +43,25 @@ public sealed class HaulingScenarios
             );
             foreach (var p in new CellRect(cell.x, cell.z, 6, 3))
                 map.fogGrid.Unfog(p);
-            target = GenSpawn.Spawn(
-                ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("ChunkMarble")),
-                cell,
-                map
-            );
+            if (itemKind == "corpse")
+            {
+                var animal = PawnGenerator.GeneratePawn(
+                    DefDatabase<PawnKindDef>.GetNamed("Muffalo")
+                );
+                GenSpawn.Spawn(animal, cell, map);
+                animal.Kill(null);
+                target = animal.Corpse;
+            }
+            else if (itemKind == "chunk")
+                target = GenSpawn.Spawn(
+                    ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("ChunkMarble")),
+                    cell,
+                    map
+                );
+            else
+                throw new ArgumentException("Use chunk or corpse.", nameof(itemKind));
+            if (target is ThingWithComps)
+                target.SetForbidden(false);
             for (int attempt = 0; ; attempt++)
             {
                 pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
@@ -104,7 +120,55 @@ public sealed class HaulingScenarios
         {
             target = map.listerThings.AllThings.First(t => t.ThingID == targetID);
             pawn = map.mapPawns.AllPawnsSpawned.First(p => p.ThingID == pawnID);
-            if (operation == "lose-sight")
+            if (operation == "store")
+            {
+                var stockpile = target.Position.GetZone(map) as Zone_Stockpile;
+                if (stockpile == null)
+                {
+                    stockpile = new Zone_Stockpile(
+                        StorageSettingsPreset.DefaultStockpile,
+                        map.zoneManager
+                    );
+                    map.zoneManager.RegisterZone(stockpile);
+                    stockpile.AddCell(target.Position);
+                }
+                stockpile.settings.filter.SetDisallowAll();
+                stockpile.settings.filter.SetAllow(target.def, true);
+                stockpile.settings.Priority = StoragePriority.Critical;
+                map.designationManager.TryRemoveDesignationOn(target, DesignationDefOf.Haul);
+            }
+            else if (operation == "setup-bill")
+            {
+                var table = (Building_WorkTable)
+                    ThingMaker.MakeThing(
+                        DefDatabase<ThingDef>.GetNamed(
+                            target is Corpse ? "TableButcher" : "TableStonecutter"
+                        ),
+                        ThingDefOf.WoodLog
+                    );
+                var location = GenRadial
+                    .RadialCellsAround(pawn.Position, 8, false)
+                    .First(c =>
+                        new CellRect(c.x - 2, c.z - 2, 5, 5).All(p =>
+                            p.InBounds(map)
+                            && p.Standable(map)
+                            && p.GetThingList(map).All(t => t is Plant or Filth)
+                        )
+                    );
+                GenSpawn.Spawn(table, location, map);
+                table.SetFaction(pawn.Faction);
+                foreach (var p in table.OccupiedRect())
+                    map.areaManager.Home[p] = true;
+                var recipe = DefDatabase<RecipeDef>.GetNamed(
+                    target is Corpse ? "ButcherCorpseFlesh" : "Make_StoneBlocksAny"
+                );
+                var bill = recipe.MakeNewBill();
+                bill.ingredientFilter.SetDisallowAll();
+                bill.ingredientFilter.SetAllow(target.def, true);
+                table.billStack.AddBill(bill);
+                billGiverID = table.ThingID;
+            }
+            else if (operation == "lose-sight")
             {
                 var source = pawn.TryGetComp<CompFog>().FieldOfViewWatcher;
                 float range = source.CalcPawnSightRange(pawn.Position, false, false);
@@ -219,7 +283,7 @@ public sealed class HaulingScenarios
             }
             else if (operation != "probe")
                 throw new ArgumentException(
-                    "Use setup, setup-construction, lose-sight, restore-sight, probe, replace-plant, replace-building, replace-filth, replace-item, remove-plan, remove-order, restore-order, start-construction or start.",
+                    "Use setup, setup-construction, setup-bill, store, lose-sight, restore-sight, probe, replace-plant, replace-building, replace-filth, replace-item, remove-plan, remove-order, restore-order, start-construction or start.",
                     nameof(operation)
                 );
         }
@@ -240,8 +304,32 @@ public sealed class HaulingScenarios
         var storageJob = target.def.EverHaulable
             ? Verse.AI.HaulAIUtility.HaulToStorageJob(pawn, target, false)
             : null;
+        var billGiver = map
+            .listerThings.AllThings.OfType<Building_WorkTable>()
+            .FirstOrDefault(t => t.ThingID == billGiverID);
+        var ingredients = new System.Collections.Generic.List<ThingCount>();
+        bool? ingredientsFound =
+            billGiver == null
+                ? null
+                : (bool)
+                    HarmonyLib
+                        .AccessTools.Method(typeof(WorkGiver_DoBill), "TryFindBestBillIngredients")
+                        .Invoke(
+                            null,
+                            new object[]
+                            {
+                                billGiver.billStack.Bills[0],
+                                pawn,
+                                billGiver,
+                                ingredients,
+                                null,
+                            }
+                        );
         return new
         {
+            billGiverID,
+            ingredientsFound,
+            ingredientIDs = ingredients.Select(t => t.Thing.ThingID).ToArray(),
             tick = Find.TickManager.TicksGame,
             targetID = target.ThingID,
             pawnID = pawn.ThingID,

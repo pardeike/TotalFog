@@ -83,14 +83,14 @@
     "Source/TotalFog/Presentation/DynamicVisibility.cs": "996bbbfbd78986270ec3c4bf11e2560e1b23b9b4ee1972efd4619e9dce9ac259",
     "Source/TotalFog/Presentation/ExplosionVisibility.cs": "790dc8f627ca698caf850408530ab0a5b4c9ac03dfb437f012303aed0d523008",
     "Source/TotalFog/Presentation/FleckVisibility.cs": "b99a1eeed4551734df53b9896818778bf3ba26a2ba019a1aa9b9de9a151d6590",
-    "Source/TotalFog/Presentation/FogMeshInvalidation.cs": "cdfc269a703ec94039b1942a50c2b2ca918acee08c8242cd3438185b77b9d5f4",
+    "Source/TotalFog/Presentation/FogMeshInvalidation.cs": "f754fa6f6ac2cc7aea5aed9d37dcc50aa6aa39f2f12a336406ad80f00cfd693a",
     "Source/TotalFog/Presentation/GasVisibility.Patches.cs": "3d72fd7ee8b6d43c79d4783c43ab1bdd434f1240bcb69d4092b3e43a05c7ce03",
     "Source/TotalFog/Presentation/GasVisibility.cs": "352f6d12669280b3a937f900800f489e8fb52c432842429284ff0c82de4fbc06",
     "Source/TotalFog/Presentation/InterfaceVisibility.Patches.cs": "25463d1f6600c1c4080e36526d236463c69cd41eb9dea125b4574e588f1a5eb4",
     "Source/TotalFog/Presentation/InterfaceVisibility.cs": "ccdbddf3049f5f6ff11779516623d04f358bc5031882b1bfdd3fbe89f5ca794f",
     "Source/TotalFog/Presentation/LightingVisibility.cs": "d64b4d3877820b9c8c37ee81762465d81d4af02d0ce22cffd8237ae058443817",
     "Source/TotalFog/Presentation/MapSearchVisibility.cs": "3c74cc3dc019d689d2ba46e832d3326b59720068c3e3d1a1f5dfca9ad973fe39",
-    "Source/TotalFog/Presentation/ThingVisibility.cs": "ff55d5b0e27e84f556cf37a604086ad5d96c327d9ff0029edaee09e6034ffbcb",
+    "Source/TotalFog/Presentation/ThingVisibility.cs": "9109177aa5c40a29a12d26331b9716b14b4efd6611d9e283c270e4e6045c4e3a",
     "Source/TotalFog/Properties/AssemblyInfo.cs": "d02ea3dbe42de67e82a5c52cadcd42efcbb4d58c32fb592c9a5cf9b7e211d1c5",
     "Source/TotalFog/Sight/CompCellRegistration.cs": "25e63bc8867a0100745c8714e7ac82ac89df1f08784459c0bd569b30e7f719c1",
     "Source/TotalFog/Sight/CompFog.cs": "da95cf37bee1410661289087c36f84a165f7b13527705dfdcfb998417df17f09",
@@ -100,7 +100,7 @@
     "Source/TotalFog/Sight/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
     "Source/TotalFog/Sight/CompSightSource.cs": "3277c99f4e6613532f81b32e407751c88d4c54d4f34866d394eec5b93a17d97f",
     "Source/TotalFog/Sight/CompTreeOcclusion.cs": "a88fd2f8ac6cdce776245ad69b8d2ef8657fb15aa04fa3174847ba2718d181ee",
-    "Source/TotalFog/Sight/CompVisibility.cs": "711ed66fa12edf65bef3260df44dd121837823023b51cb1e638384dc2cf84cc1",
+    "Source/TotalFog/Sight/CompVisibility.cs": "df7aa63238b1cbe689c8e4994a7512f2ac85748b74e90a42c491902ecadcf210",
     "Source/TotalFog/Sight/CompWallOcclusion.cs": "151214c0dcbfee1d9f1fd0f8c33425b535c5402ad95134ced543b857fa20e25d",
     "Source/TotalFog/Sight/FogMapUtility.cs": "29a016f17c05a935b1bce94820eaa433cc8154155c04455d3e76a0794aeac942",
     "Source/TotalFog/Sight/FogSubcomponent.cs": "f0e30133a3eb5aab141588dda39d7ed5dd3f086bfea58fe3d4af22a1284584d8",
@@ -128,5 +128,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "790a8548387a3eaf30ed68ead5fbb269ee357f3504c9bac8952741940f334321"
+  "dllSha256": "d81b470fc5d29b339156966080adc72f7a516363e60655635680284a3cb3f146"
 }

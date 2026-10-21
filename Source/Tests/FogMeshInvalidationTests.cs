@@ -8,6 +8,45 @@ namespace TotalFog.Tests;
 
 public sealed class FogMeshInvalidationTests
 {
+    [Theory]
+    [InlineData(DrawerType.MapMeshOnly)]
+    [InlineData(DrawerType.MapMeshAndRealTime)]
+    public void PlainStaticThingsRefreshWhenSightChanges(DrawerType drawer)
+    {
+        var map = new Map();
+        map.Things.Add(new Thing { def = new ThingDef { drawerType = drawer } });
+        Assert.NotEqual(
+            0UL,
+            FogMeshInvalidation.FlagsForSightChange(map, 0) & (ulong)MapMeshFlagDefOf.Things
+        );
+    }
+
+    [Theory]
+    [InlineData(DrawerType.RealtimeOnly)]
+    [InlineData(DrawerType.None)]
+    public void PlainRealtimeThingsDoNotInvalidateStaticMeshes(DrawerType drawer)
+    {
+        var map = new Map();
+        map.Things.Add(new Thing { def = new ThingDef { drawerType = drawer } });
+        Assert.Equal(
+            0UL,
+            FogMeshInvalidation.FlagsForSightChange(map, 0) & (ulong)MapMeshFlagDefOf.Things
+        );
+    }
+
+    [Fact]
+    public void ComponentBearingThingsKeepTheirExistingTransitionInvalidation()
+    {
+        var map = new Map();
+        map.Things.Add(
+            new ThingWithComps { def = new ThingDef { drawerType = DrawerType.MapMeshOnly } }
+        );
+        Assert.Equal(
+            0UL,
+            FogMeshInvalidation.FlagsForSightChange(map, 0) & (ulong)MapMeshFlagDefOf.Things
+        );
+    }
+
     [Fact]
     public void Unlit_sight_changes_preserve_fog_and_gas_without_rebuilding_lighting()
     {
