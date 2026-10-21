@@ -61,6 +61,42 @@ has no recognized errors or exceptions. Companion SDK-version warnings are
 retained. The companion is excluded from player packages. Performance retains
 the accepted baseline; no new throughput or Multiplayer claim is made.
 
+## Combat Extended tower report, 2026-10-21
+
+The [Workshop comment](https://steamcommunity.com/sharedfiles/filedetails/?id=3820003593#comment_571552431431914212)
+reports guards not firing with tower shooting enabled. Its weapon, draft state,
+game version and exact combined loadout are not supplied. Do not mark it fixed
+or attribute it to a setting without that evidence.
+
+The existing `totalfog/watchtower_ce` fixture passes all 26 controls on the same
+`6f7e5f2e...` gameplay DLL, Core-only offline 1.6.4871 and CE 16.7.4.0,
+assembly MVID `8639b76d81d349b09a08a728cd94a679`. Automatic native short-bow
+fire from a drafted lookout launches raised arrows and injures the ground target.
+Incoming arrows injure the elevated lookout. Tall blockers, low-wall shots,
+gradual climb/descent bounds and in-flight save/load also pass. The fixture
+reloads the unchanged save before the owned process stops. This is a bounded
+weapon/loadout check, not general CE acceptance or proof about undrafted guards.
+
+The offline profile loads Harmony's local copy because it does not resolve the
+Workshop entry. Its 1.6 `0Harmony.dll` is byte-identical to the released Workshop
+payload, SHA-256 `8ac54fdf0fab257148d68bc744d67609b74554ee72a4f3452e32030eaad009c6`.
+No private Harmony build is used. The separate Steam 1.7 checks load Workshop
+Harmony directly. The offline profile also uses an exact canonical copy of the
+released CE payload. Personal mod configuration is unchanged.
+
+The retained warning `CE tower cover cache unavailable: unsupported bounds-size
+read` is from our old adapter. DecompilerServer source and IL show that current
+`LightingTracker.HighestCoverAt` already uses `Bounds.max.y` for both pawn and
+cover. The adapter leaves that native body unchanged, and all native controls
+above pass. No gameplay patch is added for this warning. No recognized errors
+or exceptions occur in `artifacts/logs/feedback-ce-native-20261021.log`.
+The structured result is `artifacts/feedback-ce-tower-20261021.json`, with three
+native crops under `artifacts/CECore16UserData/Screenshots/`.
+
+The remaining underground-room report concerns VGE/VGE2 plus Rim Effect on
+Odyssey missions. It has no supplied save, log or complete mod list. The plain
+chunk invalidation correction does not establish a fix for that room delay.
+
 ## InitializeComps prefix cost, 2026-10-15
 
 A review flagged the InitializeComps prefix as a linear comp scan for every new
