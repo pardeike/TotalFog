@@ -123,23 +123,12 @@ public class CompSightSource : FogSubcomponent
         {
             if (pawn.Dead)
                 effectiveFaction = null;
-            else if (pawn.IsPrisonerOfColony && FogSettings.PrisonerGiveVision)
+            else
             {
-                effectiveFaction = pawn.HostFaction;
-                modifier = .2f;
+                effectiveFaction = SightFaction.For(fog, pawn, out modifier);
+                if (modifier == 1 && pawn.RaceProps.Animal)
+                    modifier = Compatibility.AnimalVision.Modifier(pawn);
             }
-            else if (
-                effectiveFaction != null
-                && !effectiveFaction.IsPlayer
-                && FogSettings.AllyGiveVision
-                && effectiveFaction.AllyOrNeutralTo(fog.PrimaryPlayerFaction)
-            )
-            {
-                effectiveFaction = fog.PrimaryPlayerFaction;
-                modifier = .5f;
-            }
-            else if (pawn.RaceProps.Animal)
-                modifier = Compatibility.AnimalVision.Modifier(pawn);
         }
         // Player/ally/prisoner sight drives presentation. Other faction grids
         // are needed only when enemy fog targeting is explicitly enabled.

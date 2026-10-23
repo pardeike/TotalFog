@@ -26,7 +26,7 @@ public static class Visibility
     /// <summary>
     /// Whether the optional enemy-fog policy permits one target cell. Uses the
     /// observing humanlike pawn's faction sight, not the player's presentation
-    /// sight. Returns true for observers outside that policy or when disabled.
+    /// sight; allies sharing vision with the player use that shared sight. Returns true for observers outside that policy or when disabled.
     /// Native hostility, line-of-sight and range checks remain required.
     /// Call on the game thread; this method does not change simulation or sight.
     /// </summary>
@@ -37,7 +37,7 @@ public static class Visibility
         || !FogSettings.AISmart
         || pawn.Faction.IsPlayer
         || !pawn.RaceProps.Humanlike
-        || pawn.Map.GetVisibility().IsShown(pawn.Faction, cell);
+        || pawn.Map.GetVisibility() is var fog && fog.IsShown(SightFaction.For(fog, pawn), cell);
 
     /// <summary>
     /// Register the current inspection/selection cell for an exact Thing type.
