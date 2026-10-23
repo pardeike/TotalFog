@@ -23,6 +23,7 @@
     <Compile Include="../TotalFog/Sight/CompCellRegistration.cs" Link="Production/CompCellRegistration.cs" />
     <Compile Include="../TotalFog/Presentation/ThingVisibility.cs" Link="Production/ThingVisibility.cs" />
     <Compile Include="../TotalFog/Visibility.cs" Link="Production/Visibility.cs" />
+    <Compile Include="../TotalFog/Sight/SightFaction.cs" Link="Production/SightFaction.cs" />
     <Compile Include="../TotalFog/Notifications/NotificationVisibility.cs" Link="Production/NotificationVisibility.cs" />
     <Compile Include="../TotalFog/Notifications/RefugeePodNotifications.cs" Link="Production/RefugeePodNotifications.cs" />
     <Compile Include="../TotalFog/Notifications/SilentRaidPolicy.cs" Link="Production/SilentRaidPolicy.cs" />

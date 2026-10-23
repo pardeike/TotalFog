@@ -65,7 +65,8 @@ internal static class Verb
         }
 
         var mapComponentSeenFog = thing.Map.GetVisibility();
-        return mapComponentSeenFog == null || mapComponentSeenFog.IsShown(thing.Faction, targetLoc);
+        return mapComponentSeenFog == null
+            || mapComponentSeenFog.IsShown(SightFaction.For(mapComponentSeenFog, thing), targetLoc);
     }
 
     private static bool FovLineOfSight(IntVec3 sourceSq, IntVec3 targetLoc, Thing thing)

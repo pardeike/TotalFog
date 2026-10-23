@@ -180,6 +180,6 @@ internal static class CombatExtendedIntegration
         )
             return true;
         var fog = observer.Map.GetVisibility();
-        return fog?.Initialized != true || fog.IsShown(observer.Faction, targetCell);
+        return fog?.Initialized != true || fog.IsShown(SightFaction.For(fog, observer), targetCell);
     }
 }

@@ -32,6 +32,41 @@ public sealed class VisibilityIntegrationTests
     }
 
     [Fact]
+    public void AlliesSharingPlayerSightTargetWhatThatSharedSightShows()
+    {
+        bool oldSmart = FogSettings.AISmart;
+        bool oldAlly = FogSettings.AllyGiveVision;
+        try
+        {
+            FogSettings.AISmart = true;
+            FogSettings.AllyGiveVision = true;
+            var trader = new Pawn
+            {
+                Faction = new Faction { loadID = 7, AllyOrNeutral = true },
+            };
+            var fog = trader.Map.Fog;
+            fog.FactionSight[fog.PrimaryPlayerFaction] = new[] { false, true, false, false };
+            Assert.False(Visibility.AllowsTarget(trader, new IntVec3(0, 0)));
+            Assert.True(Visibility.AllowsTarget(trader, new IntVec3(1, 0)));
+
+            FogSettings.AllyGiveVision = false;
+            Assert.False(Visibility.AllowsTarget(trader, new IntVec3(1, 0)));
+            fog.FactionSight[trader.Faction] = new[] { true, false, false, false };
+            Assert.True(Visibility.AllowsTarget(trader, new IntVec3(0, 0)));
+
+            FogSettings.AllyGiveVision = true;
+            trader.Faction.AllyOrNeutral = false;
+            Assert.True(Visibility.AllowsTarget(trader, new IntVec3(0, 0)));
+            Assert.False(Visibility.AllowsTarget(trader, new IntVec3(1, 0)));
+        }
+        finally
+        {
+            FogSettings.AISmart = oldSmart;
+            FogSettings.AllyGiveVision = oldAlly;
+        }
+    }
+
+    [Fact]
     public void TargetFilterPreservesObserversOutsideExistingEnemyFogPolicy()
     {
         bool old = FogSettings.AISmart;

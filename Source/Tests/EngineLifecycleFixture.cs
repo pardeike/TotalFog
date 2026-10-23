@@ -78,6 +78,9 @@ namespace Verse
         public static Faction OfPlayer = PrimaryPlayer;
         public int loadID;
         public bool IsPlayer;
+        public bool AllyOrNeutral;
+
+        public bool AllyOrNeutralTo(Faction other) => AllyOrNeutral;
     }
 
     public class Thing
@@ -920,6 +923,8 @@ namespace TotalFog
         public static bool ClearFogDuringTargeting = true;
         public static bool InteractWithRememberedObjects = true;
         public static bool AISmart;
+        public static bool AllyGiveVision;
+        public static bool PrisonerGiveVision;
         public static bool SilentRaids;
         public static bool HideEventNegative,
             HideEventNeutral,
