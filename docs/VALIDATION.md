@@ -8,9 +8,41 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
-## Corner-touching wall sight, 2026-10-24
+## Release 1.0.3 candidate, 2026-10-24
 
-The unreleased DLL is
+The versioned Release DLL is
+`a270e3f6c3e44e51148c0e3e9017d8e439757a30d34c23a4b4455c4bdd2985bd`,
+MVID `0a7d8d13-34ed-41ea-b8c0-d53177771b9d`.
+All 557 C# tests and seven artifact tests pass. Gameplay and companion
+compilation succeeds with zero warnings or errors. The tracked receipt matches.
+
+These exact bytes pass all 17 native corner-wall controls on Steam
+1.7.4985 rev1269 with all five DLCs and offline 1.6.4871 rev581 with CE.
+Both profiles use released Harmony and RimBridgeServer. The scenarios restore
+settings and reload their unchanged saves. Both games then stop.
+Neither native journal contains errors. Existing save-version and ritual
+precept warnings remain on 1.7. Both journals contain bridge timing warnings.
+These checks renew wall-corner sight and blocker lifecycle only.
+
+The frozen ZIP contains 277 files under one `TotalFog/` wrapper, SHA-256
+`d1182e4ae16e6f25af8932104eceb6d423a81ba254aa45e768dcc2269cf7172e`.
+Every file matches both deployed payloads. Extraction produces
+`Mods/TotalFog/About` exactly once. The package excludes companions, SDKs,
+private Harmony, debug symbols, source and Finder metadata.
+Candidate hashes, native results and journals are under `artifacts/release-1.0.3/`.
+
+An independent read-only release review found no source blocker. Two additional
+development diagnostics compare 913,790 point/mask queries without disagreement
+and 177,520 independently clear floor pairs without incorrectly hiding a pair.
+The latter uses direct line geometry and 6,208 closed diagonal pinches.
+These diagnostics precede the version bump and do not establish combat,
+performance or full mod-list acceptance. Their logs are
+`artifacts/logs/release-review-point-consistency.log` and
+`artifacts/logs/release-review-independent-sight.log`.
+
+## Corner-touching wall sight development, 2026-10-24
+
+The development DLL is
 `80729020172bf69013c382dae367c4f8b02e585c24cf059d2f523e9fe4bb973a`,
 MVID `2cdb988f-96fc-4150-a6f6-59fb45ab1e7a`. Both deployed copies match
 the built bytes. The tracked receipt passes verification. Version 1.0.2's

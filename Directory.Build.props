@@ -3,7 +3,7 @@
     <ModName>Total Fog</ModName>
     <ModFileName>TotalFog</ModFileName>
     <PackageId>brrainz.totalfog</PackageId>
-    <ModVersion>1.0.2</ModVersion>
+    <ModVersion>1.0.3</ModVersion>
     <Repository>https://github.com/pardeike/TotalFog</Repository>
     <Version>$(ModVersion)</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>

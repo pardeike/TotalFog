@@ -33,7 +33,7 @@ Feedback: https://discord.gg/G4r84eN7w6
 Source: https://github.com/pardeike/TotalFog
 
 Based on Real Fog of War by Luca De Petrillo and its NWN continuation by Mlie. Apache License 2.0.</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.0.2</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.0.3</modVersion>
   <incompatibleWith>
     <li>Mlie.NWNRealFogOfWar</li>
   </incompatibleWith>
