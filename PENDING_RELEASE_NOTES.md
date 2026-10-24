@@ -1,0 +1,1 @@
+- Fixed sight leaking through walls that touch at their corners.

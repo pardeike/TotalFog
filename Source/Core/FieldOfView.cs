@@ -3,7 +3,7 @@ using System;
 
 namespace TotalFog.Core;
 
-/// <summary>Symmetric shadowcasting: floor centers, opaque cell diamonds, exact rational slopes.</summary>
+/// <summary>Symmetric shadowcasting: floor centers, joined opaque diamonds, exact rational slopes.</summary>
 public static class FieldOfView
 {
     public static void Compute(
@@ -158,12 +158,20 @@ public static class FieldOfView
             // Tail traversal avoids growing the stack through open terrain.
             while (depth <= limit && !TargetSeen)
             {
+                if (!start.HasRoomTo(end))
+                    return;
                 int first = (int)Floor(
                     2L * depth * start.Numerator + start.Denominator,
                     2L * start.Denominator
                 );
                 int last = (int)
                     -Floor(-(2L * depth * end.Numerator - end.Denominator), 2L * end.Denominator);
+                int wallFirst = first,
+                    wallLast = last;
+                // Additional cells can close a joined shadow. They cannot
+                // reveal opaque targets outside the original sector.
+                first = Math.Max(-depth, first - 1);
+                last = Math.Min(depth, last + 1);
                 long depthSquared = (long)depth * depth;
                 bool hasPrevious = false,
                     previousOpaque = false;
@@ -193,13 +201,17 @@ public static class FieldOfView
                     bool inBounds = (uint)x < width && (uint)z < height;
                     bool inRange = depthSquared + (long)column * column <= rangeSquared;
                     bool wall = !inBounds || !inRange || opaque[z * width + x];
+                    if (hasPrevious && previousOpaque && !wall)
+                        start = start.Later(TransitionSlope(depth, column, true, quadrant));
                     if (
                         inBounds
                         && inRange
                         && (
-                            wall
-                            || (long)column * start.Denominator >= (long)depth * start.Numerator
-                                && (long)column * end.Denominator <= (long)depth * end.Numerator
+                            wall && column >= wallFirst && column <= wallLast
+                            || !wall
+                                && !ClosedQuadrantCorner(depth, column, quadrant)
+                                && start.IncludesLower(column, depth)
+                                && end.IncludesUpper(column, depth)
                         )
                     )
                     {
@@ -211,14 +223,13 @@ public static class FieldOfView
                         }
                         reveal?.Invoke(index);
                     }
-                    if (hasPrevious && previousOpaque != wall)
-                    {
-                        var edge = new Slope(2 * column - 1, 2 * depth);
-                        if (previousOpaque)
-                            start = edge;
-                        else
-                            Scan(depth + 1, start, edge, quadrant);
-                    }
+                    if (hasPrevious && !previousOpaque && wall)
+                        Scan(
+                            depth + 1,
+                            start,
+                            end.Earlier(TransitionSlope(depth, column, false, quadrant)),
+                            quadrant
+                        );
                     previousOpaque = wall;
                     hasPrevious = true;
                 }
@@ -234,12 +245,20 @@ public static class FieldOfView
         {
             while (depth <= limit)
             {
+                if (!start.HasRoomTo(end))
+                    return;
                 int first = (int)Floor(
                     2L * depth * start.Numerator + start.Denominator,
                     2L * start.Denominator
                 );
                 int last = (int)
                     -Floor(-(2L * depth * end.Numerator - end.Denominator), 2L * end.Denominator);
+                int wallFirst = first,
+                    wallLast = last;
+                int visibleFirst = first + (start.IncludesLower(first, depth) ? 0 : 1);
+                int visibleLast = last - (end.IncludesUpper(last, depth) ? 0 : 1);
+                first = Math.Max(-depth, first - 1);
+                last = Math.Min(depth, last + 1);
                 long depthSquared = (long)depth * depth;
                 // Short rows cost less to cast directly than to prove clear.
                 if (
@@ -251,8 +270,8 @@ public static class FieldOfView
                                 depthSquared,
                                 first,
                                 last,
-                                start,
-                                end,
+                                visibleFirst,
+                                visibleLast,
                                 quadrant
                             )
                             : WriteOpenVerticalRow(
@@ -260,8 +279,8 @@ public static class FieldOfView
                                 depthSquared,
                                 first,
                                 last,
-                                start,
-                                end,
+                                visibleFirst,
+                                visibleLast,
                                 quadrant
                             )
                     )
@@ -270,14 +289,6 @@ public static class FieldOfView
                     depth++;
                     continue;
                 }
-                // Rounded row endpoints can miss the center-slope interval
-                // by at most one cell. Interior floor cells are already inside.
-                // A wall-to-floor transition only moves start behind that floor.
-                int visibleFirst =
-                    first
-                    + ((long)first * start.Denominator < (long)depth * start.Numerator ? 1 : 0);
-                int visibleLast =
-                    last - ((long)last * end.Denominator > (long)depth * end.Numerator ? 1 : 0);
                 bool hasPrevious = false,
                     previousOpaque = false;
                 for (int column = first; column <= last; column++)
@@ -306,20 +317,33 @@ public static class FieldOfView
                     bool inBounds = (uint)x < width && (uint)z < height;
                     bool inRange = depthSquared + (long)column * column <= rangeSquared;
                     bool wall = !inBounds || !inRange || opaque[z * width + x];
+                    if (hasPrevious && previousOpaque && !wall)
+                    {
+                        start = start.Later(TransitionSlope(depth, column, true, quadrant));
+                        visibleFirst = Math.Max(
+                            visibleFirst,
+                            column + (start.IncludesLower(column, depth) ? 0 : 1)
+                        );
+                    }
                     if (
                         inBounds
                         && inRange
-                        && (wall || column >= visibleFirst && column <= visibleLast)
+                        && (
+                            wall && column >= wallFirst && column <= wallLast
+                            || !wall
+                                && !ClosedQuadrantCorner(depth, column, quadrant)
+                                && column >= visibleFirst
+                                && column <= visibleLast
+                        )
                     )
                         destination!.AddCell(x, z);
-                    if (hasPrevious && previousOpaque != wall)
-                    {
-                        var edge = new Slope(2 * column - 1, 2 * depth);
-                        if (previousOpaque)
-                            start = edge;
-                        else
-                            ScanMask(depth + 1, start, edge, quadrant);
-                    }
+                    if (hasPrevious && !previousOpaque && wall)
+                        ScanMask(
+                            depth + 1,
+                            start,
+                            end.Earlier(TransitionSlope(depth, column, false, quadrant)),
+                            quadrant
+                        );
                     previousOpaque = wall;
                     hasPrevious = true;
                 }
@@ -329,13 +353,63 @@ public static class FieldOfView
             }
         }
 
+        private bool ClosedQuadrantCorner(int depth, int column, int quadrant)
+        {
+            // At the shared quadrant edge, the wall on the right has not
+            // been scanned yet. Its joined corner must also hide this floor.
+            return (column == -depth || column == depth)
+                && IsOpaque(depth - 1, column, quadrant)
+                && IsOpaque(depth, column + (column < 0 ? 1 : -1), quadrant);
+        }
+
+        private Slope TransitionSlope(int depth, int column, bool previousOpaque, int quadrant)
+        {
+            int numerator = 2 * column - 1;
+            // Extend only touching opaque neighbours to their shared square
+            // corner. Isolated walls keep their existing diamond silhouette.
+            int neighbourDepth =
+                depth + ((previousOpaque ? numerator < 0 : numerator > 0) ? 1 : -1);
+            if (
+                IsOpaque(depth, column - (previousOpaque ? 1 : 0), quadrant)
+                && IsOpaque(neighbourDepth, column - (previousOpaque ? 0 : 1), quadrant)
+            )
+                return new Slope(numerator, depth + neighbourDepth, true);
+            return new Slope(numerator, 2 * depth);
+        }
+
+        private bool IsOpaque(int depth, int column, int quadrant)
+        {
+            int x = originX,
+                z = originZ;
+            switch (quadrant)
+            {
+                case 0:
+                    x += column;
+                    z -= depth;
+                    break;
+                case 1:
+                    x += depth;
+                    z += column;
+                    break;
+                case 2:
+                    x += column;
+                    z += depth;
+                    break;
+                default:
+                    x -= depth;
+                    z += column;
+                    break;
+            }
+            return (uint)x < width && (uint)z < height && opaque[z * width + x];
+        }
+
         private bool WriteOpenVerticalRow(
             int depth,
             long depthSquared,
             int first,
             int last,
-            Slope start,
-            Slope end,
+            int visibleFirst,
+            int visibleLast,
             int quadrant
         )
         {
@@ -356,10 +430,6 @@ public static class FieldOfView
             for (int index = firstZ * width + x; index <= endIndex; index += width)
                 if (opaque[index])
                     return false;
-            int visibleFirst =
-                first + ((long)first * start.Denominator < (long)depth * start.Numerator ? 1 : 0);
-            int visibleLast =
-                last - ((long)last * end.Denominator > (long)depth * end.Numerator ? 1 : 0);
             destination!.AddVerticalRun(originZ + visibleFirst, originZ + visibleLast, x);
             return true;
         }
@@ -369,8 +439,8 @@ public static class FieldOfView
             long depthSquared,
             int first,
             int last,
-            Slope start,
-            Slope end,
+            int visibleFirst,
+            int visibleLast,
             int quadrant
         )
         {
@@ -390,10 +460,6 @@ public static class FieldOfView
                 ) >= 0
             )
                 return false;
-            int visibleFirst =
-                first + ((long)first * start.Denominator < (long)depth * start.Numerator ? 1 : 0);
-            int visibleLast =
-                last - ((long)last * end.Denominator > (long)depth * end.Numerator ? 1 : 0);
             destination!.AddHorizontalRun(originX + visibleFirst, originX + visibleLast, z);
             return true;
         }
@@ -405,9 +471,42 @@ public static class FieldOfView
         return numerator < 0 && numerator % denominator != 0 ? result - 1 : result;
     }
 
-    private readonly struct Slope(int numerator, int denominator)
+    private readonly struct Slope(int numerator, int denominator, bool exclusive = false)
     {
         public readonly int Numerator = numerator;
         public readonly int Denominator = denominator;
+        private readonly bool exclusive = exclusive;
+
+        public bool IncludesLower(int column, int depth)
+        {
+            long difference = (long)column * Denominator - (long)depth * Numerator;
+            return difference > 0 || difference == 0 && !exclusive;
+        }
+
+        public bool IncludesUpper(int column, int depth)
+        {
+            long difference = (long)column * Denominator - (long)depth * Numerator;
+            return difference < 0 || difference == 0 && !exclusive;
+        }
+
+        public bool HasRoomTo(Slope end)
+        {
+            long difference = (long)Numerator * end.Denominator - (long)end.Numerator * Denominator;
+            return difference < 0 || difference == 0 && !exclusive && !end.exclusive;
+        }
+
+        public Slope Later(Slope other)
+        {
+            long difference =
+                (long)Numerator * other.Denominator - (long)other.Numerator * Denominator;
+            return difference > 0 || difference == 0 && exclusive ? this : other;
+        }
+
+        public Slope Earlier(Slope other)
+        {
+            long difference =
+                (long)Numerator * other.Denominator - (long)other.Numerator * Denominator;
+            return difference < 0 || difference == 0 && exclusive ? this : other;
+        }
     }
 }

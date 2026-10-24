@@ -346,6 +346,12 @@ sources, reciprocal sight, radius, blockers, rectangular maps, footprints and
 lifecycle behavior. Engine tests must cover rendering, registration, save/load,
 UI, notifications and audio separately.
 
+Opaque cells that touch diagonally join at their shared cell corner. Rational
+shadow boundaries exclude that closed corner, including at quadrant boundaries.
+The caster inspects neighbouring boundary candidates so clipping cannot miss a
+joining wall. Isolated walls retain their original diamond shape. This closes
+diagonal enclosures without tracing a separate ray for every visible cell.
+
 For a demonstrated regression, compare load time, actual tick progress,
 frame-time distribution and allocations against the accepted Total Fog baseline
 on the affected workload. The inherited binary retains historical comparisons.

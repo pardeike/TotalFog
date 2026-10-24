@@ -12,7 +12,9 @@ Review round 2 is complete in ten ordered commits on 13 October 2026, followed
 by Andreas's accepted independent reassessment corrections. The independent
 player-stability review then corrects owned-pawn controls, tower fog targeting
 and CE targeting for other player factions. The current development build
-passes 549 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+passes 557 C# tests and seven pure artifact-gate tests. Gameplay and companion
+compilation succeeds without warnings or errors. The pure Core test project
+retains its three existing nullable warnings.
 The 1.0.2 merchant, prisoner-sharing and split-stack corrections pass native
 controls on both engines. Earlier released payloads retain separate evidence below.
 The subsequent lighting-invalidation change passes native light-boundary checks
@@ -36,6 +38,7 @@ including tracked-binary validation, formatting, pure tests and clean builds.
 
 | Area | Current evidence and boundary |
 |---|---|
+| Corner-touching walls | Unreleased DLL 80729020 closes diagonal enclosures while preserving single-corner peeking and real openings. Pure tests cover all 512 small blocker layouts, reciprocal floor sight, point/mask agreement including opaque targets, hidden walls, radius and zero-allocation casting. All 17 native wall/observer controls pass on Steam 1.7.4985 with all DLCs and offline Core-only 1.6.4871 with CE. Each opening admits sight and rebuilding seals it while keeping exploration memory. No native errors occur. Full tester loadout, combat, screenshot and performance gates are not renewed. |
 | Visitor and prisoner combat sight | The 24 October regressions reproduce lost target acquisition when sharing replaces personal faction sight. Final 1.0.2 DLL 0050ffa8 retains full own sight and separately shares half range for visitors or one-fifth for prisoners. All 35 merchant controls and 22 prisoner/stack controls pass on Steam 1.7.4985 with all DLCs and Core-only offline 1.6.4871 with CE. These include every sharing-setting combination, combat peeking, contribution cleanup and native prison-break acquisition. Neutral prisoners obey the prisoner option independently of ally sharing. No captured errors remain. The original reporter's full loadout and a natural trader/prisoner fight remain untested. |
 | Split stacks and cargo | Native partial pickup preserves the split units' observation history. Six pure cases protect unknown cargo, one-use arrival permission, old locations and independent faction records. Final 1.0.2 passes native split/pod delivery on both engines, including a fresh-process airborne save/load on 1.7. Unknown herbal medicine remains unknown; the 1.6 forced-merge control still leaves seven remembered units without sight. Full world travel and optional transport-mod combinations retain their separate evidence limits. |
 | Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |

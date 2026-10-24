@@ -8,6 +8,52 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Corner-touching wall sight, 2026-10-24
+
+The unreleased DLL is
+`80729020172bf69013c382dae367c4f8b02e585c24cf059d2f523e9fe4bb973a`,
+MVID `2cdb988f-96fc-4150-a6f6-59fb45ab1e7a`. Both deployed copies match
+the built bytes. The tracked receipt passes verification. Version 1.0.2's
+published artifact remains the separate checkpoint below.
+
+Four new geometry cases reproduce sight passing through touching wall corners
+on the earlier caster. The accepted red log is
+`artifacts/diagonal-walls-20261024/red.log`. Additional boundary tests reject
+an intermediate candidate that reveals opaque targets behind a blocker.
+The final caster uses neighbouring candidates only for shadow closure, not
+for revealing targets outside the original sector.
+
+All 557 C# tests and seven artifact tests pass. The corner controls cover every
+rotation, closed rooms at three sizes, off-centre observers, single-wall
+openings and hidden opaque targets. All 512 small blocker layouts preserve
+reciprocal floor sight and callback/mask/point agreement. Existing clipped-map,
+open-row, shared-range and zero-allocation controls remain passing. Gameplay
+and companion builds have no warnings or errors. The pure Core test project
+retains three existing nullable warnings in PendingQueue and VisibilityMask.
+
+The same DLL passes all 17 `totalfog/corner_walls` native controls on:
+
+- Steam 1.7.4985 rev1269 with Core and all five DLCs.
+- Offline Core-only 1.6.4871 rev581 with CE.
+
+Both profiles include Harmony and RimBridgeServer. Real walls enclose a native
+player observer in a previously unseen patch. All outside sample cells stay
+out of current sight. Removing each cardinal wall admits sight, rebuilding it
+removes that sight, and legitimate discovery remains remembered. The scenario
+restores settings and reloads its unchanged save. Both games then stop.
+
+The initial 1.7 fixture requires an unnecessarily large empty patch and fails
+before staging. That result is retained as `native17-rejected-fixture.json`.
+The corrected 9x9 footprint passes on both engines. Accepted results and native
+log journals are under `artifacts/diagonal-walls-20261024/`. Neither journal
+contains errors. The 1.7 fixture logs its older save version and missing ritual
+precept warnings. Both journals include bridge startup timing warnings.
+
+This proves paused native sight and wall-change integration. It does not replay
+the tester's complete loadout, renew combat or performance acceptance, or add
+pixel/screenshot evidence. No saved-data fields or public API signatures change.
+Previously explored cells are deliberately not erased by the corrected sight.
+
 ## Release 1.0.2 candidate, 2026-10-24
 
 The versioned Release DLL is

@@ -122,6 +122,12 @@ regressions in the same isolated paused fixture. It checks prison-break target
 acquisition, all enemy-fog/prisoner/ally setting combinations, known and unknown
 split cargo, arrival consumption and whole-stack identity. It restores settings
 and reloads the supplied save; read the native error journal before acceptance.
+Use `totalfog/corner_walls` for diagonal enclosures in an isolated paused save.
+It finds a clear, unseen 9x9 patch, creates real walls and a native observer,
+then opens and rebuilds each side. It checks current sight, blocker registration
+and retained discovery. It restores settings and reloads the unchanged save.
+Read the native log journal. This is a bounded sight check, not a combat or
+performance gate; the companion remains outside player packages.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

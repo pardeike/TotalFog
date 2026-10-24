@@ -53,7 +53,10 @@ public class FieldOfViewTests
             for (int b = a + 1; b < 99; b++)
                 if (!blocked[b])
                 {
-                    Assert.Equal(seen[b], Cast(blocked, 11, 9, b % 11, b / 11, 20)[a]);
+                    Assert.True(
+                        seen[b] == Cast(blocked, 11, 9, b % 11, b / 11, 20)[a],
+                        $"Sight differs between ({a % 11},{a / 11}) and ({b % 11},{b / 11})"
+                    );
                     Assert.Equal(
                         seen[b],
                         FieldOfView.CanSee(11, 9, a % 11, a / 11, b % 11, b / 11, 20, blocked)
