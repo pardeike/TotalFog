@@ -8,6 +8,74 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Release 1.0.2 candidate, 2026-10-24
+
+The versioned Release DLL is
+`0050ffa89eb17123c6ae453982c088730810f6e8ad5e78dbb471d52a565cadee`,
+MVID `766ad8fd-1b21-4560-b997-0d5df1716615`.
+It passes 549 C# tests and seven artifact tests with zero build warnings/errors.
+The frozen ZIP contains 277 files under one `TotalFog/` wrapper, SHA-256
+`0c1015e1f7c833a39e569cff7e46259118c754b909c087ea872692eee98c3252`.
+Every file and its bytes match the deployed Steam-folder payload. Extraction
+produces `TotalFog/About` once. The package excludes companions, SDKs, private
+Harmony, debug symbols, source, diagnostic media and Finder metadata. The
+existing build receipt contains only relative public source paths and hashes.
+
+The review reproduced prisoner target-acquisition loss with prisoner sharing
+and enemy fog enabled, neutral-prisoner sight leaking through the ally option,
+and lost observation on a native partial-stack pickup. Its accepted red run is
+`artifacts/interaction-review-20261024/native17.json` on DLL 24071843. An earlier
+probe dereferenced an uninitialized child fog subcomponent and is rejected as
+fixture evidence. Six new pure split cases run before implementation: five
+fail and the unknown-cargo control passes. Their red log is
+`artifacts/logs/stack-observation-red-20261024.log`.
+
+Prisoners now use the existing separate sharing channel at one-fifth range.
+Their own faction keeps full sight when enemy fog is enabled. Prisoner status
+owns the sharing decision even when its option is disabled. Factionless
+prisoners retain the previous host-sharing path. Native `CompFog.PostSplitOff`
+initializes a known split stack's fog parts and copies its observation history,
+recorded locations and unconsumed arrival marker. Mutable faction histories
+are copied independently. Unknown stacks avoid this extra setup. No saved
+fields, defaults, targeting exceptions or public API signatures are changed.
+
+The final DLL passes 35 `merchant_sight` assertions and 22 `sharing_and_stacks`
+assertions on each engine:
+
+- Steam 1.7.4985 rev1269, released Workshop Harmony, bridge, Core and all five DLCs.
+- Offline Core-only 1.6.4871 rev581, released Workshop Harmony, bridge and CE.
+
+The new controls exercise native prison-break target acquisition, all eight
+enemy-fog/prisoner-sharing/ally-sharing combinations, the one-fifth range
+boundary, native partial pickup before and after arrival authorization,
+consumption, unknown cargo on explored terrain and whole-stack identity. The
+existing merchant controls retain full own sight, shorter player sharing,
+combat peeking and range/movement/faction/despawn cleanup. Both suites restore
+settings and reload unchanged saves. Their manifests record engine, mods,
+gameplay hash and MVID in `artifacts/sharing16-102-20261024.json`,
+`sharing17-102-20261024.json` and `merchant102_*` JSON files.
+
+A full 1.7 cargo-only pod control uses native partial pickup before loading,
+then saves airborne cargo, restarts the game and reloads it. After 650 actual
+ticks, five medicine units arrive with `seenHere=true`, `inspect=true` and
+`sight=false`; unknown herbal medicine stays unseen and uninspectable. The
+first step request reaches its ten-second budget after 559 ticks. Advancing
+the reported remaining 91 ticks completes the intended window without replay.
+The 1.6 native pod-split control also completes landing with five remembered
+units and unknown herbal medicine. Its retained pod-merge control absorbs five
+units into an unseen two-unit stack, leaving seven inspectable units without
+sight. The 1.6 native end clocks are 588 and 590; these prove completed landing,
+not the helper's requested 650-tick duration. All final captured error journals
+are empty. Test games are stopped and base fixtures are restored.
+
+The pure split controls also preserve old-location limits, prohibit renewal of
+consumed arrival permission and isolate faction observation dictionaries.
+This is bounded native acquisition and delivery evidence. It does not reproduce
+the original reporter's full loadout or a natural trader/prisoner fight, and
+does not renew broader CE or deferred Multiplayer acceptance. The accepted
+performance baseline remains closed; these changes add no recurring scan or
+new timer, and split copying occurs only on the native split event.
+
 ## Merchant sight-sharing regression, 2026-10-24
 
 The [visitor combat report](https://discord.com/channels/900081000942567454/1390493088358858762/1563202747296120833)

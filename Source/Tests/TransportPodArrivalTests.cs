@@ -123,6 +123,105 @@ public sealed class TransportPodArrivalTests : IDisposable
         Assert.False(receiver.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void KnownSplitCargoRetainsKnowledgeBeforeOrAfterArrivalIsMarked(bool markBeforeSplit)
+    {
+        var cargo = Cargo(observed: true);
+        var source = cargo.TryGetComp<CompFog>().HideFromPlayer;
+        if (markBeforeSplit)
+            source.RememberNextArrival(Faction.OfPlayer);
+        var split = Cargo(observed: false);
+        source.CopySplitKnowledgeTo(split.TryGetComp<CompFog>().HideFromPlayer);
+        Assert.True(split.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
+        if (!markBeforeSplit)
+            split.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        var map = Destination(false);
+        Spawn(split, map, new IntVec3(1, 1));
+        Assert.True(ThingVisibility.CanInspect(split));
+        Assert.False(Visibility.IsVisible(split));
+        Assert.True(source.WasSeenBy(Faction.OfPlayer));
+        // A consumed copied marker cannot authorize another hidden relocation.
+        map.Fog.knownCells[0] = true;
+        Spawn(split, map, new IntVec3(0, 0));
+        Assert.False(ThingVisibility.CanInspect(split));
+    }
+
+    [Fact]
+    public void UnknownSplitCargoCannotGainKnowledgeThroughAnArrival()
+    {
+        var cargo = Cargo(observed: false);
+        var split = Cargo(observed: false);
+        cargo.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        cargo
+            .TryGetComp<CompFog>()
+            .HideFromPlayer.CopySplitKnowledgeTo(split.TryGetComp<CompFog>().HideFromPlayer);
+        split.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        Spawn(split, Destination(true), new IntVec3(1, 1));
+        Assert.False(split.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
+        Assert.False(ThingVisibility.CanInspect(split));
+    }
+
+    [Fact]
+    public void SplitKnowledgeRetainsItsOldLocationWithoutGrantingAnOrdinaryHiddenMove()
+    {
+        var cargo = Cargo(observed: true);
+        var split = Cargo(observed: false);
+        cargo
+            .TryGetComp<CompFog>()
+            .HideFromPlayer.CopySplitKnowledgeTo(split.TryGetComp<CompFog>().HideFromPlayer);
+        Spawn(split, cargo.Map, cargo.PositionHeld);
+        Assert.True(ThingVisibility.CanInspect(split));
+        Spawn(split, Destination(true), new IntVec3(1, 1));
+        Assert.True(split.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
+        Assert.False(ThingVisibility.CanInspect(split));
+    }
+
+    [Fact]
+    public void SplitKnowledgeDoesNotResurrectAConsumedArrivalPermission()
+    {
+        var cargo = Cargo(observed: true);
+        cargo.TryGetComp<CompFog>().HideFromPlayer.RememberNextArrival(Faction.OfPlayer);
+        Spawn(cargo, Destination(true), new IntVec3(1, 1));
+        var split = Cargo(observed: false);
+        cargo
+            .TryGetComp<CompFog>()
+            .HideFromPlayer.CopySplitKnowledgeTo(split.TryGetComp<CompFog>().HideFromPlayer);
+        Assert.True(split.TryGetComp<CompFog>().HideFromPlayer.WasSeenBy(Faction.OfPlayer));
+        Spawn(split, Destination(true), new IntVec3(1, 1));
+        Assert.False(ThingVisibility.CanInspect(split));
+    }
+
+    [Fact]
+    public void SplitCopiesFactionHistoryWithoutSharingMutableObservationRecords()
+    {
+        var cargo = Cargo(observed: true);
+        var source = cargo.TryGetComp<CompFog>().HideFromPlayer;
+        var second = new Faction { loadID = 2, IsPlayer = true };
+        var third = new Faction { loadID = 3, IsPlayer = true };
+        cargo.Map.Fog.FactionSight[second] = new[] { true, false, false, false };
+        cargo.Map.Fog.FactionKnown[second] = new[] { true, false, false, false };
+        source.RecordObservation(second, cargo.Map.Fog);
+        var split = Cargo(observed: false);
+        var child = split.TryGetComp<CompFog>().HideFromPlayer;
+        source.CopySplitKnowledgeTo(child);
+        Spawn(split, cargo.Map, cargo.PositionHeld);
+        Assert.True(child.WasSeenAtCurrentLocation(second));
+        cargo.Map.Fog.FactionSight[third] = new[] { true, false, false, false };
+        cargo.Map.Fog.FactionKnown[third] = new[] { true, false, false, false };
+        child.RecordObservation(third, cargo.Map.Fog);
+        Assert.True(child.WasSeenBy(third));
+        Assert.False(source.WasSeenBy(third));
+        cargo.Map.Fog.FactionSight[second][3] = true;
+        cargo.Map.Fog.FactionKnown[second][3] = true;
+        Spawn(split, cargo.Map, new IntVec3(1, 1));
+        child.RecordObservation(second, cargo.Map.Fog);
+        Assert.True(child.WasSeenAtCurrentLocation(second));
+        Assert.True(source.WasSeenAtCurrentLocation(second));
+        Assert.True(source.WasSeenAtCurrentLocation(Faction.OfPlayer));
+    }
+
     private static ThingWithComps Cargo(bool observed)
     {
         var cargo = new ThingWithComps();

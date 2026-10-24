@@ -102,4 +102,16 @@ public class CompFog : ThingComp
 
     public override void PreAbsorbStack(Thing otherStack, int count) =>
         HideFromPlayer?.AbsorbArrival(otherStack, count);
+
+    public override void PostSplitOff(Thing piece)
+    {
+        if (piece == parent || HideFromPlayer?.HasObservation != true)
+            return;
+        var copy = piece.TryGetComp<CompFog>();
+        if (copy == null)
+            return;
+        // A new unspawned stack has comps but no fog subcomponents yet.
+        copy.Setup();
+        HideFromPlayer.CopySplitKnowledgeTo(copy.HideFromPlayer);
+    }
 }

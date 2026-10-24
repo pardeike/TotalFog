@@ -25,9 +25,10 @@ resources, intercept material writes, or save drawing archives. Native drawing
 continues for observed static objects. Their appearance can change while unseen;
 exact last-observed pictures are intentionally outside this mod's requirements.
 
-With enemy fog enabled, visiting allies and neutral pawns retain their own
-faction's full sight when sharing sight with the player. Sharing contributes
-the existing half-range view separately. Ordinary sources keep one coverage
+With enemy fog enabled, visitors and prisoners retain their own faction's full
+sight when sharing with the player. Visitors share half range and prisoners
+share one-fifth range separately. Prisoner status takes precedence over the
+ally option, including when prisoner sharing is disabled. Ordinary sources keep one coverage
 channel. The optional second channel reuses the full cast through a circular
 mask intersection. Combat peeking uses a separate shorter cast because its
 adjacent origins have different range boundaries. Movement, faction changes,
@@ -50,6 +51,10 @@ saved observer marker. Native spawn consumes it. Native stack absorption applies
 that arrival knowledge to the receiving stack when items actually transfer.
 A partial remainder keeps its marker until spawning. These paths grant no live
 sight and do not mark previously unknown cargo as observed.
+Native stack splitting copies existing observation history, recorded locations
+and any unconsumed arrival marker to the split units. Mutable faction histories
+are copied separately. Unknown stacks remain unknown; splitting does not renew
+a consumed marker or authorize an ordinary hidden move to another cell.
 A new object in an explored cell stays
 hidden until observed. Pawns, flyers, projectiles, corpses and
 ordinary motes require current sight. Player pawn observers and owned blueprints

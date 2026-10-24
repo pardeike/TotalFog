@@ -52,10 +52,17 @@ public sealed class TravelScenarios
                     );
                 if (
                     operation
-                    is not ("gravship" or "caravan" or "pod" or "pod-cargo" or "pod-merge")
+                    is not (
+                        "gravship"
+                        or "caravan"
+                        or "pod"
+                        or "pod-cargo"
+                        or "pod-merge"
+                        or "pod-split"
+                    )
                 )
                     throw new ArgumentException(
-                        "Use gravship, caravan, pod, pod-cargo, pod-merge or status."
+                        "Use gravship, caravan, pod, pod-cargo, pod-merge, pod-split or status."
                     );
                 if (rotation < 0 || rotation > 3)
                     throw new ArgumentOutOfRangeException(nameof(rotation));
@@ -154,7 +161,14 @@ public sealed class TravelScenarios
                         );
                     return null;
                 }
-                cargo.DeSpawn();
+                if (operation == "pod-split")
+                {
+                    cargo.stackCount = 20;
+                    cargo = cargo.SplitOff(5);
+                    samples.Add(new { phase = "native-partial-pickup", cargo = State(cargo) });
+                }
+                if (cargo.Spawned)
+                    cargo.DeSpawn();
                 if (operation == "caravan")
                 {
                     viewer.inventory.innerContainer.TryAdd(cargo);
@@ -281,7 +295,7 @@ public sealed class TravelScenarios
                     success = arrived.Spawned
                         && (receivingStack == null || cargo.Destroyed && arrived.stackCount == 7)
                         && (
-                            operation is "pod-cargo" or "pod-merge"
+                            operation is "pod-cargo" or "pod-merge" or "pod-split"
                                 ? !arrived
                                     .Map.GetVisibility()
                                     .IsShown(Faction.OfPlayer, arrived.Position)

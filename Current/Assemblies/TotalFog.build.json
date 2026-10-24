@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "configuration": "Release",
   "inputs": {
-    "Directory.Build.props": "a409f1bc369a5c2e286ac6c80dbec6315122eba0e3d0ea952bcac87b8e9ae92e",
+    "Directory.Build.props": "34849ecbdb9b78f13b01981e27837e9fc121c8bc2a57645d27f0eefd4d304c00",
     "Source/Core/FeatureInstallation.cs": "ba225d3d475d06b52dc3803d9aea2612ec4c971b56a11fc1563a5d74bee8b50b",
     "Source/Core/FieldOfView.cs": "b8496e69335c51e108aaeae2fe5a7fc2b6046a0c7230f5a07ec117173143ec9b",
     "Source/Core/FogAppearance.cs": "d4f83beeed464e62a3403f631fdc6d5e7c73d28e35907c77180d3d3997fbed4e",
@@ -94,14 +94,14 @@
     "Source/TotalFog/Presentation/ThingVisibility.cs": "9109177aa5c40a29a12d26331b9716b14b4efd6611d9e283c270e4e6045c4e3a",
     "Source/TotalFog/Properties/AssemblyInfo.cs": "d02ea3dbe42de67e82a5c52cadcd42efcbb4d58c32fb592c9a5cf9b7e211d1c5",
     "Source/TotalFog/Sight/CompCellRegistration.cs": "25e63bc8867a0100745c8714e7ac82ac89df1f08784459c0bd569b30e7f719c1",
-    "Source/TotalFog/Sight/CompFog.cs": "d731a97b6b15e14ba7a87d15c6769ac02ba6b86bb1fef518c230bafd65f8553d",
+    "Source/TotalFog/Sight/CompFog.cs": "b2348345829ff113a887b507cffd9a48d1c9f37090ce5a6090aa38277cefa803",
     "Source/TotalFog/Sight/CompPresentationState.cs": "0405af086336e84ff647f5cf70c4615e7dd0283da59d3692623445184205b130",
     "Source/TotalFog/Sight/CompProperties_SightModifier.cs": "1364eb69ac5d33296a1fae8324bcaf1e64f5e663938a737c8f8c8ebd53c85dbc",
     "Source/TotalFog/Sight/CompProperties_TreeOcclusion.cs": "1fb6e769c3bcc6ce5cb8ddc1ed9c5415e852234be09c7f906f65c50874105001",
     "Source/TotalFog/Sight/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
-    "Source/TotalFog/Sight/CompSightSource.cs": "ba349a6efbfbbdb83e2abc3589d0ec21660758c10ff422a374917b4e0d925e56",
+    "Source/TotalFog/Sight/CompSightSource.cs": "b249d7dc8613e1ce8a17da76cb34525421dcd3674a73cb1317c0fd828b823493",
     "Source/TotalFog/Sight/CompTreeOcclusion.cs": "a88fd2f8ac6cdce776245ad69b8d2ef8657fb15aa04fa3174847ba2718d181ee",
-    "Source/TotalFog/Sight/CompVisibility.cs": "95a72f684d6e7534c267402ecffa5c0a38b802ccb74dcd7f6f07f8c1dd180957",
+    "Source/TotalFog/Sight/CompVisibility.cs": "c43f9c113ebc3d0dc88248ffa702eec1187f8056430bf7a28731f59e7bd045d6",
     "Source/TotalFog/Sight/CompWallOcclusion.cs": "151214c0dcbfee1d9f1fd0f8c33425b535c5402ad95134ced543b857fa20e25d",
     "Source/TotalFog/Sight/FogMapUtility.cs": "29a016f17c05a935b1bce94820eaa433cc8154155c04455d3e76a0794aeac942",
     "Source/TotalFog/Sight/FogSubcomponent.cs": "f0e30133a3eb5aab141588dda39d7ed5dd3f086bfea58fe3d4af22a1284584d8",
@@ -129,5 +129,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "240718435aec83f4373d11efc4cafa93eda78c88e720b8470b72b1da902ee083"
+  "dllSha256": "0050ffa89eb17123c6ae453982c088730810f6e8ad5e78dbb471d52a565cadee"
 }

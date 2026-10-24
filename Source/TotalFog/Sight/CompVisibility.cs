@@ -17,6 +17,7 @@ public class CompVisibility : FogSubcomponent
     private Dictionary<int, int> otherObservedCells;
     private int arrivalObserverFactionId;
     public bool SeenByPlayer => WasSeenBy(Faction.OfPlayer);
+    internal bool HasObservation => seenByPlayer || otherObserverFactionIds?.Count > 0;
 
     public bool WasSeenBy(Faction faction) =>
         faction != null
@@ -125,6 +126,23 @@ public class CompVisibility : FogSubcomponent
     {
         if (faction?.IsPlayer == true && CanRememberLocation && WasSeenBy(faction))
             arrivalObserverFactionId = faction.loadID;
+    }
+
+    internal void CopySplitKnowledgeTo(CompVisibility split)
+    {
+        if (split == this)
+            return;
+        // The units retain their observers and last known location. A split
+        // does not observe a new cell or renew an already-consumed arrival.
+        split.seenByPlayer = seenByPlayer;
+        split.firstObserverFactionId = firstObserverFactionId;
+        split.observedMapId = observedMapId;
+        split.firstObservedCell = firstObservedCell;
+        split.arrivalObserverFactionId = arrivalObserverFactionId;
+        split.otherObserverFactionIds =
+            otherObserverFactionIds == null ? null : new List<int>(otherObserverFactionIds);
+        split.otherObservedCells =
+            otherObservedCells == null ? null : new Dictionary<int, int>(otherObservedCells);
     }
 
     internal void AbsorbArrival(Thing other, int count)

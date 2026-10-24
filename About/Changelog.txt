@@ -1,5 +1,12 @@
 # Total Fog changelog
 
+1.0.2
+
+- Fixed visitors losing their combat sight when both ally sight sharing and enemy fog are enabled.
+- Fixed prisoner sight sharing interfering with their own combat sight, including during prison breaks.
+- Fixed neutral prisoners sharing sight through the ally option when prisoner sharing is off.
+- Split stacks now retain what you have seen of them, including cargo sent by transport pod.
+
 0.1.0 — unreleased preliminary development
 
 - Independent Total Fog identity and rewritten sight engine.

@@ -1,1 +1,0 @@
-- Fixed visitors losing their combat sight when both ally sight sharing and enemy fog are enabled.

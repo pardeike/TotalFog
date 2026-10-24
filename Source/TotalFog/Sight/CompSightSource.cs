@@ -148,15 +148,29 @@ public class CompSightSource : FogSubcomponent
             return;
         var effectiveFaction = parent.Faction;
         Faction shareWith = null;
-        float modifier = 1;
+        float modifier = 1,
+            sharedModifier = .5f;
         if (pawn != null)
         {
             if (pawn.Dead)
                 effectiveFaction = null;
-            else if (pawn.IsPrisonerOfColony && FogSettings.PrisonerGiveVision)
+            else if (pawn.IsPrisonerOfColony)
             {
-                effectiveFaction = pawn.HostFaction;
-                modifier = .2f;
+                // Prisoner status owns sharing, even for a neutral faction.
+                // Keep the prisoner's own sight when enemy fog needs it.
+                if (FogSettings.PrisonerGiveVision)
+                {
+                    if (FogSettings.AISmart && effectiveFaction?.IsPlayer == false)
+                    {
+                        shareWith = pawn.HostFaction;
+                        sharedModifier = .2f;
+                    }
+                    else
+                    {
+                        effectiveFaction = pawn.HostFaction;
+                        modifier = .2f;
+                    }
+                }
             }
             else if (
                 effectiveFaction != null
@@ -199,7 +213,7 @@ public class CompSightSource : FogSubcomponent
             : pawn != null ? CalcPawnSightRange(parent.Position, false, false)
             : BuildingRange();
         int radius = modifier == 0 ? -1 : Mathf.RoundToInt(range * modifier);
-        int sharedRadius = shareWith == null ? -1 : Mathf.RoundToInt(range * .5f);
+        int sharedRadius = shareWith == null ? -1 : Mathf.RoundToInt(range * sharedModifier);
         if (elevated != null && radius > 0)
             radius = TowerGeometry.SightRadius(
                 radius,

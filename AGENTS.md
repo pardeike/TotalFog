@@ -108,7 +108,8 @@ For player transport diagnostics, use `totalfog/travel_arrival` on the isolated
 paused feedback profile. Gravship controls pack and place native cargo on another
 map, with an unseen payload and no passengers. Caravan and pod controls use native
 entry/landing. `pod-cargo` omits the passenger; `stageOnly=true` leaves it airborne
-for a cold save/load. Status inspects saved cargo by ID. This does not test a full
+for a cold save/load. `pod-split` uses native partial pickup before loading a
+cargo-only pod. Status inspects saved cargo by ID. This does not test a full
 world flight, VGE/Rim Effect or Multiplayer. Reload the unchanged fixture afterward.
 For visitor sight-sharing regressions, use `totalfog/merchant_sight` on an
 isolated paused single-player map. It checks native acquisition, all four
@@ -116,6 +117,11 @@ enemy-fog/sharing combinations, complete idle/peeking masks and contribution
 cleanup, then restores settings and reloads the unchanged supplied save.
 Read the native error journal afterward; a passing manifest cannot accept a
 fixture that logged errors. This is controlled acquisition, not a natural fight.
+Use `totalfog/sharing_and_stacks` for prisoner sharing and native stack-split
+regressions in the same isolated paused fixture. It checks prison-break target
+acquisition, all enemy-fog/prisoner/ally setting combinations, known and unknown
+split cargo, arrival consumption and whole-stack identity. It restores settings
+and reloads the supplied save; read the native error journal before acceptance.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns
