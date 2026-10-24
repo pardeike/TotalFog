@@ -83,6 +83,9 @@ targets or neighbouring cells. Native undiscovered fog still takes precedence.
 - Notifications retain original payloads until their targets are observed, survive
   saves and replay once. Audio has independent settings for combat music, hidden
   sources, hearing filtering and sound markers.
+  Hearing markers sample hidden movement independently of played audio.
+  Their own pooled material draws after fog at an overlay height. They do not
+  change discovery or shared materials. Stationary attacks alone do not qualify.
 - Optional integrations own their feature detection and exceptions. They do not
   change the core visibility algorithm.
 

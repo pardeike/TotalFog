@@ -931,6 +931,9 @@ namespace TotalFog
     public class Mote_HearingCue : Verse.Thing
     {
         public int ObserverFactionId;
+        public float Alpha => 1;
+
+        public float CalculatedShockwaveSpan() => 1;
 
         public void Initialize(
             UnityEngine.Vector3 position,

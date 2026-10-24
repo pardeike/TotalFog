@@ -1,0 +1,1 @@
+- Fixed hearing rings being hidden by unexplored fog, including rings from moving zombies.

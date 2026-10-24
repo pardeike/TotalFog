@@ -8,6 +8,13 @@ public class Graphic_HearingCue : Graphic_Mote
 {
     protected override bool ForcePropertyBlock => true;
 
+    public override void Init(GraphicRequest req)
+    {
+        // Use a separate pooled material after fog, without changing shared materials.
+        req.renderQueue = System.Math.Max(req.renderQueue, MatBases.FogOfWar.renderQueue + 1);
+        base.Init(req);
+    }
+
     public override void DrawWorker(
         Vector3 loc,
         Rot4 rot,

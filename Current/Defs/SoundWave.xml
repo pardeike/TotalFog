@@ -3,6 +3,8 @@
   <!--=============== Bases ==============-->
   <ThingDef Name="MoteSoundWaveBase" ParentName="MoteBase" Abstract="True">
     <thingClass>TotalFog.Mote_HearingCue</thingClass>
+    <!-- Hearing markers must draw above opaque fog without revealing their source. -->
+    <altitudeLayer>MetaOverlays</altitudeLayer>
     <graphicData>
       <shaderType>MoteWater</shaderType>
     </graphicData>

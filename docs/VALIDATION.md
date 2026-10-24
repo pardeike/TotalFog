@@ -8,6 +8,57 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Hearing rings over unexplored fog, 2026-10-24
+
+The unreleased gameplay DLL is
+`20ddc656d45ab7b457d63c6685811cbfccf096ce45dc7f740e85db961a3884b1`,
+MVID `397d297c-f11f-4812-a14c-24dd181c24e7`.
+The hearing definition SHA-256 is
+`589b8a1cd6ec514da262dd7800afb20c1f2378f68c68bd46c778bd5b796f5aa1`.
+
+The clean Core-only 1.6.4871 fixture loads released Workshop Harmony,
+RimBridgeServer, Zombieland 5.7.1.0 and Total Fog. Zombieland's DLL is
+`69bcbaa5f012345a471b2c115c324496496e233e78bff8aa178e4eee8b8de820`.
+Real human and ordinary zombie movement generates scheduled hearing cues
+behind a real wall. Native Stumble movement also generates cues. Waiting
+and stationary wall attacks generate none for either type. Both attackers
+damage the wall, so the negative control includes actual attacks.
+
+The original cue appears on remembered ground but disappears behind opaque
+unexplored fog. Its native drawing path still runs with positive alpha.
+Two native height assertions fail before correction. Raising the marker alone
+passes those assertions but still fails the screenshots. That candidate is
+rejected as `native16-height-only-rejected.json`. Two new source-linked
+material-order tests then fail for default and low render queues. The higher
+explicit queue control passes. Their red log is `material-order-red.log`.
+
+The final marker uses MetaOverlays height and its own pooled material after
+the fog material. Native fog has render queue 3175 and height 12.439.
+Final rings use queue 3176 and height about 14.3. The marker preserves a higher
+explicit queue and does not mutate shared materials. Eligibility, faction
+privacy, hearing range, discovery and audio playback remain unchanged.
+
+All 560 C# tests and seven artifact tests pass. Gameplay and companion builds
+have zero warnings or errors. The same deployed pair passes all 29 native
+checks on unknown ground and all 29 on remembered ground. Actual screenshots
+show red rings from humans and zombies on both backgrounds. Targets remain
+hidden and unknown terrain stays unknown. Neither run records native errors.
+The journal contains only bridge startup timing warnings.
+
+Evidence is under `artifacts/hearing-zombies-20261024/`. Accepted manifests
+are `native16-final-unknown.json` and `native16-final-explored.json`.
+Earlier diagnostic attempts are not acceptance evidence: one cannot serialize
+engine vectors, paused stepping does not advance custom zombie movement,
+and zero-threat cleanup kills later fixture zombies. The accepted scenario
+uses Normal playback with scoped prevention of that cleanup. It restores
+settings/probes and reloads the unchanged save. The game then stops and its
+temporary mod configuration is restored byte for byte.
+
+This confirms a general Total Fog rendering defect that can explain the report.
+The reporter's exact terrain knowledge and zombie activity remain unverified.
+The native check is on macOS 1.6, without DLCs. It does not renew Windows,
+1.7, broad compatibility or performance acceptance. Zombieland source is unchanged.
+
 ## Release 1.0.3 candidate, 2026-10-24
 
 The versioned Release DLL is

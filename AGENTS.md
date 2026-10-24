@@ -128,6 +128,12 @@ then opens and rebuilds each side. It checks current sight, blocker registration
 and retained discovery. It restores settings and reloads the unchanged save.
 Read the native log journal. This is a bounded sight check, not a combat or
 performance gate; the companion remains outside player packages.
+Use `totalfog/hearing_cues` on an isolated paused Core/Zombieland save for
+human/zombie walking, waiting, wall attacks and native Stumble controls.
+Toggle `exploredGround` and use distinct `evidenceLabel` values for captures.
+The scenario uses Normal playback and temporarily prevents zero-threat cleanup.
+It restores settings/probes and reloads the unchanged save. Inspect screenshots
+and the native journal. Height or draw-call checks alone do not prove visible rings.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

@@ -15,7 +15,7 @@
     "Source/Core/VisibilityGrid.cs": "07e9f1f3e43fc1b6af304603b610e2c9db9693ce805c5ddc5cad8133f217741d",
     "Source/Core/VisibilityMask.cs": "473156fc77bbab3216df5e79e8fa63f6e7a51ffac50c4d6a0cda71003ba46691",
     "Source/Core/VisibilityPolicy.cs": "403c64f1c5536ab25fd35b52e5c2e331dc5531efb7f3d01b219e5fe30f10c123",
-    "Source/TotalFog/Audio/Graphic_HearingCue.cs": "d790c0e0079bdc09e5cef4b7f1c30ad2dd82b5a3907a639f670c83f2dae4ff50",
+    "Source/TotalFog/Audio/Graphic_HearingCue.cs": "ea5e42d8d13bcf9d486c1b09481a49b18809ed82e9afef22ecf87ee8094c1e89",
     "Source/TotalFog/Audio/Mote_HearingCue.cs": "725752f083f2c05e2321c75bc935c9517c29df9a0bf8542310deb9af1e012b0e",
     "Source/TotalFog/Audio/MusicVisibility.cs": "0b679f72aafb05a5bfed4d41795daba24e9406bd2273b447997314702550289b",
     "Source/TotalFog/Audio/SustainerVisibility.cs": "9d5da6c6f9803b091bc59f9e715e4a6b86b793f38d822e34053c166e4a078411",
@@ -129,5 +129,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "a270e3f6c3e44e51148c0e3e9017d8e439757a30d34c23a4b4455c4bdd2985bd"
+  "dllSha256": "20ddc656d45ab7b457d63c6685811cbfccf096ce45dc7f740e85db961a3884b1"
 }
