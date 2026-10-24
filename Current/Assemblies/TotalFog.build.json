@@ -13,7 +13,7 @@
     "Source/Core/PendingQueue.cs": "1b36eebc4cbe2eadce3a59848847b7150bd67d00f411e1a5f614c5ad3356e824",
     "Source/Core/TowerGeometry.cs": "fa97237c501a490facb7656dede78d3ec9dd1fdfa96c4e93479876fd456b5946",
     "Source/Core/VisibilityGrid.cs": "07e9f1f3e43fc1b6af304603b610e2c9db9693ce805c5ddc5cad8133f217741d",
-    "Source/Core/VisibilityMask.cs": "245637731c70b5f416643e4603f70dba45829ee8843fc756c0e4e1602566c1cb",
+    "Source/Core/VisibilityMask.cs": "473156fc77bbab3216df5e79e8fa63f6e7a51ffac50c4d6a0cda71003ba46691",
     "Source/Core/VisibilityPolicy.cs": "403c64f1c5536ab25fd35b52e5c2e331dc5531efb7f3d01b219e5fe30f10c123",
     "Source/TotalFog/Audio/Graphic_HearingCue.cs": "d790c0e0079bdc09e5cef4b7f1c30ad2dd82b5a3907a639f670c83f2dae4ff50",
     "Source/TotalFog/Audio/Mote_HearingCue.cs": "725752f083f2c05e2321c75bc935c9517c29df9a0bf8542310deb9af1e012b0e",
@@ -99,7 +99,7 @@
     "Source/TotalFog/Sight/CompProperties_SightModifier.cs": "1364eb69ac5d33296a1fae8324bcaf1e64f5e663938a737c8f8c8ebd53c85dbc",
     "Source/TotalFog/Sight/CompProperties_TreeOcclusion.cs": "1fb6e769c3bcc6ce5cb8ddc1ed9c5415e852234be09c7f906f65c50874105001",
     "Source/TotalFog/Sight/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
-    "Source/TotalFog/Sight/CompSightSource.cs": "3277c99f4e6613532f81b32e407751c88d4c54d4f34866d394eec5b93a17d97f",
+    "Source/TotalFog/Sight/CompSightSource.cs": "ba349a6efbfbbdb83e2abc3589d0ec21660758c10ff422a374917b4e0d925e56",
     "Source/TotalFog/Sight/CompTreeOcclusion.cs": "a88fd2f8ac6cdce776245ad69b8d2ef8657fb15aa04fa3174847ba2718d181ee",
     "Source/TotalFog/Sight/CompVisibility.cs": "95a72f684d6e7534c267402ecffa5c0a38b802ccb74dcd7f6f07f8c1dd180957",
     "Source/TotalFog/Sight/CompWallOcclusion.cs": "151214c0dcbfee1d9f1fd0f8c33425b535c5402ad95134ced543b857fa20e25d",
@@ -129,5 +129,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "766de38299b9acf6e64cdb481c8c6551305da4b784599a46030f4fd81b1d75e1"
+  "dllSha256": "240718435aec83f4373d11efc4cafa93eda78c88e720b8470b72b1da902ee083"
 }

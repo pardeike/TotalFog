@@ -11,8 +11,10 @@ and a result applies only to its recorded gameplay bytes and loadout.
 Review round 2 is complete in ten ordered commits on 13 October 2026, followed
 by Andreas's accepted independent reassessment corrections. The independent
 player-stability review then corrects owned-pawn controls, tower fog targeting
-and CE targeting for other player factions. The current Release
-build passes 532 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+and CE targeting for other player factions. The current development build
+passes 543 C# tests and seven pure artifact-gate tests with zero warnings/errors.
+The post-1.0.1 merchant correction passes native controls on both engines and
+remains unreleased. The published 1.0.1 payload retains its separate evidence below.
 The subsequent lighting-invalidation change passes native light-boundary checks
 on both engines and the Core-only wide performance floor below. The 14 earlier
 player-safety controls retain their own 9a490e5b checkpoint.
@@ -34,6 +36,7 @@ including tracked-binary validation, formatting, pure tests and clean builds.
 
 | Area | Current evidence and boundary |
 |---|---|
+| Visitor combat sight | The 24 October regression reproduces failed native target acquisition on the published DLL only when ally sight sharing and enemy fog are both enabled. DLL 24071843 keeps full own-faction sight and separately shares the shorter player view. All 35 controlled native assertions pass on Steam 1.7.4985 with all DLCs and Core-only offline 1.6.4871 with CE. Coverage, combat peeking, setting combinations, movement, range/faction changes and despawning pass. No captured errors remain. The reporter's unknown loadout and a natural trader fight remain untested. This fix is not yet released. |
 | Versions | 1.6 and 1.7 share Current/, compiled against 1.6 as intended by the engine developers. The active folder is a declared project exception. Runtime evidence remains specific to each engine. |
 | Colony startup | The 14 October paused Steam 1.7.4977 game reproduces 7,239 remembered cells before any colonist spawns, with no current sight or positive sight sources and map reveal disabled. The inherited landing-site seed is removed. Existing saved discovery, real sight publication and explicit whole-map reveal remain unchanged. Corrected DLL b7ab4581 is deployed and loaded in a fresh Steam process with the same ten-mod loadout. A new-colony fog check remains pending; the reproduction uses baseline DLL fcde178b. |
 | Watchtower planning | The 14 October Steam 1.7.4977 check reproduces successful mouse placement with an invisible tower blueprint, despite the native resource warning. DLL d736e1fb fixes the generated blueprint's drawing mode after final definition loading. Saved plans and fresh mouse placement are visible with `150 (not enough stored)` still shown. The user's four existing plans remain; the diagnostic plan is cancelled. This renews planning/rendering only, not construction or broader tower gates. |

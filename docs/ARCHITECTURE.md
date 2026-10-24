@@ -25,6 +25,15 @@ resources, intercept material writes, or save drawing archives. Native drawing
 continues for observed static objects. Their appearance can change while unseen;
 exact last-observed pictures are intentionally outside this mod's requirements.
 
+With enemy fog enabled, visiting allies and neutral pawns retain their own
+faction's full sight when sharing sight with the player. Sharing contributes
+the existing half-range view separately. Ordinary sources keep one coverage
+channel. The optional second channel reuses the full cast through a circular
+mask intersection. Combat peeking uses a separate shorter cast because its
+adjacent origins have different range boundaries. Movement, faction changes,
+settings changes and despawning reconcile both contributions. Targeting still
+uses the observer's faction grid and all native combat checks.
+
 Exploration is a saved boolean grid for each player faction. Current sight is a
 reference-counted grid rebuilt from faction observers. Object observation records
 which player factions have seen it, rather than storing an appearance. The

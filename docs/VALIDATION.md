@@ -8,6 +8,63 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Merchant sight-sharing regression, 2026-10-24
+
+The [visitor combat report](https://discord.com/channels/900081000942567454/1390493088358858762/1563202747296120833)
+has no supplied save or loadout. A controlled native reproduction establishes
+one Total Fog defect: enabling both ally sight sharing and enemy fog redirects
+the visitor's coverage to the player, leaving its own faction grid empty.
+Native `AttackTargetFinder.CanSee` then rejects a nearby hostile pawn.
+
+The test runs before the fix on the published 1.0.1 DLL, SHA-256
+`766de38299b9acf6e64cdb481c8c6551305da4b784599a46030f4fd81b1d75e1`.
+Only the combination with both settings enabled fails acquisition and own
+coverage. The other three combinations retain acquisition. The local result
+is `artifacts/merchant-red-20261024.json`.
+
+The correction keeps full own-faction sight and adds separate half-range player
+coverage. Ordinary sources do not allocate secondary masks. Non-peeking shared
+sight reuses the full cast. Peeking retains its independent shorter-radius cast
+to preserve the previous corner/range behavior. No saved fields, targeting
+exceptions or public API changes are added.
+
+Eleven new pure cases cover obstacles, independent shorter casts on 80 seeded
+maps, map edges, shifted word boundaries, zero/negative radii and buffer reuse.
+The empty-operation red phase fails ten cases, retained in
+`artifacts/logs/merchant-mask-red-20261024.log`. The complete suite now passes
+543 C# tests and seven artifact tests, with zero build warnings/errors.
+
+The corrected Release DLL is
+`240718435aec83f4373d11efc4cafa93eda78c88e720b8470b72b1da902ee083`,
+MVID `8b594753-9baf-4406-b687-9c743bcb365c`.
+`totalfog/merchant_sight` passes all 35 assertions on each engine:
+
+- Steam 1.7.4985 rev1269, released Workshop Harmony, bridge, Core and all five DLCs.
+- Offline Core-only 1.6.4871 rev581, released Workshop Harmony, bridge and CE.
+
+Each run checks all four setting combinations, actual native target acquisition,
+hostile controls, full own range and shorter shared range. Complete coverage
+arrays match the independent single-setting controls with an obstacle, both idle
+and combat peeking. Range reduction, movement, recruitment, hostility and
+despawning remove the appropriate old contributions. Both runs reload the
+unchanged fixture, restore settings and finish with no captured errors.
+The JSON manifests record the actual DLL hash, MVID, engine and loaded mods in
+`artifacts/merchant-green16-20261024.json` and
+`artifacts/merchant-green17-20261024.json`. The accompanying `merchant-logs*`
+files retain the empty native error journals.
+
+The first green 1.7 attempt used the granite rock definition as wall stuff.
+The engine substituted default stuff and logged an error. That fixture result
+is rejected and retained as `merchant-green17-rejected-fixture-20261024.json`.
+The accepted runs use valid wood stuff. Existing 1.7 fixture-load warnings about
+its prior engine revision and a missing funeral precept remain outside this fix.
+
+These are controlled native sight/acquisition tests on generated neutral and
+hostile pawns. They do not reproduce the reporter's unknown setup or a natural
+trader fight. They do not renew broader CE acceptance or the deferred tower
+report. Test games are stopped. Source validation is separate from publication;
+the published 1.0.1 payload does not yet include this fix.
+
 ## Release 1.0.1 candidate, 2026-10-21
 
 The final versioned Release DLL is

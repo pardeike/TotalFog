@@ -110,6 +110,12 @@ map, with an unseen payload and no passengers. Caravan and pod controls use nati
 entry/landing. `pod-cargo` omits the passenger; `stageOnly=true` leaves it airborne
 for a cold save/load. Status inspects saved cargo by ID. This does not test a full
 world flight, VGE/Rim Effect or Multiplayer. Reload the unchanged fixture afterward.
+For visitor sight-sharing regressions, use `totalfog/merchant_sight` on an
+isolated paused single-player map. It checks native acquisition, all four
+enemy-fog/sharing combinations, complete idle/peeking masks and contribution
+cleanup, then restores settings and reloads the unchanged supplied save.
+Read the native error journal afterward; a passing manifest cannot accept a
+fixture that logged errors. This is controlled acquisition, not a natural fight.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

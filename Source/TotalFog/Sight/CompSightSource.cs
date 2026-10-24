@@ -22,6 +22,11 @@ public class CompSightSource : FogSubcomponent
         treeMask = new(),
         peekMask = new();
     private readonly Action<int, bool> change;
+    private Faction sharedFaction;
+    private VisibilityMask sharedCurrent,
+        sharedNext;
+    private Action<int, bool> sharedChange;
+    private int lastSharedRadius = -1;
     private IntVec3 position = IntVec3.Invalid;
     private IntVec3[] peekDirections;
     private int nextCheck,
@@ -92,10 +97,34 @@ public class CompSightSource : FogSubcomponent
 
     private void Clear()
     {
-        if (faction == null || fog == null)
+        try
+        {
+            if (faction != null && fog != null)
+            {
+                next.Reset(0, 0, 0, 0, 1);
+                VisibilityMask.ApplyAndSwap(ref current, ref next, change);
+            }
+        }
+        finally
+        {
+            ClearShared();
+        }
+    }
+
+    private void ClearShared()
+    {
+        if (sharedFaction == null)
             return;
-        next.Reset(0, 0, 0, 0, 1);
-        VisibilityMask.ApplyAndSwap(ref current, ref next, change);
+        try
+        {
+            sharedNext.Reset(0, 0, 0, 0, 1);
+            VisibilityMask.ApplyAndSwap(ref sharedCurrent, ref sharedNext, sharedChange);
+        }
+        finally
+        {
+            sharedFaction = null;
+            lastSharedRadius = -1;
+        }
     }
 
     public void UpdateFoV(bool forceUpdate = false)
@@ -118,6 +147,7 @@ public class CompSightSource : FogSubcomponent
         if (!fog.Initialized)
             return;
         var effectiveFaction = parent.Faction;
+        Faction shareWith = null;
         float modifier = 1;
         if (pawn != null)
         {
@@ -135,8 +165,13 @@ public class CompSightSource : FogSubcomponent
                 && effectiveFaction.AllyOrNeutralTo(fog.PrimaryPlayerFaction)
             )
             {
-                effectiveFaction = fog.PrimaryPlayerFaction;
-                modifier = .5f;
+                if (FogSettings.AISmart)
+                    shareWith = fog.PrimaryPlayerFaction;
+                else
+                {
+                    effectiveFaction = fog.PrimaryPlayerFaction;
+                    modifier = .5f;
+                }
             }
             else if (pawn.RaceProps.Animal)
                 modifier = Compatibility.AnimalVision.Modifier(pawn);
@@ -159,17 +194,21 @@ public class CompSightSource : FogSubcomponent
         var elevated = tower?.Occupant == pawn && tower?.ProvidesSight == true ? tower : null;
         forceUpdate |= elevatedTower != elevated || elevated?.SightDirty == true;
         elevatedTower = elevated;
-        int radius =
-            modifier == 0
-                ? -1
-                : Mathf.RoundToInt(
-                    pawn != null
-                        ? CalcPawnSightRange(parent.Position, false, false) * modifier
-                        : BuildingRange()
-                );
+        float range =
+            modifier == 0 ? 0
+            : pawn != null ? CalcPawnSightRange(parent.Position, false, false)
+            : BuildingRange();
+        int radius = modifier == 0 ? -1 : Mathf.RoundToInt(range * modifier);
+        int sharedRadius = shareWith == null ? -1 : Mathf.RoundToInt(range * .5f);
         if (elevated != null && radius > 0)
             radius = TowerGeometry.SightRadius(
                 radius,
+                FogSettings.TowerVisionMultiplier,
+                FogSettings.TowerMaxSightRange
+            );
+        if (elevated != null && sharedRadius > 0)
+            sharedRadius = TowerGeometry.SightRadius(
+                sharedRadius,
                 FogSettings.TowerVisionMultiplier,
                 FogSettings.TowerMaxSightRange
             );
@@ -180,6 +219,8 @@ public class CompSightSource : FogSubcomponent
             && faction == effectiveFaction
             && radius == LastSightRange
             && peekDirections == peeking
+            && sharedFaction == shareWith
+            && lastSharedRadius == sharedRadius
         )
             return;
         fog.CancelRefresh(this);
@@ -188,12 +229,68 @@ public class CompSightSource : FogSubcomponent
             Clear();
             faction = effectiveFaction;
         }
+        if (sharedFaction != shareWith)
+        {
+            ClearShared();
+            if (shareWith != null)
+            {
+                // Sharing is a second contribution, never a replacement for
+                // the visitor's own sight. Ordinary sources allocate none of it.
+                sharedCurrent ??= new VisibilityMask();
+                sharedNext ??= new VisibilityMask();
+                sharedChange ??= (index, visible) =>
+                {
+                    if (visible)
+                        fog.IncrementSeen(sharedFaction, index);
+                    else
+                        fog.DecrementSeen(sharedFaction, index);
+                };
+            }
+            sharedFaction = shareWith;
+        }
         position = parent.Position;
         SetSightRange(radius);
         peekDirections = peeking;
+        var rect = SightRect(radius, peeking != null);
+        ComputeSightMask(next, rect, radius, peeking, elevated);
+        if (shareWith != null)
+        {
+            var sharedRect = SightRect(sharedRadius, peeking != null);
+            if (peeking != null)
+                // A peek is centered on the adjacent cell, so clipping only
+                // around the pawn would extend the old shared range at corners.
+                ComputeSightMask(sharedNext, sharedRect, sharedRadius, peeking, elevated);
+            else
+            {
+                sharedNext.Reset(
+                    sharedRect.minX,
+                    sharedRect.minZ,
+                    sharedRect.Width,
+                    sharedRect.Height,
+                    map.Size.x
+                );
+                sharedNext.AddFromWithinRadius(next, position.x, position.z, sharedRadius);
+                foreach (var cell in parent.OccupiedRect())
+                    if (cell.InBounds(map) && next.Contains(map.cellIndices.CellToIndex(cell)))
+                        sharedNext.Add(map.cellIndices.CellToIndex(cell));
+            }
+            lastSharedRadius = sharedRadius;
+        }
+        try
+        {
+            VisibilityMask.ApplyAndSwap(ref current, ref next, change);
+        }
+        finally
+        {
+            if (shareWith != null)
+                VisibilityMask.ApplyAndSwap(ref sharedCurrent, ref sharedNext, sharedChange);
+        }
+    }
+
+    private CellRect SightRect(int radius, bool peeking)
+    {
         int margin =
-            Math.Min(Math.Max(map.Size.x, map.Size.z), Math.Max(0, radius))
-            + (peeking == null ? 0 : 1);
+            Math.Min(Math.Max(map.Size.x, map.Size.z), Math.Max(0, radius)) + (peeking ? 1 : 0);
         var rect = new CellRect(
             position.x - margin,
             position.z - margin,
@@ -201,12 +298,23 @@ public class CompSightSource : FogSubcomponent
             margin * 2 + 1
         ).Encapsulate(parent.OccupiedRect());
         rect.ClipInsideMap(map);
-        next.Reset(rect.minX, rect.minZ, rect.Width, rect.Height, map.Size.x);
+        return rect;
+    }
+
+    private void ComputeSightMask(
+        VisibilityMask destination,
+        CellRect rect,
+        int radius,
+        IntVec3[] peeking,
+        Watchtowers.Building_Watchtower elevated
+    )
+    {
+        destination.Reset(rect.minX, rect.minZ, rect.Width, rect.Height, map.Size.x);
         if (faction != null && VisibilityPolicy.IsSightSource(pawn != null, radius))
         {
             foreach (var cell in parent.OccupiedRect())
                 if (cell.InBounds(map))
-                    next.Add(map.cellIndices.CellToIndex(cell));
+                    destination.Add(map.cellIndices.CellToIndex(cell));
             FieldOfView.ComputeMask(
                 map.Size.x,
                 map.Size.z,
@@ -214,17 +322,17 @@ public class CompSightSource : FogSubcomponent
                 position.z,
                 radius,
                 elevated == null ? fog.viewBlockerCells : elevated.SightWindow(rect),
-                next
+                destination
             );
             if (elevated != null)
             {
                 foreach (var cell in rect)
                     if (cell.Roofed(map))
-                        next.Remove(map.cellIndices.CellToIndex(cell));
+                        destination.Remove(map.cellIndices.CellToIndex(cell));
                 elevated.SightDirty = false;
             }
             if (peeking != null)
-                CastPeeking(rect, radius, peeking);
+                CastPeeking(destination, rect, radius, peeking);
             // A ground observer can see a raised person without seeing the
             // hidden terrain behind the wall below them. Publish only that
             // platform's logical cell, keeping the rest of the ground cast.
@@ -246,12 +354,8 @@ public class CompSightSource : FogSubcomponent
                         forSight: true
                     )
                 )
-                    next.Add(map.cellIndices.CellToIndex(platform.Position));
+                    destination.Add(map.cellIndices.CellToIndex(platform.Position));
         }
-        if (faction != null)
-            VisibilityMask.ApplyAndSwap(ref current, ref next, change);
-        else
-            (current, next) = (next, current);
     }
 
     private void SetSightRange(int radius)
@@ -260,7 +364,12 @@ public class CompSightSource : FogSubcomponent
         LastSightRange = radius;
     }
 
-    private void CastPeeking(CellRect rect, int radius, IntVec3[] directions)
+    private void CastPeeking(
+        VisibilityMask destination,
+        CellRect rect,
+        int radius,
+        IntVec3[] directions
+    )
     {
         treeMask.Reset(rect.minX, rect.minZ, rect.Width, rect.Height, map.Size.x);
         peekMask.Reset(rect.minX, rect.minZ, rect.Width, rect.Height, map.Size.x);
@@ -293,7 +402,7 @@ public class CompSightSource : FogSubcomponent
                 peekMask
             );
         }
-        next.AddIntersection(peekMask, treeMask);
+        destination.AddIntersection(peekMask, treeMask);
     }
 
     private IntVec3[] GetPeeking()

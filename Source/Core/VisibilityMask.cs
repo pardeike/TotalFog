@@ -122,6 +122,39 @@ public sealed class VisibilityMask
             words[i] |= a.words[i] & b.words[i];
     }
 
+    /// <summary>Union source cells inside a circle, clipped to this footprint.</summary>
+    public void AddFromWithinRadius(VisibilityMask source, int centerX, int centerZ, int radius)
+    {
+        if (radius < 0 || width == 0 || height == 0 || source.Area == 0)
+            return;
+        long squared = (long)radius * radius;
+        for (int row = 0; row < height; row++)
+        {
+            long dz = (long)minZ + row - centerZ;
+            if (dz < -radius || dz > radius)
+                continue;
+            int extent = (int)Math.Sqrt(squared - dz * dz);
+            int first = (int)Math.Max(0, (long)centerX - extent - minX);
+            int last = (int)Math.Min(width - 1, (long)centerX + extent - minX);
+            if (first > last)
+                continue;
+            int firstWord = first >> 6,
+                lastWord = last >> 6;
+            for (int word = firstWord; word <= lastWord; word++)
+            {
+                ulong bits = source.RowSlice(
+                    minZ + row - source.minZ,
+                    minX + word * 64 - source.minX
+                );
+                if (word == firstWord)
+                    bits &= ulong.MaxValue << (first & 63);
+                if (word == lastWord)
+                    bits &= ulong.MaxValue >> (63 - (last & 63));
+                words[row * wordsPerRow + word] |= bits;
+            }
+        }
+    }
+
     private bool SameBounds(VisibilityMask other) =>
         width == other.width
         && height == other.height
