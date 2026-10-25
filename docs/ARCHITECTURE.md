@@ -167,6 +167,18 @@ to recast. Refog therefore restores actual current sight after paused map edits,
 instead of copying stale observer counts. This full refresh runs only on explicit
 debug commands; ordinary source scheduling is unchanged.
 
+### Scanner discovery reports
+
+A player ground scanner reports colony knowledge even when its deposit is outside
+current sight. A temporary scope around native `CompDeepScanner.DoFind` lets its
+notification pass the existing visibility policy. A finalizer restores the prior
+scope after success or failure, including nested calls and a skipped prefix.
+The letter retains its deposit target. This exception grants neither current
+sight nor surface discovery. Other-faction scanners and ordinary hidden events
+keep their existing policy. Long-range scanner reports have no local target and
+already pass the world-event rule, so their discovery method is not patched.
+The scope adds no saved state or periodic work.
+
 ### Multiplayer context
 
 Multiplayer is optional. Its API is bound once, with retained delegates and no

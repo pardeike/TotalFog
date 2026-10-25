@@ -8,6 +8,8 @@ internal static class NotificationVisibility
 {
     internal static bool HasVisibleTarget(LookTargets targets, Map pendingArrivalMap = null)
     {
+        if (ScannerNotifications.IsPlayerReport)
+            return true;
         if (targets?.targets == null || targets.targets.Count == 0)
             return true;
         foreach (var target in targets.targets)

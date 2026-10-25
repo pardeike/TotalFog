@@ -652,6 +652,11 @@ namespace Unity.Collections
 
 namespace RimWorld
 {
+    public class CompScanner
+    {
+        public Verse.ThingWithComps parent;
+    }
+
     public static class DesignationDefOf
     {
         public static readonly Verse.DesignationDef Haul = new();

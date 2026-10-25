@@ -67,12 +67,14 @@
     "Source/TotalFog/Mod/PatchSafety.cs": "77ab016113fd96c8acd68ad4307d7947e6319b255bf52006a8bc9971a660a4bd",
     "Source/TotalFog/Mod/SettingsWindow.cs": "4e6ccf5ea238ad8bacb252ca559186886f083e6cd1d5b48234521abc086e70b8",
     "Source/TotalFog/Mod/TotalFogMod.Patches.cs": "a214d9e1270010b473f464d48a5bb34a5555875b0e8ade72b37e71f64b9525dd",
-    "Source/TotalFog/Mod/TotalFogMod.cs": "7248e0673e7c8fffa3630024e472e5c8b9b572e143c0c8aa3a66440da6067460",
+    "Source/TotalFog/Mod/TotalFogMod.cs": "2ceb33a124bc81632a8d80a9cae0f13dc519f3218367b80d975218c8566dc6d1",
     "Source/TotalFog/Notifications/DeferredNotifications.cs": "a7a30e32b4e760e2175b998f1d3e14a7caa3dcb13efebc882f09970e2399ba3e",
     "Source/TotalFog/Notifications/EntityDiscovery.cs": "05889f81142944d22fed6ead269c58d3c0dd8b7bc99758266028cdedadea482b",
     "Source/TotalFog/Notifications/NotificationHooks.cs": "d6dc8d7c157251a45454a3612a1896bb82b97c67de16dad784081951de1d9f11",
-    "Source/TotalFog/Notifications/NotificationVisibility.cs": "b41106f29e54efa63c66911b86e1bb7887c08e8c8c4963ddff5a567cf9688177",
+    "Source/TotalFog/Notifications/NotificationVisibility.cs": "db6cbae852d260de5f193509d6c4aeade2cf631c6857e79daa3bf9422762a5dc",
     "Source/TotalFog/Notifications/RefugeePodNotifications.cs": "126fa53f189363ded091c26cf2f745bcd112cd7bf8378754bcfaabdef8a14289",
+    "Source/TotalFog/Notifications/ScannerNotifications.Patches.cs": "d4426f57c1e3d1ad35b0407de13242064f4c3084f4d89cbee5797e0af69bffa5",
+    "Source/TotalFog/Notifications/ScannerNotifications.cs": "b22c63f63d0548df13b5f6b80aa5bbeb8a9da00f835e0eb8041b77cef248c433",
     "Source/TotalFog/Notifications/SilentRaidPolicy.cs": "8212b608da4167f309e87dfdc2f5d6075cbfafde5386cc07e96f710e3108812e",
     "Source/TotalFog/Notifications/ThreatAlerts.Patches.cs": "c6dac34ab6379274394f30ff185e358b4d60db0b9b143e6e6bed69b74a1cdeaf",
     "Source/TotalFog/Notifications/ThreatAlerts.cs": "3fdbbee20cfd6c31c8f355f52282dcf7f00c53ac325e91b2a3bac4e0927be893",
@@ -129,5 +131,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "20ddc656d45ab7b457d63c6685811cbfccf096ce45dc7f740e85db961a3884b1"
+  "dllSha256": "bc1682e6ca30f4600c833822c6e33ec2dd939f0736c5b6c6726470fc1247bdbf"
 }

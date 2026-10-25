@@ -8,6 +8,45 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Scanner discovery reports, 2026-10-25
+
+Mortal's report asks to allow ground-penetrating and long-range scanner alerts.
+Native 1.6 source confirms that ground discoveries target the deposit cell.
+That cell can be outside current sight, so the existing notification policy
+defers or discards its letter. Long-range discoveries create a world quest and
+send a targetless letter. That report already passes the world-event rule.
+
+Two source-linked scanner assertions fail before the correction, one for each
+hidden-positive setting. The accepted red log is `policy-red.log` under
+`artifacts/scanner-notifications-20261025/`. All 569 C# tests and seven artifact
+tests then pass. Gameplay and companion compilation has zero warnings or errors.
+The production patch scopes only player-owned ground discovery. It leaves the
+long-range discovery method unchanged.
+
+The final unreleased gameplay DLL SHA-256 is
+`bc1682e6ca30f4600c833822c6e33ec2dd939f0736c5b6c6726470fc1247bdbf`,
+MVID `43ed3254-1eb0-492b-9cc4-5079cdc1a7e1`.
+These exact bytes pass all 18 native controls on offline Core-only 1.6.4871 rev581
+and Steam 1.7.4985 rev1269 with all five DLCs. Both profiles use released Workshop
+Harmony and RimBridgeServer. Real ground and long-range letters arrive immediately
+with hidden positives set to defer and discard. The ground letter retains its
+unseen deposit target. Ordinary hidden positives remain deferred or discarded,
+and another faction's ground scanner cannot bypass filtering. A deliberate
+native discovery failure preserves its exception and clears the scope.
+Neither current sight nor surface discovery changes.
+
+The companion stages real scanners and calls their native discovery methods.
+It does not complete normal scanner work or establish Multiplayer compatibility.
+It restores options/coverage and reloads each unchanged save. Both games stop.
+The temporary 1.6 mod configuration is restored byte for byte. Native journals
+contain no errors. The 1.7 save retains its existing version and Funeral-precept
+warnings; both engines log bridge startup timing warnings.
+
+Accepted manifests are `native16-final.json` and `native17-final.json` in the
+same artifact directory, alongside their native journals. Earlier `native16.json`
+and `native17.json` test a broader, superseded two-scanner patch. No version bump,
+public push, package delivery or publication accompanies this correction.
+
 ## Hearing rings over unexplored fog, 2026-10-24
 
 The unreleased gameplay DLL is

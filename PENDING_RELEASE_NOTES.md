@@ -1,1 +1,2 @@
 - Fixed hearing rings being hidden by unexplored fog, including rings from moving zombies.
+- New ground-penetrating scanner discoveries now notify you immediately, even when the deposit is outside current sight.

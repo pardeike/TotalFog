@@ -134,6 +134,11 @@ Toggle `exploredGround` and use distinct `evidenceLabel` values for captures.
 The scenario uses Normal playback and temporarily prevents zero-threat cleanup.
 It restores settings/probes and reloads the unchanged save. Inspect screenshots
 and the native journal. Height or draw-call checks alone do not prove visible rings.
+Use `totalfog/scanner_notifications` on an isolated paused single-player save
+for native ground/long-range discovery letters and hidden-event controls.
+It invokes native discovery directly, checks ownership and exception cleanup,
+restores options/coverage and reloads the unchanged supplied save. It does not
+test scanner work duration. Read the native error journal before acceptance.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

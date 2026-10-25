@@ -19,6 +19,10 @@ public partial class TotalFogMod : Mod
             () => Compatibility.LegacySaveTypes.Install(harmony)
         );
         PatchSafety.Install("base fog hooks", InjectDetours);
+        PatchSafety.Install(
+            "scanner discovery reports",
+            () => Notifications.ScannerNotifications.Install(harmony)
+        );
         PatchSafety.Install("debug fog commands", () => DebugFogCommands.Install(harmony));
         PatchSafety.Install("watchtowers", () => Watchtowers.WatchtowerPatches.Install(harmony));
     }
