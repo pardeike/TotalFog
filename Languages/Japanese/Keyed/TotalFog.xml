@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>速い</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Off</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0}秒</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>基本視界</baseViewRange>
-  <baseViewRangeDesc>健康状態,明るさ,天候を考慮する前の入植者の視界距離です.</baseViewRangeDesc>
+  <baseViewRange>基本視界（セル）</baseViewRange>
+  <baseViewRangeDesc>健康状態,明るさ,天候を考慮する前の入植者の視界距離です. 10から100までの整数のセル数で指定します。</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>その他の目</TotalFog_AdditionalObservers>
   <buildingVisionMod>建物の視界倍率</buildingVisionMod>
   <buildingVisionModDesc>カメラなどの建物の視界距離に掛ける倍率です.設置時のプレビューは変わりません.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>見張り塔</TotalFog_Watchtowers>
   <TotalFog_TowerVision>見張りの視界倍率</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>見張り塔の上から見張りがどれだけ遠くまで見えるかの倍率です.屋根や山,他の塔は視界を遮ります.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>見張りの視界上限</TotalFog_TowerRange>
+  <TotalFog_TowerRange>見張りの視界上限（セル）</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>見張りはこのセル数より遠くは見えません.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>はしごの昇降時間(ティック)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>登り降りにかかる時間です.60ティックがゲーム内時間の1秒です.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>はしごの昇降時間</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>はしごを上り下りする時間です。通常のゲーム速度での秒数で表示します。</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>見張りの射撃許可</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>見張りは独立した壁越しに射撃できます.塔の上では被弾しやすく,白兵戦はできません.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>望遠鏡の視界上限</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>望遠鏡の視界上限（セル）</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>監視望遠鏡を使う入植者はこのセル数より遠くは見えません.見張り塔とは無関係です.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>誰も見ていないものの音は,継続音も含めて鳴りません.聴覚によるフィルタリングより優先されます.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>聴覚による音のフィルタリング</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>隠れた音はくぐもり,それを聞き取れる生きた入植者の近くでのみ鳴ります.聴覚範囲の外では無音です.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>聴覚範囲</audioSourceRange>
+  <audioSourceRange>聴覚範囲（セル）</audioSourceRange>
   <audioSourceRangeDesc>入植者が隠れた音を聞き取れるセル数です.</audioSourceRangeDesc>
   <volumeMufflingModifier>距離による減衰</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>聴覚範囲の端に近づくにつれて,隠れた音がどれだけ小さくなるかを決めます.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>0%では聴覚範囲内の音量は変わりません。100%では距離に応じて小さくなり、範囲の端で無音になります。範囲外の音は常に聞こえません。</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>物音マーカー</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>物音マーカーを表示</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>入植者が隠れた動きを聞き取った場所に小さなマーカーを表示します.不要ならオフにしてください.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>物音マーカーの範囲</baseHearingRange>
+  <baseHearingRange>物音マーカーの範囲（セル）</baseHearingRange>
   <TotalFog_HearingRangeDesc>隠れた動きを聞き取れるセル数です.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

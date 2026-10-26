@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Snabb</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Av</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0} %</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Grundläggande siktavstånd</baseViewRange>
-  <baseViewRangeDesc>Hur långt en kolonist ser innan hälsa, ljus och väder räknas in.</baseViewRangeDesc>
+  <baseViewRange>Grundläggande siktavstånd (rutor)</baseViewRange>
+  <baseViewRangeDesc>Hur långt en kolonist ser innan hälsa, ljus och väder räknas in. Hela rutor, från 10 till 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Andra ögon</TotalFog_AdditionalObservers>
   <buildingVisionMod>Siktmultiplikator för byggnader</buildingVisionMod>
   <buildingVisionModDesc>Skalar hur långt kameror och andra byggnader ser. Förhandsvisningen vid placering ändras inte.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Vakttorn</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Siktmultiplikator för utkik</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Hur mycket längre en utkik ser från toppen av ett vakttorn. Tak, berg och andra torn blockerar fortfarande sikten.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Siktgräns för utkik</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Siktgräns för utkik (rutor)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>En utkik ser aldrig längre än så här många rutor.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Klättringstid för stege (ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Hur lång tid det tar att klättra upp eller ner. 60 ticks är en sekund speltid.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Tid att klättra på stegen</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Tid att klättra upp eller ner, i sekunder vid normal spelhastighet.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Utkikar får skjuta</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Utkikar kan skjuta över fristående väggar. Däruppe är de lättare att träffa och kan inte slåss i närstrid.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Siktgräns för teleskop</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Siktgräns för teleskop (rutor)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>En kolonist vid ett spaningsteleskop ser aldrig längre än så här många rutor. Oberoende av vakttorn.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Ljud från sådant ingen kan se är tysta, även pågående loopar. Detta åsidosätter hörselbaserad filtrering.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Hörselbaserad ljudfiltrering</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Dolda ljud dämpas och spelas bara nära en levande kolonist som skulle kunna höra dem. Bortom hörselräckvidden är de tysta.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Hörselräckvidd</audioSourceRange>
+  <audioSourceRange>Hörselräckvidd (rutor)</audioSourceRange>
   <audioSourceRangeDesc>Hur många rutor bort en kolonist fortfarande kan höra ett dolt ljud.</audioSourceRangeDesc>
   <volumeMufflingModifier>Dämpning med avståndet</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Hur mycket tystare ett dolt ljud blir mot kanten av hörselräckvidden.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>Vid 0% är ljudstyrkan oförändrad inom hörhåll. Vid 100% avtar den till tystnad vid gränsen. Ljud utanför hörhåll är alltid tysta.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Ljudmarkörer</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Visa ljudmarkörer</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Små markörer visar var en kolonist hör dold rörelse. Stäng av för att ta bort dem.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Räckvidd för ljudmarkörer</baseHearingRange>
+  <baseHearingRange>Räckvidd för ljudmarkörer (rutor)</baseHearingRange>
   <TotalFog_HearingRangeDesc>Hur många rutor bort dold rörelse kan höras.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

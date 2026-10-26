@@ -179,6 +179,16 @@ keep their existing policy. Long-range scanner reports have no local target and
 already pass the world-event rule, so their discovery method is not patched.
 The scope adds no saved state or periodic work.
 
+### Faction relationship reports
+
+Player relationship letters are also colony knowledge. A temporary context
+around native `Faction.Notify_RelationKindChanged` records the reporting faction
+and original target. Only letters matching both bypass fog filtering. Messages
+and letters about other targets retain normal checks, including quest callbacks
+inside the relationship change. The context restores its previous value after
+nested calls, skipped prefixes or exceptions. Native `canSendLetter` remains in
+charge of whether a relationship letter is produced at all.
+
 ### Multiplayer context
 
 Multiplayer is optional. Its API is bound once, with retained delegates and no

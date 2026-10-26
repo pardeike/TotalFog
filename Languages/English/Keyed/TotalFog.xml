@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Fast</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Off</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Base sight range</baseViewRange>
-  <baseViewRangeDesc>How far a colonist sees before health, light and weather are taken into account.</baseViewRangeDesc>
+  <baseViewRange>Base sight range (cells)</baseViewRange>
+  <baseViewRangeDesc>How far a colonist sees before health, light and weather are taken into account. Whole cells, from 10 to 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Other eyes</TotalFog_AdditionalObservers>
   <buildingVisionMod>Building sight multiplier</buildingVisionMod>
   <buildingVisionModDesc>Scales how far cameras and other buildings see. The placement preview does not change.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Watchtowers</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Lookout sight multiplier</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>How much farther a lookout sees from the top of a watchtower. Roofs, mountains and other towers still block the view.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Lookout sight limit</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Lookout sight limit (cells)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>A lookout never sees farther than this many cells.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Ladder climb time (ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>How long climbing up or down takes. 60 ticks are one second of game time.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Ladder climb time</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Time to climb up or down, in seconds at normal game speed.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Lookouts may shoot</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Lookouts can shoot over freestanding walls. Up there they are easier to hit and cannot fight in melee.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Telescope sight limit</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Telescope sight limit (cells)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>A colonist at a watch telescope never sees farther than this many cells. Independent of watchtowers.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Sounds from things nobody can see are silent, including ongoing loops. This overrides hearing-based filtering.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Hearing-based sound filtering</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Hidden sounds are muffled and only play near a living colonist who could hear them. Beyond hearing range they are silent.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Hearing range</audioSourceRange>
+  <audioSourceRange>Hearing range (cells)</audioSourceRange>
   <audioSourceRangeDesc>How many cells away a colonist can still hear a hidden sound.</audioSourceRangeDesc>
   <volumeMufflingModifier>Muffling with distance</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>How much quieter a hidden sound gets toward the edge of hearing range.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>0% keeps volume unchanged within hearing range. 100% fades to silence at its edge. Sounds outside hearing range stay silent.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Sound markers</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Show sound markers</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Small markers show where a colonist hears hidden movement. Turn this off to remove them.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Sound marker range</baseHearingRange>
+  <baseHearingRange>Sound marker range (cells)</baseHearingRange>
   <TotalFog_HearingRangeDesc>How many cells away hidden movement can be heard.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

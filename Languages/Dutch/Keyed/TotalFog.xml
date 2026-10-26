@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Snel</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Uit</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Basiszichtbereik</baseViewRange>
-  <baseViewRangeDesc>Hoe ver een kolonist ziet voordat gezondheid, licht en weer worden meegerekend.</baseViewRangeDesc>
+  <baseViewRange>Basiszichtbereik (cellen)</baseViewRange>
+  <baseViewRangeDesc>Hoe ver een kolonist ziet voordat gezondheid, licht en weer worden meegerekend. Hele cellen, van 10 tot 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Andere ogen</TotalFog_AdditionalObservers>
   <buildingVisionMod>Zichtfactor gebouwen</buildingVisionMod>
   <buildingVisionModDesc>Schaalt hoe ver camera's en andere gebouwen zien. Het plaatsingsvoorbeeld verandert niet.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Wachttorens</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Zichtfactor uitkijk</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Hoeveel verder een uitkijk ziet vanaf de top van een wachttoren. Daken, bergen en andere torens blokkeren het zicht nog steeds.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Zichtlimiet uitkijk</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Zichtlimiet uitkijk (cellen)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Een uitkijk ziet nooit verder dan dit aantal cellen.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Klimtijd ladder (ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Hoe lang omhoog of omlaag klimmen duurt. 60 ticks zijn één seconde speltijd.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Klimtijd van de ladder</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Tijd om omhoog of omlaag te klimmen, in seconden bij normale spelsnelheid.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Uitkijken mogen schieten</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Uitkijken kunnen over vrijstaande muren schieten. Daarboven zijn ze makkelijker te raken en kunnen ze niet van dichtbij vechten.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Zichtlimiet telescoop</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Zichtlimiet telescoop (cellen)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Een kolonist aan een uitkijktelescoop ziet nooit verder dan dit aantal cellen. Staat los van wachttorens.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Geluiden van dingen die niemand kan zien zijn stil, ook doorlopende geluiden. Dit gaat vóór het filteren op gehoor.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Geluidsfilter op gehoor</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Verborgen geluiden klinken gedempt en spelen alleen af bij een levende kolonist die ze zou kunnen horen. Buiten gehoorbereik zijn ze stil.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Gehoorbereik</audioSourceRange>
+  <audioSourceRange>Gehoorbereik (cellen)</audioSourceRange>
   <audioSourceRangeDesc>Op hoeveel cellen afstand een kolonist een verborgen geluid nog kan horen.</audioSourceRangeDesc>
   <volumeMufflingModifier>Demping met afstand</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Hoeveel zachter een verborgen geluid wordt richting de rand van het gehoorbereik.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>Bij 0% blijft het volume binnen gehoorafstand gelijk. Bij 100% neemt het af tot stilte aan de rand. Geluiden buiten gehoorafstand blijven stil.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Geluidsmarkeringen</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Geluidsmarkeringen tonen</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Kleine markeringen tonen waar een kolonist verborgen beweging hoort. Zet dit uit om ze te verwijderen.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Bereik geluidsmarkeringen</baseHearingRange>
+  <baseHearingRange>Bereik geluidsmarkeringen (cellen)</baseHearingRange>
   <TotalFog_HearingRangeDesc>Op hoeveel cellen afstand verborgen beweging te horen is.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

@@ -24,6 +24,10 @@ public partial class TotalFogMod : Mod
             () => Notifications.ScannerNotifications.Install(harmony)
         );
         PatchSafety.Install("debug fog commands", () => DebugFogCommands.Install(harmony));
+        PatchSafety.Install(
+            "faction relationship reports",
+            () => Notifications.FactionRelationNotifications.Install(harmony)
+        );
         PatchSafety.Install("watchtowers", () => Watchtowers.WatchtowerPatches.Install(harmony));
     }
 

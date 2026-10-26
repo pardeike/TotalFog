@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Быстро</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Выкл</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} с</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Базовая дальность обзора</baseViewRange>
-  <baseViewRangeDesc>Как далеко видит поселенец без учёта здоровья, освещения и погоды.</baseViewRangeDesc>
+  <baseViewRange>Базовая дальность обзора (клетки)</baseViewRange>
+  <baseViewRangeDesc>Как далеко видит поселенец без учёта здоровья, освещения и погоды. Целое число клеток от 10 до 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Другие наблюдатели</TotalFog_AdditionalObservers>
   <buildingVisionMod>Множитель обзора построек</buildingVisionMod>
   <buildingVisionModDesc>Масштабирует дальность обзора камер и других построек. Предпросмотр при размещении не меняется.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Дозорные вышки</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Множитель обзора дозорного</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Насколько дальше видит дозорный с вершины дозорной вышки. Крыши, горы и другие вышки по-прежнему закрывают обзор.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Предел обзора дозорного</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Предел обзора дозорного (клетки)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Дозорный никогда не видит дальше этого числа клеток.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Время подъёма по лестнице (тики)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Сколько длится подъём или спуск. 60 тиков — одна секунда игрового времени.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Время подъёма и спуска</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Время подъёма или спуска по лестнице, в секундах при обычной скорости игры.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Дозорные могут стрелять</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Дозорные могут стрелять поверх отдельно стоящих стен. Наверху в них легче попасть, и они не могут драться врукопашную.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Предел обзора телескопа</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Предел обзора телескопа (клетки)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Поселенец у наблюдательного телескопа никогда не видит дальше этого числа клеток. Не зависит от дозорных вышек.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Звуки того, чего никто не видит, не слышны, включая длящиеся звуки. Это отменяет фильтр по слуху.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Фильтр звуков по слуху</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Невидимые звуки приглушены и слышны только рядом с живым поселенцем, который мог бы их услышать. За пределами дальности слуха они не слышны.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Дальность слуха</audioSourceRange>
+  <audioSourceRange>Дальность слуха (клетки)</audioSourceRange>
   <audioSourceRangeDesc>За сколько клеток поселенец ещё слышит невидимый звук.</audioSourceRangeDesc>
   <volumeMufflingModifier>Приглушение с расстоянием</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Насколько тише становится невидимый звук ближе к границе дальности слуха.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>При 0% громкость в пределах слышимости не меняется. При 100% она снижается до тишины на границе слышимости. Звуки за её пределами всегда беззвучны.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Метки звуков</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Показывать метки звуков</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Небольшие метки показывают, где поселенец слышит невидимое движение. Отключите, чтобы их убрать.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Дальность меток звуков</baseHearingRange>
+  <baseHearingRange>Дальность меток звуков (клетки)</baseHearingRange>
   <TotalFog_HearingRangeDesc>За сколько клеток слышно невидимое движение.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

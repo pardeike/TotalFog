@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Szybko</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Wył</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Podstawowy zasięg widzenia</baseViewRange>
-  <baseViewRangeDesc>Jak daleko widzi kolonista, zanim zostaną uwzględnione zdrowie, światło i pogoda.</baseViewRangeDesc>
+  <baseViewRange>Podstawowy zasięg widzenia (pola)</baseViewRange>
+  <baseViewRangeDesc>Jak daleko widzi kolonista, zanim zostaną uwzględnione zdrowie, światło i pogoda. Całkowita liczba pól, od 10 do 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Inni obserwatorzy</TotalFog_AdditionalObservers>
   <buildingVisionMod>Mnożnik widzenia budynków</buildingVisionMod>
   <buildingVisionModDesc>Skaluje, jak daleko widzą kamery i inne budynki. Podgląd podczas umieszczania się nie zmienia.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Wieże strażnicze</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Mnożnik widzenia wartownika</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>O ile dalej widzi wartownik ze szczytu wieży strażniczej. Dachy, góry i inne wieże nadal zasłaniają widok.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Limit widzenia wartownika</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Limit widzenia wartownika (pola)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Wartownik nigdy nie widzi dalej niż tyle pól.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Czas wspinaczki po drabinie (tiki)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Jak długo trwa wejście na górę lub zejście. 60 tików to jedna sekunda czasu gry.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Czas wspinania po drabinie</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Czas wejścia lub zejścia, w sekundach przy normalnej prędkości gry.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Wartownicy mogą strzelać</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Wartownicy mogą strzelać ponad wolnostojącymi ścianami. Na górze łatwiej ich trafić i nie mogą walczyć wręcz.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Limit widzenia teleskopu</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Limit widzenia teleskopu (pola)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Kolonista przy teleskopie obserwacyjnym nigdy nie widzi dalej niż tyle pól. Niezależne od wież strażniczych.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Dźwięki rzeczy, których nikt nie widzi, są wyciszone, w tym trwające pętle. Ma to pierwszeństwo przed filtrowaniem według słuchu.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Filtrowanie dźwięków według słuchu</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Ukryte dźwięki są stłumione i słychać je tylko w pobliżu żywego kolonisty, który mógłby je usłyszeć. Poza zasięgiem słuchu są wyciszone.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Zasięg słuchu</audioSourceRange>
+  <audioSourceRange>Zasięg słuchu (pola)</audioSourceRange>
   <audioSourceRangeDesc>Z ilu pól kolonista wciąż słyszy ukryty dźwięk.</audioSourceRangeDesc>
   <volumeMufflingModifier>Tłumienie z odległością</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>O ile cichszy staje się ukryty dźwięk przy granicy zasięgu słuchu.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>Przy 0% głośność w zasięgu słuchu nie zmienia się. Przy 100% maleje do ciszy na jego granicy. Dźwięki poza zasięgiem słuchu pozostają niesłyszalne.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Znaczniki odgłosów</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Pokaż znaczniki odgłosów</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Małe znaczniki pokazują, gdzie kolonista słyszy ukryty ruch. Wyłącz, aby je usunąć.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Zasięg znaczników odgłosów</baseHearingRange>
+  <baseHearingRange>Zasięg znaczników odgłosów (pola)</baseHearingRange>
   <TotalFog_HearingRangeDesc>Z ilu pól słychać ukryty ruch.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Rapide</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Désactivée</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0} %</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Portée de vue de base</baseViewRange>
-  <baseViewRangeDesc>Distance à laquelle un colon voit avant la prise en compte de la santé, de la lumière et de la météo.</baseViewRangeDesc>
+  <baseViewRange>Portée de vue de base (cases)</baseViewRange>
+  <baseViewRangeDesc>Distance à laquelle un colon voit avant la prise en compte de la santé, de la lumière et de la météo. Cases entières, de 10 à 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Autres observateurs</TotalFog_AdditionalObservers>
   <buildingVisionMod>Multiplicateur de vue des structures</buildingVisionMod>
   <buildingVisionModDesc>Ajuste la portée de vue des caméras et des autres structures. L'aperçu de placement ne change pas.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Tours de guet</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Multiplicateur de vue du guetteur</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>À quel point un guetteur voit plus loin du haut d'une tour de guet. Les toits, les montagnes et les autres tours bloquent toujours la vue.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Portée maximale du guetteur</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Portée maximale du guetteur (cases)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Un guetteur ne voit jamais plus loin que ce nombre de cases.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Durée de montée à l'échelle (ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Durée de la montée ou de la descente. 60 ticks correspondent à une seconde de jeu.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Temps de montée ou de descente</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Temps pour monter ou descendre, en secondes à vitesse de jeu normale.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Les guetteurs peuvent tirer</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Les guetteurs peuvent tirer par-dessus les murs isolés. Là-haut, ils sont plus faciles à toucher et ne peuvent pas combattre au corps-à-corps.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Portée maximale à la longue-vue</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Portée maximale à la longue-vue (cases)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Un colon à la longue-vue ne voit jamais plus loin que ce nombre de cases. Indépendant des tours de guet.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Les sons de ce que personne ne voit sont muets, y compris les boucles en cours. Ce réglage l'emporte sur le filtrage selon l'ouïe.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Filtrage des sons selon l'ouïe</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Les sons cachés sont étouffés et ne jouent que près d'un colon vivant qui pourrait les entendre. Au-delà de la portée d'ouïe, ils sont muets.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Portée d'ouïe</audioSourceRange>
+  <audioSourceRange>Portée d'ouïe (cases)</audioSourceRange>
   <audioSourceRangeDesc>À combien de cases un colon entend encore un son caché.</audioSourceRangeDesc>
   <volumeMufflingModifier>Atténuation avec la distance</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>À quel point un son caché s'affaiblit en approchant de la limite de la portée d'ouïe.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>À 0 %, le volume reste inchangé à portée auditive. À 100 %, il diminue jusqu’au silence à la limite de cette portée. Les sons au-delà restent inaudibles.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Marqueurs de bruit</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Afficher les marqueurs de bruit</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>De petits marqueurs indiquent où un colon entend un mouvement caché. Désactivez pour les retirer.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Portée des marqueurs de bruit</baseHearingRange>
+  <baseHearingRange>Portée des marqueurs de bruit (cases)</baseHearingRange>
   <TotalFog_HearingRangeDesc>À combien de cases un mouvement caché peut être entendu.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

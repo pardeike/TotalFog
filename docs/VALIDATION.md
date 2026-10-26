@@ -8,6 +8,57 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Localized settings units and diplomacy reports, 2026-10-26
+
+The unreleased gameplay DLL SHA-256 is
+`57ba368659602502a8f3a7286f62b2a75c7a69527e979f2883176f793700a978`,
+MVID `2e3dfaae-3211-497b-b642-715781b6e8ad`. The companion SHA-256 is
+`ab07fa5425e1796015459b3d98347176652a67733a395d9b42866060299ee9fa`.
+Both deployed pairs match. All 580 C# tests and seven artifact tests pass.
+Gameplay and companion compilation has zero warnings or errors.
+
+The accepted red phase compiles and fails five assertions: two diplomacy
+notification cases and three missing unit formats. Its log is
+`artifacts/settings-units-20261026/policy-and-localization-red.log`.
+An earlier missing fixture import is not accepted red evidence.
+
+Distances now name cells in their labels. Multipliers carry a multiplication
+sign, muffling uses percentages, and ladder time displays seconds at normal
+speed. Stored ticks, fractions, defaults and slider bounds are unchanged.
+All 14 language files retain matching keys and numeric placeholders. The
+formats include Turkish percent prefixes and localized second units.
+
+The final native settings audit passes all 416 checks on Steam 1.7.4985 rev1269
+with all five DLCs, released Workshop Harmony and RimBridgeServer. It loads
+native keyed translations and measures the real displayed value formatter.
+The widest tested value is Swedish `99.99 %`, 52 pixels in a 72-pixel field.
+Changed labels fit within two native text lines at a 320-pixel label width.
+Nine inspected screenshots cover English, German and Japanese Vision, scrolled
+Vision and Audio pages. The earlier captures are retained separately. This
+does not audit every resolution or perform a full game-language reload.
+
+Native relationship notifications pass all 33 controls on the same 1.7 profile
+and Core-only offline 1.6.4871 rev581. All four Ally/Neutral/Hostile transitions
+arrive with hidden pawn targets under both defer/discard settings. Targets are
+retained, scopes clear, and ordinary hidden positive/negative/neutral letters
+keep their filters. Reports grant neither sight nor terrain discovery.
+The fixture changes relation kinds and invokes native notification production.
+It does not reproduce a natural goodwill incident or establish Multiplayer.
+
+The first candidate scoped all notification visibility during a relationship
+change. Native source also sends quest signals inside that call, so the final
+exception matches only the relationship letter's reporting faction and target.
+Pure negative controls retain filtering for other factions, other targets and
+multi-target letters within that context. Messages receive no new bypass.
+
+The scenarios restore options and reload unchanged saves. The temporary 1.6
+mod list is restored byte for byte. The settings audit restores language,
+page, scroll and audio options. Both test games stop. Neither native journal
+contains errors; existing save-version, Funeral-precept and bridge timing
+warnings remain. Final manifests and journals are in
+`artifacts/settings-units-20261026/`. The earlier broad-scope manifest is
+superseded. No ZIP, version bump, public push or publication accompanies this work.
+
 ## Release 1.0.4 candidate, 2026-10-26
 
 The final versioned Release DLL SHA-256 is

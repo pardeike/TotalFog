@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Schnell</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Aus</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Grundsichtweite</baseViewRange>
-  <baseViewRangeDesc>Wie weit ein Kolonist sieht, bevor Gesundheit, Licht und Wetter berücksichtigt werden.</baseViewRangeDesc>
+  <baseViewRange>Grundsichtweite (Zellen)</baseViewRange>
+  <baseViewRangeDesc>Wie weit ein Kolonist sieht, bevor Gesundheit, Licht und Wetter berücksichtigt werden. Ganze Zellen, von 10 bis 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Weitere Augen</TotalFog_AdditionalObservers>
   <buildingVisionMod>Sichtmultiplikator für Gebäude</buildingVisionMod>
   <buildingVisionModDesc>Skaliert, wie weit Kameras und andere Gebäude sehen. Die Platzierungsvorschau ändert sich nicht.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Wachtürme</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Sichtmultiplikator für Wachposten</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Um wie viel weiter ein Wachposten von der Spitze eines Wachturms sieht. Dächer, Berge und andere Türme blockieren die Sicht weiterhin.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Sichtgrenze für Wachposten</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Sichtgrenze für Wachposten (Zellen)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Ein Wachposten sieht nie weiter als diese Anzahl Zellen.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Kletterzeit der Leiter (Ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Wie lange Auf- oder Abstieg dauern. 60 Ticks sind eine Sekunde Spielzeit.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Kletterzeit der Leiter</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Zeit zum Hinauf- oder Hinabklettern, in Sekunden bei normaler Spielgeschwindigkeit.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Wachposten dürfen schießen</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Wachposten können über freistehende Wände schießen. Dort oben sind sie leichter zu treffen und können nicht im Nahkampf kämpfen.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Sichtgrenze für Teleskope</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Sichtgrenze für Teleskope (Zellen)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Ein Kolonist am Wachteleskop sieht nie weiter als diese Anzahl Zellen. Unabhängig von Wachtürmen.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Geräusche von Dingen, die niemand sehen kann, sind stumm, auch laufende Schleifen. Das hat Vorrang vor der Filterung nach Gehör.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Geräuschfilterung nach Gehör</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Verborgene Geräusche sind gedämpft und nur in der Nähe eines lebenden Kolonisten zu hören, der sie hören könnte. Außerhalb der Hörweite sind sie stumm.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Hörweite</audioSourceRange>
+  <audioSourceRange>Hörweite (Zellen)</audioSourceRange>
   <audioSourceRangeDesc>Wie viele Zellen entfernt ein Kolonist ein verborgenes Geräusch noch hören kann.</audioSourceRangeDesc>
   <volumeMufflingModifier>Dämpfung mit der Entfernung</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Wie viel leiser ein verborgenes Geräusch zum Rand der Hörweite hin wird.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>Bei 0% bleibt die Lautstärke innerhalb der Hörweite unverändert. Bei 100% nimmt sie bis zur Stille am Rand ab. Geräusche außerhalb der Hörweite bleiben stumm.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Geräuschmarkierungen</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Geräuschmarkierungen anzeigen</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Kleine Markierungen zeigen, wo ein Kolonist verborgene Bewegung hört. Schalte dies aus, um sie zu entfernen.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Reichweite der Geräuschmarkierungen</baseHearingRange>
+  <baseHearingRange>Reichweite der Geräuschmarkierungen (Zellen)</baseHearingRange>
   <TotalFog_HearingRangeDesc>Wie viele Zellen entfernt verborgene Bewegung gehört werden kann.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

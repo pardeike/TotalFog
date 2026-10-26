@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Rápida</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Apagado</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Alcance visual base</baseViewRange>
-  <baseViewRangeDesc>Hasta dónde ve un colono antes de tener en cuenta la salud, la luz y el clima.</baseViewRangeDesc>
+  <baseViewRange>Alcance visual base (casillas)</baseViewRange>
+  <baseViewRangeDesc>Hasta dónde ve un colono antes de tener en cuenta la salud, la luz y el clima. Casillas enteras, de 10 a 100.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Otros ojos</TotalFog_AdditionalObservers>
   <buildingVisionMod>Multiplicador de visión de edificios</buildingVisionMod>
   <buildingVisionModDesc>Escala hasta dónde ven las cámaras y otros edificios. La vista previa de ubicación no cambia.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Torres de vigilancia</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Multiplicador de visión del vigía</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Cuánto más lejos ve un vigía desde lo alto de una torre de vigilancia. Los techos, las montañas y otras torres siguen bloqueando la vista.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Límite de visión del vigía</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Límite de visión del vigía (casillas)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Un vigía nunca ve más allá de este número de casillas.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Tiempo de subida por la escalera (ticks)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Cuánto tarda en subir o bajar. 60 ticks son un segundo de tiempo de juego.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Tiempo de subida y bajada</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Tiempo para subir o bajar, en segundos a velocidad de juego normal.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Los vigías pueden disparar</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Los vigías pueden disparar por encima de muros aislados. Allí arriba son más fáciles de alcanzar y no pueden luchar cuerpo a cuerpo.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Límite de visión del telescopio</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Límite de visión del telescopio (casillas)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Un colono en un telescopio de vigilancia nunca ve más allá de este número de casillas. Es independiente de las torres de vigilancia.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Los sonidos de cosas que nadie puede ver se silencian, incluidos los bucles continuos. Esto anula el filtrado por audición.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>Filtrado de sonido por audición</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Los sonidos ocultos se amortiguan y solo suenan cerca de un colono vivo que pudiera oírlos. Más allá del alcance auditivo quedan en silencio.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>Alcance auditivo</audioSourceRange>
+  <audioSourceRange>Alcance auditivo (casillas)</audioSourceRange>
   <audioSourceRangeDesc>A cuántas casillas de distancia un colono aún puede oír un sonido oculto.</audioSourceRangeDesc>
   <volumeMufflingModifier>Amortiguación con la distancia</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Cuánto se atenúa un sonido oculto hacia el límite del alcance auditivo.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>Con 0%, el volumen no cambia dentro del alcance auditivo. Con 100%, disminuye hasta el silencio en su límite. Los sonidos fuera del alcance siempre son inaudibles.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Marcadores de sonido</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Mostrar marcadores de sonido</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Pequeños marcadores muestran dónde oye un colono movimiento oculto. Desactívalo para quitarlos.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Alcance de los marcadores de sonido</baseHearingRange>
+  <baseHearingRange>Alcance de los marcadores de sonido (casillas)</baseHearingRange>
   <TotalFog_HearingRangeDesc>A cuántas casillas de distancia se puede oír movimiento oculto.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

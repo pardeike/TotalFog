@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>빠름</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>끄기</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0}초</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>기본 시야 범위</baseViewRange>
-  <baseViewRangeDesc>건강, 빛과 날씨를 반영하기 전에 정착민이 보는 거리입니다.</baseViewRangeDesc>
+  <baseViewRange>기본 시야 범위 (칸)</baseViewRange>
+  <baseViewRangeDesc>건강, 빛과 날씨를 반영하기 전에 정착민이 보는 거리입니다. 10~100칸 사이의 정수로 설정합니다.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>다른 관찰자</TotalFog_AdditionalObservers>
   <buildingVisionMod>건물 시야 배수</buildingVisionMod>
   <buildingVisionModDesc>카메라와 다른 건물이 보는 거리를 조정합니다. 배치 미리보기는 바뀌지 않습니다.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>감시탑</TotalFog_Watchtowers>
   <TotalFog_TowerVision>감시자 시야 배수</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>감시탑 꼭대기의 감시자가 얼마나 더 멀리 보는지 정합니다. 지붕, 산과 다른 감시탑은 여전히 시야를 막습니다.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>감시자 시야 한계</TotalFog_TowerRange>
+  <TotalFog_TowerRange>감시자 시야 한계 (칸)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>감시자는 이 칸 수보다 멀리 보지 못합니다.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>사다리 오르내리기 시간 (틱)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>올라가거나 내려오는 데 걸리는 시간입니다. 60틱은 게임 시간 1초입니다.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>사다리 오르내리는 시간</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>사다리를 오르거나 내려가는 시간입니다. 보통 게임 속도 기준의 초 단위로 표시합니다.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>감시자 사격 허용</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>감시자는 독립된 벽 너머로 사격할 수 있습니다. 탑 위에서는 맞기 쉽고 근접 전투를 할 수 없습니다.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>망원경 시야 한계</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>망원경 시야 한계 (칸)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>감시 망원경 앞에 선 정착민은 이 칸 수보다 멀리 보지 못합니다. 감시탑과는 별개입니다.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>아무도 볼 수 없는 것의 소리는 지속되는 반복음까지 포함해 들리지 않습니다. 청각 기반 필터보다 우선합니다.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>청각 기반 소리 필터</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>숨겨진 소리는 작게 들리며, 들을 수 있는 살아 있는 정착민 근처에서만 재생됩니다. 청각 범위 밖에서는 들리지 않습니다.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>청각 범위</audioSourceRange>
+  <audioSourceRange>청각 범위 (칸)</audioSourceRange>
   <audioSourceRangeDesc>정착민이 숨겨진 소리를 들을 수 있는 거리를 칸 수로 정합니다.</audioSourceRangeDesc>
   <volumeMufflingModifier>거리에 따른 감쇠</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>청각 범위 가장자리로 갈수록 숨겨진 소리가 얼마나 작아지는지 정합니다.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>0%에서는 청력 범위 안의 음량이 유지됩니다. 100%에서는 거리에 따라 작아져 범위 끝에서 무음이 됩니다. 범위 밖의 소리는 항상 들리지 않습니다.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>소리 감지 표시</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>소리 감지 표시 보기</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>정착민이 숨겨진 움직임을 듣는 곳에 작은 표시가 나타납니다. 끄면 표시가 사라집니다.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>소리 감지 표시 범위</baseHearingRange>
+  <baseHearingRange>소리 감지 표시 범위 (칸)</baseHearingRange>
   <TotalFog_HearingRangeDesc>숨겨진 움직임을 들을 수 있는 거리를 칸 수로 정합니다.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>Hızlı</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>Kapalı</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>%{0}</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} sn</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>Temel görüş menzili</baseViewRange>
-  <baseViewRangeDesc>Sağlık, ışık ve hava durumu hesaba katılmadan önce bir kolonicinin ne kadar uzağı gördüğü.</baseViewRangeDesc>
+  <baseViewRange>Temel görüş menzili (kare)</baseViewRange>
+  <baseViewRangeDesc>Sağlık, ışık ve hava durumu hesaba katılmadan önce bir kolonicinin ne kadar uzağı gördüğü. 10 ile 100 arasında tam kare sayısı.</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>Diğer gözler</TotalFog_AdditionalObservers>
   <buildingVisionMod>Yapı görüş çarpanı</buildingVisionMod>
   <buildingVisionModDesc>Kameraların ve diğer yapıların ne kadar uzağı gördüğünü ölçekler. Yerleştirme ön izlemesi değişmez.</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>Gözcü kuleleri</TotalFog_Watchtowers>
   <TotalFog_TowerVision>Gözcü görüş çarpanı</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>Bir gözcünün gözcü kulesinin tepesinden ne kadar daha uzağı gördüğü. Çatılar, dağlar ve diğer kuleler görüşü yine de engeller.</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>Gözcü görüş sınırı</TotalFog_TowerRange>
+  <TotalFog_TowerRange>Gözcü görüş sınırı (kare)</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>Bir gözcü hiçbir zaman bu kadar kareden daha uzağı göremez.</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>Merdiven tırmanma süresi (tik)</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>Yukarı veya aşağı tırmanmanın ne kadar sürdüğü. 60 tik, bir saniye oyun zamanıdır.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>Merdiven tırmanma süresi</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Yukarı veya aşağı tırmanma süresi. Normal oyun hızında saniye olarak gösterilir.</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>Gözcüler ateş edebilir</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>Gözcüler bağımsız duvarların üzerinden ateş edebilir. Yukarıdayken daha kolay vurulurlar ve yakın dövüş yapamazlar.</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>Teleskop görüş sınırı</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>Teleskop görüş sınırı (kare)</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>Gözetleme teleskobundaki bir kolonici hiçbir zaman bu kadar kareden daha uzağı göremez. Gözcü kulelerinden bağımsızdır.</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>Kimsenin göremediği şeylerden gelen sesler, süregelen döngüler dâhil, sessizdir. Bu, işitmeye dayalı filtrelemeyi geçersiz kılar.</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>İşitmeye dayalı ses filtreleme</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>Gizli sesler boğuk çalar ve yalnızca onları duyabilecek yaşayan bir kolonicinin yakınında duyulur. İşitme menzilinin ötesinde sessizdir.</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>İşitme menzili</audioSourceRange>
+  <audioSourceRange>İşitme menzili (kare)</audioSourceRange>
   <audioSourceRangeDesc>Bir kolonicinin gizli bir sesi kaç kare uzaktan hâlâ duyabildiği.</audioSourceRangeDesc>
   <volumeMufflingModifier>Mesafeyle boğuklaşma</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>Gizli bir sesin işitme menzilinin kenarına doğru ne kadar kısıldığı.</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>%0, işitme menzili içindeki ses düzeyini değiştirmez. %100, sesi menzilin sınırında sessizliğe kadar azaltır. Menzil dışındaki sesler her zaman sessizdir.</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>Ses işaretleri</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>Ses işaretlerini göster</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>Küçük işaretler bir kolonicinin gizli hareketi nerede duyduğunu gösterir. Kaldırmak için bunu kapat.</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>Ses işareti menzili</baseHearingRange>
+  <baseHearingRange>Ses işareti menzili (kare)</baseHearingRange>
   <TotalFog_HearingRangeDesc>Gizli hareketin kaç kare uzaktan duyulabildiği.</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->

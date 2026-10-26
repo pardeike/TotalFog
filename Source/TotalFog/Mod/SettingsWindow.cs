@@ -211,7 +211,15 @@ public partial class FogSettings
             120,
             "TotalFog_TowerRangeDesc"
         );
-        Range(row, "TotalFog_TowerClimb", ref TowerClimbTicks, 60, 300, "TotalFog_TowerClimbDesc");
+        Range(
+            row,
+            "TotalFog_TowerClimb",
+            ref TowerClimbTicks,
+            60,
+            300,
+            "TotalFog_TowerClimbDesc",
+            seconds: true
+        );
         Check(
             row,
             "TotalFog_TowerShooting",
@@ -304,7 +312,8 @@ public partial class FogSettings
                 ref VolumeMufflingModifier,
                 0,
                 1,
-                "volumeMufflingModifierDesc"
+                "volumeMufflingModifierDesc",
+                percent: true
             );
         }
         Section(row, "TotalFog_HearingIndicators");
@@ -377,10 +386,16 @@ public partial class FogSettings
         ref int value,
         int min,
         int max,
-        string description
+        string description,
+        bool seconds = false
     )
     {
-        ValueLabel(row, key, value.ToString(), description);
+        ValueLabel(
+            row,
+            key,
+            seconds ? UnitValue("TotalFog_ValueSeconds", value / 60f) : value.ToString(),
+            description
+        );
         value = Mathf.RoundToInt(row.Slider(value, min, max));
         row.Gap(8f);
     }
@@ -391,13 +406,25 @@ public partial class FogSettings
         ref float value,
         float min,
         float max,
-        string description
+        string description,
+        bool percent = false
     )
     {
-        ValueLabel(row, key, Math.Round(value, 2).ToString("0.##"), description);
+        ValueLabel(
+            row,
+            key,
+            UnitValue(
+                percent ? "TotalFog_ValuePercent" : "TotalFog_ValueMultiplier",
+                percent ? value * 100 : value
+            ),
+            description
+        );
         value = row.Slider(value, min, max);
         row.Gap(8f);
     }
+
+    internal static string UnitValue(string key, float value) =>
+        key.Translate(Math.Round(value, 2).ToString("0.##"));
 
     private static void ValueLabel(
         Listing_Standard row,

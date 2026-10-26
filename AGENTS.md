@@ -139,6 +139,16 @@ for native ground/long-range discovery letters and hidden-event controls.
 It invokes native discovery directly, checks ownership and exception cleanup,
 restores options/coverage and reloads the unchanged supplied save. It does not
 test scanner work duration. Read the native error journal before acceptance.
+Use `totalfog/faction_notifications` for all four native player relationship
+transitions with unseen pawn targets under defer/discard settings. It retains
+ordinary hidden-event controls, restores options/coverage and reloads the
+unchanged supplied save. Read the native journal. This is controlled native
+notification production, not a natural goodwill incident or Multiplayer proof.
+Use `totalfog/settings_units` on a paused isolated game without an open mod
+settings dialog. It loads all 14 keyed translations, measures unit values in
+the native 72-pixel field and labels at a narrower 320-pixel width, then captures
+English/German/Japanese Vision and Audio pages. Inspect the captures. It restores
+language, page, scroll and audio options without selecting/saving a new language.
 For construction-control diagnostics, `totalfog/installed_state` with
 `observeNextDrag=true` records one native rectangle selection's input and
 candidates. Calling it again without that flag removes the observer and returns

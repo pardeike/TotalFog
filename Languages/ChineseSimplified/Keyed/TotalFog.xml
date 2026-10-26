@@ -38,9 +38,13 @@
   <fogFadeSpeedSetting_Fast>快</fogFadeSpeedSetting_Fast>
   <fogFadeSpeedSetting_Disabled>关</fogFadeSpeedSetting_Disabled>
 
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} 秒</TotalFog_ValueSeconds>
+
   <!-- Vision -->
-  <baseViewRange>基础视野范围</baseViewRange>
-  <baseViewRangeDesc>在计入健康、光照和天气之前，殖民者能看多远。</baseViewRangeDesc>
+  <baseViewRange>基础视野范围（格）</baseViewRange>
+  <baseViewRangeDesc>在计入健康、光照和天气之前，殖民者能看多远。 以整格计，范围为10至100格。</baseViewRangeDesc>
   <TotalFog_AdditionalObservers>其他观察者</TotalFog_AdditionalObservers>
   <buildingVisionMod>建筑视野倍率</buildingVisionMod>
   <buildingVisionModDesc>调整摄像头和其他建筑的视野距离。放置预览不会改变。</buildingVisionModDesc>
@@ -67,13 +71,13 @@
   <TotalFog_Watchtowers>瞭望塔</TotalFog_Watchtowers>
   <TotalFog_TowerVision>瞭望员视野倍率</TotalFog_TowerVision>
   <TotalFog_TowerVisionDesc>瞭望员在瞭望塔顶能看多远的倍数。屋顶、山体和其他瞭望塔仍会遮挡视线。</TotalFog_TowerVisionDesc>
-  <TotalFog_TowerRange>瞭望员视野上限</TotalFog_TowerRange>
+  <TotalFog_TowerRange>瞭望员视野上限（格）</TotalFog_TowerRange>
   <TotalFog_TowerRangeDesc>瞭望员的视野不会超过此格数。</TotalFog_TowerRangeDesc>
-  <TotalFog_TowerClimb>爬梯时间（tick）</TotalFog_TowerClimb>
-  <TotalFog_TowerClimbDesc>上下梯子所需的时间。60 tick 为一秒游戏时间。</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerClimb>爬梯时间</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>爬上或爬下所需的时间，以正常游戏速度下的秒数计。</TotalFog_TowerClimbDesc>
   <TotalFog_TowerShooting>瞭望员可以射击</TotalFog_TowerShooting>
   <TotalFog_TowerShootingDesc>瞭望员可以越过独立的墙射击。在塔上他们更容易被击中，且无法近战。</TotalFog_TowerShootingDesc>
-  <TotalFog_TelescopeRange>望远镜视野上限</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRange>望远镜视野上限（格）</TotalFog_TelescopeRange>
   <TotalFog_TelescopeRangeDesc>使用观测望远镜的殖民者的视野不会超过此格数。与瞭望塔无关。</TotalFog_TelescopeRangeDesc>
 
   <!-- Information -->
@@ -107,14 +111,14 @@
   <TotalFog_MuteHiddenSoundsDesc>无人看到的事物发出的声音完全静音，包括持续循环的声音。此选项优先于基于听力的过滤。</TotalFog_MuteHiddenSoundsDesc>
   <TotalFog_FilterHiddenSounds>基于听力的声音过滤</TotalFog_FilterHiddenSounds>
   <TotalFog_FilterHiddenSoundsDesc>隐藏的声音会变得低沉，且只在能听到它的活着的殖民者附近播放。超出听力范围则静音。</TotalFog_FilterHiddenSoundsDesc>
-  <audioSourceRange>听力范围</audioSourceRange>
+  <audioSourceRange>听力范围（格）</audioSourceRange>
   <audioSourceRangeDesc>殖民者在多少格外仍能听到隐藏的声音。</audioSourceRangeDesc>
   <volumeMufflingModifier>随距离减弱</volumeMufflingModifier>
-  <volumeMufflingModifierDesc>隐藏的声音接近听力范围边缘时减弱多少。</volumeMufflingModifierDesc>
+  <volumeMufflingModifierDesc>0%时，听力范围内的音量不变。100%时，声音随距离衰减，在听力范围边缘降为无声。范围外的声音始终无声。</volumeMufflingModifierDesc>
   <TotalFog_HearingIndicators>声音标记</TotalFog_HearingIndicators>
   <TotalFog_ShowHearingCues>显示声音标记</TotalFog_ShowHearingCues>
   <TotalFog_ShowHearingCuesDesc>小标记显示殖民者听到隐藏移动的位置。关闭此选项可移除它们。</TotalFog_ShowHearingCuesDesc>
-  <baseHearingRange>声音标记范围</baseHearingRange>
+  <baseHearingRange>声音标记范围（格）</baseHearingRange>
   <TotalFog_HearingRangeDesc>在多少格外能听到隐藏的移动。</TotalFog_HearingRangeDesc>
 
   <!-- Cameras -->
