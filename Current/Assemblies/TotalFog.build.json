@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "configuration": "Release",
   "inputs": {
-    "Directory.Build.props": "7d158b5c15e33432e35e9caf4df69df28cfc142e8db6cc396dcabe1d53ebf93e",
+    "Directory.Build.props": "50fad873e0035d86401fee256d34c2cfa69afbb66c8e147ae2479d18543e8ba7",
     "Source/Core/FeatureInstallation.cs": "ba225d3d475d06b52dc3803d9aea2612ec4c971b56a11fc1563a5d74bee8b50b",
     "Source/Core/FieldOfView.cs": "4edabbc921347407a4201053c01e9c70a4c00981946251a56922b8839d0776f5",
     "Source/Core/FogAppearance.cs": "d4f83beeed464e62a3403f631fdc6d5e7c73d28e35907c77180d3d3997fbed4e",
@@ -131,5 +131,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "bc1682e6ca30f4600c833822c6e33ec2dd939f0736c5b6c6726470fc1247bdbf"
+  "dllSha256": "3eab629b15abdd744cc0bfa0aa438e10dbd61ae8034f2f054db809c0b8a4bbe7"
 }

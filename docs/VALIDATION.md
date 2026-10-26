@@ -8,6 +8,42 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Release 1.0.4 candidate, 2026-10-26
+
+The final versioned Release DLL SHA-256 is
+`3eab629b15abdd744cc0bfa0aa438e10dbd61ae8034f2f054db809c0b8a4bbe7`,
+MVID `0cb51c8c-99ac-48bb-8946-759230eec94e`.
+All 569 C# tests and seven artifact tests pass. Gameplay and companion builds
+have zero warnings or errors. The tracked build receipt matches.
+
+These exact bytes pass all 18 scanner controls on offline 1.6.4871 rev581 with
+Core and Zombieland 5.7.1, and Steam 1.7.4985 rev1269 with all five DLCs.
+Both profiles use released Workshop Harmony and RimBridgeServer. Reports remain
+immediate under both hidden-positive settings. Deposit targets, ordinary-event
+filtering, ownership, exception cleanup and terrain privacy retain their controls.
+
+The 1.6 Zombieland fixture also passes all 29 hearing controls on unknown ground
+and all 29 on remembered ground. Inspected screenshots show human and zombie
+rings over fog while their targets stay hidden. Native Stumble movement passes.
+Waiting and stationary attacks retain the movement-only policy. This renews
+the hearing rendering check on macOS 1.6, not Windows or 1.7 hearing acceptance.
+
+Both native journals contain no errors. Existing save-version, Funeral-precept
+and bridge timing warnings remain. The scenarios restore settings and reload
+unchanged saves. Both test games stop, and the temporary 1.6 mod configuration
+is restored byte for byte. Another session's game is left alone after a guarded
+deployment refusal; no running installation is overwritten.
+
+The frozen ZIP contains 277 files under one `TotalFog/` wrapper, SHA-256
+`21ea6e3dfdfd118b4c5e571540c194e41076e451c512324d069f8e4630e49158`.
+Every file matches both deployed payloads. Extraction produces
+`Mods/TotalFog/About` exactly once. The ZIP excludes companion tools, SDKs,
+private Harmony, debug symbols, source and Finder metadata. Its deployed-content
+digest is `50f3cbe1448d406a83c00fbd293f417357f9d23646039682baef02065ffedb6f`.
+Candidate hashes, native manifests and journals are under
+`artifacts/release-1.0.4/`. Publication promotes these bytes without rebuilding.
+Earlier development checkpoints below retain their own hashes and limits.
+
 ## Scanner discovery reports, 2026-10-25
 
 Mortal's report asks to allow ground-penetrating and long-range scanner alerts.
