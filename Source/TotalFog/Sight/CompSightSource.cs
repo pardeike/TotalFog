@@ -505,6 +505,8 @@ public class CompSightSource : FogSubcomponent
         if (!ignoreDarkness)
         {
             float night = pawn.GetStatValue(FogDefOf.NightVisionEffectiveness);
+            if (pawn.genes?.AffectedByDarkness == false)
+                night = Math.Max(1, night);
             modifier *=
                 night < 1 ? Mathf.Lerp(night, 1, parent.Map.glowGrid.GroundGlowAt(cell)) : night;
         }

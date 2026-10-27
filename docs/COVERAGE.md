@@ -6,6 +6,14 @@ Detailed dated results, including rejected candidates, belong to
 [VALIDATION.md](VALIDATION.md). A later pass does not erase an earlier failure,
 and a result applies only to its recorded gameplay bytes and loadout.
 
+## Night-vision capability regression
+
+The 27 October 2026 native 1.7 check passes seven darkness-immunity and
+night-sight modifier controls. Gameplay reads the native active-gene capability,
+not a named Dark Vision exception. Ordinary penalties and enhanced night-sight
+values remain intact. See [the dated validation](VALIDATION.md#native-darkness-immunity-2026-10-27)
+for exact bytes, the red/green boundary, and what was not exercised.
+
 ## Current status
 
 Review round 2 is complete in ten ordered commits on 13 October 2026, followed

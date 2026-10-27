@@ -103,7 +103,7 @@
     "Source/TotalFog/Sight/CompProperties_SightModifier.cs": "1364eb69ac5d33296a1fae8324bcaf1e64f5e663938a737c8f8c8ebd53c85dbc",
     "Source/TotalFog/Sight/CompProperties_TreeOcclusion.cs": "1fb6e769c3bcc6ce5cb8ddc1ed9c5415e852234be09c7f906f65c50874105001",
     "Source/TotalFog/Sight/CompSightModifier.cs": "d20485c6322ae018a9391a362c5e66694aa9db3dd41f08c2f70c534f33f31d51",
-    "Source/TotalFog/Sight/CompSightSource.cs": "b249d7dc8613e1ce8a17da76cb34525421dcd3674a73cb1317c0fd828b823493",
+    "Source/TotalFog/Sight/CompSightSource.cs": "d92d61956201707b1c10ac8262f76d3d2bf3b306b3234ea4360f158142b9d848",
     "Source/TotalFog/Sight/CompTreeOcclusion.cs": "a88fd2f8ac6cdce776245ad69b8d2ef8657fb15aa04fa3174847ba2718d181ee",
     "Source/TotalFog/Sight/CompVisibility.cs": "c43f9c113ebc3d0dc88248ffa702eec1187f8056430bf7a28731f59e7bd045d6",
     "Source/TotalFog/Sight/CompWallOcclusion.cs": "151214c0dcbfee1d9f1fd0f8c33425b535c5402ad95134ced543b857fa20e25d",
@@ -133,5 +133,5 @@
     "Source/TotalFog/Watchtowers/WorkGiver_WatchtowerRescue.cs": "7422d00fb7ab1ea71820d7e1ffdfab223755c3fb001a78364a4653e8947b576f",
     "global.json": "a0fc2efcd4cc3a24444007b6e49f5b3c754e9d9e1869052c6ab7bdcba7cb7960"
   },
-  "dllSha256": "57ba368659602502a8f3a7286f62b2a75c7a69527e979f2883176f793700a978"
+  "dllSha256": "fc40c6b7f837e4bd91eeaed9daaf05a2b5426c234469b0643b22d0295b2e62b5"
 }

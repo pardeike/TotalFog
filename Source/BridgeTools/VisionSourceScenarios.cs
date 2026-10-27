@@ -29,11 +29,14 @@ public sealed class VisionSourceScenarios
         IRimBridgeContext ctx,
         CancellationToken cancellationToken,
         string saveName,
-        string evidenceLabel
+        string evidenceLabel,
+        bool nightVisionOnly = false
     )
     {
         if (string.IsNullOrWhiteSpace(saveName) || string.IsNullOrWhiteSpace(evidenceLabel))
             throw new ArgumentException("Supply the loaded save name and an evidence label.");
+        if (nightVisionOnly)
+            return await CheckNightVision(ctx, cancellationToken);
         await gate.WaitAsync(cancellationToken);
         var manifest = RimBridgeEvidence.CreateManifest(
             "totalfog/vision_source_controls",
@@ -373,6 +376,160 @@ public sealed class VisionSourceScenarios
             var result = await ctx.Game.StepTicksAsync(ticks, cancellationToken: cancellationToken);
             if (!result.Success)
                 throw new InvalidOperationException("Native stepping: " + result.Status);
+        }
+    }
+
+    private static GlowGrid nightVisionGrid;
+    private static IntVec3 nightVisionCell;
+    private static float nightVisionGlow;
+
+    private static void NightVisionGlowPostfix(GlowGrid __instance, IntVec3 __0, ref float __result)
+    {
+        if (__instance == nightVisionGrid && __0 == nightVisionCell)
+            __result = nightVisionGlow;
+    }
+
+    private static async Task<object> CheckNightVision(
+        IRimBridgeContext ctx,
+        CancellationToken cancellationToken
+    )
+    {
+        await gate.WaitAsync(cancellationToken);
+        try
+        {
+            return await ctx.MainThread.InvokeAsync<object>(
+                () =>
+                {
+                    var map = Find.CurrentMap;
+                    if (map == null || !Find.TickManager.Paused || !ModsConfig.BiotechActive)
+                        throw new InvalidOperationException(
+                            "Use a paused map with Biotech active."
+                        );
+                    var pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                    var harmony = new Harmony("brrainz.totalfog.night-vision-probe");
+                    var cell = map.AllCells.First(c => c.Standable(map) && !c.Fogged(map));
+                    var roof = map.roofGrid.RoofAt(cell);
+                    var rows = new List<object>();
+                    bool success = true;
+                    try
+                    {
+                        foreach (var existing in pawn.genes.GenesListForReading.ToArray())
+                            pawn.genes.RemoveGene(existing);
+                        GenSpawn.Spawn(pawn, cell, map);
+                        map.roofGrid.SetRoof(cell, RoofDefOf.RoofConstructed);
+                        nightVisionGrid = map.glowGrid;
+                        nightVisionCell = cell;
+                        harmony.Patch(
+                            AccessTools.Method(typeof(GlowGrid), nameof(GlowGrid.GroundGlowAt)),
+                            postfix: new HarmonyMethod(
+                                typeof(VisionSourceScenarios),
+                                nameof(NightVisionGlowPostfix)
+                            )
+                        );
+                        var sight = pawn.TryGetComp<CompFog>().FieldOfViewWatcher;
+                        nightVisionGlow = 1;
+                        float baselineDay = sight.CalcPawnSightRange(cell, false, true);
+                        void Sample(string name, float expectedNight, float dayMultiplier = 1)
+                        {
+                            nightVisionGlow = 1;
+                            float day = sight.CalcPawnSightRange(cell, false, true);
+                            nightVisionGlow = 0;
+                            float dark = sight.CalcPawnSightRange(cell, false, true);
+                            float ratio = dark / day;
+                            sight.UpdateFoV(true);
+                            int radius = sight.LastSightRange;
+                            bool passed =
+                                Math.Abs(ratio - expectedNight) < .001f
+                                && Math.Abs(day - baselineDay * dayMultiplier) < .001f
+                                && radius == UnityEngine.Mathf.RoundToInt(dark);
+                            success &= passed;
+                            rows.Add(
+                                new
+                                {
+                                    name,
+                                    passed,
+                                    day,
+                                    dark,
+                                    ratio,
+                                    expectedNight,
+                                    radius,
+                                }
+                            );
+                        }
+                        Sample("ordinary pawn", .65f);
+                        var gene = pawn.genes.AddGene(
+                            DefDatabase<GeneDef>.GetNamed("DarkVision"),
+                            false
+                        );
+                        Sample("Biotech Dark Vision", 1);
+                        pawn.genes.RemoveGene(gene);
+                        var custom = new GeneDef
+                        {
+                            defName = "TotalFog_ProbeNightVision",
+                            geneClass = typeof(Gene),
+                            ignoreDarkness = true,
+                        };
+                        gene = pawn.genes.AddGene(custom, false);
+                        Sample("unnamed modded darkness immunity", 1);
+                        var blocker = pawn.genes.AddGene(
+                            new GeneDef
+                            {
+                                defName = "TotalFog_ProbeOverride",
+                                geneClass = typeof(Gene),
+                            },
+                            true
+                        );
+                        gene.OverrideBy(blocker);
+                        Sample("overridden immunity gene", .65f);
+                        pawn.genes.RemoveGene(gene);
+                        pawn.genes.RemoveGene(blocker);
+                        var modifierDef = new HediffDef
+                        {
+                            defName = "TotalFog_ProbeNightSight",
+                            hediffClass = typeof(HediffWithComps),
+                            stages = new List<HediffStage>
+                            {
+                                new HediffStage
+                                {
+                                    statOffsets = new List<StatModifier>
+                                    {
+                                        new StatModifier
+                                        {
+                                            stat = FogDefOf.NightVisionEffectiveness,
+                                            value = .2f,
+                                        },
+                                    },
+                                },
+                            },
+                        };
+                        var modifier = pawn.health.AddHediff(modifierDef);
+                        Sample("generic night-sight stat modifier", .85f);
+                        pawn.health.RemoveHediff(modifier);
+                        modifierDef.stages[0].statOffsets[0].value = .5f;
+                        modifier = pawn.health.AddHediff(modifierDef);
+                        Sample("night-sight bonus above daylight", 1, 1.15f);
+                        gene = pawn.genes.AddGene(
+                            DefDatabase<GeneDef>.GetNamed("DarkVision"),
+                            false
+                        );
+                        Sample("immunity preserves extra night-sight bonus", 1, 1.15f);
+                        return new { success, rows };
+                    }
+                    finally
+                    {
+                        harmony.UnpatchAll(harmony.Id);
+                        nightVisionGrid = null;
+                        if (!pawn.Destroyed)
+                            pawn.Destroy(DestroyMode.Vanish);
+                        map.roofGrid.SetRoof(cell, roof);
+                    }
+                },
+                cancellationToken
+            );
+        }
+        finally
+        {
+            gate.Release();
         }
     }
 

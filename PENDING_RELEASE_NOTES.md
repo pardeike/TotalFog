@@ -1,2 +1,3 @@
 - Settings now show distance units, sight multipliers, percentages and ladder times in seconds, with updated translations.
 - Faction relationship letters now arrive immediately, even when their map target is out of sight.
+- Night vision now respects active darkness-immunity genes, including Biotech Dark Vision, while preserving night-sight modifiers.

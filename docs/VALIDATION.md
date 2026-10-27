@@ -8,6 +8,49 @@ remain recorded. For the current acceptance summary and remaining work, use
 use [ARCHITECTURE.md](ARCHITECTURE.md). The 6 October delivered ZIPs are a separate
 snapshot from later source commits.
 
+## Native darkness immunity, 2026-10-27
+
+Mortal's Dark Vision report is reproduced and fixed locally. This is not a public release.
+The test uses Steam RimWorld 1.7.4990 rev1069, all official DLCs, Harmony,
+RimBridgeServer, Total Fog, and Zombieland, in the isolated paired profile.
+It starts a fresh debug colony and loads or writes no saves. The profile's
+historical 1.6 name does not identify the running engine. Zombieland and the
+bridge retain their existing version-metadata warnings on this 1.7 build.
+
+`totalfog/vision_source_controls` with `nightVisionOnly:true` temporarily
+controls ground light at one roofed pawn cell. It generates and destroys its
+own pawn, restores the roof, removes its observer patch, and leaves other
+sources unchanged. The ordinary source-control mode retains its own save/reload
+contract. Supply the required nonempty save/evidence strings for this mode,
+but no save is read.
+
+The red run `op_871a0ac661ea40caadc289219e79c97f` demonstrates two failures:
+Biotech Dark Vision and an unnamed active gene with `ignoreDarkness=true`
+both retain the ordinary 65% dark range. Five other controls pass.
+The initial green run `op_9ebe36ec24914a5a98f1b0fb6e0b03c6` passes all seven rows:
+ordinary night penalty, native Dark Vision, unnamed gene immunity, overridden
+inactive immunity, a generic +0.2 night-sight stat modifier, a bonus above
+100%, and preservation of that bonus with immunity. The fixture's ordinary
+range is 60 in light and 39 in darkness. Active immunity restores 60 in darkness.
+The +0.2 modifier gives 51, and a +0.5 modifier preserves 69 with or without immunity.
+The final run `op_68a51111d6d54cdea2673d349b8e7ac2` also refreshes each actual
+field-of-view source and verifies its published radius: 39, 60, 60, 39, 51, 69,
+and 69. It separately asserts absolute daylight ranges so immunity cannot
+silently remove an existing bonus. This proves the native calculation and
+source-radius integration, not every mod's custom vision system or rendered
+fog-boundary pixels. There is no per-gene or per-mod name in gameplay
+code. The shared native gene query and existing pawn-capacity/stat calculations
+remain the integration points.
+
+All 580 C# tests and seven artifact tests pass. Gameplay and companion builds
+have zero warnings or errors. Tested gameplay DLL SHA-256:
+`fc40c6b7f837e4bd91eeaed9daaf05a2b5426c234469b0643b22d0295b2e62b5`.
+The installed gameplay DLL matches. Native journals contain no errors. Two
+startup warnings concern existing Waylith `hideFlags` and `sRGBWrite` stubs in
+Zombieland's title rendering. The post-startup journal after sequence 16 is empty.
+The failed initial fixture compilation used an unavailable `GeneDefOf.DarkVision`
+field. It is a harness prerequisite failure, not accepted red bug evidence.
+
 ## Localized settings units and diplomacy reports, 2026-10-26
 
 The unreleased gameplay DLL SHA-256 is
