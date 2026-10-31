@@ -16,6 +16,13 @@ for exact bytes, the red/green boundary, and what was not exercised.
 
 ## Current status
 
+The current 1.7 work adds [reactions to unseen weapon fire](UNSEEN-FIRE.md).
+The full source suite passes 606 tests. A bounded native check verifies silent
+and audible rifle controls, hidden attackers, fixed investigation cells and real
+movement. Custom pawn subclasses and guard overrides have source tests. Bespoke
+AI, separate firing implementations and combined optional-mod loadouts remain
+unverified. The older 1.6 evidence and test counts below retain their dated scope.
+
 Review round 2 is complete in ten ordered commits on 13 October 2026, followed
 by Andreas's accepted independent reassessment corrections. The independent
 player-stability review then corrects owned-pawn controls, tower fog targeting

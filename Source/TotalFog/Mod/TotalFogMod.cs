@@ -25,6 +25,10 @@ public partial class TotalFogMod : Mod
         );
         PatchSafety.Install("debug fog commands", () => DebugFogCommands.Install(harmony));
         PatchSafety.Install(
+            "unseen fire reactions",
+            () => Combat.UnseenFirePatches.Install(harmony)
+        );
+        PatchSafety.Install(
             "faction relationship reports",
             () => Notifications.FactionRelationNotifications.Install(harmony)
         );

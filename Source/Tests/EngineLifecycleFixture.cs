@@ -167,7 +167,7 @@ namespace Verse
         public bool Humanlike = true;
     }
 
-    public class Pawn : ThingWithComps
+    public partial class Pawn : ThingWithComps
     {
         public bool IsMutant;
         public bool Dead;
@@ -248,7 +248,7 @@ namespace Verse
         public bool this[IntVec3 cell] => Active;
     }
 
-    public class Map
+    public partial class Map
     {
         private static int nextMapId;
         public int uniqueID = ++nextMapId;
@@ -389,9 +389,16 @@ namespace Verse
 
     public record struct IntVec3(int x, int z)
     {
+        public IntVec3(int x, int y, int z)
+            : this(x, z) { }
+
         public static readonly IntVec3 Invalid = new(-1, -1);
 
-        public bool InBounds(Map map) => (uint)x < 2 && (uint)z < 2;
+        public bool InBounds(Map map) => (uint)x < map.Size.x && (uint)z < map.Size.z;
+
+        public bool IsValid => x >= 0 && z >= 0;
+
+        public bool Standable(Map map) => !map.Blocked.Contains(this);
 
         public List<Thing> GetThingList(Map map) => map.Things;
 
@@ -406,16 +413,20 @@ namespace Verse
             (x - other.x) * (x - other.x) + (z - other.z) * (z - other.z) <= range * range;
     }
 
-    public class VerbProperties
+    public partial class VerbProperties
     {
         public bool requireLineOfSight = true;
     }
 
-    public class Verb
+    public partial class Verb
     {
         public Thing caster;
         public VerbProperties verbProps = new();
-        public LocalTargetInfo CurrentTarget;
+        public LocalTargetInfo CurrentTarget
+        {
+            get => currentTarget;
+            set => currentTarget = value;
+        }
         public bool FliesOverhead;
 
         public bool ProjectileFliesOverhead() => FliesOverhead;
@@ -439,6 +450,7 @@ namespace Verse
         }
 
         public bool HasThing => Thing != null;
+        public bool IsValid => Thing != null || cell.IsValid;
         public IntVec3 Cell => Thing?.Position ?? cell;
     }
 
@@ -878,7 +890,7 @@ namespace TotalFog
                 faction != null && FactionSight.TryGetValue(faction, out var sight)
                     ? sight
                     : InSight
-            )[cell.z * 2 + cell.x];
+            )[cell.z * Owner.Size.x + cell.x];
         }
 
         public readonly Dictionary<(int, int), HashSet<CompVisibility>> Registered = new();
@@ -1004,6 +1016,14 @@ namespace HarmonyLib
 
         public void Patch(System.Reflection.MethodInfo original, HarmonyMethod postfix) =>
             Patched.Add(original);
+
+        public void Patch(
+            System.Reflection.MethodBase original,
+            HarmonyMethod prefix,
+            HarmonyMethod postfix,
+            HarmonyMethod transpiler,
+            HarmonyMethod finalizer
+        ) => Patched.Add((System.Reflection.MethodInfo)original);
     }
 
     [System.AttributeUsage(System.AttributeTargets.Method)]
@@ -1024,7 +1044,7 @@ namespace HarmonyLib
         public const int Last = 0;
     }
 
-    public static class AccessTools
+    public static partial class AccessTools
     {
         public static readonly Dictionary<string, System.Type> Types = new();
 
@@ -1037,19 +1057,18 @@ namespace HarmonyLib
         public static System.Reflection.MethodInfo DeclaredMethod(
             System.Type type,
             string name,
-            System.Type[] parameters
+            System.Type[] parameters = null
         ) =>
-            type.GetMethod(
-                name,
-                System.Reflection.BindingFlags.Public
-                    | System.Reflection.BindingFlags.NonPublic
-                    | System.Reflection.BindingFlags.Instance
-                    | System.Reflection.BindingFlags.Static
-                    | System.Reflection.BindingFlags.DeclaredOnly,
-                null,
-                parameters,
-                null
-            );
+            parameters == null
+                ? type.GetMethod(name, AllDeclared)
+                : type.GetMethod(name, AllDeclared, null, parameters, null);
+
+        private const System.Reflection.BindingFlags AllDeclared =
+            System.Reflection.BindingFlags.Public
+            | System.Reflection.BindingFlags.NonPublic
+            | System.Reflection.BindingFlags.Instance
+            | System.Reflection.BindingFlags.Static
+            | System.Reflection.BindingFlags.DeclaredOnly;
     }
 }
 

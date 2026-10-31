@@ -8,6 +8,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../TotalFog/Audio/Graphic_HearingCue.cs" Link="Production/Graphic_HearingCue.cs" />
+    <Compile Include="../TotalFog/Combat/UnseenFire.cs" Link="Production/UnseenFire.cs" />
+    <Compile Include="../TotalFog/Combat/UnseenFirePatches.cs" Link="Production/UnseenFirePatches.cs" />
+    <Compile Include="../TotalFog/Mod/PatchSafety.cs" Link="Production/PatchSafety.cs" />
     <Compile Include="../TotalFog/Notifications/ThreatAlerts.cs" Link="Production/ThreatAlerts.cs" />
     <Compile Include="../TotalFog/Detours/ReservationUtility.cs" Link="Production/ReservationUtility.cs" />
     <Compile Include="../TotalFog/Detours/HaulAIUtility.cs" Link="Production/HaulAIUtility.cs" />
