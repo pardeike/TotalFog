@@ -1,8 +1,8 @@
 # Building Total Fog from source
 
 Total Fog builds with the .NET SDK version in [global.json](../global.json). The
-solution is `Source/TotalFog.slnx`. The SDK is **10.0.301**; gameplay and companion
-DLLs target **.NET Framework 4.7.2**, while independent tests run on .NET 10.
+solution is `Source/TotalFog.slnx`. The SDK is **10.0.400**; gameplay and companion
+DLLs target **.NET 10 / AnyCPU**, while independent tests run on .NET 10.
 The workflow needs Python 3, Git and `uv` for the pinned Ruff formatter. Live
 setup, deployment and measurement commands currently use the macOS Steam install
 and local GABS/RimBridgeServer tools. Set `RIMWORLD_MOD_DIR` to use another
@@ -15,9 +15,9 @@ installed game's `Mods` folder.
 | `./scripts/mod test` | Checks formatting and runs pure tests without a game install or DLL changes |
 | `./scripts/mod build` | Checks formatting, runs the tests, builds the mod and records its source/binary receipt |
 | `./scripts/mod verify-binary` | Checks that the tracked DLL and build receipt match the current gameplay source and build inputs |
-| `./scripts/mod deploy` | Builds and copies the mod into your RimWorld `Mods` folder |
-| `./scripts/mod deploy-built` | Installs the already-built gameplay/companion pair without rebuilding; the game must be stopped |
-| `./scripts/mod metadata` | Updates the installed description and version/load-folder metadata without changing DLLs; the game must be stopped |
+| `./scripts/mod deploy` | Builds, installs the gameplay/companion pair and verifies `Mods/TotalFog.zip`; the game must be stopped |
+| `./scripts/mod deploy-built` | Installs and packages the verified existing pair without rebuilding; the game must be stopped |
+| `./scripts/mod metadata` | Refuses partial updates; use the complete paired deploy command |
 | `./scripts/mod package` | Builds the player ZIP (one `TotalFog/` folder) |
 | `./scripts/mod package-built` | Packages the existing verified DLL without rebuilding, including first-release Workshop ID metadata |
 | `./scripts/mod setup` | Installs the build and creates the isolated test profile |
@@ -50,13 +50,52 @@ retain historical defaults when no baseline override is provided; those defaults
 are not release requirements. See the
 [baseline and measurement limits](VALIDATION.md#accepted-performance-baseline-2026-10-13).
 
-Full logs are kept in `artifacts/logs/`. RimWorld 1.6 and 1.7 load the active
-DLL, definitions and assets from `Current/`; the older version folders stay
-for history. This active folder is a declared exception to the shared mod
-standard. The shared DLL intentionally compiles against the 1.6 reference
-package, following the engine developers' compatibility strategy. We will
-adopt a specific 1.7 reference when available. Native results retain their
-recorded engine versions, hashes and limits.
+Full logs are kept in `artifacts/logs/`. RimWorld 1.6 keeps its existing
+`Current/` and `LegacyAssets` mapping. RimWorld 1.7 loads `1.7/`, which contains
+its own definitions, textures and languages. The 1.7 mapping loads only `1.7/`.
+The main project and companion build only for 1.7. They cannot write into the
+frozen payload. `scripts/frozen-payload.json` checks the existing historical,
+1.6, and language bytes before and after canonical commands.
+
+The references are pinned to RimWorld `1.7.4990-unstable` and Harmony
+`3.0.0-rc.4`. The companion uses the published `RimBridgeServer.Sdk` `2.0.0`
+package from NuGet.org. No local SDK package is required.
+Do not rebuild it from another repository as an incidental Total Fog step.
+
+`./scripts/mod build` runs formatting checks, independent tests, and the main
+and companion builds. It writes the 1.7 source receipt and paired hashes.
+The Release project build writes those receipts after the companion succeeds,
+before any deployment target. Direct project builds use the same receipt writer.
+`./scripts/mod verify-binary` verifies the frozen payload and the 1.7 receipt.
+The local frozen snapshot contains unpublished changes. Packaging uses published
+v1.0.4 bytes from a checksum-pinned archive instead. That archive matches all
+277 files in the accepted Steam upload. Steam's current update timestamp still
+matches that publication. Local `Current/`, root languages and historical folders
+remain unchanged. Historical folders absent from that publication stay out of
+the new ZIP. Published DLLs, languages, artwork and other runtime resources retain their
+bytes. Existing installations also retain those files' inode and mtime.
+`LoadFolders.xml` retains its legacy mappings and selects `1.7/` for 1.7.
+`Directory.Build.props` owns the mod version. The normal build syncs only the
+version values in `About/About.xml` and `About/Manifest.xml` from that owner.
+
+For a normal build, paired install and ZIP, run:
+
+```sh
+RIMWORLD_MOD_DIR="/path/to/RimWorld/Mods" ./scripts/mod deploy
+```
+
+The companion goes to the selected Mods root's sibling `BridgeTools/TotalFog`
+directory. The command verifies `dist/TotalFog.zip` and `Mods/TotalFog.zip` against
+the installed player payload. Companions stay outside the ZIP.
+Before changing an existing install, the command refuses missing, different or
+additional legacy files and symlinks. It never rewrites existing published runtime/resource files.
+Use `./scripts/mod package` to build and verify only the ZIP. It never installs,
+including when `RIMWORLD_MOD_DIR` is inherited. Metadata-only updates are disabled.
+
+The older runtime, feedback, setup, and showcase commands in the table are
+historical 1.6 harnesses. The canonical command refuses them until they receive
+an explicit 1.7 port. Existing evidence keeps its original engine and binary
+limits. Acceptance for this port requires clean 1.7 startup and a new game.
 More details:
 [architecture](ARCHITECTURE.md), [coverage](COVERAGE.md),
 [validation](VALIDATION.md) and [AGENTS.md](../AGENTS.md).

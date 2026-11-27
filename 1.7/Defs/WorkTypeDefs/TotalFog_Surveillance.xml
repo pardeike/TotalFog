@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorkTypeDef>
+    <defName>TotalFog_Surveillance</defName>
+    <labelShort>cameras</labelShort>
+    <pawnLabel>Camera operator</pawnLabel>
+    <gerundLabel>operating cameras</gerundLabel>
+    <verb>Operate cameras</verb>
+    <description>Operate a camera console so your cameras can show their surroundings. Its priority is separate from basic work.</description>
+    <naturalPriority>50</naturalPriority>
+    <alwaysStartActive>false</alwaysStartActive>
+    <relevantSkills>
+      <li>Intellectual</li>
+    </relevantSkills>
+    <workTags>
+      <li>Intellectual</li>
+    </workTags>
+  </WorkTypeDef>
+</Defs>

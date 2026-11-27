@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>주간 시야</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>이 생물이 낮에 보는 거리에 곱해지는 값입니다.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>야간 시야</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>이 생물이 밤에 보는 거리에 곱해지는 값입니다.</NightVisionEffectiveness.description>
+</LanguageData>

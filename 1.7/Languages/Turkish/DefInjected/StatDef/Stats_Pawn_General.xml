@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>gündüz görüşü</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Bu canlının gün ışığında ne kadar uzağı gördüğünün çarpanı.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>gece görüşü</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Bu canlının gece ne kadar uzağı gördüğünün çarpanı.</NightVisionEffectiveness.description>
+</LanguageData>

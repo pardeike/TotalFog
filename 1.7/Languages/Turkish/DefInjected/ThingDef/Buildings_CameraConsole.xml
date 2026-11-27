@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraConsole.label>kamera konsolu</CameraConsole.label>
+  <CameraConsole.description>Gözetleme kameralarını birbirine bağlar. Bir kolonici burada çalışırken kameralar gördüklerini sana gösterir. Güç gerektirir.</CameraConsole.description>
+</LanguageData>

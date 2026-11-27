@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraConsole.label>カメラコンソール</CameraConsole.label>
+  <CameraConsole.description>監視カメラを接続します.入植者がここで作業している間,カメラが映すものを見ることができます.電力が必要です.</CameraConsole.description>
+</LanguageData>

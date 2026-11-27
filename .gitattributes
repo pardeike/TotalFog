@@ -1,2 +1,11 @@
 # C# is LF in every checkout, including Windows; the CSharpier check rejects CRLF.
 *.cs text eol=lf
+
+# Preserve exact frozen release bytes on Windows as well as macOS/Linux.
+1.2/** -text
+1.3/** -text
+1.4/** -text
+1.5/** -text
+Current/** -text
+LegacyAssets/** -text
+Languages/** -text

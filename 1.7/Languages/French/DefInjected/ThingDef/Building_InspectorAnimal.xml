@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>poule inspectrice</InspectorChicken.label>
+  <InspectorChicken.description>Retirée. Conservée pour que les anciennes sauvegardes se chargent encore. Elle ne voit plus et ne mange plus.</InspectorChicken.description>
+  <InspectorHare.label>lièvre inspecteur</InspectorHare.label>
+  <InspectorHare.description>Retiré. Conservé pour que les anciennes sauvegardes se chargent encore. Il ne voit plus et ne mange plus.</InspectorHare.description>
+  <InspectorMonkey.label>singe inspecteur</InspectorMonkey.label>
+  <InspectorMonkey.description>Retiré. Conservé pour que les anciennes sauvegardes se chargent encore. Il ne voit plus et ne mange plus.</InspectorMonkey.description>
+  <InspectorRat.label>rat inspecteur</InspectorRat.label>
+  <InspectorRat.description>Retiré. Conservé pour que les anciennes sauvegardes se chargent encore. Il ne voit plus et ne mange plus.</InspectorRat.description>
+  <InspectorSquirrel.label>écureuil inspecteur</InspectorSquirrel.label>
+  <InspectorSquirrel.description>Retiré. Conservé pour que les anciennes sauvegardes se chargent encore. Il ne voit plus et ne mange plus.</InspectorSquirrel.description>
+</LanguageData>

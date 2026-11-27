@@ -1,6 +1,6 @@
 # Total Fog gameplay assembly
 
-This is the mod's gameplay DLL (`TotalFog.dll`, net472). The pure sight engine
+This is the RimWorld 1.7 gameplay DLL (`TotalFog.dll`, net10.0/AnyCPU). The pure sight engine
 it builds on lives in [`../Core`](../Core) and is compiled into this assembly
 without Verse or Unity references. Test instrumentation lives in
 [`../BridgeTools`](../BridgeTools) and never ships to players.
@@ -23,7 +23,7 @@ without Verse or Unity references. Test instrumentation lives in
 
 ## Conventions
 
-- A type's full name (namespace plus type name) is a contract. `Current/Defs`
+- A type's full name (namespace plus type name) is a contract. `1.7/Defs`
   XML, saved games and `Compatibility/LegacySaveTypes.cs` bind types by full
   name, so a rename can break existing games. Folders do not set namespaces, so
   moving a file is free. `BridgeTools` is test instrumentation; it reflects on
@@ -35,7 +35,8 @@ without Verse or Unity references. Test instrumentation lives in
 - Formatting is owned by CSharpier (`./scripts/mod format`); the build and CI
   reject unformatted files. `.editorconfig` is its only configuration, and
   `.gitattributes` keeps C# files LF in every checkout, including Windows.
-- Player-facing text lives in `Languages/English`; code uses keys only.
+- Existing text remains frozen in `Languages/English`. Put 1.7 text changes under
+  `1.7/Languages/English`; code uses keys only.
 
 See [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) for the design and
 [`AGENTS.md`](../../AGENTS.md) for the workflow commands.

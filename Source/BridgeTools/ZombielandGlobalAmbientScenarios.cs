@@ -97,7 +97,7 @@ public sealed partial class AudioScenarios
                             {
                                 volume = s.source.volume,
                                 playing = s.source.isPlaying,
-                                muted = s.source.mute,
+                                muted = SourceMuted(s.source),
                             })
                             .ToArray();
                         float peak = samples.Length == 0 ? 0 : samples.Max(s => s.volume);

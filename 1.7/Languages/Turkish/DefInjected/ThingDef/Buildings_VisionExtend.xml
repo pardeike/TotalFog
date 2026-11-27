@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>eski gözcü kulesi</WatchTower.label>
+  <WatchTower.description>Kullanımdan kalktı. Eski kayıtlar yüklenebilsin diye tutuluyor. Artık görüşü genişletmez.</WatchTower.description>
+  <WatchTowerRoofed.label>eski çatılı gözcü kulesi</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Kullanımdan kalktı. Eski kayıtlar yüklenebilsin diye tutuluyor. Artık görüşü genişletmez ve hava durumundan korumaz.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>ışık feneri</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Kullanımdan kalktı. Eski kayıtlar yüklenebilsin diye tutuluyor. Artık ışık veya görüş sağlamaz.</TowerLightBeacon.description>
+  <WatchTelescope.label>gözetleme teleskobu</WatchTelescope.label>
+  <WatchTelescope.description>Ayaklı bir teleskop. Başında duran bir kolonici iki kat uzağı görür.</WatchTelescope.description>
+</LanguageData>

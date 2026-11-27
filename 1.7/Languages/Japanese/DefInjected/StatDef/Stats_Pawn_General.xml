@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>昼間の視力</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>昼間にこの生物がどこまで見えるかの掛け率です.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>夜間の視力</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>夜間にこの生物がどこまで見えるかの掛け率です.</NightVisionEffectiveness.description>
+</LanguageData>

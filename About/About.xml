@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
   <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. Original attribution is retained in NOTICE.md. -->
   <name>Total Fog</name>
@@ -33,7 +33,7 @@ Feedback: https://discord.gg/G4r84eN7w6
 Source: https://github.com/pardeike/TotalFog
 
 Based on Real Fog of War by Luca De Petrillo and its NWN continuation by Mlie. Apache License 2.0.</description>
-  <modVersion IgnoreIfNoMatchingField="True">1.0.4</modVersion>
+  <modVersion IgnoreIfNoMatchingField="True">1.0.5</modVersion>
   <incompatibleWith>
     <li>Mlie.NWNRealFogOfWar</li>
   </incompatibleWith>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>küçük güvenlik çanı</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Kullanımdan kalktı. Eski kayıtlar yüklenebilsin diye tutuluyor. Artık görüş sağlamaz.</SecurityBellSmall.description>
+  <SecurityBell.label>büyük güvenlik çanı</SecurityBell.label>
+  <SecurityBell.description>Kullanımdan kalktı. Eski kayıtlar yüklenebilsin diye tutuluyor. Artık görüş sağlamaz.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>duvar kamerası</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Duvara sabitlenmiş küçük bir kamera. Kısa menzilli, ucuz ve az güç tüketir.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>çalı içinde kamera</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Bir çalının içine gizlenmiş, gözden kaçması kolay bir kamera. Kısa menzilli.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>kuru çalı içinde kamera</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Kuru bir çalının içine gizlenmiş, gözden kaçması kolay bir kamera. Kısa menzilli.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>tavan kamerası</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>İç mekânlar için bir kamera. Çatı altına asılmalıdır. Kısa menzilli, inşası ucuz.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>zemin kamerası</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Zemin ayağı üzerinde sağlam bir kamera. Orta menzilli.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>güneş enerjili kamera</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Kendi güneş paneli olan bir kamera. Güç hattı gerektirmez ama açık gökyüzü altında durmalıdır. Orta menzilli.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>kamera direği</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Yüksek bir direğin tepesinde geniş görüşlü bir kamera. Uzun menzilli ama çok güç tüketir. Açık gökyüzü altında durmalıdır.</SurveillanceCamera_High.description>
+</LanguageData>

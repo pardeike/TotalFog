@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>campana de seguridad pequeña</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no proporciona visión.</SecurityBellSmall.description>
+  <SecurityBell.label>campana de seguridad grande</SecurityBell.label>
+  <SecurityBell.description>Elemento retirado. Se conserva para que las partidas antiguas sigan cargando. Ya no proporciona visión.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>cámara de pared</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Una cámara pequeña fijada a un muro. Corto alcance, barata y de bajo consumo.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>cámara en un arbusto</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Una cámara escondida dentro de un arbusto, fácil de pasar por alto. Corto alcance.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>cámara en un arbusto seco</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Una cámara escondida dentro de un arbusto seco, fácil de pasar por alto. Corto alcance.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>cámara de techo</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>Una cámara para interiores. Debe colgar bajo un techo. Corto alcance, barata de construir.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>cámara de suelo</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Una cámara robusta sobre un soporte de suelo. Alcance medio.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>cámara solar</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Una cámara con su propio panel solar. No necesita conducto eléctrico, pero debe estar a cielo abierto. Alcance medio.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>poste de cámara</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Una cámara en lo alto de un poste con una vista amplia. Largo alcance, pero consume mucha energía. Debe estar a cielo abierto.</SurveillanceCamera_High.description>
+</LanguageData>

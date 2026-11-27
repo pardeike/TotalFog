@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>малый охранный колокол</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не даёт обзора.</SecurityBellSmall.description>
+  <SecurityBell.label>большой охранный колокол</SecurityBell.label>
+  <SecurityBell.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не даёт обзора.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>настенная камера</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Небольшая камера, закреплённая на стене. Малая дальность, дешёвая и экономная.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>камера в кусте</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Камера, спрятанная в кусте, — её легко не заметить. Малая дальность.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>камера в сухом кусте</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Камера, спрятанная в сухом кусте, — её легко не заметить. Малая дальность.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>потолочная камера</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>Камера для помещений. Должна висеть под крышей. Малая дальность, дешёвая в постройке.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>напольная камера</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Прочная камера на напольном креплении. Средняя дальность.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>солнечная камера</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Камера с собственной солнечной батареей. Не нуждается в кабеле, но должна стоять под открытым небом. Средняя дальность.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>камера на столбе</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Камера высоко на столбе с широким обзором. Большая дальность, но высокое энергопотребление. Должна стоять под открытым небом.</SurveillanceCamera_High.description>
+</LanguageData>

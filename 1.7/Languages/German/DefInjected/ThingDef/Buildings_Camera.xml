@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>kleine Sicherheitsglocke</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Ausgemustert. Bleibt erhalten, damit alte Spielstände noch laden. Sie liefert keine Sicht mehr.</SecurityBellSmall.description>
+  <SecurityBell.label>große Sicherheitsglocke</SecurityBell.label>
+  <SecurityBell.description>Ausgemustert. Bleibt erhalten, damit alte Spielstände noch laden. Sie liefert keine Sicht mehr.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>Wandkamera</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Eine kleine Kamera an einer Wand. Kurze Reichweite, günstig und sparsam im Stromverbrauch.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>Kamera im Busch</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Eine in einem Busch versteckte Kamera, leicht zu übersehen. Kurze Reichweite.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>Kamera im toten Busch</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Eine in einem toten Busch versteckte Kamera, leicht zu übersehen. Kurze Reichweite.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>Deckenkamera</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>Eine Kamera für Innenräume. Muss unter einem Dach hängen. Kurze Reichweite, günstig zu bauen.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>Bodenkamera</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Eine robuste Kamera auf einem Bodensockel. Mittlere Reichweite.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>Solarkamera</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Eine Kamera mit eigenem Solarmodul. Braucht keine Stromleitung, muss aber unter freiem Himmel stehen. Mittlere Reichweite.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>Kameramast</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Eine Kamera hoch oben auf einem Mast mit weitem Blick. Große Reichweite, aber stromhungrig. Muss unter freiem Himmel stehen.</SurveillanceCamera_High.description>
+</LanguageData>

@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <DesignatorDropdownGroupDef>
+    <defName>SurveillanceCamera</defName>
+    <label>surveillance cameras</label>
+  </DesignatorDropdownGroupDef>
+  <!-- Base Camera -->
+  <ThingDef Name="BaseCamera" ParentName="BaseVisionStuff" Abstract="True">
+    <tickerType>Normal</tickerType>
+    <designatorDropdown>SurveillanceCamera</designatorDropdown>
+    <thingClass>TotalFog.Building_VisionCamera</thingClass>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <passability>Standable</passability>
+    <rotatable>false</rotatable>
+    <fillPercent>0</fillPercent>
+    <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+    <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+    <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+    <statBases>
+      <Mass>4</Mass>
+      <Beauty>-1</Beauty>
+      <MaxHitPoints>60</MaxHitPoints>
+      <WorkToBuild>2000</WorkToBuild>
+      <Flammability>0.1</Flammability>
+    </statBases>
+    <comps>
+      <li Class="CompProperties_Flickable" />
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurity</li>
+    </researchPrerequisites>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+  </ThingDef>
+  <!-- no tier -->
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>SecurityBellSmall</defName>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <label>small security bell</label>
+    <uiIconScale>0.25</uiIconScale>
+    <description>Retired. Kept so old saves still load. It no longer provides sight.</description>
+    <graphicData>
+      <texPath>Things/Buildings/SecurityBellSmall</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1.0,1.0)</drawSize>
+      <damageData>
+        <rect>(0,0,1,0.15)</rect>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <drawerType>RealtimeOnly</drawerType>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <statBases>
+      <Mass>0.2</Mass>
+      <MaxHitPoints>5</MaxHitPoints>
+      <WorkToBuild>300</WorkToBuild>
+      <Flammability>0.5</Flammability>
+      <Beauty>-1</Beauty>
+      <Cleanliness>0</Cleanliness>
+    </statBases>
+    <costList>
+      <Steel>5</Steel>
+    </costList>
+    <designationCategory>Security</designationCategory>
+    <comps Inherit="False" />
+    <building>
+      <expandHomeArea>false</expandHomeArea>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <specialDisplayRadius>0</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="BaseVisionStuff">
+    <defName>SecurityBell</defName>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <label>large security bell</label>
+    <uiIconScale>0.25</uiIconScale>
+    <description>Retired. Kept so old saves still load. It no longer provides sight.</description>
+    <graphicData>
+      <texPath>Things/Buildings/SecurityBell</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(4.0,4.0)</drawSize>
+      <damageData>
+        <rect>(0,0,1,0.15)</rect>
+      </damageData>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <drawerType>RealtimeOnly</drawerType>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <statBases>
+      <Mass>0.2</Mass>
+      <MaxHitPoints>5</MaxHitPoints>
+      <WorkToBuild>300</WorkToBuild>
+      <Flammability>0.5</Flammability>
+      <Beauty>-1</Beauty>
+      <Cleanliness>0</Cleanliness>
+    </statBases>
+    <costList>
+      <Steel>10</Steel>
+    </costList>
+    <designationCategory>Security</designationCategory>
+    <comps Inherit="False" />
+    <building>
+      <expandHomeArea>false</expandHomeArea>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <specialDisplayRadius>0</specialDisplayRadius>
+  </ThingDef>
+  <!-- Tier 1, blocky and non curved-->
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_Mounted</defName>
+    <label>wall camera</label>
+    <description>A small camera fixed to a wall. Short range, cheap, and easy on power.</description>
+    <altitudeLayer>Skyfaller</altitudeLayer>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <fillPercent>0</fillPercent>
+    <clearBuildingArea>false</clearBuildingArea>
+    <passability>Standable</passability>
+    <rotatable>true</rotatable>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_Mounted</texPath>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+      <drawOffsetNorth>(0,0,0.4)</drawOffsetNorth>
+    </graphicData>
+    <placeWorkers>
+      <li>Placeworker_AttachedToWall</li>
+    </placeWorkers>
+    <costList>
+      <Steel>20</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>50</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>24</viewRadius>
+        <needManned>true</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurity</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>23.9</specialDisplayRadius>
+    <building>
+      <isEdifice>false</isEdifice>
+      <isAttachment>true</isAttachment>
+    </building>
+  </ThingDef>
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_Bush</defName>
+    <label>camera in a bush</label>
+    <description>A camera hidden inside a bush, easy to overlook. Short range.</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <pathCost>30</pathCost>
+    <fillPercent>0.2</fillPercent>
+    <building>
+      <isTrap>true</isTrap>
+    </building>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_Bush</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <statBases Inherit="False">
+      <Mass>10</Mass>
+      <Beauty>1</Beauty>
+      <MaxHitPoints>50</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <Flammability>0.8</Flammability>
+    </statBases>
+    <costList>
+      <Steel>30</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+      <WoodLog>30</WoodLog>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>70</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>24</viewRadius>
+        <needManned>True</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurity</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>23.9</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_DeadBush</defName>
+    <label>camera in a dead bush</label>
+    <description>A camera hidden inside a dead bush, easy to overlook. Short range.</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <pathCost>30</pathCost>
+    <fillPercent>0.2</fillPercent>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_DeadBush</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <building>
+      <isTrap>true</isTrap>
+    </building>
+    <statBases Inherit="False">
+      <Mass>10</Mass>
+      <Beauty>1</Beauty>
+      <MaxHitPoints>50</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <Flammability>0.8</Flammability>
+    </statBases>
+    <costList>
+      <Steel>30</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+      <WoodLog>30</WoodLog>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>70</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>24</viewRadius>
+        <needManned>True</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurity</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>23.9</specialDisplayRadius>
+    <isAutoAttackableMapObject>false</isAutoAttackableMapObject>
+  </ThingDef>
+  <!-- Tier 2, flexible, curved and provide more vision range -->
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_UnderRoof</defName>
+    <label>ceiling camera</label>
+    <description>A camera for indoor use. Must hang under a roof. Short range, cheap to build.</description>
+    <altitudeLayer>Skyfaller</altitudeLayer>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <clearBuildingArea>false</clearBuildingArea>
+    <passability>Standable</passability>
+    <placeWorkers>
+      <li>TotalFog.PlaceWorker_VisionRoof</li>
+    </placeWorkers>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_UnderRoof</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <uiIconPath>Things/Buildings/SurveillanceCamera_UnderRoof_MenuIcon</uiIconPath>
+    <uiIconScale>0.5</uiIconScale>
+    <costList>
+      <Steel>25</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>50</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>25</viewRadius>
+        <needManned>true</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurityAdvanced</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>24.9</specialDisplayRadius>
+    <building>
+      <isEdifice>false</isEdifice>
+      <canBuildNonEdificesUnder>true</canBuildNonEdificesUnder>
+    </building>
+  </ThingDef>
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_Ground</defName>
+    <label>ground camera</label>
+    <description>A sturdy camera on a ground mount. Medium range.</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <pathCost>10</pathCost>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_Ground</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <costList>
+      <Steel>30</Steel>
+      <ComponentIndustrial>3</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>75</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>35</viewRadius>
+        <needManned>True</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurityAdvanced</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>34.9</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_Solar</defName>
+    <label>solar camera</label>
+    <description>A camera with its own solar panel. Needs no power line, but must stand under open sky. Medium range.</description>
+    <altitudeLayer>Building</altitudeLayer>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <pathCost>10</pathCost>
+    <placeWorkers>
+      <li>PlaceWorker_NotUnderRoof</li>
+    </placeWorkers>
+    <fillPercent>0.2</fillPercent>
+    <graphicData>
+      <texPath>Things/Buildings/SurveillanceCamera_Solar</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shadowData>
+        <volume>(0.3, 0.6, 0.3)</volume>
+        <offset>(0,0,-0.1)</offset>
+      </shadowData>
+      <damageData>
+        <rect>(0.2,0.2,0.6,0.6)</rect>
+      </damageData>
+    </graphicData>
+    <costList>
+      <Steel>40</Steel>
+      <ComponentIndustrial>5</ComponentIndustrial>
+    </costList>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>-5</basePowerConsumption>
+        <transmitsPower>true</transmitsPower>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>40</viewRadius>
+        <needManned>True</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>SolarPanels</li>
+      <li>Batteries</li>
+      <li>CameraSecurityAdvanced</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>39.9</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="BaseCamera">
+    <defName>SurveillanceCamera_High</defName>
+    <label>camera post</label>
+    <description>A camera high on a post with a wide view. Long range, but hungry for power. Must stand under open sky.</description>
+    <fillPercent>0.2</fillPercent>
+    <pathCost>40</pathCost>
+    <graphicData>
+      <graphicClass>Graphic_Single</graphicClass>
+      <texPath>Things/Buildings/SurveillanceCamera_High</texPath>
+      <drawSize>(2,5)</drawSize>
+    </graphicData>
+    <costList>
+      <Steel>80</Steel>
+      <ComponentIndustrial>8</ComponentIndustrial>
+    </costList>
+    <statBases Inherit="False">
+      <Mass>20</Mass>
+      <Beauty>0</Beauty>
+      <MaxHitPoints>120</MaxHitPoints>
+      <WorkToBuild>3000</WorkToBuild>
+      <Flammability>0.1</Flammability>
+    </statBases>
+    <size>(1,1)</size>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>125</basePowerConsumption>
+      </li>
+      <li Class="TotalFog.CompProperties_BuildingSight">
+        <viewRadius>65</viewRadius>
+        <needManned>true</needManned>
+      </li>
+    </comps>
+    <researchPrerequisites>
+      <li>CameraSecurityAdvanced</li>
+    </researchPrerequisites>
+    <specialDisplayRadius>64.9</specialDisplayRadius>
+    <placeWorkers>
+      <li>PlaceWorker_NotUnderRoof</li>
+    </placeWorkers>
+    <uiIconOffset>(0, 0.2)</uiIconOffset>
+  </ThingDef>
+</Defs>

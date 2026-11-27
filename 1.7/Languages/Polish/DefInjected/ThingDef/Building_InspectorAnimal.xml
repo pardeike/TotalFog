@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <InspectorChicken.label>Kura inspekcyjna</InspectorChicken.label>
+  <InspectorChicken.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie widzi ani nie je.</InspectorChicken.description>
+  <InspectorHare.label>Zając inspekcyjny</InspectorHare.label>
+  <InspectorHare.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie widzi ani nie je.</InspectorHare.description>
+  <InspectorMonkey.label>Małpa inspekcyjna</InspectorMonkey.label>
+  <InspectorMonkey.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie widzi ani nie je.</InspectorMonkey.description>
+  <InspectorRat.label>Szczur inspekcyjny</InspectorRat.label>
+  <InspectorRat.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie widzi ani nie je.</InspectorRat.description>
+  <InspectorSquirrel.label>Wiewiórka inspekcyjna</InspectorSquirrel.label>
+  <InspectorSquirrel.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie widzi ani nie je.</InspectorSquirrel.description>
+</LanguageData>

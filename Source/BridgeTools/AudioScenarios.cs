@@ -141,7 +141,7 @@ public sealed partial class AudioScenarios
                                         .Select(s => new
                                         {
                                             volume = s.source.volume,
-                                            muted = s.source.mute,
+                                            muted = SourceMuted(s.source),
                                             playing = s.source.isPlaying,
                                         })
                                         .ToArray(),

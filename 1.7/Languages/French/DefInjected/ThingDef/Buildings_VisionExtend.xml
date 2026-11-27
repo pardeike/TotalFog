@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>ancienne tour de guet</WatchTower.label>
+  <WatchTower.description>Retirée. Conservée pour que les anciennes sauvegardes se chargent encore. Elle n'étend plus la vue.</WatchTower.description>
+  <WatchTowerRoofed.label>ancienne tour de guet couverte</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Retirée. Conservée pour que les anciennes sauvegardes se chargent encore. Elle n'étend plus la vue et ne protège plus des intempéries.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>balise lumineuse</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Retirée. Conservée pour que les anciennes sauvegardes se chargent encore. Elle ne fournit plus ni lumière ni vue.</TowerLightBeacon.description>
+  <WatchTelescope.label>longue-vue</WatchTelescope.label>
+  <WatchTelescope.description>Une longue-vue sur pied. Un colon qui s'y tient voit deux fois plus loin.</WatchTelescope.description>
+</LanguageData>

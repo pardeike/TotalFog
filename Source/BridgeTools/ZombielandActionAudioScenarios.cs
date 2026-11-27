@@ -112,7 +112,7 @@ public sealed partial class AudioScenarios
                         samples.Length > 0
                         && samples.All(s =>
                             s.source.spatialBlend == 1f
-                            && s.source.rolloffMode == AudioRolloffMode.Linear
+                            && SourceRolloff(s.source) == AudioRolloffMode.Linear
                         );
                     passed &= valid;
                     vanillaControl = new
@@ -122,9 +122,9 @@ public sealed partial class AudioScenarios
                             .Select(s => new
                             {
                                 s.source.spatialBlend,
-                                rolloff = s.source.rolloffMode.ToString(),
-                                s.source.minDistance,
-                                s.source.maxDistance,
+                                rolloff = SourceRolloff(s.source).ToString(),
+                                minDistance = SourceMinDistance(s.source),
+                                maxDistance = SourceMaxDistance(s.source),
                                 distance = Vector3.Distance(
                                     Find.Camera.transform.position,
                                     s.source.transform.position
@@ -456,12 +456,13 @@ public sealed partial class AudioScenarios
                             sample.info.Maker.Map != null,
                             sample.source != null
                                 && sample.source.spatialBlend == (sample.subDef.onCamera ? 0f : 1f)
-                                && sample.source.rolloffMode == AudioRolloffMode.Linear
+                                && SourceRolloff(sample.source) == AudioRolloffMode.Linear
                                 && (
                                     sample.subDef.onCamera
                                     || (
-                                        sample.source.minDistance == sample.subDef.distRange.TrueMin
-                                        && sample.source.maxDistance
+                                        SourceMinDistance(sample.source)
+                                            == sample.subDef.distRange.TrueMin
+                                        && SourceMaxDistance(sample.source)
                                             == sample.subDef.distRange.TrueMax
                                         && (
                                             sample.source.transform.position
@@ -476,8 +477,8 @@ public sealed partial class AudioScenarios
                                     Find.Camera.transform.position,
                                     sample.source.transform.position
                                 ),
-                            sample.source?.minDistance ?? 0f,
-                            sample.source?.maxDistance ?? 0f
+                            sample.source == null ? 0f : SourceMinDistance(sample.source),
+                            sample.source == null ? 0f : SourceMaxDistance(sample.source)
                         );
                     }
                 }

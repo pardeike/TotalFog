@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TotalFog.FogDefaultsDef>
+    <defName>RealFoWModDefaults</defName>
+    <baseViewRange>80</baseViewRange>
+  </TotalFog.FogDefaultsDef>
+</Defs>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Reset to defaults</RFWreset>
+  <TotalFog_ResetDesc>Reset all settings to their defaults. Tree blocking stays as it is while a game is loaded.</TotalFog_ResetDesc>
+  <CurrentModVersion>Version {0}</CurrentModVersion>
+  <NotVisible>Out of sight</NotVisible>
+  <CannotPlaceInUndiscovered>Cannot place in unexplored area.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Must be placed under a roof.</MustBeUnderRoof>
+  <MustBeNextToWall>Must be placed against a wall.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Appearance</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Vision</TotalFog_PageVision>
+  <TotalFog_PageInformation>Information</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Audio</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>How explored ground looks when nobody is watching it.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Who sees for you, and how far.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Which messages and details may tell you about things nobody has seen.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Music and sounds can give away hidden events. Choose what you want to hear.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Darkness of explored areas</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>How dark explored ground gets when nobody can see it right now.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Black (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Fog fade speed</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>How quickly the fog fades when sight changes. Off switches instantly.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Slow</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Medium</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Fast</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Off</fogFadeSpeedSetting_Disabled>
+
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
+  <!-- Vision -->
+  <baseViewRange>Base sight range (cells)</baseViewRange>
+  <baseViewRangeDesc>How far a colonist sees before health, light and weather are taken into account. Whole cells, from 10 to 100.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Other eyes</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Building sight multiplier</buildingVisionMod>
+  <buildingVisionModDesc>Scales how far cameras and other buildings see. The placement preview does not change.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Turret sight multiplier</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Scales how far automatic turrets see. A turret needs power or fuel to see at all.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Animal sight multiplier</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Scales how far your animals see. An animal needs a master and release training to see for you.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Mech sight multiplier</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Scales how far your mechs see. 1 keeps their normal range. Weapon range and hearing do not change.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Allies and visitors share their sight</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Friendly people and animals on your map let you see what they see, at half their normal range.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Prisoners share their sight</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Your prisoners let you see what they see, at one fifth of their normal range.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Terrain and maps</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>New maps start explored</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>New maps begin with all ground explored. You still only see what your colonists see right now.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Trees block sight</treesBlockSight>
+  <treesBlockSightDesc>Grown trees block the line of sight. Saplings and stumps do not.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Change this from the main menu, then load your game.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>No fog on home maps</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Your home maps show everything. Fog stays on all other maps.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Full map view during gravship flights</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Shows the whole map while you choose a landing site and during takeoff and landing. This can show you things nobody has seen.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Watchtowers</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Lookout sight multiplier</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>How much farther a lookout sees from the top of a watchtower. Roofs, mountains and other towers still block the view.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Lookout sight limit (cells)</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>A lookout never sees farther than this many cells.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Ladder climb time</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Time to climb up or down, in seconds at normal game speed.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Lookouts may shoot</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Lookouts can shoot over freestanding walls. Up there they are easier to hit and cannot fight in melee.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Telescope sight limit (cells)</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>A colonist at a watch telescope never sees farther than this many cells. Independent of watchtowers.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Delayed news about unseen events</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Letters and messages about something nobody can see wait until someone sees it. Colony health and world events still arrive at once.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Dropped news about unseen events</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Letters and messages of the chosen kinds are dropped while nobody can see what they are about. Colony health, visible events and world events still arrive. Use “Delayed news” above to keep them instead.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Major threats</hideThreatBig>
+  <hideThreatSmall>Minor threats</hideThreatSmall>
+  <hideEventPositive>Good news</hideEventPositive>
+  <hideEventNegative>Bad news</hideEventNegative>
+  <hideEventNeutral>Neutral news</hideEventNeutral>
+  <TotalFog_SilentRaids>Silent raids</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>No letter and no slowdown when raids or manhunter packs arrive, even in plain sight. They still attack, and combat still slows time. Music is a separate setting.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Other information</TotalFog_InformationOptions>
+  <wildLifeTabVisible>List unseen wild animals</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>The Wildlife tab also lists animals nobody can see. This gives away that they are there.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Hide unseen speech bubbles</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Hides Interaction Bubbles of characters out of sight.</hideSpeakBubbleDesc>
+  <aiSmart>Enemies have fog too</aiSmart>
+  <aiSmartDesc>Human enemies can only target what their own side can see. A colonist in the dark stays hidden.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Use remembered buildings and items</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Select, inspect and give orders to buildings and items you have seen before, as long as they are still where you saw them. This includes right-click work orders. People, animals, combat targets and anything never seen still need current sight. Your own colonists and construction plans always work.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Cameras need an operator</NeedWatcher>
+  <NeedWatcherDesc>Cameras only show their surroundings while a colonist works at a camera console.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>No combat or Anomaly music</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Keeps the normal music playing during combat and Anomaly events, so a change of music cannot warn you.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Mute hidden sounds</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Sounds from things nobody can see are silent, including ongoing loops. This overrides hearing-based filtering.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Hearing-based sound filtering</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Hidden sounds are muffled and only play near a living colonist who could hear them. Beyond hearing range they are silent.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Hearing range (cells)</audioSourceRange>
+  <audioSourceRangeDesc>How many cells away a colonist can still hear a hidden sound.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Muffling with distance</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>0% keeps volume unchanged within hearing range. 100% fades to silence at its edge. Sounds outside hearing range stay silent.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Sound markers</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Show sound markers</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Small markers show where a colonist hears hidden movement. Turn this off to remove them.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Sound marker range (cells)</baseHearingRange>
+  <TotalFog_HearingRangeDesc>How many cells away hidden movement can be heard.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Working cameras: {0}</TotalFog_CameraCount>
+  <Revealing>Watching</Revealing>
+  <NoCameraConsole>No operated camera console</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Lookout: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Keep watch from tower</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Keep watch until undrafted</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>Keep watch for {0}</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Keeping watch until undrafted or ordered away</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Watch ends in {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Climbing up {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Climbing down {0}.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Climb down</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Bring down from tower</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>tower occupied or ladder blocked</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>The cell in front of the ladder must stay clear.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>A watchtower needs open sky.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Bring the lookout down before deconstructing the tower.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>The ladder is blocked. Clear the cell in front of it so the lookout can climb down.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Waiting for the ladder of {0} to clear.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} jumps off the blocked watchtower. The fall may hurt.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

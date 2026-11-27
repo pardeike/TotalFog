@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>zicht overdag</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Factor voor hoe ver dit wezen bij daglicht ziet.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>nachtzicht</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Factor voor hoe ver dit wezen 's nachts ziet.</NightVisionEffectiveness.description>
+</LanguageData>

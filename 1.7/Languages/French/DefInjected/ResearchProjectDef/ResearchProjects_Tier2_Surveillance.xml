@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>caméras de sécurité</CameraSecurity.label>
+  <CameraSecurity.description>Permet de construire des caméras de surveillance et une console des caméras. Les caméras alimentées vous montrent leurs alentours pendant qu'un colon utilise la console.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>objectifs de caméra avancés</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Permet de construire de meilleures caméras : des modèles de plafond et au sol, une caméra solaire sans ligne électrique et une caméra sur mât à longue portée.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>longue-vue</WatchTelescope.label>
+  <WatchTelescope.description>Permet de construire une longue-vue. Un colon qui s'y tient voit deux fois plus loin.</WatchTelescope.description>
+</LanguageData>

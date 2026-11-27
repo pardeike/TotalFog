@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>小型警铃</SecurityBellSmall.label>
+  <SecurityBellSmall.description>已停用。保留以便旧存档仍能加载。它不再提供视野。</SecurityBellSmall.description>
+  <SecurityBell.label>大型警铃</SecurityBell.label>
+  <SecurityBell.description>已停用。保留以便旧存档仍能加载。它不再提供视野。</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>壁挂摄像头</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>固定在墙上的小型摄像头。范围短，便宜，省电。</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>灌木摄像头</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>藏在灌木中的摄像头，容易被忽视。范围短。</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>枯灌木摄像头</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>藏在枯死灌木中的摄像头，容易被忽视。范围短。</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>吊顶摄像头</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>室内用摄像头。必须挂在屋顶下。范围短，建造便宜。</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>地面摄像头</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>安装在地面底座上的坚固摄像头。范围中等。</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>太阳能摄像头</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>自带太阳能板的摄像头。无需电线，但必须放置在露天处。范围中等。</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>摄像柱</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>立柱顶端的高位摄像头，视野开阔。范围远，但耗电量大。必须放置在露天处。</SurveillanceCamera_High.description>
+</LanguageData>

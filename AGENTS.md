@@ -4,43 +4,65 @@ Read ../steam-mods/AGENTS.md and its development/testing guidance.
 Preserve inherited attribution, license, frozen historical version folders and
 the active portable textures. The public upstream-baseline tag owns the original
 source/payload; do not keep redundant upstream scratch files in the active tree.
-Build with the .NET 10.0.301 SDK pinned in global.json. The quiet workflow uses
+Build with the .NET 10.0.400 SDK pinned in global.json. The quiet workflow uses
 the existing SDK install under ~/Library/Application Support/dotnet when present,
-including for nested companion builds. Gameplay and companion DLLs still target
-net472 for RimWorld; independent tests run on net10.0. Krafs.Publicizer 2.3.2
-prepares build-only references in obj/, with virtual members excluded. Keep
-native virtual access levels, including protected job/drawing overrides. The
-companion reuses the main DLL's internal access-check attribute through its
-existing InternalsVisibleTo contract. Canonical workflows default NuGet output
-to artifacts/nuget so another project's publicised cache files cannot change our
-reference resolution; an explicit NUGET_PACKAGES overrides this for CI/probes.
-About/About.xml supports RimWorld 1.6 and 1.7; both LoadFolders.xml entries
-load the same Current/ and LegacyAssets payload. Compile against the 1.6
-reference package for both engines, as Andreas confirmed is the engine
-developers' intended compatibility strategy. Adopt a specific 1.7 reference
-when available; its absence is not a reason to withdraw 1.7 support. Current/
-is a declared exception to the shared version-numbered folder standard.
-.steam-mods.json rimworldVersion remains the 1.6 compilation/baseline target.
-Do not relax the shared validator. Folders below 1.6 stay frozen. Record native
-evidence by actual engine version; shared binaries do not transfer runtime
-acceptance between engines.
+including for nested companion builds. Gameplay and companion DLLs target
+net10.0/AnyCPU for RimWorld 1.7. Independent tests run on net10.0.
+Krafs.Publicizer 2.3.2 prepares build-only references in obj/, with virtual
+members excluded. Keep native virtual access levels. The companion reuses the
+main DLL's internal access-check attribute through InternalsVisibleTo.
+Canonical workflows default NuGet output to artifacts/nuget. An explicit
+NUGET_PACKAGES overrides this for CI/probes. The companion restores published
+RimBridgeServer.Sdk 2.0.0 from NuGet.org. No local SDK package or feed is required.
+About/About.xml supports RimWorld 1.6 and 1.7. The 1.6 mapping retains Current/
+and LegacyAssets. Those folders, Languages/, and historical version folders
+are frozen at the existing checkout. scripts/frozen-payload.json records their
+exact bytes. Never rebuild, regenerate receipts, format, or edit that payload.
+The current main project and companion build only for 1.7. They use the latest
+compatible references resolved for this port. Put new runtime resources under
+1.7/ and load only 1.7 for that engine, including its own languages.
+The local frozen snapshot includes unpublished 1.6 changes. It is not the
+shipping baseline. Stage published v1.0.4 bytes for Current/, LegacyAssets/,
+root Languages/ and other root files from the checksum-pinned release archive.
+scripts/published_payload.py pins that archive, which matches the accepted
+277-file Steam upload. Never copy local frozen payload into an install or ZIP.
+Only the 1.7 LoadFolders mapping and the two version fields may change in
+shared metadata. All other published root/legacy bytes stay exact.
+Directory.Build.props owns ModVersion. The normal project build syncs
+About/About.xml and About/Manifest.xml from it before compilation.
+Do not restore the superseded shared-binary policy. .steam-mods.json describes
+the 1.7 compilation target. Build output may use only 1.7/ or artifacts/.
+Native acceptance for this port is clean startup and a new game on 1.7.
+Compilation and pure tests do not establish that acceptance.
 Current scope: prioritize concrete Total Fog/Zombieland tester regressions and
 bounded CE checks. Multiplayer stays unverified and further development is
 deferred until demand or reports; do not restart it from older checklist items.
 For source-only review builds that must preserve the tracked release DLL, set
 `TotalFogBuildOutput="$PWD/artifacts/review/Assemblies/"` when running
 `./scripts/mod build`. The companion references that build output directly.
-Use the canonical quiet command `./scripts/mod test|build|verify-binary|deploy|package|setup|baseline|benchmark`.
-Every gameplay source/build-input commit must carry a matching Release DLL and
-Current/Assemblies/TotalFog.build.json receipt. The canonical build writes the
-receipt only after compilation succeeds. CI checks it against the checkout and
-DLL before rebuilding, so a fresh CI build cannot conceal a stale tracked file.
-The snapshot uses normalized text hashes, not Git commit age: documentation-only
-commits and Windows CRLF checkouts do not invalidate it, while changed, added or
-removed compiled inputs do. Explicit source-only review batches may redirect
-output, but refresh the tracked pair before completing/pushing the batch.
-Use `./scripts/mod metadata` for installed About/About.xml, LoadFolders.xml and
-README.md changes without rebuilding or replacing gameplay/companion DLLs.
+Use the canonical quiet command `./scripts/mod test|build|verify-binary|deploy|package`.
+The canonical build writes 1.7/Assemblies/TotalFog.build.json only after the
+main and companion compile. Keep the 1.7 DLL and receipt together. CI checks
+this pair before rebuilding. The 1.6 receipt remains frozen and is checked by
+its hash, not against the evolving 1.7 source.
+The main project's Release target owns receipt creation after the companion
+build. Direct project builds use the same writer before paired deployment.
+`./scripts/mod build` checks formatting, tests, frozen bytes, and the 1.7 pair.
+It never deploys. Set RIMWORLD_MOD_DIR to the 1.7 installation's logical Mods
+path, then run `./scripts/mod deploy` for build, paired install and verified ZIP.
+The ZIP is written to dist/TotalFog.zip and RIMWORLD_MOD_DIR/TotalFog.zip.
+Existing published runtime/resource files keep their bytes, inode and mtime. Before any install
+change, refuse missing, different or additional legacy files and symlinks.
+`./scripts/mod package` builds and verifies the ZIP without installing anything,
+including when RIMWORLD_MOD_DIR is inherited. Historical checkout folders stay
+unchanged and are not added to a published payload that did not contain them.
+Historical 1.6 runtime/feedback/showcase workflows remain in source but refuse
+execution through scripts/mod until explicitly ported. Their old evidence
+remains valid only for its recorded engine and binaries.
+The later instructions for those workflows describe historical 1.6 procedures.
+Do not treat them as current 1.7 commands.
+Metadata-only installation is disabled. Use the complete paired deploy command
+so versioned languages, load mappings and the ZIP cannot drift apart.
 The target game must be stopped. Set RIMWORLD_MOD_DIR to the intended Mods root;
 both macOS executable names and the external Mods layout are guarded.
 For the offline 1.6 app, use its logical `RimWorldMac1.6.app/Mods` path,

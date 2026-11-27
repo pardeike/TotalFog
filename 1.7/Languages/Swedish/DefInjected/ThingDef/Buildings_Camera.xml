@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>liten larmklocka</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den ger inte längre någon sikt.</SecurityBellSmall.description>
+  <SecurityBell.label>stor larmklocka</SecurityBell.label>
+  <SecurityBell.description>Utgången. Finns kvar så att gamla sparfiler kan laddas. Den ger inte längre någon sikt.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>väggkamera</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>En liten kamera fäst på en vägg. Kort räckvidd, billig och strömsnål.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>kamera i buske</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>En kamera gömd i en buske, lätt att förbise. Kort räckvidd.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>kamera i död buske</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>En kamera gömd i en död buske, lätt att förbise. Kort räckvidd.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>takkamera</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>En kamera för inomhusbruk. Måste hänga under ett tak. Kort räckvidd, billig att bygga.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>markkamera</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>En robust kamera på markstativ. Medellång räckvidd.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>solcellskamera</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>En kamera med egen solpanel. Behöver ingen elledning men måste stå under fri himmel. Medellång räckvidd.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>kamerastolpe</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>En kamera högt uppe på en stolpe med vid utsikt. Lång räckvidd men strömslukande. Måste stå under fri himmel.</SurveillanceCamera_High.description>
+</LanguageData>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>kamery bezpieczeństwa</CameraSecurity.label>
+  <CameraSecurity.description>Pozwala budować kamery monitoringu i konsolę kamer. Zasilane kamery pokazują Ci swoje otoczenie, gdy kolonista obsługuje konsolę.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>zaawansowane obiektywy kamer</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Pozwala budować lepsze kamery: modele sufitowe i naziemne, kamerę słoneczną bez linii zasilania oraz dalekosiężny słup z kamerą.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>teleskop obserwacyjny</WatchTelescope.label>
+  <WatchTelescope.description>Pozwala zbudować teleskop obserwacyjny. Kolonista stojący przy nim widzi dwa razy dalej.</WatchTelescope.description>
+</LanguageData>

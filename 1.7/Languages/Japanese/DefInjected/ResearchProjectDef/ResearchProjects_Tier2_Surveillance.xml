@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>監視カメラ</CameraSecurity.label>
+  <CameraSecurity.description>監視カメラとカメラコンソールを作れるようになります.電力のあるカメラは,入植者がコンソールを操作している間,周囲を映します.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>高度なカメラレンズ</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>より優れたカメラを作れるようになります.天井型と地上型,電力線のいらないソーラーカメラ,長距離のカメラポストです.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>監視望遠鏡</WatchTelescope.label>
+  <WatchTelescope.description>監視望遠鏡を作れるようになります.そこに立つ入植者は2倍遠くまで見えます.</WatchTelescope.description>
+</LanguageData>

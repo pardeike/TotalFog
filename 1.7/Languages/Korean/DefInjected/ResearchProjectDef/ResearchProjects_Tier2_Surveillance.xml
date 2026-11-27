@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>보안 카메라</CameraSecurity.label>
+  <CameraSecurity.description>감시 카메라와 카메라 콘솔을 건설할 수 있습니다. 전력이 공급되는 카메라는 정착민이 콘솔을 조작하는 동안 주변을 보여 줍니다.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>고급 카메라 렌즈</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>더 나은 카메라를 건설할 수 있습니다. 천장형과 지면형, 전선이 필요 없는 태양광 카메라, 장거리 카메라 기둥입니다.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>감시 망원경</WatchTelescope.label>
+  <WatchTelescope.description>감시 망원경을 건설할 수 있습니다. 그 앞에 선 정착민은 두 배 멀리 봅니다.</WatchTelescope.description>
+</LanguageData>

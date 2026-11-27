@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>kleine alarmbel</SecurityBellSmall.label>
+  <SecurityBellSmall.description>Buiten gebruik. Behouden zodat oude opgeslagen spellen nog laden. Hij geeft geen zicht meer.</SecurityBellSmall.description>
+  <SecurityBell.label>grote alarmbel</SecurityBell.label>
+  <SecurityBell.description>Buiten gebruik. Behouden zodat oude opgeslagen spellen nog laden. Hij geeft geen zicht meer.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>muurcamera</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>Een kleine camera aan een muur. Kort bereik, goedkoop en zuinig met stroom.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>camera in een struik</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>Een camera verborgen in een struik, makkelijk over het hoofd te zien. Kort bereik.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>camera in een dode struik</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>Een camera verborgen in een dode struik, makkelijk over het hoofd te zien. Kort bereik.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>plafondcamera</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>Een camera voor binnen. Moet onder een dak hangen. Kort bereik, goedkoop te bouwen.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>grondcamera</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>Een stevige camera op een grondvoet. Gemiddeld bereik.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>zonnecamera</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>Een camera met een eigen zonnepaneel. Heeft geen stroomkabel nodig, maar moet onder de open lucht staan. Gemiddeld bereik.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>camerapaal</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>Een camera hoog op een paal met een wijd blikveld. Groot bereik, maar verbruikt veel stroom. Moet onder de open lucht staan.</SurveillanceCamera_High.description>
+</LanguageData>

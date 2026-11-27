@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>小型警報ベル</SecurityBellSmall.label>
+  <SecurityBellSmall.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう視界は得られません.</SecurityBellSmall.description>
+  <SecurityBell.label>大型警報ベル</SecurityBell.label>
+  <SecurityBell.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう視界は得られません.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>壁掛けカメラ</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>壁に取り付ける小型カメラです.視界は短く,安価で消費電力も少なめです.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>茂みのカメラ</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>茂みの中に隠したカメラで,見つかりにくいです.視界は短めです.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>枯れ茂みのカメラ</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>枯れた茂みの中に隠したカメラで,見つかりにくいです.視界は短めです.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>天井カメラ</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>屋内用のカメラです.屋根の下に吊るす必要があります.視界は短く,建築コストは安価です.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>地上カメラ</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>地面の台座に据えた頑丈なカメラです.視界は中程度です.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>ソーラーカメラ</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>独自の太陽光パネルを備えたカメラです.電力線は不要ですが,屋根のない場所に設置する必要があります.視界は中程度です.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>カメラポスト</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>高い支柱の上に据えた,広い視野を持つカメラです.視界は長いですが,消費電力が大きめです.屋根のない場所に設置する必要があります.</SurveillanceCamera_High.description>
+</LanguageData>

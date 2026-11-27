@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <LangVersion>latest</LangVersion>
     <OutputPath>../../artifacts/BridgeTools/TotalFog</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <DebugType>None</DebugType>
   </PropertyGroup>
   <PropertyGroup>
-    <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../Current/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
+    <TotalFogGameplayAssembly Condition="'$(TotalFogGameplayAssembly)' == ''">../../1.7/Assemblies/TotalFog.dll</TotalFogGameplayAssembly>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer" Version="2.3.2" PrivateAssets="all" />
@@ -15,8 +17,16 @@
     <!-- TotalFog exposes this internal helper through InternalsVisibleTo. -->
     <Compile Remove="$(NuGetPackageRoot)/krafs.publicizer/2.3.2/contentfiles/cs/any/Publicizer/IgnoresAccessChecksToAttribute.cs" />
     <Reference Include="TotalFog" HintPath="$(TotalFogGameplayAssembly)" Private="false" />
-    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4871" ExcludeAssets="runtime" />
-    <PackageReference Include="Lib.Harmony.Ref" Version="2.4.2" ExcludeAssets="runtime" />
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.7.5021-unstable" ExcludeAssets="runtime" />
+    <PackageReference Include="Lib.Harmony.Ref" Version="3.0.0-rc.8" ExcludeAssets="runtime" />
     <PackageReference Include="RimBridgeServer.Sdk" Version="2.0.0" PrivateAssets="all" ExcludeAssets="runtime" />
   </ItemGroup>
+  <Target Name="ValidateBuildOutput" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <SafeArtifactOutput>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../artifacts/'))</SafeArtifactOutput>
+      <FullBuildOutput>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/$(OutputPath)'))</FullBuildOutput>
+      <FullBuildOutput Condition="$([System.IO.Path]::IsPathRooted('$(OutputPath)'))">$([System.IO.Path]::GetFullPath('$(OutputPath)'))</FullBuildOutput>
+    </PropertyGroup>
+    <Error Condition="!$(FullBuildOutput.StartsWith('$(SafeArtifactOutput)'))" Text="Companion build output must stay under artifacts/. The 1.6 payload is frozen." />
+  </Target>
 </Project>

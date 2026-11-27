@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BuildingBase">
+    <defName>TotalFog_Watchtower</defName>
+    <label>watchtower</label>
+    <description>A solid 3x3 tower with room for one lookout. Climb the ladder to see over freestanding walls. Roofs, mountains and other towers still block the view. A lookout up there is easy to hit. Bring them down before deconstructing: a collapsing tower hurts whoever is on it.</description>
+    <thingClass>TotalFog.Watchtowers.Building_Watchtower</thingClass>
+    <size>(3,3)</size>
+    <rotatable>true</rotatable>
+    <defaultPlacingRot>South</defaultPlacingRot>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <tickerType>Never</tickerType>
+    <altitudeLayer>BuildingOnTop</altitudeLayer>
+    <passability>Impassable</passability>
+    <fillPercent>1</fillPercent>
+    <blockLight>true</blockLight>
+    <holdsRoof>false</holdsRoof>
+    <useBlueprintGraphicAsGhost>true</useBlueprintGraphicAsGhost>
+    <designationCategory>Security</designationCategory>
+    <uiIconPath>UI/Watchtower/Build</uiIconPath>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <costStuffCount>150</costStuffCount>
+    <researchPrerequisites>
+      <li>ComplexFurniture</li>
+    </researchPrerequisites>
+    <stuffCategories>
+      <li>Woody</li>
+      <li>Stony</li>
+      <li>Metallic</li>
+    </stuffCategories>
+    <graphicData>
+      <texPath>Things/Building/Linked/WallSmooth_MenuIcon</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <linkFlags>Wall</linkFlags>
+      <shaderType>Cutout</shaderType>
+      <drawSize>(3,3)</drawSize>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>450</MaxHitPoints>
+      <WorkToBuild>6000</WorkToBuild>
+      <Mass>150</Mass>
+      <Flammability>1</Flammability>
+      <Beauty>0</Beauty>
+    </statBases>
+    <building>
+      <blueprintGraphicData>
+        <texPath>Things/Building/Linked/WallSmooth_MenuIcon</texPath>
+        <graphicClass>TotalFog.Watchtowers.Graphic_WatchtowerPreview</graphicClass>
+        <drawSize>(3,3)</drawSize>
+      </blueprintGraphicData>
+      <isEdifice>true</isEdifice>
+      <ai_chillDestination>false</ai_chillDestination>
+      <canBuildNonEdificesUnder>false</canBuildNonEdificesUnder>
+      <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
+    </building>
+    <placeWorkers>
+      <li>TotalFog.Watchtowers.PlaceWorker_Watchtower</li>
+    </placeWorkers>
+  </ThingDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerWatch</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Keeping watch from TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerDescend</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Climbing down from TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <JobDef>
+    <defName>TotalFog_WatchtowerRetrieve</defName>
+    <driverClass>TotalFog.Watchtowers.JobDriver_Watchtower</driverClass>
+    <reportString>Bringing TargetC down from TargetA.</reportString>
+    <casualInterruptible>false</casualInterruptible>
+  </JobDef>
+  <WorkGiverDef>
+    <defName>TotalFog_WatchtowerRescue</defName>
+    <label>rescue from watchtower</label>
+    <giverClass>TotalFog.Watchtowers.WorkGiver_WatchtowerRescue</giverClass>
+    <workType>Doctor</workType>
+    <verb>rescue</verb>
+    <gerund>rescuing</gerund>
+    <priorityInType>61</priorityInType>
+    <directOrderable>false</directOrderable>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+</Defs>

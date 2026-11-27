@@ -54,6 +54,24 @@ def write_receipt(root, assembly):
     receipt_path(assembly).write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
 
 
+def record_build(root, assembly, companion=None):
+    root, assembly = Path(root).resolve(), Path(assembly).resolve()
+    if not any(assembly.is_relative_to(root / folder) for folder in ["1.7", "artifacts"]):
+        raise RuntimeError("Build receipts must stay under 1.7/ or artifacts/; 1.6 is frozen")
+    pair = None
+    if companion is not None:
+        companion = Path(companion).resolve()
+        if not companion.is_relative_to(root / "artifacts"):
+            raise RuntimeError("Companion receipts must stay under artifacts/")
+        pair = {
+            "gameplaySha256": hashlib.sha256(assembly.read_bytes()).hexdigest(),
+            "companionSha256": hashlib.sha256(companion.read_bytes()).hexdigest(),
+        }
+    write_receipt(root, assembly)
+    if pair is not None:
+        companion.with_suffix(".pair.json").write_text(json.dumps(pair, indent=2) + "\n")
+
+
 def verify_receipt(root, assembly):
     assembly = Path(assembly)
     try:
@@ -82,3 +100,13 @@ def verify_receipt(root, assembly):
         or record.get("dllSha256") != hashlib.sha256(assembly.read_bytes()).hexdigest()
     ):
         raise RuntimeError("Gameplay DLL differs from its build receipt; run ./scripts/mod build")
+
+
+if __name__ == "__main__":
+    import sys
+    from frozen_payload import verify_frozen
+
+    root = Path(__file__).resolve().parents[1]
+    verify_frozen(root)
+    record_build(root, *sys.argv[1:])
+    verify_frozen(root)

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <DayVisionEffectiveness.label>dagsyn</DayVisionEffectiveness.label>
+  <DayVisionEffectiveness.description>Multiplikator för hur långt den här varelsen ser i dagsljus.</DayVisionEffectiveness.description>
+  <NightVisionEffectiveness.label>nattsyn</NightVisionEffectiveness.label>
+  <NightVisionEffectiveness.description>Multiplikator för hur långt den här varelsen ser på natten.</NightVisionEffectiveness.description>
+</LanguageData>

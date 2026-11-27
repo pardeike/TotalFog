@@ -1,7 +1,9 @@
 """Pure checks for the tracked gameplay artifact gate; no game or build required."""
 
 from pathlib import Path
+import hashlib
 import importlib.util
+import json
 import tempfile
 import unittest
 
@@ -29,6 +31,29 @@ class BuildReceiptTests(unittest.TestCase):
 
     def test_current_source_and_dll_pass(self):
         receipt.verify_receipt(self.root, self.assembly)
+
+    def test_native_build_records_the_exact_gameplay_and_companion_pair(self):
+        assembly = self.root / "1.7/Assemblies/TotalFog.dll"
+        companion = self.root / "artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll"
+        for target in [assembly, companion]:
+            target.parent.mkdir(parents=True)
+            target.write_bytes(target.name.encode())
+        receipt.record_build(self.root, assembly, companion)
+        receipt.verify_receipt(self.root, assembly)
+        pair = json.loads(companion.with_suffix(".pair.json").read_text())
+        self.assertEqual(pair["gameplaySha256"], hashlib.sha256(assembly.read_bytes()).hexdigest())
+        self.assertEqual(
+            pair["companionSha256"], hashlib.sha256(companion.read_bytes()).hexdigest()
+        )
+
+    def test_native_receipt_writer_refuses_frozen_output_before_writing(self):
+        assembly = self.root / "Current/Assemblies/TotalFog.dll"
+        assembly.parent.mkdir(parents=True)
+        assembly.write_bytes(b"frozen DLL")
+        with self.assertRaisesRegex(RuntimeError, "frozen"):
+            receipt.record_build(self.root, assembly)
+        self.assertEqual(assembly.read_bytes(), b"frozen DLL")
+        self.assertFalse(receipt.receipt_path(assembly).exists())
 
     def test_source_edit_addition_and_removal_fail(self):
         for action in ["edit", "add", "remove"]:

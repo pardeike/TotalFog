@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <!-- Surveillance Camera -->
+  <ThingDef Name="BaseVisionStuff" ParentName="BuildingBase" Abstract="True">
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <selectable>true</selectable>
+    <designationCategory>Security</designationCategory>
+    <thingCategories>
+      <li>BuildingsSecurity</li>
+    </thingCategories>
+    <stealable>false</stealable>
+  </ThingDef>
+</Defs>

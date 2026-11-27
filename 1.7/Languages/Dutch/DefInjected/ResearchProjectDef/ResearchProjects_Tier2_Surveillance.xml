@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraSecurity.label>bewakingscamera's</CameraSecurity.label>
+  <CameraSecurity.description>Bouw bewakingscamera's en een cameraconsole. Camera's met stroom tonen je hun omgeving zolang een kolonist de console bedient.</CameraSecurity.description>
+  <CameraSecurityAdvanced.label>geavanceerde cameralenzen</CameraSecurityAdvanced.label>
+  <CameraSecurityAdvanced.description>Bouw betere camera's: plafond- en grondmodellen, een zonnecamera die geen stroomkabel nodig heeft, en een camerapaal met groot bereik.</CameraSecurityAdvanced.description>
+  <WatchTelescope.label>uitkijktelescoop</WatchTelescope.label>
+  <WatchTelescope.description>Bouw een uitkijktelescoop. Een kolonist die erachter staat ziet twee keer zo ver.</WatchTelescope.description>
+</LanguageData>

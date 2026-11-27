@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>alter Wachturm</WatchTower.label>
+  <WatchTower.description>Ausgemustert. Bleibt erhalten, damit alte Spielstände noch laden. Er erweitert die Sicht nicht mehr.</WatchTower.description>
+  <WatchTowerRoofed.label>alter überdachter Wachturm</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Ausgemustert. Bleibt erhalten, damit alte Spielstände noch laden. Er erweitert die Sicht nicht mehr und schützt nicht mehr vor Wetter.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>Leuchtfeuer</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Ausgemustert. Bleibt erhalten, damit alte Spielstände noch laden. Es gibt weder Licht noch Sicht mehr.</TowerLightBeacon.description>
+  <WatchTelescope.label>Wachteleskop</WatchTelescope.label>
+  <WatchTelescope.description>Ein Teleskop auf einem Ständer. Ein Kolonist, der hier steht, sieht doppelt so weit.</WatchTelescope.description>
+</LanguageData>

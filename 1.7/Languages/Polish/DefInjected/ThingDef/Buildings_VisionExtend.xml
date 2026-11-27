@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>Stara wieża strażnicza</WatchTower.label>
+  <WatchTower.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie zwiększa zasięgu widzenia.</WatchTower.description>
+  <WatchTowerRoofed.label>Stara zadaszona wieża strażnicza</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie zwiększa zasięgu widzenia ani nie chroni przed pogodą.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>Latarnia sygnałowa</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Wycofane. Zachowane, aby stare zapisy nadal się wczytywały. Już nie daje światła ani widoku.</TowerLightBeacon.description>
+  <WatchTelescope.label>Teleskop obserwacyjny</WatchTelescope.label>
+  <WatchTelescope.description>Teleskop na statywie. Kolonista stojący tutaj widzi dwa razy dalej.</WatchTelescope.description>
+</LanguageData>

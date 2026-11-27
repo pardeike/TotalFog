@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <SecurityBellSmall.label>작은 경보 종</SecurityBellSmall.label>
+  <SecurityBellSmall.description>폐지되었습니다. 기존 저장 파일을 불러올 수 있도록 남겨 두었습니다. 더 이상 시야를 제공하지 않습니다.</SecurityBellSmall.description>
+  <SecurityBell.label>큰 경보 종</SecurityBell.label>
+  <SecurityBell.description>폐지되었습니다. 기존 저장 파일을 불러올 수 있도록 남겨 두었습니다. 더 이상 시야를 제공하지 않습니다.</SecurityBell.description>
+  <SurveillanceCamera_Mounted.label>벽 카메라</SurveillanceCamera_Mounted.label>
+  <SurveillanceCamera_Mounted.description>벽에 고정된 작은 카메라입니다. 범위가 짧고 저렴하며 전력을 적게 씁니다.</SurveillanceCamera_Mounted.description>
+  <SurveillanceCamera_Bush.label>덤불 속 카메라</SurveillanceCamera_Bush.label>
+  <SurveillanceCamera_Bush.description>덤불 속에 숨겨 알아채기 어려운 카메라입니다. 범위가 짧습니다.</SurveillanceCamera_Bush.description>
+  <SurveillanceCamera_DeadBush.label>마른 덤불 속 카메라</SurveillanceCamera_DeadBush.label>
+  <SurveillanceCamera_DeadBush.description>마른 덤불 속에 숨겨 알아채기 어려운 카메라입니다. 범위가 짧습니다.</SurveillanceCamera_DeadBush.description>
+  <SurveillanceCamera_UnderRoof.label>천장 카메라</SurveillanceCamera_UnderRoof.label>
+  <SurveillanceCamera_UnderRoof.description>실내용 카메라입니다. 지붕 아래에 매달아야 합니다. 범위가 짧고 건설비가 저렴합니다.</SurveillanceCamera_UnderRoof.description>
+  <SurveillanceCamera_Ground.label>지면 카메라</SurveillanceCamera_Ground.label>
+  <SurveillanceCamera_Ground.description>지면 거치대에 올린 튼튼한 카메라입니다. 범위가 중간입니다.</SurveillanceCamera_Ground.description>
+  <SurveillanceCamera_Solar.label>태양광 카메라</SurveillanceCamera_Solar.label>
+  <SurveillanceCamera_Solar.description>자체 태양광 패널이 달린 카메라입니다. 전선은 필요 없지만 지붕이 없는 곳에 세워야 합니다. 범위가 중간입니다.</SurveillanceCamera_Solar.description>
+  <SurveillanceCamera_High.label>카메라 기둥</SurveillanceCamera_High.label>
+  <SurveillanceCamera_High.description>기둥 높이 달려 넓게 내려다보는 카메라입니다. 범위가 길지만 전력을 많이 씁니다. 지붕이 없는 곳에 세워야 합니다.</SurveillanceCamera_High.description>
+</LanguageData>

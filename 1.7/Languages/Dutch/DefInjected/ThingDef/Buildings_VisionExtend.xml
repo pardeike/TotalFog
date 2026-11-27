@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>oude wachttoren</WatchTower.label>
+  <WatchTower.description>Buiten gebruik. Behouden zodat oude opgeslagen spellen nog laden. Hij vergroot het zicht niet meer.</WatchTower.description>
+  <WatchTowerRoofed.label>oude overdekte wachttoren</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Buiten gebruik. Behouden zodat oude opgeslagen spellen nog laden. Hij vergroot het zicht niet meer en beschut niet meer tegen het weer.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>lichtbaken</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Buiten gebruik. Behouden zodat oude opgeslagen spellen nog laden. Het geeft geen licht of zicht meer.</TowerLightBeacon.description>
+  <WatchTelescope.label>uitkijktelescoop</WatchTelescope.label>
+  <WatchTelescope.description>Een telescoop op een statief. Een kolonist die hier staat ziet twee keer zo ver.</WatchTelescope.description>
+</LanguageData>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>旧式の見張り塔</WatchTower.label>
+  <WatchTower.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう視界は広がりません.</WatchTower.description>
+  <WatchTowerRoofed.label>旧式の屋根付き見張り塔</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう視界は広がらず,天候からも守りません.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>照明ビーコン</TowerLightBeacon.label>
+  <TowerLightBeacon.description>廃止されました.古いセーブデータを読み込めるよう残されています.もう明かりも視界も得られません.</TowerLightBeacon.description>
+  <WatchTelescope.label>監視望遠鏡</WatchTelescope.label>
+  <WatchTelescope.description>台に据えた望遠鏡です.ここに立つ入植者は2倍遠くまで見えます.</WatchTelescope.description>
+</LanguageData>

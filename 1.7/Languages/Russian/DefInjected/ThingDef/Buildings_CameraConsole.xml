@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CameraConsole.label>консоль наблюдения</CameraConsole.label>
+  <CameraConsole.description>Объединяет ваши камеры наблюдения. Пока за ней работает поселенец, камеры показывают вам то, что видят. Требует энергии.</CameraConsole.description>
+</LanguageData>

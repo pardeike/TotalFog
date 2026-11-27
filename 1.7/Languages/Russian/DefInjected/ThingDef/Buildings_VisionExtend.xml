@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>старая дозорная вышка</WatchTower.label>
+  <WatchTower.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не расширяет обзор.</WatchTower.description>
+  <WatchTowerRoofed.label>старая крытая дозорная вышка</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не расширяет обзор и не укрывает от непогоды.</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>световой маяк</TowerLightBeacon.label>
+  <TowerLightBeacon.description>Устарело. Сохранено, чтобы старые сохранения по-прежнему загружались. Больше не даёт ни света, ни обзора.</TowerLightBeacon.description>
+  <WatchTelescope.label>наблюдательный телескоп</WatchTelescope.label>
+  <WatchTelescope.description>Телескоп на штативе. Поселенец, стоящий здесь, видит вдвое дальше.</WatchTelescope.description>
+</LanguageData>

@@ -4,7 +4,18 @@
 from pathlib import Path
 import hashlib, json, os, shutil, statistics, subprocess, sys, traceback, zipfile
 import xml.etree.ElementTree as ET
-from build_receipt import verify_receipt, write_receipt
+from contextlib import contextmanager
+import tempfile
+from build_receipt import verify_receipt
+from frozen_payload import verify_frozen
+from published_payload import (
+    published_payload,
+    read_payload,
+    verify_installed_legacy,
+    verify_legacy_mapping,
+    write_package,
+    VERSION_METADATA,
+)
 
 if os.name == "nt":
     import msvcrt
@@ -27,22 +38,12 @@ MODS = (
 )
 PROJECT = ROOT / "Source/TotalFog/TotalFog.csproj"
 LOGS = ROOT / "artifacts/logs"
-PAYLOAD = [
-    "About",
-    "Current",
-    "LegacyAssets",
-    "Languages",
-    "LoadFolders.xml",
-    "LICENSE.md",
-    "NOTICE.md",
-    "README.md",
-]
 LOGS.mkdir(parents=True, exist_ok=True)
 step = "arguments"
 logpath = LOGS / ((sys.argv[1] if len(sys.argv) > 1 else "usage") + ".log")
 workflow_env = os.environ.copy()
 workflow_env.setdefault("NUGET_PACKAGES", str(ROOT / "artifacts/nuget"))
-pinned_dotnet = Path.home() / "Library/Application Support/dotnet/sdk-10.0.301"
+pinned_dotnet = Path.home() / "Library/Application Support/dotnet/sdk-10.0.400"
 if (pinned_dotnet / "dotnet").is_file():
     workflow_env["PATH"] = str(pinned_dotnet) + os.pathsep + workflow_env.get("PATH", "")
 
@@ -78,7 +79,7 @@ def format_sources(log, check=False):
             "--cache-dir",
             str(ROOT / "artifacts/tool-cache"),
             "--from",
-            "ruff==0.16.10",
+            "ruff==0.17.3",
             "ruff",
             "format",
             *(["--check"] if check else []),
@@ -102,123 +103,138 @@ def stopped():
 def gameplay_assembly():
     output = os.environ.get("TotalFogBuildOutput")
     if not output:
-        return ROOT / "Current/Assemblies/TotalFog.dll"
+        return ROOT / "1.7/Assemblies/TotalFog.dll"
     directory = Path(output).expanduser()
     if not directory.is_absolute():
         directory = PROJECT.parent / directory
+    directory = directory.resolve()
+    if not any(directory.is_relative_to(ROOT / folder) for folder in ["1.7", "artifacts"]):
+        raise RuntimeError("Build output must stay under 1.7/ or artifacts/; 1.6 is frozen")
     return directory / "TotalFog.dll"
 
 
 def stage(destination, baseline=False):
+    if baseline:
+        raise RuntimeError("The historical baseline workflow cannot stage the 1.7 package")
+    verify_frozen(ROOT)
     candidate = gameplay_assembly()
-    if not baseline and not candidate.is_file():
-        raise RuntimeError("Build output is missing: " + str(candidate))
-    # Deployment owns this directory. Replacing it prevents removed definitions,
-    # translations and historical DLLs from surviving an update.
+    verify_receipt(ROOT, candidate)
+    published = published_payload(ROOT)
+    payload = published | {"1.7/" + name: data for name, data in read_payload(ROOT / "1.7").items()}
+    payload["1.7/Assemblies/TotalFog.dll"] = candidate.read_bytes()
+    payload["1.7/Assemblies/TotalFog.build.json"] = candidate.with_suffix(
+        ".build.json"
+    ).read_bytes()
+    for name in ["LoadFolders.xml", *VERSION_METADATA]:
+        payload[name] = (ROOT / name).read_bytes()
+    owner = ET.parse(ROOT / "Directory.Build.props").findtext(".//ModVersion")
+    if any(
+        ET.fromstring(payload[name]).findtext(tag) != owner
+        for name, tag in VERSION_METADATA.items()
+    ):
+        raise RuntimeError(
+            "Version metadata differs from Directory.Build.props; run ./scripts/mod build"
+        )
+    verify_legacy_mapping(payload["LoadFolders.xml"], published)
     resolved = destination.resolve()
-    if destination.is_symlink() or resolved == ROOT or resolved in ROOT.parents:
+    if (
+        destination.is_symlink()
+        or resolved == ROOT
+        or resolved in ROOT.parents
+        or (resolved.is_relative_to(ROOT) and not resolved.is_relative_to(ROOT / "artifacts"))
+    ):
         raise RuntimeError("Unsafe staging destination: " + str(destination))
     if destination.exists():
         shutil.rmtree(destination)
-    destination.mkdir(parents=True, exist_ok=True)
-    for name in PAYLOAD:
-        src, dst = ROOT / name, destination / name
-        if not src.exists():
-            continue
-        if src.is_dir():
-            shutil.copytree(src, dst, dirs_exist_ok=True)
+    for name, data in payload.items():
+        target = destination / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
+    if read_payload(destination) != payload:
+        raise RuntimeError("Staged payload differs")
+    verify_frozen(ROOT)
+
+
+@contextmanager
+def deployment_guard():
+    key = hashlib.sha256((str(MODS.resolve()) + "|TotalFog").encode()).hexdigest()
+    with (Path(tempfile.gettempdir()) / ("rimworld-deploy-" + key + ".lock")).open("a+b") as lock:
+        if os.name == "nt":
+            if lock.tell() == 0:
+                lock.write(b"\0")
+                lock.flush()
+            lock.seek(0)
+            msvcrt.locking(lock.fileno(), msvcrt.LK_LOCK, 1)
         else:
-            shutil.copy2(src, dst)
-    # Portable PNGs supply the active textures. Only the original comparison
-    # loads the upstream bundle, restored from its immutable snapshot below.
-    if (destination / "Assets").exists():
-        shutil.rmtree(destination / "Assets")
-    assemblies = destination / ("1.6/Assemblies" if baseline else "Current/Assemblies")
-    assemblies.mkdir(parents=True, exist_ok=True)
-    if not baseline:
-        shutil.copy2(candidate, assemblies / "TotalFog.dll")
-        receipt = candidate.with_suffix(".build.json")
-        if receipt.exists():
-            shutil.copy2(receipt, assemblies / receipt.name)
-        mapped = {
-            folder.text
-            for version in ET.parse(ROOT / "LoadFolders.xml").getroot()
-            for folder in version
-        }
-        if "1.6" not in mapped:
-            shutil.rmtree(destination / "1.6", ignore_errors=True)
-    # Remove the inherited updater metadata from previously staged installs.
-    (destination / "PRELIMINARY.md").unlink(missing_ok=True)
-    (destination / "About/ModSync.xml").unlink(missing_ok=True)
-    (assemblies / "rimworld-mod-real-fow.dll").unlink(missing_ok=True)
-    if baseline:
-        shutil.rmtree(destination / "Current", ignore_errors=True)
-        # The native baseline must retain the original runtime XML bindings.
-        # Total Fog's renamed classes cannot be resolved by the inherited DLL.
-        revision = "upstream-baseline"
-        baseline_dir = ROOT / "artifacts/baseline"
-        baseline_dir.mkdir(parents=True, exist_ok=True)
-        for name in ["rimworld-mod-real-fow.dll", "VersionFromManifest.dll"]:
-            original = subprocess.check_output(
-                ["git", "show", revision + ":1.6/Assemblies/" + name], cwd=ROOT
-            )
-            retained = baseline_dir / name
-            if retained.exists() and retained.read_bytes() != original:
-                raise RuntimeError(
-                    "Retained baseline differs from the public upstream snapshot: " + name
-                )
-            if not retained.exists():
-                retained.write_bytes(original)
-        folders = ["1.6/Defs", "1.6/Patches", "Assets"]
-        names = subprocess.check_output(
-            ["git", "ls-tree", "-r", "--name-only", revision, *folders, "LoadFolders.xml"],
-            cwd=ROOT,
-            text=True,
-        ).splitlines()
-        if not names:
-            raise RuntimeError("Original baseline definitions are missing")
-        for folder in folders:
-            shutil.rmtree(destination / folder, ignore_errors=True)
-        for name in names:
-            target = destination / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(
-                subprocess.check_output(["git", "show", revision + ":" + name], cwd=ROOT)
-            )
-        # The upstream bundle is platform-specific. Both measured variants use
-        # the same portable texture fallback; keep the original DLL/XML bindings.
-        load_folders = ET.parse(destination / "LoadFolders.xml")
-        active = load_folders.getroot().find("v1.6")
-        if not any(folder.text == "LegacyAssets" for folder in active):
-            ET.SubElement(active, "li").text = "LegacyAssets"
-        load_folders.write(destination / "LoadFolders.xml", encoding="utf-8", xml_declaration=True)
-        shutil.copy2(
-            ROOT / "artifacts/baseline/rimworld-mod-real-fow.dll", assemblies / "TotalFog.dll"
-        )
-        shutil.copy2(
-            ROOT / "artifacts/baseline/VersionFromManifest.dll",
-            assemblies / "VersionFromManifest.dll",
-        )
-    for path in destination.rglob("*"):
-        if path.is_file() and (
-            path.suffix in {".pdb", ".mdb"}
-            or path.name in {".DS_Store", "0Harmony.dll"}
-            or path.name.startswith("._")
-            or (not baseline and path.name == "VersionFromManifest.dll" and "Current" in path.parts)
-        ):
-            path.unlink()
-    if not (assemblies / "TotalFog.dll").is_file():
-        raise RuntimeError("TotalFog.dll is missing")
+            fcntl.flock(lock, fcntl.LOCK_EX)
+        yield
 
 
 def deploy_pair(baseline=False):
+    with deployment_guard():
+        deploy_pair_locked(baseline)
+
+
+def deploy_pair_locked(baseline=False):
+    if baseline:
+        raise RuntimeError("The historical 1.6 baseline workflow cannot deploy the 1.7 pair")
+    if (
+        not os.environ.get("RIMWORLD_MOD_DIR")
+        or MODS.name != "Mods"
+        or not MODS.is_dir()
+        or MODS.parent.name.startswith("RimWorldMac")
+    ):
+        raise RuntimeError("Set RIMWORLD_MOD_DIR to the 1.7 installation's Mods folder")
     stopped()
-    stage(MODS / "TotalFog", baseline)
+    verify_frozen(ROOT)
+    published = published_payload(ROOT)
+    candidate = gameplay_assembly()
+    verify_receipt(ROOT, candidate)
     companion = ROOT / "artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll"
-    if companion.exists():
-        bundle = MODS.parent / "BridgeTools/TotalFog"
-        bundle.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(companion, bundle / companion.name)
+    pair = json.loads(companion.with_suffix(".pair.json").read_text())
+    if pair != {
+        "gameplaySha256": hashlib.sha256(candidate.read_bytes()).hexdigest(),
+        "companionSha256": hashlib.sha256(companion.read_bytes()).hexdigest(),
+    }:
+        raise RuntimeError("Gameplay/companion pair differs; run ./scripts/mod build")
+    destination = MODS / "TotalFog"
+    bundle = MODS.parent / "BridgeTools/TotalFog"
+    for target in [destination, bundle, MODS / "TotalFog.zip"]:
+        if target.is_symlink() or (
+            target.is_dir() and any(p.is_symlink() for p in target.rglob("*"))
+        ):
+            raise RuntimeError("Deployment destinations must not contain symlinks")
+    installed = verify_installed_legacy(destination, published)
+    staged = ROOT / "artifacts/deploy-stage/TotalFog"
+    stage(staged)
+    archive = write_package(staged, ROOT / "dist/TotalFog.zip", published)
+    stopped()
+    if not destination.exists():
+        with tempfile.TemporaryDirectory(prefix=".TotalFog-install-", dir=MODS) as tmp:
+            fresh = Path(tmp) / "TotalFog"
+            shutil.copytree(staged, fresh)
+            fresh.rename(destination)
+    else:
+        # Only 1.7, version metadata and its load mapping may change in an existing installation.
+        if (destination / "1.7").exists():
+            shutil.rmtree(destination / "1.7")
+        for name, data in read_payload(staged).items():
+            if name in published and name not in VERSION_METADATA and name != "LoadFolders.xml":
+                continue
+            target = destination / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if installed.get(name) != data or not target.exists():
+                target.write_bytes(data)
+    bundle.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(companion, bundle / companion.name)
+    shutil.copy2(archive, MODS / archive.name)
+    if read_payload(destination) != read_payload(staged):
+        raise RuntimeError("Installed payload differs from the staged ZIP")
+    verify_installed_legacy(destination, published)
+    if companion.read_bytes() != (bundle / companion.name).read_bytes():
+        raise RuntimeError("Deployed companion differs from the build")
+    if archive.read_bytes() != (MODS / archive.name).read_bytes():
+        raise RuntimeError("Installed ZIP differs from the verified archive")
 
 
 try:
@@ -232,6 +248,24 @@ try:
     else:
         fcntl.flock(guard, fcntl.LOCK_EX)
     mode = sys.argv[1]
+    if mode == "metadata":
+        raise RuntimeError("Use ./scripts/mod deploy for a complete published-legacy-safe update")
+    step = "frozen payload"
+    verify_frozen(ROOT)
+    if mode not in {
+        "format",
+        "format-check",
+        "test",
+        "build",
+        "verify-binary",
+        "deploy",
+        "deploy-built",
+        "metadata",
+        "package",
+        "package-built",
+        "source-publish",
+    }:
+        raise RuntimeError("Historical 1.6 runtime workflows need a separate 1.7 port: " + mode)
     if mode not in {
         "format",
         "format-check",
@@ -275,7 +309,7 @@ try:
     with logpath.open("w") as log:
         if mode in {"verify-binary", "package-built"}:
             step = "tracked gameplay DLL"
-            verify_receipt(ROOT, ROOT / "Current/Assemblies/TotalFog.dll")
+            verify_receipt(ROOT, gameplay_assembly())
         if mode in {"format", "format-check"}:
             step = "formatting"
             format_sources(log, check=mode == "format-check")
@@ -286,6 +320,8 @@ try:
             "build",
             "verify-binary",
             "source-publish",
+            "package",
+            "package-built",
         } and (MODS.name != "Mods" or not MODS.is_dir()):
             raise RuntimeError("RIMWORLD_MOD_DIR must name an existing Mods folder")
         if mode == "source-publish":
@@ -372,7 +408,19 @@ try:
             step = "formatting"
             format_sources(log, check=True)
             step = "tests"
-            run([sys.executable, str(ROOT / "Source/Tests/BuildReceiptTests.py")], log)
+            run(
+                [
+                    sys.executable,
+                    "-m",
+                    "unittest",
+                    "discover",
+                    "-s",
+                    str(ROOT / "Source/Tests"),
+                    "-p",
+                    "*Tests.py",
+                ],
+                log,
+            )
             run(
                 [
                     "dotnet",
@@ -388,6 +436,8 @@ try:
                 log,
             )
             if mode != "test":
+                step = "build output"
+                gameplay_assembly()
                 step = "build"
                 run(
                     [
@@ -400,11 +450,14 @@ try:
                         "--nologo",
                         "-v:q",
                         "-p:RIMWORLD_MOD_DIR=",
+                        "-p:BuildBridgeTools=true",
+                        "-p:SkipBridgeTools=false",
+                        "-p:TotalFogPython=" + sys.executable,
                     ],
                     log,
                 )
                 step = "gameplay build receipt"
-                write_receipt(ROOT, gameplay_assembly())
+                verify_receipt(ROOT, gameplay_assembly())
         if mode == "runtime-compare":
             step = "runtime comparison"
             pairs = int(os.environ.get("TOTALFOG_COMPARISON_PAIRS", "3"))
@@ -1356,52 +1409,12 @@ try:
                 if seen != set(bundle.namelist()):
                     raise RuntimeError("Feedback ZIPs do not cover the complete paired package")
         if mode in {"package", "package-built"}:
-            step = "package"
-            import tempfile
-
+            step = "package and published legacy audit"
             with tempfile.TemporaryDirectory(prefix="totalfog-package-") as tmp:
                 staged = Path(tmp) / "TotalFog"
                 stage(staged)
-                (ROOT / "dist").mkdir(exist_ok=True)
-                with zipfile.ZipFile(ROOT / "dist/TotalFog.zip", "w", zipfile.ZIP_DEFLATED) as z:
-                    for p in sorted(staged.rglob("*")):
-                        if p.is_file():
-                            z.write(p, Path("TotalFog") / p.relative_to(staged))
-            step = "package audit"
-            archive = ROOT / "dist/TotalFog.zip"
-            with zipfile.ZipFile(archive) as z:
-                if z.testzip() is not None:
-                    raise RuntimeError("ZIP integrity check failed")
-                for name in z.namelist():
-                    if not name.startswith("TotalFog/") or any(
-                        part in {"Source", "BridgeTools", "artifacts"} for part in Path(name).parts
-                    ):
-                        raise RuntimeError("Unexpected ZIP payload: " + name)
-                    if name.endswith(".dll") and Path(name).name != "TotalFog.dll":
-                        raise RuntimeError("Unexpected runtime DLL: " + name)
-                if (
-                    z.read("TotalFog/Current/Assemblies/TotalFog.dll")
-                    != (ROOT / "Current/Assemblies/TotalFog.dll").read_bytes()
-                ):
-                    raise RuntimeError("Packaged DLL does not match the build")
-                advertised = [
-                    n.text
-                    for n in ET.fromstring(z.read("TotalFog/About/About.xml")).findall(
-                        "supportedVersions/li"
-                    )
-                ]
-                expected = [
-                    n.text
-                    for n in ET.parse(ROOT / "About/About.xml").findall("supportedVersions/li")
-                ]
-                build_version = json.loads((ROOT / ".steam-mods.json").read_text())["mod"][
-                    "rimworldVersion"
-                ]
-                if advertised != expected or build_version not in advertised:
-                    raise RuntimeError("Supported game version metadata drifted")
-            (ROOT / "dist/TotalFog.zip.sha256").write_text(
-                hashlib.sha256(archive.read_bytes()).hexdigest() + "  TotalFog.zip\n"
-            )
+                write_package(staged, ROOT / "dist/TotalFog.zip", published_payload(ROOT))
+    verify_frozen(ROOT)
     print("ok")
 except Exception as exc:
     diagnostic = (

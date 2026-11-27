@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WatchTower.label>舊瞭望塔</WatchTower.label>
+  <WatchTower.description>已停用。保留以便舊存檔仍能載入。它不再擴展視野。</WatchTower.description>
+  <WatchTowerRoofed.label>舊有頂瞭望塔</WatchTowerRoofed.label>
+  <WatchTowerRoofed.description>已停用。保留以便舊存檔仍能載入。它不再擴展視野，也不再遮風避雨。</WatchTowerRoofed.description>
+  <TowerLightBeacon.label>照明信標</TowerLightBeacon.label>
+  <TowerLightBeacon.description>已停用。保留以便舊存檔仍能載入。它不再提供光線或視野。</TowerLightBeacon.description>
+  <WatchTelescope.label>觀測望遠鏡</WatchTelescope.label>
+  <WatchTelescope.description>架在支架上的望遠鏡。站在這裡的殖民者視野加倍。</WatchTelescope.description>
+</LanguageData>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <DesignatorDropdownGroupDef>
+    <defName>InspectorAnimal</defName>
+    <label>inspector animals</label>
+  </DesignatorDropdownGroupDef>
+  <!-- Most animal eat 0.56 nutrition per day -->
+  <ThingDef Name="InspectorAnimalBase" ParentName="BaseVisionStuff" Abstract="True">
+    <graphicData>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(2.3,2.3)</drawSize>
+      <damageData>
+        <rect>(0,0,1,0.15)</rect>
+      </damageData>
+    </graphicData>
+    <uiIconScale>0.5</uiIconScale>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <repairEffect>Sow</repairEffect>
+    <size>(1,1)</size>
+    <altitudeLayer>BuildingOnTop</altitudeLayer>
+    <drawerType>RealtimeOnly</drawerType>
+    <rotatable>false</rotatable>
+    <tickerType>Normal</tickerType>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <statBases>
+      <Mass>0.2</Mass>
+      <MaxHitPoints>20</MaxHitPoints>
+      <WorkToBuild>300</WorkToBuild>
+      <Flammability>1</Flammability>
+      <!-- Cute though -->
+      <Beauty>2</Beauty>
+      <!-- They are filthy because animal -->
+      <Cleanliness>-4</Cleanliness>
+    </statBases>
+    <!-- Save compatibility only: no construction, sight or feeding. -->
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <comps Inherit="False" />
+    <building>
+      <expandHomeArea>false</expandHomeArea>
+      <ai_chillDestination>false</ai_chillDestination>
+    </building>
+    <designatorDropdown>InspectorAnimal</designatorDropdown>
+    <specialDisplayRadius>0</specialDisplayRadius>
+  </ThingDef>
+  <ThingDef ParentName="InspectorAnimalBase">
+    <defName>InspectorChicken</defName>
+    <!-- Retain saved buildings, blueprints and frames, without new construction or vision. -->
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <specialDisplayRadius>0</specialDisplayRadius>
+    <label>inspector chicken</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
+    <graphicData>
+      <texPath>Things/Buildings/InspectorChicken</texPath>
+    </graphicData>
+    <soundImpactDefault>Pawn_Chicken_Wounded</soundImpactDefault>
+    <costList>
+      <WoodLog>50</WoodLog>
+    </costList>
+    <comps Inherit="False" />
+  </ThingDef>
+  <ThingDef ParentName="InspectorAnimalBase">
+    <defName>InspectorHare</defName>
+    <label>inspector hare</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
+    <graphicData>
+      <texPath>Things/Buildings/InspectorHare</texPath>
+    </graphicData>
+    <soundImpactDefault>Pawn_Hare_Wounded</soundImpactDefault>
+    <costList>
+      <WoodLog>50</WoodLog>
+    </costList>
+  </ThingDef>
+  <ThingDef ParentName="InspectorAnimalBase">
+    <defName>InspectorMonkey</defName>
+    <label>inspector monkey</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
+    <graphicData>
+      <texPath>Things/Buildings/InspectorMonkey</texPath>
+    </graphicData>
+    <soundImpactDefault>Pawn_Monkey_Wounded</soundImpactDefault>
+    <costList>
+      <WoodLog>50</WoodLog>
+    </costList>
+  </ThingDef>
+  <ThingDef ParentName="InspectorAnimalBase">
+    <defName>InspectorRat</defName>
+    <label>inspector rat</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
+    <graphicData>
+      <texPath>Things/Buildings/InspectorRat</texPath>
+    </graphicData>
+    <soundImpactDefault>Pawn_Boomrat_Wounded</soundImpactDefault>
+    <costList>
+      <WoodLog>50</WoodLog>
+    </costList>
+  </ThingDef>
+  <ThingDef ParentName="InspectorAnimalBase">
+    <defName>InspectorSquirrel</defName>
+    <label>inspector squirrel</label>
+    <description>Retired. Kept so old saves still load. It no longer sees or eats.</description>
+    <graphicData>
+      <texPath>Things/Buildings/InspectorSquirrel</texPath>
+    </graphicData>
+    <soundImpactDefault>Pawn_Boomrat_Wounded</soundImpactDefault>
+    <costList>
+      <WoodLog>50</WoodLog>
+    </costList>
+  </ThingDef>
+  <!--
+	<ThingDef ParentName="InspectorAnimalBase">
+		<defName>Inspector</defName>
+		<label>inspector</label>
+		<description>It's a that monitors your surroundings and tells you what's going on. It consumes .</description>
+		<graphicData>
+			<texPath>Things/Buildings/Inspector</texPath>
+		</graphicData>
+		<costList>
+			<WoodLog>50</WoodLog>
+		</costList>
+		<comps>
+			<li Class="CompProperties_Refuelable">
+				<fuelConsumptionRate>2</fuelConsumptionRate>
+				<fuelCapacity>20.0</fuelCapacity>
+				<fuelFilter>
+					<thingDefs>
+						<li/>
+					</thingDefs>
+				</fuelFilter>
+				<initialFuelPercent>1</initialFuelPercent>
+			</li>
+		</comps>
+	</ThingDef>-->
+</Defs>

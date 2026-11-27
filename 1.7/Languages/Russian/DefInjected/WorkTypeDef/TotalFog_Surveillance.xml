@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TotalFog_Surveillance.description>Работа за консолью наблюдения, чтобы ваши камеры показывали своё окружение. Приоритет задаётся отдельно от обычной работы.</TotalFog_Surveillance.description>
+  <TotalFog_Surveillance.labelShort>камеры</TotalFog_Surveillance.labelShort>
+  <TotalFog_Surveillance.pawnLabel>Оператор камер</TotalFog_Surveillance.pawnLabel>
+  <TotalFog_Surveillance.gerundLabel>Управлять камерами</TotalFog_Surveillance.gerundLabel>
+  <TotalFog_Surveillance.verb>Управлять камерами</TotalFog_Surveillance.verb>
+</LanguageData>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- General -->
+  <RFWreset>Auf Standard zurücksetzen</RFWreset>
+  <TotalFog_ResetDesc>Setzt alle Einstellungen auf ihre Standardwerte zurück. Die Sichtblockierung durch Bäume bleibt unverändert, solange ein Spiel geladen ist.</TotalFog_ResetDesc>
+  <CurrentModVersion>Version {0}</CurrentModVersion>
+  <NotVisible>Außer Sicht</NotVisible>
+  <CannotPlaceInUndiscovered>Kann nicht in unentdeckten Gebieten platziert werden.</CannotPlaceInUndiscovered>
+  <MustBeUnderRoof>Muss unter einem Dach platziert werden.</MustBeUnderRoof>
+  <MustBeNextToWall>Muss an einer Wand platziert werden.</MustBeNextToWall>
+
+  <!-- Settings pages -->
+  <TotalFog_PageAppearance>Darstellung</TotalFog_PageAppearance>
+  <TotalFog_PageVision>Sicht</TotalFog_PageVision>
+  <TotalFog_PageInformation>Informationen</TotalFog_PageInformation>
+  <TotalFog_PageAudio>Audio</TotalFog_PageAudio>
+  <TotalFog_IntroAppearance>Wie erkundetes Gelände aussieht, wenn es gerade niemand beobachtet.</TotalFog_IntroAppearance>
+  <TotalFog_IntroVision>Wer für dich sieht und wie weit.</TotalFog_IntroVision>
+  <TotalFog_IntroInformation>Welche Nachrichten und Details dir von Dingen berichten dürfen, die niemand gesehen hat.</TotalFog_IntroInformation>
+  <TotalFog_IntroAudio>Musik und Geräusche können verborgene Ereignisse verraten. Wähle, was du hören möchtest.</TotalFog_IntroAudio>
+
+  <!-- Appearance -->
+  <fogAlphaSetting_title>Dunkelheit erkundeter Gebiete</fogAlphaSetting_title>
+  <fogAlphaSetting_desc>Wie dunkel erkundetes Gelände wird, wenn es gerade niemand sehen kann.</fogAlphaSetting_desc>
+  <fogAlphaSetting_Black>Schwarz (100%)</fogAlphaSetting_Black>
+  <fogAlphaSetting_NearlyBlack>82%</fogAlphaSetting_NearlyBlack>
+  <fogAlphaSetting_VeryVeryVeryDark>71%</fogAlphaSetting_VeryVeryVeryDark>
+  <fogAlphaSetting_VeryVeryDark>59%</fogAlphaSetting_VeryVeryDark>
+  <fogAlphaSetting_VeryDark>47%</fogAlphaSetting_VeryDark>
+  <fogAlphaSetting_Dark>39%</fogAlphaSetting_Dark>
+  <fogAlphaSetting_Medium>31%</fogAlphaSetting_Medium>
+  <fogAlphaSetting_Light>24%</fogAlphaSetting_Light>
+  <fogFadeSpeedSetting_title>Überblendgeschwindigkeit des Nebels</fogFadeSpeedSetting_title>
+  <fogFadeSpeedSetting_desc>Wie schnell der Nebel überblendet, wenn sich die Sicht ändert. „Aus“ wechselt sofort.</fogFadeSpeedSetting_desc>
+  <fogFadeSpeedSetting_Slow>Langsam</fogFadeSpeedSetting_Slow>
+  <fogFadeSpeedSetting_Medium>Mittel</fogFadeSpeedSetting_Medium>
+  <fogFadeSpeedSetting_Fast>Schnell</fogFadeSpeedSetting_Fast>
+  <fogFadeSpeedSetting_Disabled>Aus</fogFadeSpeedSetting_Disabled>
+
+  <TotalFog_ValueMultiplier>{0}×</TotalFog_ValueMultiplier>
+  <TotalFog_ValuePercent>{0}%</TotalFog_ValuePercent>
+  <TotalFog_ValueSeconds>{0} s</TotalFog_ValueSeconds>
+
+  <!-- Vision -->
+  <baseViewRange>Grundsichtweite (Zellen)</baseViewRange>
+  <baseViewRangeDesc>Wie weit ein Kolonist sieht, bevor Gesundheit, Licht und Wetter berücksichtigt werden. Ganze Zellen, von 10 bis 100.</baseViewRangeDesc>
+  <TotalFog_AdditionalObservers>Weitere Augen</TotalFog_AdditionalObservers>
+  <buildingVisionMod>Sichtmultiplikator für Gebäude</buildingVisionMod>
+  <buildingVisionModDesc>Skaliert, wie weit Kameras und andere Gebäude sehen. Die Platzierungsvorschau ändert sich nicht.</buildingVisionModDesc>
+  <TotalFog_TurretVision>Sichtmultiplikator für Geschütztürme</TotalFog_TurretVision>
+  <TotalFog_TurretVisionDesc>Skaliert, wie weit automatische Geschütztürme sehen. Ein Geschützturm braucht Strom oder Brennstoff, um überhaupt zu sehen.</TotalFog_TurretVisionDesc>
+  <TotalFog_AnimalVision>Sichtmultiplikator für Tiere</TotalFog_AnimalVision>
+  <TotalFog_AnimalVisionDesc>Skaliert, wie weit deine Tiere sehen. Ein Tier braucht eine Bezugsperson und das Training „Angreifen“, um für dich zu sehen.</TotalFog_AnimalVisionDesc>
+  <TotalFog_ColonyMechVision>Sichtmultiplikator für Mechs</TotalFog_ColonyMechVision>
+  <TotalFog_ColonyMechVisionDesc>Skaliert, wie weit deine Mechs sehen. 1 behält ihre normale Reichweite bei. Waffenreichweite und Gehör ändern sich nicht.</TotalFog_ColonyMechVisionDesc>
+  <allyGiveVision>Verbündete und Besucher teilen ihre Sicht</allyGiveVision>
+  <TotalFog_AllyVisionDesc>Freundliche Personen und Tiere auf deiner Karte lassen dich sehen, was sie sehen, mit halber normaler Reichweite.</TotalFog_AllyVisionDesc>
+  <prisonerGiveVision>Gefangene teilen ihre Sicht</prisonerGiveVision>
+  <TotalFog_PrisonerVisionDesc>Deine Gefangenen lassen dich sehen, was sie sehen, mit einem Fünftel ihrer normalen Reichweite.</TotalFog_PrisonerVisionDesc>
+  <TotalFog_TerrainAndMaps>Gelände und Karten</TotalFog_TerrainAndMaps>
+  <mapRevealAtStart>Neue Karten beginnen erkundet</mapRevealAtStart>
+  <TotalFog_MapRevealDesc>Neue Karten beginnen mit vollständig erkundetem Gelände. Du siehst trotzdem nur, was deine Kolonisten gerade sehen.</TotalFog_MapRevealDesc>
+  <treesBlockSight>Bäume blockieren die Sicht</treesBlockSight>
+  <treesBlockSightDesc>Ausgewachsene Bäume blockieren die Sichtlinie. Setzlinge und Baumstümpfe nicht.</treesBlockSightDesc>
+  <treesBlockSight_RequiresReload>Ändere dies im Hauptmenü und lade dann dein Spiel.</treesBlockSight_RequiresReload>
+  <onlyOutsideColony>Kein Nebel auf Heimatkarten</onlyOutsideColony>
+  <onlyOutsideColonyDesc>Deine Heimatkarten zeigen alles. Auf allen anderen Karten bleibt der Nebel.</onlyOutsideColonyDesc>
+  <clearFogDuringTargeting>Volle Kartensicht bei Gravschiff-Flügen</clearFogDuringTargeting>
+  <clearFogDuringTargetingDesc>Zeigt die ganze Karte, während du einen Landeplatz wählst sowie bei Start und Landung. Das kann dir Dinge zeigen, die niemand gesehen hat.</clearFogDuringTargetingDesc>
+  <TotalFog_Watchtowers>Wachtürme</TotalFog_Watchtowers>
+  <TotalFog_TowerVision>Sichtmultiplikator für Wachposten</TotalFog_TowerVision>
+  <TotalFog_TowerVisionDesc>Um wie viel weiter ein Wachposten von der Spitze eines Wachturms sieht. Dächer, Berge und andere Türme blockieren die Sicht weiterhin.</TotalFog_TowerVisionDesc>
+  <TotalFog_TowerRange>Sichtgrenze für Wachposten (Zellen)</TotalFog_TowerRange>
+  <TotalFog_TowerRangeDesc>Ein Wachposten sieht nie weiter als diese Anzahl Zellen.</TotalFog_TowerRangeDesc>
+  <TotalFog_TowerClimb>Kletterzeit der Leiter</TotalFog_TowerClimb>
+  <TotalFog_TowerClimbDesc>Zeit zum Hinauf- oder Hinabklettern, in Sekunden bei normaler Spielgeschwindigkeit.</TotalFog_TowerClimbDesc>
+  <TotalFog_TowerShooting>Wachposten dürfen schießen</TotalFog_TowerShooting>
+  <TotalFog_TowerShootingDesc>Wachposten können über freistehende Wände schießen. Dort oben sind sie leichter zu treffen und können nicht im Nahkampf kämpfen.</TotalFog_TowerShootingDesc>
+  <TotalFog_TelescopeRange>Sichtgrenze für Teleskope (Zellen)</TotalFog_TelescopeRange>
+  <TotalFog_TelescopeRangeDesc>Ein Kolonist am Wachteleskop sieht nie weiter als diese Anzahl Zellen. Unabhängig von Wachtürmen.</TotalFog_TelescopeRangeDesc>
+
+  <!-- Information -->
+  <delayAlertsUntilSeen>Verzögerte Meldungen über Ungesehenes</delayAlertsUntilSeen>
+  <delayAlertsUntilSeenDesc>Briefe und Nachrichten über etwas, das niemand sehen kann, warten, bis es jemand sieht. Koloniegesundheit und Weltereignisse kommen weiterhin sofort an.</delayAlertsUntilSeenDesc>
+  <TotalFog_DiscardEvents>Verworfene Meldungen über Ungesehenes</TotalFog_DiscardEvents>
+  <TotalFog_DiscardEventsDesc>Briefe und Nachrichten der gewählten Arten werden verworfen, solange niemand sehen kann, worum es geht. Koloniegesundheit, sichtbare Ereignisse und Weltereignisse kommen weiterhin an. Nutze stattdessen „Verzögerte Meldungen“ oben, um sie zu behalten.</TotalFog_DiscardEventsDesc>
+  <hideThreatBig>Größere Bedrohungen</hideThreatBig>
+  <hideThreatSmall>Kleinere Bedrohungen</hideThreatSmall>
+  <hideEventPositive>Gute Nachrichten</hideEventPositive>
+  <hideEventNegative>Schlechte Nachrichten</hideEventNegative>
+  <hideEventNeutral>Neutrale Nachrichten</hideEventNeutral>
+  <TotalFog_SilentRaids>Stille Überfälle</TotalFog_SilentRaids>
+  <TotalFog_SilentRaidsDesc>Kein Brief und keine Verlangsamung, wenn Überfälle oder menschenjagende Rudel eintreffen, selbst in voller Sicht. Sie greifen trotzdem an, und Kämpfe verlangsamen die Zeit weiterhin. Musik ist eine eigene Einstellung.</TotalFog_SilentRaidsDesc>
+  <TotalFog_InformationOptions>Weitere Informationen</TotalFog_InformationOptions>
+  <wildLifeTabVisible>Ungesehene Wildtiere auflisten</wildLifeTabVisible>
+  <wildLifeTabVisibleDesc>Der Tab „Wildtiere“ listet auch Tiere auf, die niemand sehen kann. Das verrät, dass sie da sind.</wildLifeTabVisibleDesc>
+  <hideSpeakBubble>Ungesehene Sprechblasen verbergen</hideSpeakBubble>
+  <hideSpeakBubbleDesc>Verbirgt Interaction Bubbles von Charakteren außer Sicht.</hideSpeakBubbleDesc>
+  <aiSmart>Gegner haben auch Nebel</aiSmart>
+  <aiSmartDesc>Menschliche Gegner können nur anvisieren, was ihre eigene Seite sehen kann. Ein Kolonist im Dunkeln bleibt verborgen.</aiSmartDesc>
+  <TotalFog_InteractWithRememberedObjects>Bekannte Gebäude und Gegenstände nutzen</TotalFog_InteractWithRememberedObjects>
+  <TotalFog_InteractWithRememberedObjectsDesc>Du kannst Gebäude und Gegenstände auswählen, untersuchen und befehligen, die du schon gesehen hast, solange sie noch dort sind, wo du sie gesehen hast. Das schließt Arbeitsaufträge per Rechtsklick ein. Personen, Tiere, Kampfziele und alles nie Gesehene brauchen weiterhin aktuelle Sicht. Deine eigenen Kolonisten und Baupläne funktionieren immer.</TotalFog_InteractWithRememberedObjectsDesc>
+  <NeedWatcher>Kameras brauchen einen Bediener</NeedWatcher>
+  <NeedWatcherDesc>Kameras zeigen ihre Umgebung nur, während ein Kolonist an einer Kamerakonsole arbeitet.</NeedWatcherDesc>
+
+  <!-- Audio -->
+  <TotalFog_SuppressCombatMusic>Keine Kampf- oder Anomaly-Musik</TotalFog_SuppressCombatMusic>
+  <TotalFog_SuppressCombatMusicDesc>Lässt während Kämpfen und Anomaly-Ereignissen die normale Musik weiterlaufen, damit ein Musikwechsel dich nicht warnen kann.</TotalFog_SuppressCombatMusicDesc>
+  <TotalFog_MuteHiddenSounds>Verborgene Geräusche stummschalten</TotalFog_MuteHiddenSounds>
+  <TotalFog_MuteHiddenSoundsDesc>Geräusche von Dingen, die niemand sehen kann, sind stumm, auch laufende Schleifen. Das hat Vorrang vor der Filterung nach Gehör.</TotalFog_MuteHiddenSoundsDesc>
+  <TotalFog_FilterHiddenSounds>Geräuschfilterung nach Gehör</TotalFog_FilterHiddenSounds>
+  <TotalFog_FilterHiddenSoundsDesc>Verborgene Geräusche sind gedämpft und nur in der Nähe eines lebenden Kolonisten zu hören, der sie hören könnte. Außerhalb der Hörweite sind sie stumm.</TotalFog_FilterHiddenSoundsDesc>
+  <audioSourceRange>Hörweite (Zellen)</audioSourceRange>
+  <audioSourceRangeDesc>Wie viele Zellen entfernt ein Kolonist ein verborgenes Geräusch noch hören kann.</audioSourceRangeDesc>
+  <volumeMufflingModifier>Dämpfung mit der Entfernung</volumeMufflingModifier>
+  <volumeMufflingModifierDesc>Bei 0% bleibt die Lautstärke innerhalb der Hörweite unverändert. Bei 100% nimmt sie bis zur Stille am Rand ab. Geräusche außerhalb der Hörweite bleiben stumm.</volumeMufflingModifierDesc>
+  <TotalFog_HearingIndicators>Geräuschmarkierungen</TotalFog_HearingIndicators>
+  <TotalFog_ShowHearingCues>Geräuschmarkierungen anzeigen</TotalFog_ShowHearingCues>
+  <TotalFog_ShowHearingCuesDesc>Kleine Markierungen zeigen, wo ein Kolonist verborgene Bewegung hört. Schalte dies aus, um sie zu entfernen.</TotalFog_ShowHearingCuesDesc>
+  <baseHearingRange>Reichweite der Geräuschmarkierungen (Zellen)</baseHearingRange>
+  <TotalFog_HearingRangeDesc>Wie viele Zellen entfernt verborgene Bewegung gehört werden kann.</TotalFog_HearingRangeDesc>
+
+  <!-- Cameras -->
+  <TotalFog_CameraCount>Aktive Kameras: {0}</TotalFog_CameraCount>
+  <Revealing>Beobachtet</Revealing>
+  <NoCameraConsole>Keine bediente Kamerakonsole</NoCameraConsole>
+
+  <!-- Watchtower -->
+  <TotalFog_TowerOccupied>Wachposten: {0}</TotalFog_TowerOccupied>
+  <TotalFog_TowerWatch>Vom Turm aus Wache halten</TotalFog_TowerWatch>
+  <TotalFog_TowerWatchDrafted>Wache halten, bis Kampfmodus endet</TotalFog_TowerWatchDrafted>
+  <TotalFog_TowerWatchTimed>{0} lang Wache halten</TotalFog_TowerWatchTimed>
+  <TotalFog_TowerHoldingDrafted>Hält Wache, bis der Kampfmodus endet oder ein Befehl kommt</TotalFog_TowerHoldingDrafted>
+  <TotalFog_TowerWatchRemaining>Wache endet in {0}</TotalFog_TowerWatchRemaining>
+  <TotalFog_TowerClimbingUp>Klettert auf {0}.</TotalFog_TowerClimbingUp>
+  <TotalFog_TowerClimbingDown>Klettert von {0} herunter.</TotalFog_TowerClimbingDown>
+  <TotalFog_TowerDescend>Herunterklettern</TotalFog_TowerDescend>
+  <TotalFog_TowerRetrieve>Vom Turm herunterholen</TotalFog_TowerRetrieve>
+  <TotalFog_TowerUnavailable>Turm besetzt oder Leiter blockiert</TotalFog_TowerUnavailable>
+  <TotalFog_TowerOptionUnavailable>{0} ({1})</TotalFog_TowerOptionUnavailable>
+  <TotalFog_TowerBlockedLadder>Die Zelle vor der Leiter muss frei bleiben.</TotalFog_TowerBlockedLadder>
+  <TotalFog_TowerNoRoof>Ein Wachturm braucht freien Himmel.</TotalFog_TowerNoRoof>
+  <TotalFog_TowerEmptyFirst>Hole den Wachposten herunter, bevor du den Turm abreißt.</TotalFog_TowerEmptyFirst>
+  <TotalFog_TowerExitBlocked>Die Leiter ist blockiert. Räume die Zelle davor frei, damit der Wachposten herunterklettern kann.</TotalFog_TowerExitBlocked>
+  <TotalFog_TowerWaitingForExit>Wartet, bis die Leiter von {0} frei ist.</TotalFog_TowerWaitingForExit>
+  <TotalFog_TowerEmergencyExit>{0} springt vom blockierten Wachturm. Der Sturz kann Verletzungen verursachen.</TotalFog_TowerEmergencyExit>
+
+</LanguageData>

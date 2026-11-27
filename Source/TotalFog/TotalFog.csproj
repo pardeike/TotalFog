@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- Modified by Andreas Pardeike for Total Fog, 2026-10-04. -->
   <PropertyGroup>
-    <OutputPath Condition="'$(TotalFogBuildOutput)' == ''">../../Current/Assemblies</OutputPath>
+    <OutputPath Condition="'$(TotalFogBuildOutput)' == ''">../../1.7/Assemblies</OutputPath>
     <OutputPath Condition="'$(TotalFogBuildOutput)' != ''">$(TotalFogBuildOutput)</OutputPath>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <DebugType>None</DebugType>
@@ -14,19 +16,20 @@
     <AssemblyVersion>$(ModVersion).0</AssemblyVersion>
     <Product>Total Fog</Product>
     <Nullable>warnings</Nullable>
+    <TotalFogPython Condition="'$(TotalFogPython)' == '' And '$(OS)' != 'Windows_NT'">python3</TotalFogPython>
+    <TotalFogPython Condition="'$(TotalFogPython)' == '' And '$(OS)' == 'Windows_NT'">python</TotalFogPython>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Krafs.Publicizer" Version="2.3.2" PrivateAssets="all" />
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.6.4871</Version>
+      <Version>1.7.5021-unstable</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony.Ref">
-      <Version>2.4.2</Version>
+      <Version>3.0.0-rc.8</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <Publicize Include="Assembly-CSharp" IncludeVirtualMembers="false" />
@@ -36,10 +39,35 @@
   <PropertyGroup Condition="'$(RIMWORLD_MOD_DIR)' != ''">
     <GlobalBridgeToolsDir>$(RIMWORLD_MOD_DIR)\..\BridgeTools</GlobalBridgeToolsDir>
   </PropertyGroup>
-  <Target Name="BuildBridgeTools" AfterTargets="Build" Condition="'$(SkipBridgeTools)' != 'true'">
+  <Target Name="SyncMetadata" BeforeTargets="PrepareForBuild" DependsOnTargets="ValidateBuildOutput">
+    <XmlPeek XmlInputPath="$(MSBuildProjectDirectory)/../../About/About.xml" Query="//ModMetaData/modVersion/text()">
+      <Output TaskParameter="Result" PropertyName="ExistingAboutVersion" />
+    </XmlPeek>
+    <XmlPeek XmlInputPath="$(MSBuildProjectDirectory)/../../About/Manifest.xml" Query="//Manifest/version/text()">
+      <Output TaskParameter="Result" PropertyName="ExistingManifestVersion" />
+    </XmlPeek>
+    <XmlPoke Condition="'$(ExistingAboutVersion)' != '$(ModVersion)'" XmlInputPath="$(MSBuildProjectDirectory)/../../About/About.xml" Query="//ModMetaData/modVersion" Value="$(ModVersion)" />
+    <XmlPoke Condition="'$(ExistingManifestVersion)' != '$(ModVersion)'" XmlInputPath="$(MSBuildProjectDirectory)/../../About/Manifest.xml" Query="//Manifest/version" Value="$(ModVersion)" />
+  </Target>
+  <Target Name="ValidateBuildOutput" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <SafeVersionOutput>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../1.7/'))</SafeVersionOutput>
+      <SafeArtifactOutput>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../../artifacts/'))</SafeArtifactOutput>
+      <FullBuildOutput>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/$(OutputPath)'))</FullBuildOutput>
+      <FullBuildOutput Condition="$([System.IO.Path]::IsPathRooted('$(OutputPath)'))">$([System.IO.Path]::GetFullPath('$(OutputPath)'))</FullBuildOutput>
+    </PropertyGroup>
+    <Error Condition="!$(FullBuildOutput.StartsWith('$(SafeVersionOutput)')) And !$(FullBuildOutput.StartsWith('$(SafeArtifactOutput)'))" Text="Build output must stay under 1.7/ or artifacts/. The 1.6 payload is frozen." />
+  </Target>
+  <Target Name="BuildBridgeTools" AfterTargets="Build" Condition="'$(SkipBridgeTools)' != 'true' And '$(BuildBridgeTools)' != 'false'">
     <Exec Command="dotnet build &quot;$(MSBuildProjectDirectory)/../BridgeTools/TotalFog.BridgeTools.csproj&quot; -c $(Configuration) --nologo -v:q -p:TotalFogGameplayAssembly=&quot;$(TargetPath)&quot;" />
   </Target>
-  <Target Name="DeployPair" AfterTargets="Build" Condition="'$(RIMWORLD_MOD_DIR)' != ''">
+  <Target Name="RecordBuild" AfterTargets="Build" BeforeTargets="DeployPair" DependsOnTargets="BuildBridgeTools" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <ReceiptCompanionArgument Condition="'$(SkipBridgeTools)' != 'true' And '$(BuildBridgeTools)' != 'false'">&quot;$(MSBuildProjectDirectory)/../../artifacts/BridgeTools/TotalFog/TotalFog.BridgeTools.dll&quot;</ReceiptCompanionArgument>
+    </PropertyGroup>
+    <Exec Command="&quot;$(TotalFogPython)&quot; &quot;$(MSBuildProjectDirectory)/../../scripts/build_receipt.py&quot; &quot;$(TargetPath)&quot; $(ReceiptCompanionArgument)" />
+  </Target>
+  <Target Name="DeployPair" AfterTargets="Build" DependsOnTargets="RecordBuild" Condition="'$(RIMWORLD_MOD_DIR)' != ''">
     <Exec Command="&quot;$(MSBuildProjectDirectory)/../../scripts/mod&quot; deploy-built" EnvironmentVariables="RIMWORLD_MOD_DIR=$(RIMWORLD_MOD_DIR)" />
   </Target>
 </Project>
